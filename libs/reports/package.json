@@ -1,0 +1,44 @@
+{
+  "name": "@nestjs-mod/reports",
+  "description": "Modules and utilities for generating reports on infrastructure and features.",
+  "version": "0.0.1",
+  "keywords": [
+    "nestjs",
+    "nestjs-mod",
+    "modules",
+    "mod",
+    "reports"
+  ],
+  "license": "MIT",
+  "author": "EndyKaufman <admin@site15.ru>",
+  "engines": {
+    "node": ">=14",
+    "npm": ">=6"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/nestjs-mod/nestjs-mod/issues"
+  },
+  "homepage": "https://github.com/nestjs-mod/nestjs-mod",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nestjs-mod/nestjs-mod.git"
+  },
+  "maintainers": [
+    {
+      "name": "EndyKaufman",
+      "email": "admin@site15.ru"
+    }
+  ],
+  "dependencies": {
+    "tslib": ">=2.3.0",
+    "markdown-it": ">=14.0.0",
+    "@nestjs-mod/common": "*",
+    "@nestjs/common": "^10.0.2"
+  },
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts"
+}

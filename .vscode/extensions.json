@@ -1,0 +1,24 @@
+{
+  "recommendations": [
+    "wmaurer.change-case",
+    "maximus136.change-string-case",
+    "ms-azuretools.vscode-docker",
+    "irongeek.vscode-env",
+    "dbaeumer.vscode-eslint",
+    "mrorz.language-gettext",
+    "ms-vscode.vscode-typescript-next",
+    "firsttris.vscode-jest-runner",
+    "ibm.output-colorizer",
+    "bradymholt.pgformatter",
+    "alex-young.pm2-explorer",
+    "esbenp.prettier-vscode",
+    "inferrinizzard.prettier-sql-vscode",
+    "prisma.prisma",
+    "foxundermoon.shell-format",
+    "sonarsource.sonarlint-vscode",
+    "ebrithil30.vscode-ts-auto-return-type",
+    "dotjoshjohnson.xml",
+    "redhat.vscode-yaml",
+    "nicoespeon.abracadabra"
+  ]
+}
