@@ -12,12 +12,12 @@ npm i --save @nestjs-mod/common
 
 ## Decorators and functions
 
-| Link                                  | Decorators                           | Function                                     | Description                                                                                                  |
-| ------------------------------------- | ------------------------------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [Config model](#config-model)         | `ConfigModel`, `ConfigModelProperty` | `configTransform`                            | Decorators for describing the module configuration and a function for its serialization and validation.      |
-| [Env model](#env-model)               | `EnvModel`, `EnvModelProperty`       | `envTransform`                               | Decorators for describing module environment variables and functions for its serialization and verification. |
-| [Nest module](#nest-module)           | `InjectFeatures`, `InjectService`    | `createNestModule`,`getNestModuleDecorators` | Function for creating a configurable module with the ability to use multi-providing.                         |
-| [Nest application](#nest-application) | -                                    | `bootstrapNestApplication`                   | Function for sequential import of nestModules.                                                               |
+| Link                                    | Decorators                           | Function                                     | Description                                                                                                  |
+| --------------------------------------- | ------------------------------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [Config model](#config-model)           | `ConfigModel`, `ConfigModelProperty` | `configTransform`                            | Decorators for describing the module configuration and a function for its serialization and validation.      |
+| [Env model](#env-model)                 | `EnvModel`, `EnvModelProperty`       | `envTransform`                               | Decorators for describing module environment variables and functions for its serialization and verification. |
+| [Nest module](#nestjs-module)           | `InjectFeatures`, `InjectService`    | `createNestModule`,`getNestModuleDecorators` | Function for creating a configurable module with the ability to use multi-providing.                         |
+| [Nest application](#nestjs-application) | -                                    | `bootstrapNestApplication`                   | Function for sequential import of nestModules.                                                               |
 
 ## Modules
 
