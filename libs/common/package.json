@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/common",
   "description": "A collection of decorators and functions for unifying nestjs applications and modules.",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "keywords": [
     "nestjs",
     "nestjs-mod",
