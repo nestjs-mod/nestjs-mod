@@ -27,6 +27,7 @@
     "esModuleInterop": true,
     "paths": {
       "@nestjs-mod/common": ["libs/common/src/index.ts"],
+      "@nestjs-mod/nestjs-mod": ["libs/cli/src/index.ts"],
       "@nestjs-mod/reports": ["libs/reports/src/index.ts"],
       "@nestjs-mod/testing": ["libs/testing/src/index.ts"]
     }
