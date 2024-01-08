@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.0.1...nestjs-mod-v1.0.2) (2024-01-08)
+
+
+### Bug Fixes
+
+* **cli:** update code ([012e64c](https://github.com/nestjs-mod/nestjs-mod/commit/012e64c5eb0b3324a75b82e4f0ae250cfcab3b39))
+
 ## [1.0.1](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.0.0...nestjs-mod-v1.0.1) (2024-01-08)
 
 
