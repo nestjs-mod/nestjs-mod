@@ -1,6 +1,7 @@
-# NestJS-Mod: Common
 
-A collection of decorators and functions for unifying nestjs applications and modules.
+# @nestjs-mod/common
+
+A collection of utilities for unifying NestJS applications and modules.
 
 [![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] [![Telegram bot][telegram-image]][telegram-url]
 
@@ -10,27 +11,38 @@ A collection of decorators and functions for unifying nestjs applications and mo
 npm i --save @nestjs-mod/common
 ```
 
-## Decorators and functions
 
-| Link                                    | Decorators                           | Function                                     | Description                                                                                                  |
-| --------------------------------------- | ------------------------------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [Config model](#config-model)           | `ConfigModel`, `ConfigModelProperty` | `configTransform`                            | Decorators for describing the module configuration and a function for its serialization and validation.      |
-| [Env model](#env-model)                 | `EnvModel`, `EnvModelProperty`       | `envTransform`                               | Decorators for describing module environment variables and functions for its serialization and verification. |
-| [Nest module](#nestjs-module)           | `InjectFeatures`, `InjectService`    | `createNestModule`,`getNestModuleDecorators` | Function for creating a configurable module with the ability to use multi-providing.                         |
-| [Nest application](#nestjs-application) | -                                    | `bootstrapNestApplication`                   | Function for sequential import of nestModules.                                                               |
+## Utilities
+
+| Link | Description |
+| ---- | ----------- |
+| [Config model](#config-model) | Decorators for describing the module configuration and a function for its serialization and validation. |
+| [Env model](#env-model) | Decorators for describing module environment variables and functions for its serialization and verification. |
+| [NestJS application](#nestjs-application) | Function for sequential import of nestModules. |
+| [NestJS module](#nestjs-module) | Function for creating a configurable module with the ability to use multi-providing. |
+
 
 ## Modules
 
-| Link                                                                            | Category         | Description                                                                |
-| ------------------------------------------------------------------------------- | ---------------- | -------------------------------------------------------------------------- |
-| [InfrastructureMarkdownReportGenerator](#infrastructuremarkdownreportgenerator) | `infrastructure` | Infrastructure markdown report generator.                                  |
-| [DefaultNestApplicationInitializer](#defaultnestapplicationinitializer)         | `system`         | Default NestJS application initializer, no third party utilities required. |
-| [DefaultNestApplicationListener](#defaultnestapplicationlistener)               | `system`         | Default NestJS application listener, no third party utilities required.    |
+| Link | Category | Description |
+| ---- | -------- | ----------- |
+| [InfrastructureMarkdownReport](#infrastructuremarkdownreport) | core | Infrastructure markdown report |
+| [DefaultNestApplicationInitializer](#defaultnestapplicationinitializer) | system | Default NestJS application initializer, no third party utilities required. |
+| [InfrastructureMarkdownReportGenerator](#infrastructuremarkdownreportgenerator) | infrastructure | Infrastructure markdown report generator. |
+| [DefaultNestApplicationListener](#defaultnestapplicationlistener) | system | Default NestJS application listener, no third party utilities required. |
 
 ## Config model
 
 Decorators for describing the module configuration and a function for its serialization and validation.
 Values for this type of configuration must be described in code.
+
+### Decorators
+
+`ConfigModel`, `ConfigModelProperty`
+
+### Function
+
+`configTransform`
 
 ### Usage
 
@@ -95,12 +107,19 @@ async function bootstrap2() {
 bootstrap2();
 ```
 
-[Back to Top](#decorators-and-functions)
-
+[Back to Top](#utilities)
 ## Env model
 
 Decorators for describing module environment variables and functions for its serialization and verification.
 Values can be automatically read from process.env.
+
+### Decorators
+
+`EnvModel`, `EnvModelProperty`
+
+### Function
+
+`envTransform`
 
 ### Usage
 
@@ -175,8 +194,88 @@ async function bootstrap3() {
 bootstrap3();
 ```
 
-[Back to Top](#decorators-and-functions)
+[Back to Top](#utilities)
+## NestJS application
 
+Function for sequential import of nestModules.
+When importing, all preWrapApplication methods of modules are run at the beginning, then all wrapApplication methods, and at the very end all postWrapApplication methods.
+
+Types of modules (list in order of processing):
+
+- `Core modules` - Core modules necessary for the operation of feature and integration modules (examples: main module with connection to the database, main module for connecting to aws, etc.).
+- `Feature modules` - Feature modules with business logic of the application.
+- `Integration modules` - Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module).
+- `System modules` - System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
+- `Infrastructure modules` - Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
+
+### Decorators
+
+`InjectFeatures`, `InjectService`
+
+### Function
+
+`createNestModule`, `getNestModuleDecorators`
+
+### Usage
+
+```typescript
+import { DefaultNestApplicationInitializer, DefaultNestApplicationListener, EnvModel, EnvModelProperty, bootstrapNestApplication, createNestModule } from '@nestjs-mod/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { IsNotEmpty } from 'class-validator';
+
+@EnvModel()
+class AppEnv {
+  @EnvModelProperty()
+  @IsNotEmpty()
+  option!: string;
+}
+
+@Injectable()
+class AppService {
+  constructor(private readonly appEnv: AppEnv) {}
+
+  getEnv() {
+    return this.appEnv;
+  }
+}
+
+const { AppModule } = createNestModule({
+  moduleName: 'AppModule',
+  environmentsModel: AppEnv,
+  providers: [AppService],
+});
+
+process.env['OPTION'] = 'value1';
+
+const globalPrefix = 'api';
+
+bootstrapNestApplication({
+  project: { name: 'TestApp', description: 'Test application' },
+  modules: {
+    system: [
+      DefaultNestApplicationInitializer.forRoot(),
+      DefaultNestApplicationListener.forRoot({
+        staticEnvironments: { port: 3000 },
+        staticConfiguration: {
+          preListen: async ({ app }) => {
+            if (app) {
+              const appService = app.get(AppService);
+              console.log(appService.getEnv()); // output: { option: 'value1' }
+              app.setGlobalPrefix(globalPrefix);
+            }
+          },
+          postListen: async ({ current }) => {
+            Logger.log(`🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${current.staticEnvironments?.port}/${globalPrefix}`);
+          },
+        },
+      }),
+    ],
+    feature: [AppModule.forRoot()],
+  },
+});
+```
+
+[Back to Top](#utilities)
 ## NestJS module
 
 Function for creating a configurable module with the ability to use multi-providing.
@@ -190,6 +289,10 @@ Type of config or env models used in module:
 - `staticEnvironmentsModel` - Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
 - `staticConfigurationModel` - Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers), values can be obtained from various sources, such as: process.env or the value of the consul key.
 - `featureConfigurationModel` - Feature variables of primitive and complex types that can be added to the current module from other modules (example: a transport for sending a message can be defined as a generalized interface, but the implementation itself will be added from a module for working with a specific transport or from an integration module).
+
+### Function
+
+`bootstrapNestApplication`
 
 ### Usage
 
@@ -308,126 +411,57 @@ async function bootstrap() {
 bootstrap();
 ```
 
-[Back to Top](#decorators-and-functions)
+[Back to Top](#utilities)
+### InfrastructureMarkdownReport
+Infrastructure markdown report
 
-## NestJS application
-
-Function for sequential import of nestModules.
-When importing, all preWrapApplication methods of modules are run at the beginning, then all wrapApplication methods, and at the very end all postWrapApplication methods.
-
-Types of modules (list in order of processing):
-
-- `Core modules` - Core modules necessary for the operation of feature and integration modules (examples: main module with connection to the database, main module for connecting to aws, etc.).
-- `Feature modules` - Feature modules with business logic of the application.
-- `Integration modules` - Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module).
-- `System modules` - System modules necessary for the operation of the entire application (examples: launching a nestjs application, launching microservices, etc.).
-- `Infrastructure modules` - Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
-
-### Usage
-
-```typescript
-import { DefaultNestApplicationInitializer, DefaultNestApplicationListener, EnvModel, EnvModelProperty, bootstrapNestApplication, createNestModule } from '@nestjs-mod/common';
-import { Injectable, Logger } from '@nestjs/common';
-import { IsNotEmpty } from 'class-validator';
-
-@EnvModel()
-class AppEnv {
-  @EnvModelProperty()
-  @IsNotEmpty()
-  option!: string;
-}
-
-@Injectable()
-class AppService {
-  constructor(private readonly appEnv: AppEnv) {}
-
-  getEnv() {
-    return this.appEnv;
-  }
-}
-
-const { AppModule } = createNestModule({
-  moduleName: 'AppModule',
-  environmentsModel: AppEnv,
-  providers: [AppService],
-});
-
-process.env['OPTION'] = 'value1';
-
-const globalPrefix = 'api';
-
-bootstrapNestApplication({
-  project: { name: 'TestApp', description: 'Test application' },
-  modules: {
-    system: [
-      DefaultNestApplicationInitializer.forRoot(),
-      DefaultNestApplicationListener.forRoot({
-        staticEnvironments: { port: 3000 },
-        staticConfiguration: {
-          preListen: async ({ app }) => {
-            if (app) {
-              const appService = app.get(AppService);
-              console.log(appService.getEnv()); // output: { option: 'value1' }
-              app.setGlobalPrefix(globalPrefix);
-            }
-          },
-          postListen: async ({ current }) => {
-            Logger.log(`🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${current.staticEnvironments?.port}/${globalPrefix}`);
-          },
-        },
-      }),
-    ],
-    feature: [AppModule.forRoot()],
-  },
-});
-```
-
-[Back to Top](#decorators-and-functions)
-
-## InfrastructureMarkdownReportGenerator
-
-Infrastructure markdown report generator.
-
-#### Static configuration (default)
-
-| Key            | Description                                                          | Constraints  | Value                                                                 |
-| -------------- | -------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------- |
-| `markdownFile` | Name of the markdown-file in which to save the infrastructure report | **optional** | `/home/endy/Projects/nestjs-mod/apps/example-basic/INFRASTRUCTURE.MD` |
+#### Shared providers
+`InfrastructureMarkdownReportStorage`
 
 [Back to Top](#modules)
-
-## DefaultNestApplicationInitializer
-
+### DefaultNestApplicationInitializer
 Default NestJS application initializer, no third party utilities required.
 
-#### Static configuration (default)
+#### Static configuration
 
-| Key            | Description                                                                               | Constraints  | Value |
-| -------------- | ----------------------------------------------------------------------------------------- | ------------ | ----- |
-| `cors`         | CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options) | **optional** | -     |
-| `bodyParser`   | Whether to use underlying platform body parser.                                           | **optional** | -     |
-| `httpsOptions` | Set of configurable HTTPS options                                                         | **optional** | -     |
-| `rawBody`      | Whether to register the raw request body on the request. Use `req.rawBody`.               | **optional** | -     |
+| Key    | Description | Constraints | Value |
+| ------ | ----------- | ----------- | ----- |
+|`cors`|CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)|**optional**|-|
+|`bodyParser`|Whether to use underlying platform body parser.|**optional**|-|
+|`httpsOptions`|Set of configurable HTTPS options|**optional**|-|
+|`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|
 
 [Back to Top](#modules)
+### InfrastructureMarkdownReportGenerator
+Infrastructure markdown report generator.
 
-## DefaultNestApplicationListener
+#### Shared providers
+`DynamicNestModuleMetadataMarkdownReportGenerator`
 
+#### Static configuration
+
+| Key    | Description | Constraints | Value |
+| ------ | ----------- | ----------- | ----- |
+|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|
+
+[Back to Top](#modules)
+### DefaultNestApplicationListener
 Default NestJS application listener, no third party utilities required.
 
-#### Static environments (default)
+#### Static environments
 
-| Key        | Description                                       | Source                                       | Constraints                               | Value  |
-| ---------- | ------------------------------------------------- | -------------------------------------------- | ----------------------------------------- | ------ |
-| `port`     | The port on which to run the server.              | `obj['port']`, `process.env['PORT']`         | **isNotEmpty** (port should not be empty) | `3000` |
-| `hostname` | Hostname on which to listen for incoming packets. | `obj['hostname']`, `process.env['HOSTNAME']` | **optional**                              | -      |
+| Key    | Description | Source | Constraints | Value |
+| ------ | ----------- | ------ | ----------- | ----- |
+|`port`|The port on which to run the server.|`obj['port']`, `process.env['PORT']`|**isNotEmpty** (port should not be empty)|-|
+|`hostname`|Hostname on which to listen for incoming packets.|`obj['hostname']`, `process.env['HOSTNAME']`|**optional**|-|
 
-#### Static configuration (default)
+#### Static configuration
 
-| Key          | Description                                    | Constraints  | Value    |
-| ------------ | ---------------------------------------------- | ------------ | -------- |
-| `preListen`  | Method for additional actions before listening | **optional** | Function |
-| `postListen` | Method for additional actions after listening  | **optional** | Function |
+| Key    | Description | Constraints | Value |
+| ------ | ----------- | ----------- | ----- |
+|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|-|
+|`preListen`|Method for additional actions before listening|**optional**|-|
+|`postListen`|Method for additional actions after listening|**optional**|-|
 
 [Back to Top](#modules)
 
@@ -437,7 +471,7 @@ MIT
 
 [npm-image]: https://badgen.net/npm/v/@nestjs-mod/common
 [npm-url]: https://npmjs.org/package/@nestjs-mod/common
-[telegram-image]: https://img.shields.io/badge/bot-group-blue.svg?maxAge=2592000
+[telegram-image]: https://img.shields.io/badge/group-telegram-blue.svg?maxAge=2592000
 [telegram-url]: https://t.me/nestjs_mod
 [downloads-image]: https://badgen.net/npm/dm/@nestjs-mod/common
 [downloads-url]: https://npmjs.org/package/@nestjs-mod/common

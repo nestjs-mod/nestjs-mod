@@ -40,7 +40,7 @@ export async function configTransform<
 
   const info: ConfigModelInfo = {
     modelPropertyOptions,
-    modelOptions,
+    modelOptions: modelOptions ?? {},
     validations: {},
   };
 
@@ -61,14 +61,17 @@ export async function configTransform<
 
   const optionsInstance = Object.assign(new model(), dataWithAllowedFields);
 
-  const validateErrors = (
-    await classValidator.validate(
-      optionsInstance,
-      modelOptions?.validatorOptions ??
-        rootOptions?.validatorOptions ??
-        CONFIG_MODEL_CLASS_VALIDATOR_OPTIONS
-    )
-  ).filter((validateError) => validateError.property);
+  const validateErrors =
+    modelOptions?.skipValidation ?? rootOptions?.skipValidation
+      ? []
+      : (
+          await classValidator.validate(
+            optionsInstance,
+            modelOptions?.validatorOptions ??
+              rootOptions?.validatorOptions ??
+              CONFIG_MODEL_CLASS_VALIDATOR_OPTIONS
+          )
+        ).filter((validateError) => validateError.property);
 
   // collect constraints
   const validateErrorsForInfo = (
@@ -104,7 +107,7 @@ export function getConfigModelMetadata<TModel extends Type = Type>(
 ) {
   const modelPropertyOptions: ConfigModelPropertyOptions[] =
     Reflect.getMetadata(CONFIG_MODEL_PROPERTIES_METADATA, model) || [];
-  const modelOptions: ConfigModelOptions = Reflect.getMetadata(
+  const modelOptions: ConfigModelOptions | undefined = Reflect.getMetadata(
     CONFIG_MODEL_METADATA,
     model
   );

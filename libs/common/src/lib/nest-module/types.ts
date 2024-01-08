@@ -158,6 +158,7 @@ export interface NestModuleMetadata<
   staticEnvironmentsModel?: Type<TStaticEnvironmentsModel>;
   environmentsOptions?: Pick<
     EnvModelOptions,
+    | 'skipValidation'
     | 'propertyNameFormatters'
     | 'propertyValueExtractors'
     | 'validatorPackage'
@@ -165,7 +166,7 @@ export interface NestModuleMetadata<
   >;
   configurationOptions?: Pick<
     ConfigModelOptions,
-    'validatorPackage' | 'validatorOptions'
+    'skipValidation' | 'validatorPackage' | 'validatorOptions'
   >;
   /**
    * Optional list of imported modules that export the providers which are
@@ -240,6 +241,18 @@ export type ForRootMethodOptions<
   TEnvironmentsModel,
   TStaticEnvironmentsModel
 > = EnvModelRootOptions & {
+  environmentsOptions?: Pick<
+    EnvModelOptions,
+    | 'skipValidation'
+    | 'propertyNameFormatters'
+    | 'propertyValueExtractors'
+    | 'validatorPackage'
+    | 'validatorOptions'
+  >;
+  configurationOptions?: Pick<
+    ConfigModelOptions,
+    'skipValidation' | 'validatorPackage' | 'validatorOptions'
+  >;
   configuration?: TConfigurationModel;
   staticConfiguration?: TStaticConfigurationModel;
   environments?: Partial<TEnvironmentsModel>;
@@ -252,7 +265,6 @@ export type ForRootAsyncMethodOptions<
   TEnvironmentsModel,
   TStaticEnvironmentsModel
 > = {
-  configuration?: TConfigurationModel;
   configurationExisting?: any;
   configurationClass?: Type<TConfigurationModel>;
   configurationFactory?: (
@@ -260,11 +272,13 @@ export type ForRootAsyncMethodOptions<
   ) => Promise<TConfigurationModel> | TConfigurationModel;
   inject?: any[];
 } & Pick<DynamicModule, 'imports'> &
-  (EnvModelRootOptions & {
-    staticConfiguration?: Partial<TStaticConfigurationModel>;
-    staticEnvironments?: Partial<TStaticEnvironmentsModel>;
-    environments?: Partial<TEnvironmentsModel>;
-  });
+  (EnvModelRootOptions &
+    ForRootMethodOptions<
+      TStaticConfigurationModel,
+      TConfigurationModel,
+      TEnvironmentsModel,
+      TStaticEnvironmentsModel
+    >);
 
 export type TModuleInfoByName = {
   environments?: EnvModelInfo;

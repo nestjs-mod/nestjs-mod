@@ -5,8 +5,8 @@ import { ConfigModel, ConfigModelProperty } from '../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../env-model/decorators';
 import { createNestModule, getNestModuleDecorators } from './utils';
 
-describe('Nest modules: Utils', () => {
-  describe('Nest modules with env model', () => {
+describe('NestJS modules: Utils', () => {
+  describe('NestJS modules with env model', () => {
     it('should return error if option of env not set', async () => {
       @EnvModel()
       class AppEnv {
@@ -148,7 +148,7 @@ describe('Nest modules: Utils', () => {
     });
   });
 
-  describe('Nest modules with config model', () => {
+  describe('NestJS modules with config model', () => {
     it('should return error if option of env not set', async () => {
       @ConfigModel()
       class AppConfig {
@@ -294,7 +294,7 @@ describe('Nest modules: Utils', () => {
       expect(app2Service.getConfig()).toMatchObject({ option: 'value1' });
     });
   });
-  describe('Nest modules with anv and config model', () => {
+  describe('NestJS modules with anv and config model', () => {
     it('should use env model and config model', async () => {
       @ConfigModel()
       class AppConfig {
@@ -350,7 +350,7 @@ describe('Nest modules: Utils', () => {
       expect(appService.getEnv()).toMatchObject({ optionEnv: 'optionEnv1' });
     });
   });
-  describe('Nest modules with multi-providing options', () => {
+  describe('NestJS modules with multi-providing options', () => {
     it('should return all feature options', async () => {
       // App1Module
 

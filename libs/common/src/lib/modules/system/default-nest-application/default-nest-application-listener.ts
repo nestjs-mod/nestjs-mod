@@ -27,6 +27,12 @@ class DefaultNestApplicationListenerEnvironments {
 @ConfigModel()
 class DefaultNestApplicationListenerConfiguration {
   @ConfigModelProperty({
+    description:
+      'Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application',
+  })
+  mode?: 'init' | 'listen' = 'listen';
+
+  @ConfigModelProperty({
     description: 'Method for additional actions before listening',
   })
   preListen?: (
@@ -71,7 +77,9 @@ export const { DefaultNestApplicationListener } = createNestModule({
                   await current.staticConfiguration?.preListen({
                     app,
                     current,
-                  } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
+                  } as WrapApplicationOptions<INestApplication,
+                    DefaultNestApplicationListenerConfiguration,
+                    DefaultNestApplicationListenerEnvironments>);
                 }
                 await app.listen(
                   current.staticEnvironments.port,
@@ -81,7 +89,9 @@ export const { DefaultNestApplicationListener } = createNestModule({
                   await current.staticConfiguration?.postListen({
                     app,
                     current,
-                  } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
+                  } as WrapApplicationOptions<INestApplication,
+                    DefaultNestApplicationListenerConfiguration,
+                    DefaultNestApplicationListenerEnvironments>);
                 }
                 return;
               }
@@ -89,14 +99,18 @@ export const { DefaultNestApplicationListener } = createNestModule({
                 await current.staticConfiguration?.preListen({
                   app,
                   current,
-                } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
+                } as WrapApplicationOptions<INestApplication,
+                  DefaultNestApplicationListenerConfiguration,
+                  DefaultNestApplicationListenerEnvironments>);
               }
               await app.listen(current.staticEnvironments.port);
               if (current.staticConfiguration?.postListen) {
                 await current.staticConfiguration?.postListen({
                   app,
                   current,
-                } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
+                } as WrapApplicationOptions<INestApplication,
+                  DefaultNestApplicationListenerConfiguration,
+                  DefaultNestApplicationListenerEnvironments>);
               }
               return;
             }

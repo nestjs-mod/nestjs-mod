@@ -7,23 +7,32 @@ import { getWrapModuleMetadataMethods } from '../nest-module/utils';
 import { NestApplicationError } from './errors';
 import { BootstrapNestApplicationOptions } from './types';
 
-export async function bootstrapNestApplication<
+export async function bootstrapNestApplicationWithOptions<
   TNestApplication = INestApplication
->({ modules, project }: BootstrapNestApplicationOptions) {
+>({
+  modules,
+  project,
+  wrapApplicationMethods,
+}: BootstrapNestApplicationOptions & {
+  wrapApplicationMethods: (
+    | 'preWrapApplication'
+    | 'wrapApplication'
+    | 'postWrapApplication'
+  )[];
+}) {
   let app: TNestApplication | undefined = undefined;
-  const nestModuleMetadataMethods = getWrapModuleMetadataMethods();
-  for (const nestModuleMetadataMethod of nestModuleMetadataMethods) {
+  for (const wrapApplicationMethod of wrapApplicationMethods) {
     for (const category of Object.keys(NestModuleCategory)) {
       let moduleIndex = 0;
       while (modules[category as NestModuleCategory]?.[moduleIndex]) {
         if (
           modules[category as NestModuleCategory]?.[moduleIndex]
-            ?.nestModuleMetadata?.[nestModuleMetadataMethod]
+            ?.nestModuleMetadata?.[wrapApplicationMethod]
         ) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const result: any = await modules[category as NestModuleCategory]?.[
             moduleIndex
-          ].nestModuleMetadata?.[nestModuleMetadataMethod]!({
+          ].nestModuleMetadata?.[wrapApplicationMethod]!({
             app,
             project,
             current: {
@@ -40,8 +49,20 @@ export async function bootstrapNestApplication<
       }
     }
   }
+  return { modules, app };
+}
+
+export async function bootstrapNestApplication<
+  TNestApplication = INestApplication
+>(options: BootstrapNestApplicationOptions) {
+  const { app } = await bootstrapNestApplicationWithOptions<TNestApplication>({
+    ...options,
+    wrapApplicationMethods: getWrapModuleMetadataMethods(),
+  });
+
   if (!app) {
     throw new NestApplicationError('Application not created!');
   }
+
   return app;
 }
