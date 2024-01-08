@@ -39,27 +39,27 @@ export async function envTransform<
   const { modelPropertyOptions, modelOptions } = getEnvModelMetadata(model);
   const info: EnvModelInfo = {
     modelPropertyOptions,
-    modelOptions,
+    modelOptions: modelOptions ?? {},
     validations: {},
   };
 
   for (const propertyOptions of modelPropertyOptions) {
-    for (const propertyNameFormatter of modelOptions.propertyNameFormatters ??
+    for (const propertyNameFormatter of modelOptions?.propertyNameFormatters ??
       rootOptions?.propertyNameFormatters ??
       []) {
       const formattedPropertyExample = propertyNameFormatter.example({
         modelRootOptions: rootOptions,
-        modelOptions,
+        modelOptions: modelOptions ?? {},
         propertyOptions,
       });
       const formattedPropertyName = propertyNameFormatter.format({
         modelRootOptions: rootOptions,
-        modelOptions,
+        modelOptions: modelOptions ?? {},
         propertyOptions,
       });
 
       const propertyValueExtractors = (
-        modelOptions.propertyValueExtractors ??
+        modelOptions?.propertyValueExtractors ??
         rootOptions?.propertyValueExtractors ??
         []
       ).map((extractor) => ({
@@ -67,14 +67,14 @@ export async function envTransform<
         example: extractor.example({
           obj: data,
           modelRootOptions: rootOptions,
-          modelOptions,
+          modelOptions: modelOptions ?? {},
           propertyOptions,
           formattedPropertyName,
         }),
         value: extractor.extract({
           obj: data,
           modelRootOptions: rootOptions,
-          modelOptions,
+          modelOptions: modelOptions ?? {},
           propertyOptions,
           formattedPropertyName,
         }),
@@ -119,15 +119,17 @@ export async function envTransform<
   );
 
   const optionsInstance = Object.assign(new model(), data);
-
-  const validateErrors = (
-    await classValidator.validate(
-      optionsInstance,
-      modelOptions?.validatorOptions ??
-        rootOptions?.validatorOptions ??
-        ENV_MODEL_CLASS_VALIDATOR_OPTIONS
-    )
-  ).filter((validateError) => validateError.property);
+  const validateErrors =
+    modelOptions?.skipValidation ?? rootOptions?.skipValidation
+      ? []
+      : (
+          await classValidator.validate(
+            optionsInstance,
+            modelOptions?.validatorOptions ??
+              rootOptions?.validatorOptions ??
+              ENV_MODEL_CLASS_VALIDATOR_OPTIONS
+          )
+        ).filter((validateError) => validateError.property);
 
   // collect constraints
   const validateErrorsForInfo = (
@@ -160,7 +162,7 @@ export async function envTransform<
 export function getEnvModelMetadata<TModel extends Type = Type>(model: TModel) {
   const modelPropertyOptions: EnvModelPropertyOptions[] =
     Reflect.getMetadata(ENV_MODEL_PROPERTIES_METADATA, model) || [];
-  const modelOptions: EnvModelOptions = Reflect.getMetadata(
+  const modelOptions: EnvModelOptions | undefined = Reflect.getMetadata(
     ENV_MODEL_METADATA,
     model
   );

@@ -7,6 +7,7 @@ export type ConfigModelOptions = {
   originalName?: string;
   validatorPackage?: ValidatorPackage;
   validatorOptions?: ValidatorOptions;
+  skipValidation?: boolean;
 };
 
 export type ConfigModelRootOptions = Omit<ConfigModelOptions, 'originalName'>;

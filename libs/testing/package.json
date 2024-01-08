@@ -36,9 +36,7 @@
   "dependencies": {
     "tslib": ">=2.3.0",
     "@nestjs-mod/common": "*",
-    "@nestjs/common": "^10.0.2"
-  },
-  "peerDependencies": {
+    "@nestjs/common": ">=8.0.0",
     "@nestjs/testing": ">=8.0.0"
   },
   "type": "commonjs",

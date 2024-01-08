@@ -99,7 +99,9 @@ export function getNestModuleDecorators({
   moduleName: string;
 }) {
   const { getFeatureConfigurationsToken, getServiceToken, getModuleInfoToken } =
-    getNestModuleInternalUtils({ moduleName });
+    getNestModuleInternalUtils({
+      moduleName,
+    });
 
   // TODO: not worked with ReturnType<typeof Inject>
   const InjectFeatures = (name?: string): any =>
@@ -112,11 +114,11 @@ export function getNestModuleDecorators({
   // TODO: not worked with ReturnType<typeof Inject>
   const InjectService =
     (service: any, name?: any): any =>
-    (target: object, key: string, index: number) => {
-      const token = getServiceToken(service.name, name);
-      // TODO: not worked :( const type = Reflect.getMetadata('design:type', target, key);
-      return Inject(token)(target, key, index);
-    };
+      (target: object, key: string, index: number) => {
+        const token = getServiceToken(service.name, name);
+        // TODO: not worked :( const type = Reflect.getMetadata('design:type', target, key);
+        return Inject(token)(target, key, index);
+      };
 
   return {
     InjectFeatures,
@@ -268,7 +270,7 @@ export function createNestModule<
           : []),
       ],
     })
-    class SettingsModule {}
+    class SettingsModule { }
     return SettingsModule;
   };
 
@@ -292,9 +294,9 @@ export function createNestModule<
         ...sharedProviders.map((sharedService) =>
           'name' in sharedService
             ? {
-                provide: getServiceToken(sharedService.name, name),
-                useExisting: sharedService,
-              }
+              provide: getServiceToken(sharedService.name, name),
+              useExisting: sharedService,
+            }
             : sharedService
         ),
       ],
@@ -309,7 +311,7 @@ export function createNestModule<
         ),
       ],
     })
-    class SharedModule {}
+    class SharedModule { }
     return SharedModule;
   };
 
@@ -329,7 +331,9 @@ export function createNestModule<
         const obj = await configTransform({
           model: nestModuleMetadata.featureConfigurationModel,
           data: featureConfiguration as any,
-          rootOptions: nestModuleMetadata.configurationOptions,
+          rootOptions: {
+            ...nestModuleMetadata.configurationOptions,
+          },
         });
         if (!moduleInfoByName[defaultName(name)].featureConfigurations) {
           moduleInfoByName[defaultName(name)].featureConfigurations = [];
@@ -442,7 +446,10 @@ export function createNestModule<
             const obj = await configTransform({
               model: nestModuleMetadata.staticConfigurationModel,
               data: asyncModuleOptions?.staticConfiguration ?? {},
-              rootOptions: nestModuleMetadata.configurationOptions,
+              rootOptions: {
+                ...nestModuleMetadata.configurationOptions,
+                ...asyncModuleOptions?.configurationOptions,
+              },
             });
             if (!moduleInfoByName[defaultName(name)]) {
               moduleInfoByName[defaultName(name)] = {
@@ -462,6 +469,7 @@ export function createNestModule<
               model: nestModuleMetadata.staticEnvironmentsModel,
               rootOptions: {
                 ...nestModuleMetadata.environmentsOptions,
+                ...asyncModuleOptions?.environmentsOptions,
                 name,
               },
               data: asyncModuleOptions?.staticEnvironments ?? {},
@@ -510,9 +518,9 @@ export function createNestModule<
               inject:
                 'inject' in asyncModuleOptions
                   ? (asyncModuleOptions.inject as (
-                      | InjectionToken
-                      | OptionalFactoryDependency
-                    )[])
+                    | InjectionToken
+                    | OptionalFactoryDependency
+                  )[])
                   : [],
             };
           }
@@ -529,44 +537,44 @@ export function createNestModule<
 
         const importsArr =
           !nestModuleMetadata.imports ||
-          Array.isArray(nestModuleMetadata.imports)
+            Array.isArray(nestModuleMetadata.imports)
             ? nestModuleMetadata.imports
             : (nestModuleMetadata.imports as any)(
-                staticConfiguration,
-                staticEnvironments
-              );
+              staticConfiguration,
+              staticEnvironments
+            );
         const imports = (!nestModuleMetadata.imports ? [] : importsArr) ?? [];
 
         const controllersArr =
           !nestModuleMetadata.controllers ||
-          Array.isArray(nestModuleMetadata.controllers)
+            Array.isArray(nestModuleMetadata.controllers)
             ? nestModuleMetadata.controllers
             : (nestModuleMetadata.controllers as any)(
-                staticConfiguration,
-                staticEnvironments
-              );
+              staticConfiguration,
+              staticEnvironments
+            );
         const controllers =
           (!nestModuleMetadata.controllers ? [] : controllersArr) ?? [];
 
         const providersArr =
           !nestModuleMetadata.providers ||
-          Array.isArray(nestModuleMetadata.providers)
+            Array.isArray(nestModuleMetadata.providers)
             ? nestModuleMetadata.providers
             : (nestModuleMetadata.providers as any)(
-                staticConfiguration,
-                staticEnvironments
-              );
+              staticConfiguration,
+              staticEnvironments
+            );
         const providers =
           (!nestModuleMetadata.providers ? [] : providersArr) ?? [];
 
         const exportsArr =
           !nestModuleMetadata.exports ||
-          Array.isArray(nestModuleMetadata.exports)
+            Array.isArray(nestModuleMetadata.exports)
             ? nestModuleMetadata.exports
             : (nestModuleMetadata.exports as any)(
-                staticConfiguration,
-                staticEnvironments
-              );
+              staticConfiguration,
+              staticEnvironments
+            );
         const exports = (!nestModuleMetadata.exports ? [] : exportsArr) ?? [];
 
         return <DynamicModule>{
@@ -577,21 +585,165 @@ export function createNestModule<
             asyncOptionsProviderLoader,
             ...(nestModuleMetadata.environmentsModel
               ? [
-                  {
-                    provide: getEnvironmentsLoaderToken(name),
-                    useFactory: async (
-                      emptyConfigOptions: TEnvironmentsModel
-                    ) => {
-                      if (!nestModuleMetadata.environmentsModel) {
-                        return environments ?? {};
+                {
+                  provide: getEnvironmentsLoaderToken(name),
+                  useFactory: async (
+                    emptyConfigOptions: TEnvironmentsModel
+                  ) => {
+                    if (!nestModuleMetadata.environmentsModel) {
+                      return environments ?? {};
+                    }
+                    const obj = await envTransform({
+                      model: nestModuleMetadata.environmentsModel,
+                      rootOptions: {
+                        ...nestModuleMetadata.environmentsOptions,
+                        ...asyncModuleOptions?.environmentsOptions,
+                        name,
+                      },
+                      data: environments ?? {},
+                    });
+                    if (!moduleInfoByName[defaultName(name)]) {
+                      moduleInfoByName[defaultName(name)] = {
+                        nestModuleMetadata:
+                          nestModuleMetadata as NestModuleMetadata,
+                      };
+                    }
+                    moduleInfoByName[defaultName(name)].environments =
+                      obj.info;
+                    Object.assign(emptyConfigOptions as any, obj.data);
+                    return emptyConfigOptions;
+                  },
+                  inject: [nestModuleMetadata.environmentsModel],
+                },
+              ]
+              : []),
+            ...(nestModuleMetadata.staticEnvironmentsModel
+              ? [
+                {
+                  provide: getStaticEnvironmentsLoaderToken(name),
+                  useFactory: async (
+                    emptyStaticEnvironments: TStaticEnvironmentsModel
+                  ) => {
+                    if (
+                      staticEnvironments &&
+                      staticEnvironments?.constructor !== Object
+                    ) {
+                      Object.setPrototypeOf(
+                        emptyStaticEnvironments,
+                        staticEnvironments
+                      );
+                      Object.assign(
+                        emptyStaticEnvironments as any,
+                        staticEnvironments
+                      );
+                    } else {
+                      Object.assign(
+                        emptyStaticEnvironments as any,
+                        staticEnvironments
+                      );
+                    }
+                  },
+                  inject: [nestModuleMetadata.staticEnvironmentsModel],
+                },
+              ]
+              : []),
+            ...(nestModuleMetadata.configurationModel
+              ? [
+                {
+                  provide: getConfigurationLoaderToken(name),
+                  useFactory: async (
+                    emptyConfiguration: TConfigurationModel,
+                    configuration: TConfigurationModel
+                  ) => {
+                    if (
+                      configuration &&
+                      configuration?.constructor !== Object
+                    ) {
+                      Object.setPrototypeOf(
+                        emptyConfiguration,
+                        configuration
+                      );
+                      if (nestModuleMetadata.configurationModel) {
+                        const obj = await configTransform({
+                          model: nestModuleMetadata.configurationModel,
+                          data: configuration,
+                          rootOptions: {
+                            ...nestModuleMetadata.configurationOptions,
+                            ...asyncModuleOptions?.configurationOptions,
+                          },
+                        });
+                        if (!moduleInfoByName[defaultName(name)]) {
+                          moduleInfoByName[defaultName(name)] = {
+                            nestModuleMetadata:
+                              nestModuleMetadata as NestModuleMetadata,
+                          };
+                        }
+                        moduleInfoByName[defaultName(name)].configuration =
+                          obj.info;
+                        Object.assign(emptyConfiguration as any, obj.data);
+                      } else {
+                        Object.assign(
+                          emptyConfiguration as any,
+                          configuration
+                        );
                       }
-                      const obj = await envTransform({
-                        model: nestModuleMetadata.environmentsModel,
+                    } else {
+                      if (nestModuleMetadata.configurationModel) {
+                        const obj = await configTransform({
+                          model: nestModuleMetadata.configurationModel,
+                          data: configuration ?? {},
+                          rootOptions: {
+                            ...nestModuleMetadata.configurationOptions,
+                            ...asyncModuleOptions?.configurationOptions,
+                          },
+                        });
+                        if (!moduleInfoByName[defaultName(name)]) {
+                          moduleInfoByName[defaultName(name)] = {
+                            nestModuleMetadata:
+                              nestModuleMetadata as NestModuleMetadata,
+                          };
+                        }
+                        moduleInfoByName[defaultName(name)].configuration =
+                          obj.info;
+                        Object.assign(emptyConfiguration as any, obj.data);
+                      } else {
+                        Object.assign(
+                          emptyConfiguration as any,
+                          configuration
+                        );
+                      }
+                    }
+                  },
+                  inject: [
+                    nestModuleMetadata.configurationModel,
+                    asyncConfigurationProviderLoaderToken,
+                  ],
+                },
+              ]
+              : []),
+            ...(nestModuleMetadata.staticConfigurationModel
+              ? [
+                {
+                  provide: getStaticConfigurationLoaderToken(name),
+                  useFactory: async (
+                    emptyStaticConfiguration: TStaticConfigurationModel
+                  ) => {
+                    if (
+                      staticConfiguration &&
+                      staticConfiguration?.constructor !== Object
+                    ) {
+                      Object.setPrototypeOf(
+                        emptyStaticConfiguration,
+                        staticConfiguration
+                      );
+                      const obj = await configTransform({
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        model: nestModuleMetadata.staticConfigurationModel!,
+                        data: staticConfiguration,
                         rootOptions: {
-                          ...nestModuleMetadata.environmentsOptions,
-                          name,
+                          ...nestModuleMetadata.configurationOptions,
+                          ...asyncModuleOptions?.configurationOptions,
                         },
-                        data: environments ?? {},
                       });
                       if (!moduleInfoByName[defaultName(name)]) {
                         moduleInfoByName[defaultName(name)] = {
@@ -599,174 +751,41 @@ export function createNestModule<
                             nestModuleMetadata as NestModuleMetadata,
                         };
                       }
-                      moduleInfoByName[defaultName(name)].environments =
-                        obj.info;
-                      Object.assign(emptyConfigOptions as any, obj.data);
-                      return emptyConfigOptions;
-                    },
-                    inject: [nestModuleMetadata.environmentsModel],
-                  },
-                ]
-              : []),
-            ...(nestModuleMetadata.staticEnvironmentsModel
-              ? [
-                  {
-                    provide: getStaticEnvironmentsLoaderToken(name),
-                    useFactory: async (
-                      emptyStaticEnvironments: TStaticEnvironmentsModel
-                    ) => {
-                      if (
-                        staticEnvironments &&
-                        staticEnvironments?.constructor !== Object
-                      ) {
-                        Object.setPrototypeOf(
-                          emptyStaticEnvironments,
-                          staticEnvironments
-                        );
-                        Object.assign(
-                          emptyStaticEnvironments as any,
-                          staticEnvironments
-                        );
-                      } else {
-                        Object.assign(
-                          emptyStaticEnvironments as any,
-                          staticEnvironments
-                        );
+                      moduleInfoByName[
+                        defaultName(name)
+                      ].staticConfiguration = obj.info;
+                      Object.assign(
+                        emptyStaticConfiguration as any,
+                        obj.data
+                      );
+                    } else {
+                      const obj = await configTransform({
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        model: nestModuleMetadata.staticConfigurationModel!,
+                        data: staticConfiguration ?? {},
+                        rootOptions: {
+                          ...nestModuleMetadata.configurationOptions,
+                          ...asyncModuleOptions?.configurationOptions,
+                        },
+                      });
+                      if (!moduleInfoByName[defaultName(name)]) {
+                        moduleInfoByName[defaultName(name)] = {
+                          nestModuleMetadata:
+                            nestModuleMetadata as NestModuleMetadata,
+                        };
                       }
-                    },
-                    inject: [nestModuleMetadata.staticEnvironmentsModel],
+                      moduleInfoByName[
+                        defaultName(name)
+                      ].staticConfiguration = obj.info;
+                      Object.assign(
+                        emptyStaticConfiguration as any,
+                        obj.data
+                      );
+                    }
                   },
-                ]
-              : []),
-            ...(nestModuleMetadata.configurationModel
-              ? [
-                  {
-                    provide: getConfigurationLoaderToken(name),
-                    useFactory: async (
-                      emptyConfiguration: TConfigurationModel,
-                      configuration: TConfigurationModel
-                    ) => {
-                      if (
-                        configuration &&
-                        configuration?.constructor !== Object
-                      ) {
-                        Object.setPrototypeOf(
-                          emptyConfiguration,
-                          configuration
-                        );
-                        if (nestModuleMetadata.configurationModel) {
-                          const obj = await configTransform({
-                            model: nestModuleMetadata.configurationModel,
-                            data: configuration,
-                            rootOptions:
-                              nestModuleMetadata.configurationOptions,
-                          });
-                          if (!moduleInfoByName[defaultName(name)]) {
-                            moduleInfoByName[defaultName(name)] = {
-                              nestModuleMetadata:
-                                nestModuleMetadata as NestModuleMetadata,
-                            };
-                          }
-                          moduleInfoByName[defaultName(name)].configuration =
-                            obj.info;
-                          Object.assign(emptyConfiguration as any, obj.data);
-                        } else {
-                          Object.assign(
-                            emptyConfiguration as any,
-                            configuration
-                          );
-                        }
-                      } else {
-                        if (nestModuleMetadata.configurationModel) {
-                          const obj = await configTransform({
-                            model: nestModuleMetadata.configurationModel,
-                            data: configuration ?? {},
-                            rootOptions:
-                              nestModuleMetadata.configurationOptions,
-                          });
-                          if (!moduleInfoByName[defaultName(name)]) {
-                            moduleInfoByName[defaultName(name)] = {
-                              nestModuleMetadata:
-                                nestModuleMetadata as NestModuleMetadata,
-                            };
-                          }
-                          moduleInfoByName[defaultName(name)].configuration =
-                            obj.info;
-                          Object.assign(emptyConfiguration as any, obj.data);
-                        } else {
-                          Object.assign(
-                            emptyConfiguration as any,
-                            configuration
-                          );
-                        }
-                      }
-                    },
-                    inject: [
-                      nestModuleMetadata.configurationModel,
-                      asyncConfigurationProviderLoaderToken,
-                    ],
-                  },
-                ]
-              : []),
-            ...(nestModuleMetadata.staticConfigurationModel
-              ? [
-                  {
-                    provide: getStaticConfigurationLoaderToken(name),
-                    useFactory: async (
-                      emptyStaticConfiguration: TStaticConfigurationModel
-                    ) => {
-                      if (
-                        staticConfiguration &&
-                        staticConfiguration?.constructor !== Object
-                      ) {
-                        Object.setPrototypeOf(
-                          emptyStaticConfiguration,
-                          staticConfiguration
-                        );
-                        const obj = await configTransform({
-                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                          model: nestModuleMetadata.staticConfigurationModel!,
-                          data: staticConfiguration,
-                          rootOptions: nestModuleMetadata.configurationOptions,
-                        });
-                        if (!moduleInfoByName[defaultName(name)]) {
-                          moduleInfoByName[defaultName(name)] = {
-                            nestModuleMetadata:
-                              nestModuleMetadata as NestModuleMetadata,
-                          };
-                        }
-                        moduleInfoByName[
-                          defaultName(name)
-                        ].staticConfiguration = obj.info;
-                        Object.assign(
-                          emptyStaticConfiguration as any,
-                          obj.data
-                        );
-                      } else {
-                        const obj = await configTransform({
-                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                          model: nestModuleMetadata.staticConfigurationModel!,
-                          data: staticConfiguration ?? {},
-                          rootOptions: nestModuleMetadata.configurationOptions,
-                        });
-                        if (!moduleInfoByName[defaultName(name)]) {
-                          moduleInfoByName[defaultName(name)] = {
-                            nestModuleMetadata:
-                              nestModuleMetadata as NestModuleMetadata,
-                          };
-                        }
-                        moduleInfoByName[
-                          defaultName(name)
-                        ].staticConfiguration = obj.info;
-                        Object.assign(
-                          emptyStaticConfiguration as any,
-                          obj.data
-                        );
-                      }
-                    },
-                    inject: [nestModuleMetadata.staticConfigurationModel],
-                  },
-                ]
+                  inject: [nestModuleMetadata.staticConfigurationModel],
+                },
+              ]
               : []),
             ...providers,
           ],
@@ -783,28 +802,32 @@ export function createNestModule<
             .map((method) =>
               nestModuleMetadata[method]
                 ? {
-                    [method]: async (
-                      options: WrapApplicationOptions<
-                        TNestApplication,
-                        TStaticConfigurationModel,
-                        TStaticEnvironmentsModel,
-                        TConfigurationModel,
-                        TEnvironmentsModel
-                      >
-                    ) => {
-                      await loadStaticSettings();
-                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                      return await nestModuleMetadata[method]!({
-                        ...options,
-                        current: {
-                          ...options.current,
-                          staticConfiguration,
-                          staticEnvironments,
-                          asyncModuleOptions,
-                        },
-                      } as WrapApplicationOptions<TNestApplication, TStaticConfigurationModel, TStaticEnvironmentsModel, TConfigurationModel, TEnvironmentsModel>);
-                    },
-                  }
+                  [method]: async (
+                    options: WrapApplicationOptions<
+                      TNestApplication,
+                      TStaticConfigurationModel,
+                      TStaticEnvironmentsModel,
+                      TConfigurationModel,
+                      TEnvironmentsModel
+                    >
+                  ) => {
+                    await loadStaticSettings();
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    return await nestModuleMetadata[method]!({
+                      ...options,
+                      current: {
+                        ...options.current,
+                        staticConfiguration,
+                        staticEnvironments,
+                        asyncModuleOptions,
+                      },
+                    } as WrapApplicationOptions<TNestApplication,
+                      TStaticConfigurationModel,
+                      TStaticEnvironmentsModel,
+                      TConfigurationModel,
+                      TEnvironmentsModel>);
+                  },
+                }
                 : {}
             )
             .reduce((all, cur) => ({ ...all, ...cur }), {}),
@@ -816,7 +839,9 @@ export function createNestModule<
   }
 
   return {
-    [nestModuleMetadata.moduleName]: InternalNestModule,
+    [nestModuleMetadata.moduleName]: Object.assign(InternalNestModule, {
+      nestModuleMetadata,
+    }),
   } as unknown as Record<
     TModuleName,
     Record<
@@ -826,27 +851,27 @@ export function createNestModule<
         featureConfiguration?: TFeatureConfigurationModel
       ) => Promise<DynamicModule>
     > &
-      Record<
-        `${TForRootMethodName}`,
-        (
-          options?: ForRootMethodOptions<
-            TStaticConfigurationModel,
-            TConfigurationModel,
-            TEnvironmentsModel,
-            TStaticEnvironmentsModel
-          >
-        ) => Promise<DynamicModule>
-      > &
-      Record<
-        `${TForRootAsyncMethodName}`,
-        (
-          options?: ForRootAsyncMethodOptions<
-            TStaticConfigurationModel,
-            TConfigurationModel,
-            TEnvironmentsModel,
-            TStaticEnvironmentsModel
-          >
-        ) => Promise<DynamicModule>
-      >
+    Record<
+      `${TForRootMethodName}`,
+      (
+        options?: ForRootMethodOptions<
+          TStaticConfigurationModel,
+          TConfigurationModel,
+          TEnvironmentsModel,
+          TStaticEnvironmentsModel
+        >
+      ) => Promise<DynamicModule>
+    > &
+    Record<
+      `${TForRootAsyncMethodName}`,
+      (
+        options?: ForRootAsyncMethodOptions<
+          TStaticConfigurationModel,
+          TConfigurationModel,
+          TEnvironmentsModel,
+          TStaticEnvironmentsModel
+        >
+      ) => Promise<DynamicModule>
+    >
   >;
 }

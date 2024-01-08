@@ -36,7 +36,10 @@
     "tslib": ">=2.3.0",
     "markdown-it": ">=14.0.0",
     "@nestjs-mod/common": "*",
-    "@nestjs/common": "^10.0.2"
+    "@nestjs/common": ">=8.0.0",
+    "class-validator": ">=0.14.0",
+    "fast-glob": ">=3.3.2",
+    "case-anything": ">=2.1.13"
   },
   "type": "commonjs",
   "main": "./src/index.js",

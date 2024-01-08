@@ -9,6 +9,7 @@ export type EnvModelOptions = {
   propertyNameFormatters?: PropertyNameFormatter[];
   validatorPackage?: ValidatorPackage;
   validatorOptions?: ValidatorOptions;
+  skipValidation?: boolean;
 };
 
 export type EnvModelRootOptions = Omit<EnvModelOptions, 'originalName'>;

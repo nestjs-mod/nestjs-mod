@@ -23,6 +23,288 @@ import {
 import { createNestModule } from '../../../nest-module/utils';
 
 @Injectable()
+export class DynamicNestModuleMetadataMarkdownReportGenerator {
+  async getReport(
+    dynamicNestModuleMetadata: DynamicNestModuleMetadata,
+    options: {
+      nestModulesEnvironmentsDescription?: string;
+      nestModulesStaticEnvironmentsDescription?: string;
+      nestModulesConfigurationDescription?: string;
+      nestModulesStaticConfigurationDescription?: string;
+      nestModulesFeatureConfigurationDescription?: string;
+    } = {
+        nestModulesEnvironmentsDescription: NEST_MODULES_ENVIRONMENTS_DESCRIPTION,
+        nestModulesStaticEnvironmentsDescription:
+          NEST_MODULES_STATIC_ENVIRONMENTS_DESCRIPTION,
+        nestModulesConfigurationDescription:
+          NEST_MODULES_CONFIGURATION_DESCRIPTION,
+        nestModulesStaticConfigurationDescription:
+          NEST_MODULES_STATIC_CONFIGURATION_DESCRIPTION,
+        nestModulesFeatureConfigurationDescription:
+          NEST_MODULES_FEATURE_CONFIGURATION_DESCRIPTION,
+      }
+  ) {
+    const lines: string[] = [];
+    if (dynamicNestModuleMetadata.nestModuleMetadata?.moduleCategory) {
+      lines.push(
+        `### ${dynamicNestModuleMetadata.nestModuleMetadata?.moduleName}`
+      );
+      if (dynamicNestModuleMetadata.nestModuleMetadata?.moduleDescription) {
+        lines.push(
+          `${dynamicNestModuleMetadata.nestModuleMetadata?.moduleDescription}`
+        );
+        lines.push('');
+      }
+      const sharedProviders =
+        dynamicNestModuleMetadata.nestModuleMetadata?.sharedProviders ?? [];
+      if (sharedProviders?.length > 0) {
+        lines.push('#### Shared providers');
+        lines.push(
+          sharedProviders
+            .map(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (s: any) => `\`${s.name}\``
+            )
+            .join(', ')
+        );
+        lines.push('');
+      }
+
+      const names = Object.keys(
+        dynamicNestModuleMetadata.moduleInfo ?? { default: true }
+      );
+      for (const name of names) {
+        this.reportOfEnvModelInfo({
+          lines,
+          settingsModelInfo:
+            dynamicNestModuleMetadata.moduleInfo?.[name].environments,
+          settingsModelInfoTitle: this.appendName(
+            'Environments',
+            names.length > 1 ? name : undefined
+          ),
+          settingsModelInfoDescription:
+            options.nestModulesEnvironmentsDescription,
+        });
+
+        this.reportOfConfigModelInfo({
+          lines,
+          settingsModelInfo:
+            dynamicNestModuleMetadata.moduleInfo?.[name].configuration,
+          settingsModelInfoTitle: this.appendName(
+            'Configuration',
+            names.length > 1 ? name : undefined
+          ),
+          settingsModelInfoDescription:
+            options.nestModulesConfigurationDescription,
+        });
+
+        this.reportOfEnvModelInfo({
+          lines,
+          settingsModelInfo:
+            dynamicNestModuleMetadata.moduleInfo?.[name].staticEnvironments,
+          settingsModelInfoTitle: this.appendName(
+            'Static environments',
+            names.length > 1 ? name : undefined
+          ),
+          settingsModelInfoDescription:
+            options.nestModulesStaticEnvironmentsDescription,
+        });
+
+        this.reportOfConfigModelInfo({
+          lines,
+          settingsModelInfo:
+            dynamicNestModuleMetadata.moduleInfo?.[name].staticConfiguration,
+          settingsModelInfoTitle: this.appendName(
+            'Static configuration',
+            names.length > 1 ? name : undefined
+          ),
+          settingsModelInfoDescription:
+            options.nestModulesStaticConfigurationDescription,
+        });
+
+        const featureConfigurations =
+          dynamicNestModuleMetadata.moduleInfo?.[name].featureConfigurations ??
+          [];
+        for (let index = 0; index < featureConfigurations.length; index++) {
+          this.reportOfConfigModelInfo({
+            lines,
+            settingsModelInfo: featureConfigurations[index],
+            settingsModelInfoTitle:
+              featureConfigurations.length === 0
+                ? this.appendName(
+                  'Feature configuration',
+                  names.length > 1 ? name : undefined
+                )
+                : `${this.appendName(
+                  'Feature configuration',
+                  names.length > 1 ? name : undefined
+                )} #${index + 1}`,
+            settingsModelInfoDescription:
+              options.nestModulesFeatureConfigurationDescription,
+          });
+        }
+      }
+    }
+    return lines.join('\n');
+  }
+
+  appendName(title: string, name?: string) {
+    if (name) {
+      return `${title}(${name})`;
+    }
+    return title;
+  }
+
+  private reportOfEnvModelInfo({
+    lines,
+    settingsModelInfo,
+    settingsModelInfoTitle,
+    settingsModelInfoDescription,
+  }: {
+    lines: string[];
+    settingsModelInfo: EnvModelInfo | undefined;
+    settingsModelInfoTitle: string;
+    settingsModelInfoDescription?: string;
+  }) {
+    if (settingsModelInfo) {
+      lines.push(
+        `#### ${settingsModelInfo.modelOptions.name
+          ? `${settingsModelInfoTitle}: ${settingsModelInfo.modelOptions.name}`
+          : settingsModelInfoTitle
+        }`
+      );
+      const description =
+        settingsModelInfo.modelOptions.description ??
+        settingsModelInfoDescription ??
+        '';
+      if (description) {
+        lines.push(`${description}`);
+      }
+      lines.push('');
+      lines.push(
+        [
+          '| Key    | Description | Source | Constraints | Value |',
+          '| ------ | ----------- | ------ | ----------- | ----- |',
+          ...(settingsModelInfo?.modelPropertyOptions.map(
+            (modelPropertyOption) =>
+              [
+                '',
+                // Key
+                `\`${String(modelPropertyOption.originalName)}${modelPropertyOption.name
+                  ? ` (${modelPropertyOption.name})`
+                  : ''
+                }\``,
+                // Description
+                modelPropertyOption.description ?? '-',
+                // Source
+                settingsModelInfo?.validations[
+                  modelPropertyOption.originalName
+                ].propertyValueExtractors
+                  .map(
+                    (propertyValueExtractor) =>
+                      `\`${propertyValueExtractor.example.example}\``
+                  )
+                  .join(', ') || '-',
+                // Constraints
+                Object.entries(
+                  settingsModelInfo?.validations[
+                    modelPropertyOption.originalName
+                  ].constraints || {}
+                )
+                  .map(([key, value]) => `**${key}** (${value})`)
+                  .join(', ') || '**optional**',
+                // Value
+                this.safeValue(
+                  settingsModelInfo?.validations[
+                    modelPropertyOption.originalName
+                  ].value
+                ),
+                '',
+              ].join('|')
+          ) ?? []),
+        ].join('\n')
+      );
+      lines.push('');
+    }
+  }
+
+  private reportOfConfigModelInfo({
+    lines,
+    settingsModelInfo,
+    settingsModelInfoTitle,
+    settingsModelInfoDescription,
+  }: {
+    lines: string[];
+    settingsModelInfo: ConfigModelInfo | undefined;
+    settingsModelInfoTitle: string;
+    settingsModelInfoDescription?: string;
+  }) {
+    if (settingsModelInfo) {
+      lines.push(
+        `#### ${settingsModelInfo.modelOptions.name
+          ? `${settingsModelInfoTitle}: ${settingsModelInfo.modelOptions.name}`
+          : settingsModelInfoTitle
+        }`
+      );
+      const description =
+        settingsModelInfo.modelOptions.description ??
+        settingsModelInfoDescription ??
+        '';
+      if (description) {
+        lines.push(`${description}`);
+      }
+      lines.push('');
+      lines.push(
+        [
+          '| Key    | Description | Constraints | Value |',
+          '| ------ | ----------- | ----------- | ----- |',
+          ...(settingsModelInfo?.modelPropertyOptions.map(
+            (modelPropertyOption) =>
+              [
+                '',
+                // Key
+                `\`${String(modelPropertyOption.originalName)}\``,
+                // Description
+                modelPropertyOption.description ?? '-',
+                // Constraints
+                Object.entries(
+                  settingsModelInfo?.validations[
+                    modelPropertyOption.originalName
+                  ].constraints || {}
+                )
+                  .map(([key, value]) => `**${key}** (${value})`)
+                  .join(', ') || '**optional**',
+                // Value
+                this.safeValue(
+                  settingsModelInfo?.validations[
+                    modelPropertyOption.originalName
+                  ].value
+                ),
+                '',
+              ].join('|')
+          ) ?? []),
+        ].join('\n')
+      );
+      lines.push('');
+    }
+  }
+
+  private safeValue(value?: string) {
+    if (!value) {
+      return '-';
+    }
+    if (typeof value === 'object') {
+      return JSON.stringify(value);
+    }
+    if (typeof value === 'function') {
+      return 'Function';
+    }
+    return typeof value.split === 'function'
+      ? '```' + value.split('`').join('\\`') + '```'
+      : '```' + value + '```';
+  }
+}
+@Injectable()
 export class InfrastructureMarkdownReportStorage {
   report!: string;
 }
@@ -48,12 +330,15 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
 }: Pick<WrapApplicationOptions, 'project' | 'modules'>) {
   @Injectable()
   class InfrastructureMarkdownReportGeneratorBootstrap
-    implements OnApplicationBootstrap
-  {
+    implements OnApplicationBootstrap {
     constructor(
-      private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorage,
-      private readonly infrastructureMarkdownReportGeneratorConfiguration: InfrastructureMarkdownReportGeneratorConfiguration
-    ) {}
+      private readonly dynamicNestModuleMetadataMarkdownReportGenerator:
+        DynamicNestModuleMetadataMarkdownReportGenerator,
+      private readonly infrastructureMarkdownReportStorage:
+        InfrastructureMarkdownReportStorage,
+      private readonly infrastructureMarkdownReportGeneratorConfiguration:
+        InfrastructureMarkdownReportGeneratorConfiguration
+    ) { }
 
     async onApplicationBootstrap() {
       this.infrastructureMarkdownReportStorage.report = await this.getReport();
@@ -91,234 +376,16 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
           lines.push('');
         }
         for (const nestModule of nestModules) {
-          if (nestModule.nestModuleMetadata?.moduleCategory) {
-            lines.push(`### ${nestModule.nestModuleMetadata?.moduleName}`);
-            if (nestModule.nestModuleMetadata?.moduleDescription) {
-              lines.push(`${nestModule.nestModuleMetadata?.moduleDescription}`);
-              lines.push('');
-            }
-            if (nestModule.nestModuleMetadata?.sharedProviders) {
-              lines.push(
-                `Shared providers: ${nestModule.nestModuleMetadata?.sharedProviders.map(
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  (s: any) => s.name
-                )}`
-              );
-              lines.push('');
-            }
-
-            const names = Object.keys(
-              nestModule.moduleInfo ?? { default: true }
-            );
-            for (const name of names) {
-              this.reportOfEnvModelInfo({
-                lines,
-                settingsModelInfo: nestModule.moduleInfo?.[name].environments,
-                settingsModelInfoTitle: `Environments (${name})`,
-                settingsModelInfoDescription:
-                  NEST_MODULES_ENVIRONMENTS_DESCRIPTION,
-              });
-
-              this.reportOfConfigModelInfo({
-                lines,
-                settingsModelInfo: nestModule.moduleInfo?.[name].configuration,
-                settingsModelInfoTitle: `Configuration (${name})`,
-                settingsModelInfoDescription:
-                  NEST_MODULES_CONFIGURATION_DESCRIPTION,
-              });
-
-              this.reportOfEnvModelInfo({
-                lines,
-                settingsModelInfo:
-                  nestModule.moduleInfo?.[name].staticEnvironments,
-                settingsModelInfoTitle: `Static environments (${name})`,
-                settingsModelInfoDescription:
-                  NEST_MODULES_STATIC_ENVIRONMENTS_DESCRIPTION,
-              });
-
-              this.reportOfConfigModelInfo({
-                lines,
-                settingsModelInfo:
-                  nestModule.moduleInfo?.[name].staticConfiguration,
-                settingsModelInfoTitle: `Static configuration (${name})`,
-                settingsModelInfoDescription:
-                  NEST_MODULES_STATIC_CONFIGURATION_DESCRIPTION,
-              });
-
-              const featureConfigurations =
-                nestModule.moduleInfo?.[name].featureConfigurations ?? [];
-              for (
-                let index = 0;
-                index < featureConfigurations.length;
-                index++
-              ) {
-                this.reportOfConfigModelInfo({
-                  lines,
-                  settingsModelInfo: featureConfigurations[index],
-                  settingsModelInfoTitle:
-                    featureConfigurations.length === 0
-                      ? `Feature configuration (${name})`
-                      : `Feature configuration (${name}) #${index + 1}`,
-                  settingsModelInfoDescription:
-                    NEST_MODULES_FEATURE_CONFIGURATION_DESCRIPTION,
-                });
-              }
-            }
-          }
+          lines.push(
+            await this.dynamicNestModuleMetadataMarkdownReportGenerator.getReport(
+              nestModule
+            )
+          );
         }
       }
 
       //lines
       return lines.join('\n');
-    }
-
-    private reportOfEnvModelInfo({
-      lines,
-      settingsModelInfo,
-      settingsModelInfoTitle,
-      settingsModelInfoDescription,
-    }: {
-      lines: string[];
-      settingsModelInfo: EnvModelInfo | undefined;
-      settingsModelInfoTitle: string;
-      settingsModelInfoDescription: string;
-    }) {
-      if (settingsModelInfo) {
-        lines.push(
-          `#### ${
-            settingsModelInfo.modelOptions.name
-              ? `${settingsModelInfoTitle}: ${settingsModelInfo.modelOptions.name}`
-              : settingsModelInfoTitle
-          }`
-        );
-        lines.push(
-          `${
-            settingsModelInfo.modelOptions.description ??
-            settingsModelInfoDescription
-          }`
-        );
-        lines.push('');
-        lines.push(
-          [
-            '| Key    | Description | Source | Constraints | Value |',
-            '| ------ | ----------- | ------ | ----------- | ----- |',
-            ...(settingsModelInfo?.modelPropertyOptions.map(
-              (modelPropertyOption) =>
-                [
-                  '',
-                  // Key
-                  `\`${String(modelPropertyOption.originalName)}${
-                    modelPropertyOption.name
-                      ? ` (${modelPropertyOption.name})`
-                      : ''
-                  }\``,
-                  // Description
-                  modelPropertyOption.description ?? '-',
-                  // Source
-                  settingsModelInfo?.validations[
-                    modelPropertyOption.originalName
-                  ].propertyValueExtractors
-                    .map(
-                      (propertyValueExtractor) =>
-                        `\`${propertyValueExtractor.example.example}\``
-                    )
-                    .join(', ') || '-',
-                  // Constraints
-                  Object.entries(
-                    settingsModelInfo?.validations[
-                      modelPropertyOption.originalName
-                    ].constraints || {}
-                  )
-                    .map(([key, value]) => `**${key}** (${value})`)
-                    .join(', ') || '**optional**',
-                  // Value
-                  this.safeValue(
-                    settingsModelInfo?.validations[
-                      modelPropertyOption.originalName
-                    ].value
-                  ),
-                  '',
-                ].join('|')
-            ) ?? []),
-          ].join('\n')
-        );
-        lines.push('');
-      }
-    }
-
-    private reportOfConfigModelInfo({
-      lines,
-      settingsModelInfo,
-      settingsModelInfoTitle,
-      settingsModelInfoDescription,
-    }: {
-      lines: string[];
-      settingsModelInfo: ConfigModelInfo | undefined;
-      settingsModelInfoTitle: string;
-      settingsModelInfoDescription: string;
-    }) {
-      if (settingsModelInfo) {
-        lines.push(
-          `#### ${
-            settingsModelInfo.modelOptions.name
-              ? `${settingsModelInfoTitle}: ${settingsModelInfo.modelOptions.name}`
-              : settingsModelInfoTitle
-          }`
-        );
-        lines.push(
-          `${
-            settingsModelInfo.modelOptions.description ??
-            settingsModelInfoDescription
-          }`
-        );
-        lines.push('');
-        lines.push(
-          [
-            '| Key    | Description | Constraints | Value |',
-            '| ------ | ----------- | ----------- | ----- |',
-            ...(settingsModelInfo?.modelPropertyOptions.map(
-              (modelPropertyOption) =>
-                [
-                  '',
-                  // Key
-                  `\`${String(modelPropertyOption.originalName)}\``,
-                  // Description
-                  modelPropertyOption.description ?? '-',
-                  // Constraints
-                  Object.entries(
-                    settingsModelInfo?.validations[
-                      modelPropertyOption.originalName
-                    ].constraints || {}
-                  )
-                    .map(([key, value]) => `**${key}** (${value})`)
-                    .join(', ') || '**optional**',
-                  // Value
-                  this.safeValue(
-                    settingsModelInfo?.validations[
-                      modelPropertyOption.originalName
-                    ].value
-                  ),
-                  '',
-                ].join('|')
-            ) ?? []),
-          ].join('\n')
-        );
-        lines.push('');
-      }
-    }
-    private safeValue(value?: string) {
-      if (!value) {
-        return '-';
-      }
-      if (typeof value === 'object') {
-        return JSON.stringify(value);
-      }
-      if (typeof value === 'function') {
-        return 'Function';
-      }
-      return typeof value.split === 'function'
-        ? '```' + value.split('`').join('\\`') + '```'
-        : '```' + value + '```';
     }
   }
   return InfrastructureMarkdownReportGeneratorBootstrap;
@@ -327,12 +394,14 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
 export const { InfrastructureMarkdownReportGenerator } = createNestModule({
   moduleName: 'InfrastructureMarkdownReportGenerator',
   staticConfigurationModel: InfrastructureMarkdownReportGeneratorConfiguration,
+  sharedProviders: [DynamicNestModuleMetadataMarkdownReportGenerator],
   preWrapApplication: async ({ project, modules, current }) => {
     if (modules[current.category]) {
       modules[current.category]!.push(
         createNestModule({
           moduleName: 'InfrastructureMarkdownReportGenerator',
           moduleDescription: 'Infrastructure markdown report generator.',
+          sharedProviders: [DynamicNestModuleMetadataMarkdownReportGenerator],
           providers: [
             getInfrastructureMarkdownReportGeneratorBootstrap({
               modules,

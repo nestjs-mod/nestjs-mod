@@ -15,7 +15,7 @@ import {
 } from '../nest-module/utils';
 import { bootstrapNestApplication } from './utils';
 
-describe('Nest application: Utils', () => {
+describe('NestJS application: Utils', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let originalExit: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,7 +37,7 @@ describe('Nest application: Utils', () => {
     exitStatus = null;
   });
 
-  describe('Nest application with env model', () => {
+  describe('NestJS application with env model', () => {
     it('should return error if option of env not set', async () => {
       @EnvModel()
       class AppEnv {
@@ -154,7 +154,7 @@ describe('Nest application: Utils', () => {
     });
   });
 
-  describe('Nest application with config model', () => {
+  describe('NestJS application with config model', () => {
     it('should return error if option of env not set', async () => {
       @ConfigModel()
       class AppConfig {
@@ -274,7 +274,7 @@ describe('Nest application: Utils', () => {
       expect(app2Service.getConfig()).toMatchObject({ option: 'value1' });
     });
   });
-  describe('Nest application with anv and config model', () => {
+  describe('NestJS application with anv and config model', () => {
     it('should use env model and config model', async () => {
       @ConfigModel()
       class AppConfig {
@@ -335,7 +335,7 @@ describe('Nest application: Utils', () => {
       expect(appService.getEnv()).toMatchObject({ optionEnv: 'optionEnv1' });
     });
   });
-  describe('Nest application with multi-providing options', () => {
+  describe('NestJS application with multi-providing options', () => {
     it('should return all feature options', async () => {
       // App1Module
 
@@ -443,7 +443,7 @@ describe('Nest application: Utils', () => {
       ]);
     });
   });
-  describe('Nest application get markdown of infrastructure', () => {
+  describe('NestJS application get markdown of infrastructure', () => {
     it('should return markdown of infrastructure', async () => {
       // App1Module
 
@@ -483,7 +483,9 @@ describe('Nest application: Utils', () => {
       });
 
       const appReportService = app.get(AppReportService);
-      expect(appReportService.getReport().split('    ').join('')).toEqual(
+      expect(
+        appReportService.getReport().split('  ').join('').split('\n').join('')
+      ).toEqual(
         `# TestApp
 
     Test application
@@ -493,12 +495,17 @@ describe('Nest application: Utils', () => {
     ### InfrastructureMarkdownReport
     Infrastructure markdown report
 
-    Shared providers: InfrastructureMarkdownReportStorage
+    #### Shared providers
+    \`InfrastructureMarkdownReportStorage\`
+
 
     ### InfrastructureMarkdownReportGenerator
     Infrastructure markdown report generator.
 
-    #### Static configuration (default)
+    #### Shared providers
+    \`DynamicNestModuleMetadataMarkdownReportGenerator\`
+
+    #### Static configuration
     Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers), values can be obtained from various sources, such as: process.env or the value of the consul key.
 
     | Key| Description | Constraints | Value |
@@ -506,12 +513,12 @@ describe('Nest application: Utils', () => {
     |\`markdownFile\`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|
 
     ## System modules
-    System modules necessary for the operation of the entire application (examples: launching a nestjs application, launching microservices, etc.).
+    System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
 
     ### DefaultNestApplicationInitializer
     Default NestJS application initializer, no third party utilities required.
 
-    #### Static configuration (default)
+    #### Static configuration
     Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers), values can be obtained from various sources, such as: process.env or the value of the consul key.
 
     | Key| Description | Constraints | Value |
@@ -521,10 +528,11 @@ describe('Nest application: Utils', () => {
     |\`httpsOptions\`|Set of configurable HTTPS options|**optional**|-|
     |\`rawBody\`|Whether to register the raw request body on the request. Use \`req.rawBody\`.|**optional**|-|
 
+
     ### DefaultNestApplicationListener
     Default NestJS application listener, no third party utilities required.
 
-    #### Static environments (default)
+    #### Static environments
     Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
 
     | Key| Description | Source | Constraints | Value |
@@ -532,18 +540,21 @@ describe('Nest application: Utils', () => {
     |\`port\`|The port on which to run the server.|\`obj['port']\`, \`process.env['PORT']\`|**isNotEmpty** (port should not be empty)|\`\`\`3012\`\`\`|
     |\`hostname\`|Hostname on which to listen for incoming packets.|\`obj['hostname']\`, \`process.env['HOSTNAME']\`|**optional**|-|
 
-    #### Static configuration (default)
+    #### Static configuration
     Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers), values can be obtained from various sources, such as: process.env or the value of the consul key.
 
     | Key| Description | Constraints | Value |
     | ------ | ----------- | ----------- | ----- |
+    |\`mode\`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|-|
     |\`preListen\`|Method for additional actions before listening|**optional**|-|
     |\`postListen\`|Method for additional actions after listening|**optional**|-|
 
     ## Feature modules
     Feature modules with business logic of the application.
-    `
-          .split('    ')
+`
+          .split('  ')
+          .join('')
+          .split('\n')
           .join('')
       );
 

@@ -2,7 +2,7 @@
 
 Example basic
 ## System modules
-System modules necessary for the operation of the entire application (examples: launching a nestjs application, launching microservices, etc.).
+System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
 
 ### DefaultNestApplicationInitializer
 Default NestJS application initializer, no third party utilities required.
