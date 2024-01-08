@@ -29,6 +29,13 @@
       "options": {
         "jestConfig": "libs/cli/jest.config.ts"
       }
+    },
+    "semantic-release": {
+      "executor": "@theunderscorer/nx-semantic-release:semantic-release",
+      "options": {
+        "buildTarget": "${PROJECT_NAME}:build",
+        "outputPath": "dist/libs/${PROJECT_NAME}"
+      }
     }
   },
   "tags": []
