@@ -2,6 +2,35 @@
   "name": "nestjs-mod",
   "description": "There is no functionality now, this name is reserved for future command utilities of the NestJS-mod project.",
   "version": "1.0.2",
+  "keywords": [
+    "nestjs",
+    "nestjs-mod",
+    "cli",
+    "mod"
+  ],
+  "license": "MIT",
+  "author": "EndyKaufman <admin@site15.ru>",
+  "engines": {
+    "node": ">=14",
+    "npm": ">=6"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/nestjs-mod/nestjs-mod/issues"
+  },
+  "homepage": "https://github.com/nestjs-mod/nestjs-mod",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nestjs-mod/nestjs-mod.git"
+  },
+  "maintainers": [
+    {
+      "name": "EndyKaufman",
+      "email": "admin@site15.ru"
+    }
+  ],
   "dependencies": {
     "tslib": "^2.3.0"
   },
