@@ -155,7 +155,7 @@ describe('SampleWithSharedConfigController', () => {
           DefaultTestNestApplicationCreate.forRoot(),
           DefaultTestNestApplicationInitializer.forRoot(),
         ],
-        feature: [SampleWithSharedConfig.forRoot({ name: 'app11' })],
+        feature: [SampleWithSharedConfig.forRoot({ contextName: 'app11' })],
       },
     });
 
@@ -182,13 +182,13 @@ describe('SampleWithSharedConfigController', () => {
         ],
         feature: [
           SampleWithSharedConfig.forRoot({
-            name: 'api21',
+            contextName: 'api21',
             staticConfiguration: {
               endpoint: 'api1',
             },
           }),
           SampleWithSharedConfig.forRoot({
-            name: 'api22',
+            contextName: 'api22',
             staticConfiguration: {
               endpoint: 'api2',
             },
@@ -284,13 +284,13 @@ describe('SampleWithSharedConfigController', () => {
         ],
         feature: [
           SampleWithSharedConfig.forRoot({
-            name: 'api31',
+            contextName: 'api31',
             staticConfiguration: {
               endpoint: 'api1',
             },
           }),
           SampleWithSharedConfig.forRoot({
-            name: 'api32',
+            contextName: 'api32',
             staticConfiguration: {
               endpoint: 'api2',
             },

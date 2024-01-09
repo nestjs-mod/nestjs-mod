@@ -9,8 +9,7 @@ import {
 import { ConfigModelInfo, ConfigModelOptions } from '../config-model/types';
 import {
   EnvModelInfo,
-  EnvModelOptions,
-  EnvModelRootOptions,
+  EnvModelOptions
 } from '../env-model/types';
 
 export const DEFAULT_FOR_ROOT_METHOD_NAME = 'forRoot';
@@ -69,24 +68,24 @@ export type DynamicNestModuleMetadata<
   TModuleName extends string = string
 > =
   | Promise<DynamicModule> & {
-      moduleInfo?: Record<string, TModuleInfoByName>;
-      nestModuleMetadata?: NestModuleMetadata<
-        TConfigurationModel,
-        TStaticConfigurationModel,
-        TEnvironmentsModel,
-        TStaticEnvironmentsModel,
-        TForRootMethodName,
-        TForRootAsyncMethodName,
-        TForFeatureMethodName,
-        TImportsWithStaticOptions,
-        TControllersWithStaticOptions,
-        TProvidersWithStaticOptions,
-        TExportsWithStaticOptions,
-        TNestApplication,
-        TFeatureConfigurationModel,
-        TModuleName
-      >;
-    };
+    moduleInfo?: Record<string, TModuleInfoByName>;
+    nestModuleMetadata?: NestModuleMetadata<
+      TConfigurationModel,
+      TStaticConfigurationModel,
+      TEnvironmentsModel,
+      TStaticEnvironmentsModel,
+      TForRootMethodName,
+      TForRootAsyncMethodName,
+      TForFeatureMethodName,
+      TImportsWithStaticOptions,
+      TControllersWithStaticOptions,
+      TProvidersWithStaticOptions,
+      TExportsWithStaticOptions,
+      TNestApplication,
+      TFeatureConfigurationModel,
+      TModuleName
+    >;
+  };
 
 export type ProjectOptions = {
   name: string;
@@ -224,15 +223,15 @@ export interface NestModuleMetadata<
 
 export type CommonNestModuleMetadata = Partial<
   DynamicModule &
-    Pick<
-      NestModuleMetadata,
-      | 'wrapApplication'
-      | 'preWrapApplication'
-      | 'postWrapApplication'
-      | 'moduleName'
-      | 'moduleCategory'
-      | 'moduleDescription'
-    >
+  Pick<
+    NestModuleMetadata,
+    | 'wrapApplication'
+    | 'preWrapApplication'
+    | 'postWrapApplication'
+    | 'moduleName'
+    | 'moduleCategory'
+    | 'moduleDescription'
+  >
 >;
 
 export type ForRootMethodOptions<
@@ -240,7 +239,7 @@ export type ForRootMethodOptions<
   TConfigurationModel,
   TEnvironmentsModel,
   TStaticEnvironmentsModel
-> = EnvModelRootOptions & {
+> = { contextName?: string } & {
   environmentsOptions?: Pick<
     EnvModelOptions,
     | 'skipValidation'
@@ -272,7 +271,7 @@ export type ForRootAsyncMethodOptions<
   ) => Promise<TConfigurationModel> | TConfigurationModel;
   inject?: any[];
 } & Pick<DynamicModule, 'imports'> &
-  (EnvModelRootOptions &
+  ({ contextName?: string } &
     ForRootMethodOptions<
       TStaticConfigurationModel,
       TConfigurationModel,

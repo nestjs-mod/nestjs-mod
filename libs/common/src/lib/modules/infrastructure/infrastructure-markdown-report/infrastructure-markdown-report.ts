@@ -78,7 +78,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           lines,
           settingsModelInfo:
             dynamicNestModuleMetadata.moduleInfo?.[name].environments,
-          settingsModelInfoTitle: this.appendName(
+          settingsModelInfoTitle: this.appendContextName(
             'Environments',
             names.length > 1 ? name : undefined
           ),
@@ -90,7 +90,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           lines,
           settingsModelInfo:
             dynamicNestModuleMetadata.moduleInfo?.[name].configuration,
-          settingsModelInfoTitle: this.appendName(
+          settingsModelInfoTitle: this.appendContextName(
             'Configuration',
             names.length > 1 ? name : undefined
           ),
@@ -102,7 +102,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           lines,
           settingsModelInfo:
             dynamicNestModuleMetadata.moduleInfo?.[name].staticEnvironments,
-          settingsModelInfoTitle: this.appendName(
+          settingsModelInfoTitle: this.appendContextName(
             'Static environments',
             names.length > 1 ? name : undefined
           ),
@@ -114,7 +114,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           lines,
           settingsModelInfo:
             dynamicNestModuleMetadata.moduleInfo?.[name].staticConfiguration,
-          settingsModelInfoTitle: this.appendName(
+          settingsModelInfoTitle: this.appendContextName(
             'Static configuration',
             names.length > 1 ? name : undefined
           ),
@@ -131,11 +131,11 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
             settingsModelInfo: featureConfigurations[index],
             settingsModelInfoTitle:
               featureConfigurations.length === 0
-                ? this.appendName(
+                ? this.appendContextName(
                   'Feature configuration',
                   names.length > 1 ? name : undefined
                 )
-                : `${this.appendName(
+                : `${this.appendContextName(
                   'Feature configuration',
                   names.length > 1 ? name : undefined
                 )} #${index + 1}`,
@@ -148,9 +148,9 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
     return lines.join('\n');
   }
 
-  appendName(title: string, name?: string) {
-    if (name) {
-      return `${title}(${name})`;
+  appendContextName(title: string, contextName?: string) {
+    if (contextName) {
+      return `${title}(${contextName})`;
     }
     return title;
   }

@@ -138,7 +138,7 @@ describe('SampleWithSharedConfigController (async)', () => {
         ],
         feature: [
           SampleWithSharedConfig.forRootAsync({
-            name: 'app11',
+            contextName: 'app11',
             configuration: { dynamicVar1: 'dyno' },
           }),
         ],
@@ -186,14 +186,14 @@ describe('SampleWithSharedConfigController (async)', () => {
         ],
         feature: [
           SampleWithSharedConfig.forRootAsync({
-            name: 'api21',
+            contextName: 'api21',
             configuration: { dynamicVar1: 'dyno' },
             staticConfiguration: {
               endpoint: 'api1',
             },
           }),
           SampleWithSharedConfig.forRootAsync({
-            name: 'api22',
+            contextName: 'api22',
             configurationClass: DynoClass,
             staticConfiguration: {
               endpoint: 'api2',
@@ -346,21 +346,21 @@ describe('SampleWithSharedConfigController (async)', () => {
         ],
         feature: [
           SampleWithSharedConfig.forRootAsync({
-            name: 'api31',
+            contextName: 'api31',
             configuration: { dynamicVar1: 'dyno' },
             staticConfiguration: {
               endpoint: 'api1',
             },
           }),
           SampleWithSharedConfig.forRootAsync({
-            name: 'api32',
+            contextName: 'api32',
             configuration: { dynamicVar1: 'dyno' },
             staticConfiguration: {
               endpoint: 'api2',
             },
           }),
           SampleWithSharedConfig.forRootAsync({
-            name: 'api33',
+            contextName: 'api33',
             configuration: { dynamicVar1: 'dyno' },
             staticConfiguration: {
               endpoint: 'api3',
@@ -426,11 +426,11 @@ describe('SampleWithSharedConfigController (async)', () => {
         ],
         feature: [
           SampleWithSharedConfig.forRootAsync({
-            name: 'api41',
+            contextName: 'api41',
             configuration: { dynamicVar1: 'dyno' },
           }),
           SampleWithSharedConfig.forRootAsync({
-            name: 'api42',
+            contextName: 'api42',
             configurationClass: DynoClass,
             staticEnvironments: { endpoint: 'api2' },
           }),
