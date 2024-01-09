@@ -5,6 +5,7 @@ import {
   NestModuleCategory,
   bootstrapNestApplication,
   createNestModule,
+  isProductionMode,
 } from '@nestjs-mod/common';
 import { RestInfrastructureHtmlReport } from '@nestjs-mod/reports';
 import { Logger } from '@nestjs/common';
@@ -32,8 +33,7 @@ bootstrapNestApplication({
           },
           postListen: async ({ current }) => {
             Logger.log(
-              `🚀 Application is running on: http://${
-                current.staticEnvironments?.hostname ?? 'localhost'
+              `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'
               }:${current.staticEnvironments?.port}/${globalPrefix}`
             );
           },
@@ -57,25 +57,25 @@ bootstrapNestApplication({
       }),
     ],
     // Disable infrastructure modules in production
-    ...(process.env['NODE_ENV'] !== 'production'
+    ...(!isProductionMode()
       ? {
-          infrastructure: [
-            InfrastructureMarkdownReportGenerator.forRoot({
-              staticConfiguration: {
-                markdownFile: join(
-                  __dirname,
-                  '..',
-                  '..',
-                  '..',
-                  'apps',
-                  'example-basic',
-                  'INFRASTRUCTURE.MD'
-                ),
-              },
-            }),
-            RestInfrastructureHtmlReport.forRoot(),
-          ],
-        }
+        infrastructure: [
+          InfrastructureMarkdownReportGenerator.forRoot({
+            staticConfiguration: {
+              markdownFile: join(
+                __dirname,
+                '..',
+                '..',
+                '..',
+                'apps',
+                'example-basic',
+                'INFRASTRUCTURE.MD'
+              ),
+            },
+          }),
+          RestInfrastructureHtmlReport.forRoot(),
+        ],
+      }
       : {}),
   },
 });

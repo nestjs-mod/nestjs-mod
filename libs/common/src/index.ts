@@ -21,4 +21,5 @@ export * from './lib/nest-module/constants';
 export * from './lib/nest-module/errors';
 export * from './lib/nest-module/types';
 export * from './lib/nest-module/utils';
+export * from './lib/utils/is-production';
 export * from './lib/utils/load-package';

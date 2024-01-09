@@ -2,6 +2,7 @@ import {
   InfrastructureMarkdownReportGenerator,
   bootstrapNestApplication,
   createNestModule,
+  isProductionMode,
 } from '@nestjs-mod/common';
 import {
   DefaultTestNestApplicationCreate,
@@ -34,22 +35,22 @@ describe('SampleWithSharedConfigController (async)', () => {
           }),
         ],
         // Disable infrastructure modules in production
-        ...(process.env['NODE_ENV'] !== 'production'
+        ...(!isProductionMode()
           ? {
-              infrastructure: [
-                InfrastructureMarkdownReportGenerator.forRoot({
-                  staticConfiguration: {
-                    markdownFile: join(
-                      __dirname,
-                      '..',
-                      '..',
-                      '..',
-                      'TESTING_INFRASTRUCTURE.MD'
-                    ),
-                  },
-                }),
-              ],
-            }
+            infrastructure: [
+              InfrastructureMarkdownReportGenerator.forRoot({
+                staticConfiguration: {
+                  markdownFile: join(
+                    __dirname,
+                    '..',
+                    '..',
+                    '..',
+                    'TESTING_INFRASTRUCTURE.MD'
+                  ),
+                },
+              }),
+            ],
+          }
           : {}),
       },
     });
@@ -259,7 +260,7 @@ describe('SampleWithSharedConfigController (async)', () => {
         @InjectService(SampleWithSharedConfigService, 'api33')
         private readonly sampleWithSharedConfigService3: SampleWithSharedConfigService,
         private readonly sampleWithSharedConfigService: SampleWithSharedConfigService
-      ) {}
+      ) { }
 
       getHello(): string {
         return `First ${this.sampleWithSharedConfigService.getHello()}`;
@@ -276,7 +277,7 @@ describe('SampleWithSharedConfigController (async)', () => {
 
     @Controller('first')
     class FirstController {
-      constructor(readonly firstService: FirstService) {}
+      constructor(readonly firstService: FirstService) { }
 
       @Get()
       getHello(): string {
@@ -302,14 +303,14 @@ describe('SampleWithSharedConfigController (async)', () => {
       providers: [FirstService],
       controllers: [FirstController],
     })
-    class FirstModule {}
+    class FirstModule { }
 
     // second
     @Injectable()
     class SecondService {
       constructor(
         private readonly sampleWithSharedConfigService: SampleWithSharedConfigService
-      ) {}
+      ) { }
 
       getHello(): string {
         return `Second ${this.sampleWithSharedConfigService.getHello()}`;
@@ -318,7 +319,7 @@ describe('SampleWithSharedConfigController (async)', () => {
 
     @Controller('second')
     class SecondController {
-      constructor(readonly secondService: SecondService) {}
+      constructor(readonly secondService: SecondService) { }
 
       @Get()
       getHello(): string {
@@ -331,7 +332,7 @@ describe('SampleWithSharedConfigController (async)', () => {
       providers: [SecondService],
       controllers: [SecondController],
     })
-    class SecondModule {}
+    class SecondModule { }
 
     const app = await bootstrapNestApplication({
       project: {
