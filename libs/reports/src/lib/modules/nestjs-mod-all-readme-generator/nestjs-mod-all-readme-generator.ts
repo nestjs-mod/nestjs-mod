@@ -1,12 +1,12 @@
 import {
-    ConfigModel,
-    ConfigModelProperty,
-    DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME,
-    DynamicNestModuleMetadataMarkdownReportGenerator,
-    InfrastructureMarkdownReportGenerator,
-    NestModuleCategory,
-    bootstrapNestApplicationWithOptions,
-    createNestModule,
+  ConfigModel,
+  ConfigModelProperty,
+  DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME,
+  DynamicNestModuleMetadataMarkdownReportGenerator,
+  InfrastructureMarkdownReportGenerator,
+  NestModuleCategory,
+  bootstrapNestApplicationWithOptions,
+  createNestModule,
 } from '@nestjs-mod/common';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { kebabCase } from 'case-anything';
@@ -54,7 +54,7 @@ export class NestjsModAllReadmeGeneratorService implements OnModuleInit {
   constructor(
     private readonly nestjsModAllReadmeGeneratorConfig: NestjsModAllReadmeGeneratorConfig,
     private readonly dynamicNestModuleMetadataMarkdownReportGenerator: DynamicNestModuleMetadataMarkdownReportGenerator
-  ) {}
+  ) { }
 
   async onModuleInit() {
     const utilsListInfo = await this.getUtilsListInfo();
@@ -69,16 +69,16 @@ export class NestjsModAllReadmeGeneratorService implements OnModuleInit {
 | Link | Description |
 | ---- | ----------- |
 ${utilsListInfo
-  .map((u) => `| ${u.link} | ${u.description?.split('\n')[0]} |`)
-  .join('\n')}
+          .map((u) => `| ${u.link} | ${u.description?.split('\n')[0]} |`)
+          .join('\n')}
 `
         : '';
 
     const utilitiesBody =
       utilsListInfo.length > 0
-        ? utilsListInfo
-            .map((u) => `${u.body}\n[Back to Top](#utilities)`)
-            .join('\n')
+        ? `\n## Utilities descriptions\n\n${utilsListInfo
+          .map((u) => `${u.body}\n[Back to Top](#utilities)`)
+          .join('\n\n---\n')}`
         : '';
 
     const modulesHeader =
@@ -89,18 +89,18 @@ ${utilsListInfo
 | Link | Category | Description |
 | ---- | -------- | ----------- |
 ${moduleListInfo
-  .map(
-    (m) => `| ${m.link} | ${m.category} | ${m.description?.split('\n')[0]} |`
-  )
-  .join('\n')}
+          .map(
+            (m) => `| ${m.link} | ${m.category} | ${m.description?.split('\n')[0]} |`
+          )
+          .join('\n')}
 `
         : '';
 
     const modulesBody =
       moduleListInfo.length > 0
-        ? moduleListInfo
-            .map((m) => `${m.body}\n[Back to Top](#modules)`)
-            .join('\n')
+        ? `\n## Modules descriptions\n\n${moduleListInfo
+          .map((m) => `${m.body}\n[Back to Top](#modules)`)
+          .join('\n\n---\n')}`
         : '';
 
     const readmeContent = `
@@ -108,11 +108,10 @@ ${moduleListInfo
 
 ${packageJsonInfo.description}
 
-[![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] ${
-      this.nestjsModAllReadmeGeneratorConfig.telegramGroup
+[![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] ${this.nestjsModAllReadmeGeneratorConfig.telegramGroup
         ? `[![Telegram bot][telegram-image]][telegram-url]`
         : ''
-    }
+      }
 
 ## Installation
 
@@ -128,16 +127,14 @@ MIT
 
 [npm-image]: https://badgen.net/npm/v/${packageJsonInfo.name}
 [npm-url]: https://npmjs.org/package/${packageJsonInfo.name}
-${
-  this.nestjsModAllReadmeGeneratorConfig.telegramGroup
-    ? `[telegram-image]: https://img.shields.io/badge/group-telegram-blue.svg?maxAge=2592000`
-    : ''
-}
-${
-  this.nestjsModAllReadmeGeneratorConfig.telegramGroup
-    ? `[telegram-url]: ${this.nestjsModAllReadmeGeneratorConfig.telegramGroup}`
-    : ''
-}
+${this.nestjsModAllReadmeGeneratorConfig.telegramGroup
+        ? `[telegram-image]: https://img.shields.io/badge/group-telegram-blue.svg?maxAge=2592000`
+        : ''
+      }
+${this.nestjsModAllReadmeGeneratorConfig.telegramGroup
+        ? `[telegram-url]: ${this.nestjsModAllReadmeGeneratorConfig.telegramGroup}`
+        : ''
+      }
 [downloads-image]: https://badgen.net/npm/dm/${packageJsonInfo.name}
 [downloads-url]: https://npmjs.org/package/${packageJsonInfo.name}
 `;
@@ -178,12 +175,13 @@ ${
         .map((p) => p.content)
         .filter(Boolean);
       readmeList.push({
+        name: utilName,
         link: `[${utilName}](#${kebabCase(utilName)})`,
         description,
         body: readmeContent,
       });
     }
-    return readmeList;
+    return readmeList.sort((a, b) => a.name.length - b.name.length);
   }
 
   private async getModuleListInfo() {
@@ -194,7 +192,7 @@ ${
       const staticModules = await module;
       const asyncModules = Object.entries(staticModules)
         .filter(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ([, value]: [string, any]) =>
             value['nestModuleMetadata']
         )
@@ -202,7 +200,7 @@ ${
         .map(([, value]: [string, any]) =>
           value[
             value.nestModuleMetadata['forRootAsyncMethodName'] ??
-              DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME
+            DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME
           ]({
             environmentsOptions: { skipValidation: true },
             configurationOptions: { skipValidation: true },
@@ -230,6 +228,7 @@ ${
         if (category) {
           const description = asyncModule.nestModuleMetadata!.moduleDescription;
           modules.push({
+            name: moduleName,
             link: `[${moduleName}](#${moduleName.toLowerCase()})`,
             category,
             description,
@@ -242,7 +241,9 @@ ${
       }
       moduleList.push(modules);
     }
-    return moduleList.flat();
+    return moduleList.flat()
+      .sort((a, b) => a.name - b.name ? 0 : a.name.length - b.name.length)
+      .sort((a, b) => a.category - b.category ? 0 : a.category.length - b.category.length);
   }
 }
 

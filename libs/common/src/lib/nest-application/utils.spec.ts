@@ -535,7 +535,7 @@ describe('NestJS application: Utils', () => {
     #### Static environments
     Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
 
-    | Key| Description | Source | Constraints | Value |
+    | Key| Description | Sources | Constraints | Value |
     | ------ | ----------- | ------ | ----------- | ----- |
     |\`port\`|The port on which to run the server.|\`obj['port']\`, \`process.env['PORT']\`|**isNotEmpty** (port should not be empty)|\`\`\`3012\`\`\`|
     |\`hostname\`|Hostname on which to listen for incoming packets.|\`obj['hostname']\`, \`process.env['HOSTNAME']\`|**optional**|-|
@@ -545,7 +545,7 @@ describe('NestJS application: Utils', () => {
 
     | Key| Description | Constraints | Value |
     | ------ | ----------- | ----------- | ----- |
-    |\`mode\`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|-|
+    |\`mode\`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|\`\`\`listen\`\`\`|
     |\`preListen\`|Method for additional actions before listening|**optional**|-|
     |\`postListen\`|Method for additional actions after listening|**optional**|-|
 

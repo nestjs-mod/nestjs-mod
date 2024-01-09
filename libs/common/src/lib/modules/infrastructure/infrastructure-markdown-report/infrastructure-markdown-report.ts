@@ -183,7 +183,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       lines.push('');
       lines.push(
         [
-          '| Key    | Description | Source | Constraints | Value |',
+          '| Key    | Description | Sources | Constraints | Value |',
           '| ------ | ----------- | ------ | ----------- | ----- |',
           ...(settingsModelInfo?.modelPropertyOptions.map(
             (modelPropertyOption) =>
@@ -196,7 +196,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                 }\``,
                 // Description
                 modelPropertyOption.description ?? '-',
-                // Source
+                // Sources
                 settingsModelInfo?.validations[
                   modelPropertyOption.originalName
                 ].propertyValueExtractors
@@ -289,19 +289,39 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
     }
   }
 
-  private safeValue(value?: string) {
-    if (!value) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private safeValue(value?: any): string {
+    try {
+      if (!value) {
+        return '-';
+      }
+      if (Array.isArray(value)) {
+        if (value.filter(v => Object.keys(v).length > 0).length > 0) {
+          return `[ ${value.map(v => this.safeValue(v)).join(', ')} ]`
+        } else {
+          return '-';
+        }
+      }
+      if (typeof value === 'object') {
+        return JSON.stringify(value);
+      }
+      if (typeof value === 'function' && !/^class\s/.test(Function.prototype.toString.call(value))) {
+        return 'Function';
+      }
+      try {
+        if ((value).name) {
+          return (value).name
+        }
+      } catch (err) {
+        // null
+      }
+      return typeof value.split === 'function'
+        ? '```' + value.split('`').join('\\`') + '```'
+        : '```' + value + '```';
+
+    } catch (err) {
       return '-';
     }
-    if (typeof value === 'object') {
-      return JSON.stringify(value);
-    }
-    if (typeof value === 'function') {
-      return 'Function';
-    }
-    return typeof value.split === 'function'
-      ? '```' + value.split('`').join('\\`') + '```'
-      : '```' + value + '```';
   }
 }
 @Injectable()

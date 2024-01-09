@@ -6,6 +6,9 @@ import {
   PropertyNameFormatter,
 } from '../types';
 
+
+export const CLEAR_WORDS = ['NESTJS', 'NEST', 'ENVIRONMENTS', 'ENVIRONMENT'];
+
 export class DotEnvPropertyNameFormatter implements PropertyNameFormatter {
   name = 'dotenv';
   example({
@@ -26,20 +29,26 @@ export class DotEnvPropertyNameFormatter implements PropertyNameFormatter {
         'propertyOptions.originalName': propertyOptions.originalName,
       },
       logic: `[
-          modelRootOptions?.name ?? null,
-          modelOptions?.name
-            ? constantCase(
-                \`\${modelOptions?.name}_\${String(
-                  propertyOptions.name ?? propertyOptions.originalName,
-                )}\`,
-              )
-            : constantCase(
-                String(propertyOptions.name ?? propertyOptions.originalName),
-              ),
-        ]
-          .filter(Boolean)
-          .map((v: string) => constantCase(v))
-          .join('_')`,
+      modelRootOptions?.name ?? null,
+      modelOptions?.name
+        ? constantCase(
+          \`\${modelOptions?.name}_\${String(
+            propertyOptions.name ?? propertyOptions.originalName
+          )}\`
+        )
+        : constantCase(
+          String(propertyOptions.name ?? propertyOptions.originalName)
+        ),
+    ]
+      .filter(Boolean)
+      .map((v: string | null) => {
+        v = constantCase(v!)
+        for (const word of ['NESTJS', 'NEST', 'ENVIRONMENTS', 'ENVIRONMENT']) {
+          v = v.replace(new RegExp(word, 'g'), '')
+        }
+        return v
+      })
+      .join('_')`,
     };
   }
   format({
@@ -55,16 +64,22 @@ export class DotEnvPropertyNameFormatter implements PropertyNameFormatter {
       modelRootOptions?.name ?? null,
       modelOptions?.name
         ? constantCase(
-            `${modelOptions?.name}_${String(
-              propertyOptions.name ?? propertyOptions.originalName
-            )}`
-          )
+          `${modelOptions?.name}_${String(
+            propertyOptions.name ?? propertyOptions.originalName
+          )}`
+        )
         : constantCase(
-            String(propertyOptions.name ?? propertyOptions.originalName)
-          ),
+          String(propertyOptions.name ?? propertyOptions.originalName)
+        ),
     ]
       .filter(Boolean)
-      .map((v) => constantCase(v!))
+      .map((v: string | null) => {
+        v = constantCase(v!)
+        for (const word of CLEAR_WORDS) {
+          v = v.replace(word, '')
+        }
+        return v
+      })
       .join('_');
   }
 }

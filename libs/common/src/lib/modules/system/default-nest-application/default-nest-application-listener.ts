@@ -30,7 +30,7 @@ class DefaultNestApplicationListenerConfiguration {
     description:
       'Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application',
   })
-  mode?: 'init' | 'listen' = 'listen';
+  mode?: 'init' | 'listen';
 
   @ConfigModelProperty({
     description: 'Method for additional actions before listening',
@@ -81,10 +81,15 @@ export const { DefaultNestApplicationListener } = createNestModule({
                     DefaultNestApplicationListenerConfiguration,
                     DefaultNestApplicationListenerEnvironments>);
                 }
-                await app.listen(
-                  current.staticEnvironments.port,
-                  current.staticEnvironments.hostname
-                );
+                if (current.staticConfiguration?.mode === 'listen') {
+                  await app.listen(
+                    current.staticEnvironments.port,
+                    current.staticEnvironments.hostname
+                  );
+                }
+                if (current.staticConfiguration?.mode === 'init') {
+                  await app.init();
+                }
                 if (current.staticConfiguration?.postListen) {
                   await current.staticConfiguration?.postListen({
                     app,
@@ -103,7 +108,12 @@ export const { DefaultNestApplicationListener } = createNestModule({
                   DefaultNestApplicationListenerConfiguration,
                   DefaultNestApplicationListenerEnvironments>);
               }
-              await app.listen(current.staticEnvironments.port);
+              if (current.staticConfiguration?.mode === 'listen') {
+                await app.listen(current.staticEnvironments.port);
+              }
+              if (current.staticConfiguration?.mode === 'init') {
+                await app.init();
+              }
               if (current.staticConfiguration?.postListen) {
                 await current.staticConfiguration?.postListen({
                   app,
@@ -121,6 +131,7 @@ export const { DefaultNestApplicationListener } = createNestModule({
           },
         }).DefaultNestApplicationListener.forRootAsync({
           ...current.asyncModuleOptions,
+          staticConfiguration: { ...current.asyncModuleOptions.staticConfiguration, mode: current.asyncModuleOptions.staticConfiguration?.mode ?? 'listen' }
         })
       );
     }

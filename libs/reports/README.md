@@ -21,6 +21,9 @@ npm i --save @nestjs-mod/reports
 | [RestInfrastructureHtmlReport](#restinfrastructurehtmlreport) | infrastructure | Rest infrastructure HTML-report |
 
 
+
+## Modules descriptions
+
 ### NestjsModAllReadmeGenerator
 Readme generator for nestjs-mod project.
 
@@ -28,13 +31,15 @@ Readme generator for nestjs-mod project.
 
 | Key    | Description | Constraints | Value |
 | ------ | ----------- | ----------- | ----- |
-|`utilsFolders`|Folders with utilities|**isNotEmpty** (utilsFolders should not be empty)|["/home/endy/Projects/nestjs-mod/nestjs-mod/libs/common/src/lib"]|
-|`modules`|Folders with modules|**isNotEmpty** (modules should not be empty)|[{}]|
+|`utilsFolders`|Folders with utilities|**isNotEmpty** (utilsFolders should not be empty)|[ ```/home/endy/Projects/nestjs-mod/nestjs-mod/libs/common/src/lib``` ]|
+|`modules`|Folders with modules|**isNotEmpty** (modules should not be empty)|-|
 |`packageFile`|Name of the package.json file with information|**isNotEmpty** (packageFile should not be empty)|```/home/endy/Projects/nestjs-mod/nestjs-mod/libs/common/package.json```|
 |`markdownFile`|Name of the markdown file in which to save|**isNotEmpty** (markdownFile should not be empty)|```/home/endy/Projects/nestjs-mod/nestjs-mod/libs/common/README.md```|
 |`telegramGroup`|Telegram group|**optional**|```https://t.me/nestjs_mod```|
 
 [Back to Top](#modules)
+
+---
 ### RestInfrastructureHtmlReport
 Rest infrastructure HTML-report
 

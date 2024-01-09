@@ -16,8 +16,8 @@ npm i --save @nestjs-mod/common
 
 | Link | Description |
 | ---- | ----------- |
-| [Config model](#config-model) | Decorators for describing the module configuration and a function for its serialization and validation. |
 | [Env model](#env-model) | Decorators for describing module environment variables and functions for its serialization and verification. |
+| [Config model](#config-model) | Decorators for describing the module configuration and a function for its serialization and validation. |
 | [NestJS module](#nestjs-module) | Function for creating a configurable module with the ability to use multi-providing. |
 | [NestJS application](#nestjs-application) | Function for sequential import of nestModules. |
 
@@ -27,101 +27,27 @@ npm i --save @nestjs-mod/common
 | Link | Category | Description |
 | ---- | -------- | ----------- |
 | [InfrastructureMarkdownReport](#infrastructuremarkdownreport) | core | Infrastructure markdown report |
+| [DefaultNestApplicationListener](#defaultnestapplicationlistener) | system | Default NestJS application listener, no third party utilities required. |
 | [DefaultNestApplicationInitializer](#defaultnestapplicationinitializer) | system | Default NestJS application initializer, no third party utilities required. |
 | [InfrastructureMarkdownReportGenerator](#infrastructuremarkdownreportgenerator) | infrastructure | Infrastructure markdown report generator. |
-| [DefaultNestApplicationListener](#defaultnestapplicationlistener) | system | Default NestJS application listener, no third party utilities required. |
 
-## Config model
 
-Decorators for describing the module configuration and a function for its serialization and validation.
-Values for this type of configuration must be described in code.
+## Utilities descriptions
 
-### Decorators
-
-`ConfigModel`, `ConfigModelProperty`
-
-### Function
-
-`configTransform`
-
-### Usage
-
-```typescript
-import { ConfigModel, ConfigModelProperty, configTransform } from '@nestjs-mod/common';
-import { DynamicModule, Module } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { IsNotEmpty } from 'class-validator';
-
-// We describe the configuration.
-@ConfigModel()
-class AppConfig {
-  @ConfigModelProperty()
-  @IsNotEmpty()
-  option!: string;
-}
-
-// We describe the module.
-@Module({ providers: [AppConfig] })
-class AppModule {
-  static forRoot(config: Partial<AppConfig>): DynamicModule {
-    return {
-      module: AppModule,
-      providers: [
-        {
-          provide: `${AppConfig.name}_loader`,
-          useFactory: async (emptyAppConfig: AppConfig) => {
-            if (config.constructor !== Object) {
-              Object.setPrototypeOf(emptyAppConfig, config);
-            }
-            const obj = await configTransform({
-              model: AppConfig,
-              data: config,
-            });
-            Object.assign(emptyAppConfig, obj.data);
-          },
-          inject: [AppConfig],
-        },
-      ],
-    };
-  }
-}
-
-// Let's try to launch the application - Example with throw validation error.
-async function bootstrap1() {
-  const app = await NestFactory.create(AppModule.forRoot({}));
-  await app.listen(3000);
-}
-
-// Now we get a config validation error.
-// throw new ConfigModelValidationErrors(validateErrors);
-// isNotEmpty: option should not be empty
-bootstrap1();
-
-// Let's try to launch the application - Example of start without error.
-async function bootstrap2() {
-  const app = await NestFactory.create(AppModule.forRoot({ option: 'value1' }));
-  console.log(app.get(AppConfig)); // output: { option: 'value1' }
-  await app.listen(3000);
-}
-
-bootstrap2();
-```
-
-[Back to Top](#utilities)
-## Env model
+### Env model
 
 Decorators for describing module environment variables and functions for its serialization and verification.
 Values can be automatically read from process.env.
 
-### Decorators
+#### Decorators
 
 `EnvModel`, `EnvModelProperty`
 
-### Function
+#### Function
 
 `envTransform`
 
-### Usage
+#### Usage
 
 ```typescript
 import { EnvModel, EnvModelProperty, envTransform } from '@nestjs-mod/common';
@@ -195,6 +121,87 @@ bootstrap3();
 ```
 
 [Back to Top](#utilities)
+
+---
+### Config model
+
+Decorators for describing the module configuration and a function for its serialization and validation.
+Values for this type of configuration must be described in code.
+
+#### Decorators
+
+`ConfigModel`, `ConfigModelProperty`
+
+#### Function
+
+`configTransform`
+
+#### Usage
+
+```typescript
+import { ConfigModel, ConfigModelProperty, configTransform } from '@nestjs-mod/common';
+import { DynamicModule, Module } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { IsNotEmpty } from 'class-validator';
+
+// We describe the configuration.
+@ConfigModel()
+class AppConfig {
+  @ConfigModelProperty()
+  @IsNotEmpty()
+  option!: string;
+}
+
+// We describe the module.
+@Module({ providers: [AppConfig] })
+class AppModule {
+  static forRoot(config: Partial<AppConfig>): DynamicModule {
+    return {
+      module: AppModule,
+      providers: [
+        {
+          provide: `${AppConfig.name}_loader`,
+          useFactory: async (emptyAppConfig: AppConfig) => {
+            if (config.constructor !== Object) {
+              Object.setPrototypeOf(emptyAppConfig, config);
+            }
+            const obj = await configTransform({
+              model: AppConfig,
+              data: config,
+            });
+            Object.assign(emptyAppConfig, obj.data);
+          },
+          inject: [AppConfig],
+        },
+      ],
+    };
+  }
+}
+
+// Let's try to launch the application - Example with throw validation error.
+async function bootstrap1() {
+  const app = await NestFactory.create(AppModule.forRoot({}));
+  await app.listen(3000);
+}
+
+// Now we get a config validation error.
+// throw new ConfigModelValidationErrors(validateErrors);
+// isNotEmpty: option should not be empty
+bootstrap1();
+
+// Let's try to launch the application - Example of start without error.
+async function bootstrap2() {
+  const app = await NestFactory.create(AppModule.forRoot({ option: 'value1' }));
+  console.log(app.get(AppConfig)); // output: { option: 'value1' }
+  await app.listen(3000);
+}
+
+bootstrap2();
+```
+
+[Back to Top](#utilities)
+
+---
 ## NestJS module
 
 Function for creating a configurable module with the ability to use multi-providing.
@@ -331,7 +338,9 @@ bootstrap();
 ```
 
 [Back to Top](#utilities)
-## NestJS application
+
+---
+### NestJS application
 
 Function for sequential import of nestModules.
 When importing, all preWrapApplication methods of modules are run at the beginning, then all wrapApplication methods, and at the very end all postWrapApplication methods.
@@ -344,15 +353,15 @@ Types of modules (list in order of processing):
 - `System modules` - System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
 - `Infrastructure modules` - Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
 
-### Decorators
+#### Decorators
 
 `InjectFeatures`, `InjectService`
 
-### Function
+#### Function
 
 `createNestModule`, `getNestModuleDecorators`
 
-### Usage
+#### Usage
 
 ```typescript
 import { DefaultNestApplicationInitializer, DefaultNestApplicationListener, EnvModel, EnvModelProperty, bootstrapNestApplication, createNestModule } from '@nestjs-mod/common';
@@ -412,6 +421,9 @@ bootstrapNestApplication({
 ```
 
 [Back to Top](#utilities)
+
+## Modules descriptions
+
 ### InfrastructureMarkdownReport
 Infrastructure markdown report
 
@@ -419,6 +431,29 @@ Infrastructure markdown report
 `InfrastructureMarkdownReportStorage`
 
 [Back to Top](#modules)
+
+---
+### DefaultNestApplicationListener
+Default NestJS application listener, no third party utilities required.
+
+#### Static environments
+
+| Key    | Description | Sources | Constraints | Value |
+| ------ | ----------- | ------ | ----------- | ----- |
+|`port`|The port on which to run the server.|`obj['port']`, `process.env['PORT']`|**isNotEmpty** (port should not be empty)|-|
+|`hostname`|Hostname on which to listen for incoming packets.|`obj['hostname']`, `process.env['HOSTNAME']`|**optional**|-|
+
+#### Static configuration
+
+| Key    | Description | Constraints | Value |
+| ------ | ----------- | ----------- | ----- |
+|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|
+|`preListen`|Method for additional actions before listening|**optional**|-|
+|`postListen`|Method for additional actions after listening|**optional**|-|
+
+[Back to Top](#modules)
+
+---
 ### DefaultNestApplicationInitializer
 Default NestJS application initializer, no third party utilities required.
 
@@ -432,6 +467,8 @@ Default NestJS application initializer, no third party utilities required.
 |`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|
 
 [Back to Top](#modules)
+
+---
 ### InfrastructureMarkdownReportGenerator
 Infrastructure markdown report generator.
 
@@ -443,25 +480,6 @@ Infrastructure markdown report generator.
 | Key    | Description | Constraints | Value |
 | ------ | ----------- | ----------- | ----- |
 |`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|
-
-[Back to Top](#modules)
-### DefaultNestApplicationListener
-Default NestJS application listener, no third party utilities required.
-
-#### Static environments
-
-| Key    | Description | Source | Constraints | Value |
-| ------ | ----------- | ------ | ----------- | ----- |
-|`port`|The port on which to run the server.|`obj['port']`, `process.env['PORT']`|**isNotEmpty** (port should not be empty)|-|
-|`hostname`|Hostname on which to listen for incoming packets.|`obj['hostname']`, `process.env['HOSTNAME']`|**optional**|-|
-
-#### Static configuration
-
-| Key    | Description | Constraints | Value |
-| ------ | ----------- | ----------- | ----- |
-|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|-|
-|`preListen`|Method for additional actions before listening|**optional**|-|
-|`postListen`|Method for additional actions after listening|**optional**|-|
 
 [Back to Top](#modules)
 

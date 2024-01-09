@@ -1,17 +1,17 @@
-## Config model
+### Config model
 
 Decorators for describing the module configuration and a function for its serialization and validation.
 Values for this type of configuration must be described in code.
 
-### Decorators
+#### Decorators
 
 `ConfigModel`, `ConfigModelProperty`
 
-### Function
+#### Function
 
 `configTransform`
 
-### Usage
+#### Usage
 
 ```typescript
 import { ConfigModel, ConfigModelProperty, configTransform } from '@nestjs-mod/common';

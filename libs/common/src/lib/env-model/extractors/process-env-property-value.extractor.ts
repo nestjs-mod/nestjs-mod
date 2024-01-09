@@ -6,8 +6,7 @@ import {
 } from '../types';
 
 export class ProcessEnvPropertyValueExtractor
-  implements PropertyValueExtractor
-{
+  implements PropertyValueExtractor {
   name = 'process.env';
   example({
     formattedPropertyName,

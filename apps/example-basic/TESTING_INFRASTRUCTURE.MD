@@ -36,7 +36,7 @@ Feature modules with business logic of the application.
 #### Environments: SampleWithSharedConfig
 Variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
 
-| Key    | Description | Source | Constraints | Value |
+| Key    | Description | Sources | Constraints | Value |
 | ------ | ----------- | ------ | ----------- | ----- |
 |`var1`|-|`obj['var1']`, `process.env['SAMPLE_WITH_SHARED_CONFIG_VAR_1']`|**isNotEmpty** (var1 should not be empty)|```var1value```|
 
@@ -50,7 +50,7 @@ Variables of primitive and complex types that are used in the module; values for
 #### Static environments: SampleWithSharedConfig
 Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
 
-| Key    | Description | Source | Constraints | Value |
+| Key    | Description | Sources | Constraints | Value |
 | ------ | ----------- | ------ | ----------- | ----- |
 |`endpoint`|-|`obj['endpoint']`, `process.env['SAMPLE_WITH_SHARED_CONFIG_ENDPOINT']`|**optional**|-|
 

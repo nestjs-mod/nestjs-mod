@@ -1,4 +1,4 @@
-## NestJS application
+### NestJS application
 
 Function for sequential import of nestModules.
 When importing, all preWrapApplication methods of modules are run at the beginning, then all wrapApplication methods, and at the very end all postWrapApplication methods.
@@ -11,15 +11,15 @@ Types of modules (list in order of processing):
 - `System modules` - System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
 - `Infrastructure modules` - Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
 
-### Decorators
+#### Decorators
 
 `InjectFeatures`, `InjectService`
 
-### Function
+#### Function
 
 `createNestModule`, `getNestModuleDecorators`
 
-### Usage
+#### Usage
 
 ```typescript
 import { DefaultNestApplicationInitializer, DefaultNestApplicationListener, EnvModel, EnvModelProperty, bootstrapNestApplication, createNestModule } from '@nestjs-mod/common';
