@@ -8,7 +8,7 @@ System modules necessary for the operation of the entire application (examples: 
 Default test NestJS application creator, no third party utilities required.
 
 #### Static configuration
-Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers), values can be obtained from various sources, such as: process.env or the value of the consul key.
+Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 
 | Key    | Description | Constraints | Value |
 | ------ | ----------- | ----------- | ----- |
@@ -19,7 +19,7 @@ Static variables of primitive and complex types that are used in the module and 
 Default test NestJS application initializer, no third party utilities required.
 
 #### Static configuration
-Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers), values can be obtained from various sources, such as: process.env or the value of the consul key.
+Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 
 | Key    | Description | Constraints | Value |
 | ------ | ----------- | ----------- | ----- |
@@ -55,7 +55,7 @@ Static variables with primitive types used in the module and can be used at the 
 |`endpoint`|-|`obj['endpoint']`, `process.env['SAMPLE_WITH_SHARED_CONFIG_ENDPOINT']`|**optional**|-|
 
 #### Static configuration
-Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers), values can be obtained from various sources, such as: process.env or the value of the consul key.
+Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 
 | Key    | Description | Constraints | Value |
 | ------ | ----------- | ----------- | ----- |
@@ -72,8 +72,8 @@ Infrastructure markdown report generator.
 `DynamicNestModuleMetadataMarkdownReportGenerator`
 
 #### Static configuration
-Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers), values can be obtained from various sources, such as: process.env or the value of the consul key.
+Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 
 | Key    | Description | Constraints | Value |
 | ------ | ----------- | ----------- | ----- |
-|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|```/home/endy/Projects/nestjs-mod/apps/example-basic/TESTING_INFRASTRUCTURE.MD```|
+|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|```/home/endy/Projects/nestjs-mod/nestjs-mod/apps/example-basic/TESTING_INFRASTRUCTURE.MD```|

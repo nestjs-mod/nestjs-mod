@@ -18,8 +18,8 @@ npm i --save @nestjs-mod/common
 | ---- | ----------- |
 | [Config model](#config-model) | Decorators for describing the module configuration and a function for its serialization and validation. |
 | [Env model](#env-model) | Decorators for describing module environment variables and functions for its serialization and verification. |
-| [NestJS application](#nestjs-application) | Function for sequential import of nestModules. |
 | [NestJS module](#nestjs-module) | Function for creating a configurable module with the ability to use multi-providing. |
+| [NestJS application](#nestjs-application) | Function for sequential import of nestModules. |
 
 
 ## Modules
@@ -195,87 +195,6 @@ bootstrap3();
 ```
 
 [Back to Top](#utilities)
-## NestJS application
-
-Function for sequential import of nestModules.
-When importing, all preWrapApplication methods of modules are run at the beginning, then all wrapApplication methods, and at the very end all postWrapApplication methods.
-
-Types of modules (list in order of processing):
-
-- `Core modules` - Core modules necessary for the operation of feature and integration modules (examples: main module with connection to the database, main module for connecting to aws, etc.).
-- `Feature modules` - Feature modules with business logic of the application.
-- `Integration modules` - Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module).
-- `System modules` - System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
-- `Infrastructure modules` - Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
-
-### Decorators
-
-`InjectFeatures`, `InjectService`
-
-### Function
-
-`createNestModule`, `getNestModuleDecorators`
-
-### Usage
-
-```typescript
-import { DefaultNestApplicationInitializer, DefaultNestApplicationListener, EnvModel, EnvModelProperty, bootstrapNestApplication, createNestModule } from '@nestjs-mod/common';
-import { Injectable, Logger } from '@nestjs/common';
-import { IsNotEmpty } from 'class-validator';
-
-@EnvModel()
-class AppEnv {
-  @EnvModelProperty()
-  @IsNotEmpty()
-  option!: string;
-}
-
-@Injectable()
-class AppService {
-  constructor(private readonly appEnv: AppEnv) {}
-
-  getEnv() {
-    return this.appEnv;
-  }
-}
-
-const { AppModule } = createNestModule({
-  moduleName: 'AppModule',
-  environmentsModel: AppEnv,
-  providers: [AppService],
-});
-
-process.env['OPTION'] = 'value1';
-
-const globalPrefix = 'api';
-
-bootstrapNestApplication({
-  project: { name: 'TestApp', description: 'Test application' },
-  modules: {
-    system: [
-      DefaultNestApplicationInitializer.forRoot(),
-      DefaultNestApplicationListener.forRoot({
-        staticEnvironments: { port: 3000 },
-        staticConfiguration: {
-          preListen: async ({ app }) => {
-            if (app) {
-              const appService = app.get(AppService);
-              console.log(appService.getEnv()); // output: { option: 'value1' }
-              app.setGlobalPrefix(globalPrefix);
-            }
-          },
-          postListen: async ({ current }) => {
-            Logger.log(`🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${current.staticEnvironments?.port}/${globalPrefix}`);
-          },
-        },
-      }),
-    ],
-    feature: [AppModule.forRoot()],
-  },
-});
-```
-
-[Back to Top](#utilities)
 ## NestJS module
 
 Function for creating a configurable module with the ability to use multi-providing.
@@ -287,7 +206,7 @@ Type of config or env models used in module:
 - `environmentsModel` - Variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
 - `configurationModel` - Variables of primitive and complex types that are used in the module; values for them must be passed when connecting the module to the application.
 - `staticEnvironmentsModel` - Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
-- `staticConfigurationModel` - Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers), values can be obtained from various sources, such as: process.env or the value of the consul key.
+- `staticConfigurationModel` - Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 - `featureConfigurationModel` - Feature variables of primitive and complex types that can be added to the current module from other modules (example: a transport for sending a message can be defined as a generalized interface, but the implementation itself will be added from a module for working with a specific transport or from an integration module).
 
 ### Function
@@ -409,6 +328,87 @@ async function bootstrap() {
 }
 
 bootstrap();
+```
+
+[Back to Top](#utilities)
+## NestJS application
+
+Function for sequential import of nestModules.
+When importing, all preWrapApplication methods of modules are run at the beginning, then all wrapApplication methods, and at the very end all postWrapApplication methods.
+
+Types of modules (list in order of processing):
+
+- `Core modules` - Core modules necessary for the operation of feature and integration modules (examples: main module with connection to the database, main module for connecting to aws, etc.).
+- `Feature modules` - Feature modules with business logic of the application.
+- `Integration modules` - Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module).
+- `System modules` - System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
+- `Infrastructure modules` - Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
+
+### Decorators
+
+`InjectFeatures`, `InjectService`
+
+### Function
+
+`createNestModule`, `getNestModuleDecorators`
+
+### Usage
+
+```typescript
+import { DefaultNestApplicationInitializer, DefaultNestApplicationListener, EnvModel, EnvModelProperty, bootstrapNestApplication, createNestModule } from '@nestjs-mod/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { IsNotEmpty } from 'class-validator';
+
+@EnvModel()
+class AppEnv {
+  @EnvModelProperty()
+  @IsNotEmpty()
+  option!: string;
+}
+
+@Injectable()
+class AppService {
+  constructor(private readonly appEnv: AppEnv) {}
+
+  getEnv() {
+    return this.appEnv;
+  }
+}
+
+const { AppModule } = createNestModule({
+  moduleName: 'AppModule',
+  environmentsModel: AppEnv,
+  providers: [AppService],
+});
+
+process.env['OPTION'] = 'value1';
+
+const globalPrefix = 'api';
+
+bootstrapNestApplication({
+  project: { name: 'TestApp', description: 'Test application' },
+  modules: {
+    system: [
+      DefaultNestApplicationInitializer.forRoot(),
+      DefaultNestApplicationListener.forRoot({
+        staticEnvironments: { port: 3000 },
+        staticConfiguration: {
+          preListen: async ({ app }) => {
+            if (app) {
+              const appService = app.get(AppService);
+              console.log(appService.getEnv()); // output: { option: 'value1' }
+              app.setGlobalPrefix(globalPrefix);
+            }
+          },
+          postListen: async ({ current }) => {
+            Logger.log(`🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${current.staticEnvironments?.port}/${globalPrefix}`);
+          },
+        },
+      }),
+    ],
+    feature: [AppModule.forRoot()],
+  },
+});
 ```
 
 [Back to Top](#utilities)
