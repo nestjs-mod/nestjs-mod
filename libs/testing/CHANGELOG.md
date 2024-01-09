@@ -1,3 +1,17 @@
+# [1.2.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.1.0...testing-v1.2.0) (2024-01-09)
+
+
+### Bug Fixes
+
+* add sort and update format of markdown reports, add CLEAR_WORDS in DotEnvPropertyNameFormatter ([8a660ca](https://github.com/nestjs-mod/nestjs-mod/commit/8a660ca0fac1bb31c4e7ec84cd127a0822950364))
+* **common:** add isProductionMode ([9cfe997](https://github.com/nestjs-mod/nestjs-mod/commit/9cfe9978008f8f313565457de2770aa38bb45e67))
+
+
+### Features
+
+* add globalEnvironmentsOptions and globalConfigurationOptions ([f3bc30a](https://github.com/nestjs-mod/nestjs-mod/commit/f3bc30aeb6eff40d66b6dc477b694c3632d13dad))
+* rename name to contextName ([c0c3849](https://github.com/nestjs-mod/nestjs-mod/commit/c0c3849da258753ceaa16a709dd32e6a0eea6afd))
+
 # [1.1.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.0.0...testing-v1.1.0) (2024-01-08)
 
 
