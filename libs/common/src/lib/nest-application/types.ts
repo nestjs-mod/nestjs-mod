@@ -1,3 +1,5 @@
+import { ConfigModelOptions } from '../config-model/types';
+import { EnvModelOptions } from '../env-model/types';
 import {
   DynamicNestModuleMetadata,
   NestModuleCategory,
@@ -7,4 +9,12 @@ import {
 export type BootstrapNestApplicationOptions = {
   project: ProjectOptions;
   modules: Partial<Record<NestModuleCategory, DynamicNestModuleMetadata[]>>;
+  globalEnvironmentsOptions?: Omit<
+    EnvModelOptions,
+    | 'originalName'
+  >;
+  globalConfigurationOptions?: Omit<
+    ConfigModelOptions,
+    'originalName'
+  >;
 };

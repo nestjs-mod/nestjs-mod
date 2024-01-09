@@ -333,6 +333,7 @@ export function createNestModule<
           data: featureConfiguration as any,
           rootOptions: {
             ...nestModuleMetadata.configurationOptions,
+            ...nestModuleMetadata.globalConfigurationOptions,
           },
         });
         if (!moduleInfoByName[defaultContextName(contextName)].featureConfigurations) {
@@ -449,6 +450,7 @@ export function createNestModule<
               rootOptions: {
                 ...nestModuleMetadata.configurationOptions,
                 ...asyncModuleOptions?.configurationOptions,
+                ...nestModuleMetadata.globalConfigurationOptions,
               },
             });
             if (!moduleInfoByName[defaultContextName(contextName)]) {
@@ -470,7 +472,13 @@ export function createNestModule<
               rootOptions: {
                 ...nestModuleMetadata.environmentsOptions,
                 ...asyncModuleOptions?.environmentsOptions,
-                ...(contextName ? { name: contextName, } : {})
+                ...nestModuleMetadata.globalEnvironmentsOptions,
+                ...(contextName ? { name: defaultContextName(contextName), } : {}),
+                ...(
+                  nestModuleMetadata.globalEnvironmentsOptions?.name ?
+                    { name: defaultContextName(nestModuleMetadata.globalEnvironmentsOptions?.name), } :
+                    {}
+                )
               },
               data: asyncModuleOptions?.staticEnvironments ?? {},
             });
@@ -598,7 +606,13 @@ export function createNestModule<
                       rootOptions: {
                         ...nestModuleMetadata.environmentsOptions,
                         ...asyncModuleOptions?.environmentsOptions,
-                        ...(contextName ? { name: contextName, } : {})
+                        ...nestModuleMetadata.globalEnvironmentsOptions,
+                        ...(contextName ? { name: defaultContextName(contextName), } : {}),
+                        ...(
+                          nestModuleMetadata.globalEnvironmentsOptions?.name ?
+                            { name: defaultContextName(nestModuleMetadata.globalEnvironmentsOptions?.name), } :
+                            {}
+                        )
                       },
                       data: environments ?? {},
                     });
@@ -670,6 +684,7 @@ export function createNestModule<
                           rootOptions: {
                             ...nestModuleMetadata.configurationOptions,
                             ...asyncModuleOptions?.configurationOptions,
+                            ...nestModuleMetadata.globalConfigurationOptions,
                           },
                         });
                         if (!moduleInfoByName[defaultContextName(contextName)]) {
@@ -695,6 +710,7 @@ export function createNestModule<
                           rootOptions: {
                             ...nestModuleMetadata.configurationOptions,
                             ...asyncModuleOptions?.configurationOptions,
+                            ...nestModuleMetadata.globalConfigurationOptions,
                           },
                         });
                         if (!moduleInfoByName[defaultContextName(contextName)]) {
@@ -743,6 +759,7 @@ export function createNestModule<
                         rootOptions: {
                           ...nestModuleMetadata.configurationOptions,
                           ...asyncModuleOptions?.configurationOptions,
+                          ...nestModuleMetadata.globalConfigurationOptions,
                         },
                       });
                       if (!moduleInfoByName[defaultContextName(contextName)]) {
@@ -766,6 +783,7 @@ export function createNestModule<
                         rootOptions: {
                           ...nestModuleMetadata.configurationOptions,
                           ...asyncModuleOptions?.configurationOptions,
+                          ...nestModuleMetadata.globalConfigurationOptions,
                         },
                       });
                       if (!moduleInfoByName[defaultContextName(contextName)]) {

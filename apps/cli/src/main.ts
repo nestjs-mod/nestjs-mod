@@ -24,7 +24,7 @@ bootstrapNestApplication({
     ],
     infrastructure: [
       NestjsModAllReadmeGenerator.forRoot({
-        name: 'common',
+        contextName: 'common',
         configuration: {
           telegramGroup: 'https://t.me/nestjs_mod',
           packageFile: join(
@@ -48,7 +48,7 @@ bootstrapNestApplication({
         },
       }),
       NestjsModAllReadmeGenerator.forRoot({
-        name: 'reports',
+        contextName: 'reports',
         configuration: {
           telegramGroup: 'https://t.me/nestjs_mod',
           packageFile: join(
@@ -72,7 +72,7 @@ bootstrapNestApplication({
         },
       }),
       NestjsModAllReadmeGenerator.forRoot({
-        name: 'testing',
+        contextName: 'testing',
         configuration: {
           telegramGroup: 'https://t.me/nestjs_mod',
           packageFile: join(

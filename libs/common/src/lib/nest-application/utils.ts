@@ -13,6 +13,8 @@ export async function bootstrapNestApplicationWithOptions<
   modules,
   project,
   wrapApplicationMethods,
+  globalConfigurationOptions,
+  globalEnvironmentsOptions
 }: BootstrapNestApplicationOptions & {
   wrapApplicationMethods: (
     | 'preWrapApplication'
@@ -25,6 +27,19 @@ export async function bootstrapNestApplicationWithOptions<
     for (const category of Object.keys(NestModuleCategory)) {
       let moduleIndex = 0;
       while (modules[category as NestModuleCategory]?.[moduleIndex]) {
+
+        if (globalConfigurationOptions && modules[category as NestModuleCategory]?.[moduleIndex]
+          ?.nestModuleMetadata) {
+          modules[category as NestModuleCategory]![moduleIndex]!.nestModuleMetadata!.globalConfigurationOptions
+            = globalConfigurationOptions
+        }
+
+        if (globalEnvironmentsOptions && modules[category as NestModuleCategory]?.[moduleIndex]
+          ?.nestModuleMetadata) {
+          modules[category as NestModuleCategory]![moduleIndex]!.nestModuleMetadata!.globalEnvironmentsOptions
+            = globalEnvironmentsOptions
+        }
+
         if (
           modules[category as NestModuleCategory]?.[moduleIndex]
             ?.nestModuleMetadata?.[wrapApplicationMethod]

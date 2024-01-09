@@ -155,17 +155,21 @@ export interface NestModuleMetadata<
   featureConfigurationModel?: Type<TFeatureConfigurationModel>;
   environmentsModel?: Type<TEnvironmentsModel>;
   staticEnvironmentsModel?: Type<TStaticEnvironmentsModel>;
-  environmentsOptions?: Pick<
+  environmentsOptions?: Omit<
     EnvModelOptions,
-    | 'skipValidation'
-    | 'propertyNameFormatters'
-    | 'propertyValueExtractors'
-    | 'validatorPackage'
-    | 'validatorOptions'
+    | 'originalName'
   >;
-  configurationOptions?: Pick<
+  configurationOptions?: Omit<
     ConfigModelOptions,
-    'skipValidation' | 'validatorPackage' | 'validatorOptions'
+    'originalName'
+  >;
+  globalEnvironmentsOptions?: Omit<
+    EnvModelOptions,
+    | 'originalName'
+  >;
+  globalConfigurationOptions?: Omit<
+    ConfigModelOptions,
+    'originalName'
   >;
   /**
    * Optional list of imported modules that export the providers which are
@@ -240,17 +244,13 @@ export type ForRootMethodOptions<
   TEnvironmentsModel,
   TStaticEnvironmentsModel
 > = { contextName?: string } & {
-  environmentsOptions?: Pick<
+  environmentsOptions?: Omit<
     EnvModelOptions,
-    | 'skipValidation'
-    | 'propertyNameFormatters'
-    | 'propertyValueExtractors'
-    | 'validatorPackage'
-    | 'validatorOptions'
+    | 'originalName'
   >;
-  configurationOptions?: Pick<
+  configurationOptions?: Omit<
     ConfigModelOptions,
-    'skipValidation' | 'validatorPackage' | 'validatorOptions'
+    'originalName'
   >;
   configuration?: TConfigurationModel;
   staticConfiguration?: TStaticConfigurationModel;
