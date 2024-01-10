@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.2.0...testing-v1.3.0) (2024-01-10)
+
+
+### Features
+
+* add configurationStream ([d7a8d0e](https://github.com/nestjs-mod/nestjs-mod/commit/d7a8d0ec10ff28bb0516d388d5b5e7ad48da2656))
+
 # [1.2.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.1.0...testing-v1.2.0) (2024-01-09)
 
 
