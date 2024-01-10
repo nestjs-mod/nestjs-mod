@@ -444,9 +444,9 @@ describe('NestJS modules: Utils', () => {
 
       @Injectable()
       class RealtimeService {
-        constructor(private readonly RealtimeConfig: RealtimeConfig) {}
+        constructor(private readonly realtimeConfig: RealtimeConfig) {}
         getConfig() {
-          return this.RealtimeConfig;
+          return this.realtimeConfig;
         }
       }
 
