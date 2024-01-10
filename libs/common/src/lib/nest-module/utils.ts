@@ -3,14 +3,17 @@ import {
   DynamicModule,
   INestApplication,
   Inject,
+  Injectable,
   InjectionToken,
   Module,
+  OnModuleDestroy,
   OptionalFactoryDependency,
   Provider,
   Type,
 } from '@nestjs/common';
 
 import { randomUUID } from 'crypto';
+import { Observable, Subject, concatMap, isObservable, takeUntil } from 'rxjs';
 import { configTransform } from '../config-model/utils';
 import { envTransform } from '../env-model/utils';
 import {
@@ -434,6 +437,15 @@ export function createNestModule<
           useValue: {},
         };
 
+        @Injectable()
+        class OnModuleDestroyService implements OnModuleDestroy {
+          unsubscribe$ = new Subject();
+          onModuleDestroy() {
+            this.unsubscribe$.next(true);
+            this.unsubscribe$.complete();
+          }
+        }
+
         if (asyncModuleOptions) {
           if ('configurationClass' in asyncModuleOptions) {
             asyncOptionsProviderLoader = {
@@ -454,6 +466,21 @@ export function createNestModule<
               inject:
                 'inject' in asyncModuleOptions
                   ? (asyncModuleOptions.inject as (InjectionToken | OptionalFactoryDependency)[])
+                  : [],
+            };
+          }
+          if ('configurationStream' in asyncModuleOptions) {
+            asyncOptionsProviderLoader = {
+              provide: asyncConfigurationProviderLoaderToken,
+              useFactory: (...args) => {
+                if (asyncModuleOptions.configurationStream) {
+                  return asyncModuleOptions.configurationStream(args);
+                }
+                return undefined;
+              },
+              inject:
+                'inject' in asyncModuleOptions
+                  ? [...(asyncModuleOptions.inject as (InjectionToken | OptionalFactoryDependency)[])]
                   : [],
             };
           }
@@ -497,6 +524,7 @@ export function createNestModule<
           imports: [settingsModule, featureModule, ...imports],
           providers: [
             createUniqProvider(),
+            OnModuleDestroyService,
             asyncOptionsProviderLoader,
             ...(nestModuleMetadata.environmentsModel
               ? [
@@ -550,30 +578,53 @@ export function createNestModule<
               ? [
                   {
                     provide: getConfigurationLoaderToken(contextName),
-                    useFactory: async (emptyConfiguration: TConfigurationModel, configuration: TConfigurationModel) => {
+                    useFactory: async (
+                      emptyConfiguration: TConfigurationModel,
+                      configuration: TConfigurationModel | Observable<TConfigurationModel>,
+                      onModuleDestroyService: OnModuleDestroyService
+                    ) => {
                       if (!moduleSettings[contextName]) {
                         moduleSettings[contextName] = {};
                       }
-                      if (configuration && configuration?.constructor !== Object) {
-                        Object.setPrototypeOf(emptyConfiguration, configuration);
-                      }
-                      if (nestModuleMetadata.configurationModel) {
-                        const obj = await configTransform({
-                          model: nestModuleMetadata.configurationModel,
-                          data: configuration ?? {},
-                          rootOptions: {
-                            ...nestModuleMetadata.configurationOptions,
-                            ...asyncModuleOptions?.configurationOptions,
-                            ...nestModuleMetadata.globalConfigurationOptions,
-                          },
-                        });
-                        moduleSettings[contextName].configuration = obj.info;
-                        Object.assign(emptyConfiguration as any, obj.data);
+                      const updateEmptyConfiguration = async function (
+                        configuration: TConfigurationModel | Observable<TConfigurationModel>,
+                        emptyConfiguration: TConfigurationModel
+                      ) {
+                        if (configuration && configuration?.constructor !== Object) {
+                          Object.setPrototypeOf(emptyConfiguration, configuration);
+                        }
+                        if (nestModuleMetadata.configurationModel) {
+                          const obj = await configTransform({
+                            model: nestModuleMetadata.configurationModel,
+                            data: configuration ?? {},
+                            rootOptions: {
+                              ...nestModuleMetadata.configurationOptions,
+                              ...asyncModuleOptions?.configurationOptions,
+                              ...nestModuleMetadata.globalConfigurationOptions,
+                            },
+                          });
+                          moduleSettings[contextName].configuration = obj.info;
+                          Object.assign(emptyConfiguration as any, obj.data);
+                        } else {
+                          Object.assign(emptyConfiguration as any, configuration);
+                        }
+                      };
+                      if (asyncModuleOptions?.configurationStream && isObservable(configuration)) {
+                        configuration
+                          .pipe(
+                            concatMap((data) => updateEmptyConfiguration(data, emptyConfiguration)),
+                            takeUntil(onModuleDestroyService.unsubscribe$)
+                          )
+                          .subscribe();
                       } else {
-                        Object.assign(emptyConfiguration as any, configuration);
+                        await updateEmptyConfiguration(configuration, emptyConfiguration);
                       }
                     },
-                    inject: [nestModuleMetadata.configurationModel, asyncConfigurationProviderLoaderToken],
+                    inject: [
+                      nestModuleMetadata.configurationModel,
+                      asyncConfigurationProviderLoaderToken,
+                      OnModuleDestroyService,
+                    ],
                   },
                 ]
               : []),

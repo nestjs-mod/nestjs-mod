@@ -1,9 +1,11 @@
 import { Injectable, Module } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { IsNotEmpty } from 'class-validator';
+import { BehaviorSubject } from 'rxjs';
 import { ConfigModel, ConfigModelProperty } from '../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../env-model/decorators';
 import { createNestModule, getNestModuleDecorators } from './utils';
+import { setTimeout } from 'timers/promises';
 
 describe('NestJS modules: Utils', () => {
   describe('NestJS modules with env model', () => {
@@ -24,10 +26,7 @@ describe('NestJS modules: Utils', () => {
         Test.createTestingModule({
           imports: [AppModule.forRoot({})],
         }).compile()
-      ).rejects.toHaveProperty(
-        'errors.0.constraints.isNotEmpty',
-        'option should not be empty'
-      );
+      ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'option should not be empty');
     });
 
     it('should return model info in error if option of env not set', async () => {
@@ -49,9 +48,7 @@ describe('NestJS modules: Utils', () => {
         }).compile()
       ).rejects.toMatchObject({
         info: {
-          modelPropertyOptions: [
-            { description: 'option description', originalName: 'option' },
-          ],
+          modelPropertyOptions: [{ description: 'option description', originalName: 'option' }],
           modelOptions: {
             name: 'model name',
             description: 'model description',
@@ -166,10 +163,7 @@ describe('NestJS modules: Utils', () => {
         Test.createTestingModule({
           imports: [AppModule.forRoot({})],
         }).compile()
-      ).rejects.toHaveProperty(
-        'errors.0.constraints.isNotEmpty',
-        'option should not be empty'
-      );
+      ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'option should not be empty');
     });
 
     it('should return model info in error if option of env not set', async () => {
@@ -191,9 +185,7 @@ describe('NestJS modules: Utils', () => {
         }).compile()
       ).rejects.toMatchObject({
         info: {
-          modelPropertyOptions: [
-            { description: 'option description', originalName: 'option' },
-          ],
+          modelPropertyOptions: [{ description: 'option description', originalName: 'option' }],
           modelOptions: {
             name: 'model name',
             description: 'model description',
@@ -284,10 +276,7 @@ describe('NestJS modules: Utils', () => {
       class App2Module {}
 
       const moduleRef: TestingModule = await Test.createTestingModule({
-        imports: [
-          App1Module.forRoot({ configuration: { option: 'value1' } }),
-          App2Module,
-        ],
+        imports: [App1Module.forRoot({ configuration: { option: 'value1' } }), App2Module],
       }).compile();
       const app2Service = moduleRef.get(App2Service);
 
@@ -312,10 +301,7 @@ describe('NestJS modules: Utils', () => {
 
       @Injectable()
       class AppService {
-        constructor(
-          private readonly appConfig: AppConfig,
-          private readonly appEnv: AppEnv
-        ) {}
+        constructor(private readonly appConfig: AppConfig, private readonly appEnv: AppEnv) {}
 
         getEnv() {
           return this.appEnv;
@@ -385,9 +371,7 @@ describe('NestJS modules: Utils', () => {
 
       @Injectable()
       class App2Service {
-        constructor(
-          private readonly appFeatureScannerService: AppFeatureScannerService
-        ) {}
+        constructor(private readonly appFeatureScannerService: AppFeatureScannerService) {}
 
         getFeatureConfigs() {
           return this.appFeatureScannerService.getFeatureConfigs();
@@ -408,9 +392,7 @@ describe('NestJS modules: Utils', () => {
 
       @Injectable()
       class App3Service {
-        constructor(
-          private readonly appFeatureScannerService: AppFeatureScannerService
-        ) {}
+        constructor(private readonly appFeatureScannerService: AppFeatureScannerService) {}
 
         getFeatureConfigs() {
           return this.appFeatureScannerService.getFeatureConfigs();
@@ -430,11 +412,7 @@ describe('NestJS modules: Utils', () => {
       // Test
 
       const moduleRef: TestingModule = await Test.createTestingModule({
-        imports: [
-          App1Module.forRoot(),
-          App2Module.forRoot(),
-          App3Module.forRoot(),
-        ],
+        imports: [App1Module.forRoot(), App2Module.forRoot(), App3Module.forRoot()],
       }).compile();
 
       const appFeatureScannerService = moduleRef.get(AppFeatureScannerService);
@@ -453,6 +431,48 @@ describe('NestJS modules: Utils', () => {
         { featureOptionConfig: 'featureOptionConfig-app2' },
         { featureOptionConfig: 'featureOptionConfig-app3' },
       ]);
+    });
+  });
+  describe('NestJS modules with useObservable (configurationStream)', () => {
+    it('should update configuration value on runtime', async () => {
+      @ConfigModel()
+      class RealtimeConfig {
+        @ConfigModelProperty()
+        @IsNotEmpty()
+        increment!: number;
+      }
+
+      @Injectable()
+      class RealtimeService {
+        constructor(private readonly RealtimeConfig: RealtimeConfig) {}
+        getConfig() {
+          return this.RealtimeConfig;
+        }
+      }
+
+      const { RealtimeModule } = createNestModule({
+        globalConfigurationOptions: { debug: true },
+        moduleName: 'RealtimeModule',
+        providers: [RealtimeService],
+        configurationModel: RealtimeConfig,
+      });
+
+      const configurationStream = new BehaviorSubject<RealtimeConfig>({ increment: 0 });
+
+      const module = await Test.createTestingModule({
+        imports: [RealtimeModule.forRootAsync({ configurationStream: () => configurationStream })],
+      }).compile();
+      const realtimeService = module.get(RealtimeService);
+
+      await module.init();
+
+      expect(realtimeService.getConfig()).toEqual({ increment: 0 });
+
+      configurationStream.next({ increment: 1 });
+
+      await setTimeout(500);
+
+      expect(realtimeService.getConfig()).toEqual({ increment: 1 });
     });
   });
 });

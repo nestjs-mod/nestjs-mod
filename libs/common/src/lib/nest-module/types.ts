@@ -2,6 +2,7 @@
 import { Abstract, DynamicModule, INestApplication, Provider, Type } from '@nestjs/common';
 import { ConfigModelInfo, ConfigModelOptions } from '../config-model/types';
 import { EnvModelInfo, EnvModelOptions } from '../env-model/types';
+import { Observable } from 'rxjs';
 
 export const DEFAULT_FOR_ROOT_METHOD_NAME = 'forRoot';
 export const DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME = 'forRootAsync';
@@ -238,6 +239,7 @@ export type ForRootAsyncMethodOptions<
   configurationExisting?: any;
   configurationClass?: Type<TConfigurationModel>;
   configurationFactory?: (...args: any[]) => Promise<TConfigurationModel> | TConfigurationModel;
+  configurationStream?: (...args: any[]) => Observable<TConfigurationModel>;
   inject?: any[];
 } & Pick<DynamicModule, 'imports'> &
   ({ contextName?: string } & ForRootMethodOptions<
