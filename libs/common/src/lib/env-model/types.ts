@@ -10,6 +10,7 @@ export type EnvModelOptions = {
   validatorPackage?: ValidatorPackage;
   validatorOptions?: ValidatorOptions;
   skipValidation?: boolean;
+  debug?:boolean;
 };
 
 export type EnvModelRootOptions = Omit<EnvModelOptions, 'originalName'>;

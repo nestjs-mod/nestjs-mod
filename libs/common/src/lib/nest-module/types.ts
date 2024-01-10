@@ -1,16 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  Abstract,
-  DynamicModule,
-  INestApplication,
-  Provider,
-  Type,
-} from '@nestjs/common';
+import { Abstract, DynamicModule, INestApplication, Provider, Type } from '@nestjs/common';
 import { ConfigModelInfo, ConfigModelOptions } from '../config-model/types';
-import {
-  EnvModelInfo,
-  EnvModelOptions
-} from '../env-model/types';
+import { EnvModelInfo, EnvModelOptions } from '../env-model/types';
 
 export const DEFAULT_FOR_ROOT_METHOD_NAME = 'forRoot';
 export const DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME = 'forRootAsync';
@@ -24,10 +15,7 @@ export enum NestModuleCategory {
   infrastructure = 'infrastructure',
 }
 
-export type ImportsWithStaticOptionsResponse =
-  | Type<any>
-  | DynamicModule
-  | Promise<DynamicModule>;
+export type ImportsWithStaticOptionsResponse = Type<any> | DynamicModule | Promise<DynamicModule>;
 
 export type ExportsWithStaticOptionsResponse =
   | DynamicModule
@@ -68,24 +56,25 @@ export type DynamicNestModuleMetadata<
   TModuleName extends string = string
 > =
   | Promise<DynamicModule> & {
-    moduleInfo?: Record<string, TModuleInfoByName>;
-    nestModuleMetadata?: NestModuleMetadata<
-      TConfigurationModel,
-      TStaticConfigurationModel,
-      TEnvironmentsModel,
-      TStaticEnvironmentsModel,
-      TForRootMethodName,
-      TForRootAsyncMethodName,
-      TForFeatureMethodName,
-      TImportsWithStaticOptions,
-      TControllersWithStaticOptions,
-      TProvidersWithStaticOptions,
-      TExportsWithStaticOptions,
-      TNestApplication,
-      TFeatureConfigurationModel,
-      TModuleName
-    >;
-  };
+      moduleSettings?: Record<string, TModuleSettings>;
+      nestModuleMetadata?: NestModuleMetadata<
+        TConfigurationModel,
+        TStaticConfigurationModel,
+        TEnvironmentsModel,
+        TStaticEnvironmentsModel,
+        TForRootMethodName,
+        TForRootAsyncMethodName,
+        TForFeatureMethodName,
+        TImportsWithStaticOptions,
+        TControllersWithStaticOptions,
+        TProvidersWithStaticOptions,
+        TExportsWithStaticOptions,
+        TNestApplication,
+        TFeatureConfigurationModel,
+        TModuleName
+      >;
+      pathNestModuleMetadata?: (newNestModuleMetadata: Partial<NestModuleMetadata>) => NestModuleMetadata;
+    };
 
 export type ProjectOptions = {
   name: string;
@@ -155,22 +144,10 @@ export interface NestModuleMetadata<
   featureConfigurationModel?: Type<TFeatureConfigurationModel>;
   environmentsModel?: Type<TEnvironmentsModel>;
   staticEnvironmentsModel?: Type<TStaticEnvironmentsModel>;
-  environmentsOptions?: Omit<
-    EnvModelOptions,
-    | 'originalName'
-  >;
-  configurationOptions?: Omit<
-    ConfigModelOptions,
-    'originalName'
-  >;
-  globalEnvironmentsOptions?: Omit<
-    EnvModelOptions,
-    | 'originalName'
-  >;
-  globalConfigurationOptions?: Omit<
-    ConfigModelOptions,
-    'originalName'
-  >;
+  environmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
+  configurationOptions?: Omit<ConfigModelOptions, 'originalName'>;
+  globalEnvironmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
+  globalConfigurationOptions?: Omit<ConfigModelOptions, 'originalName'>;
   /**
    * Optional list of imported modules that export the providers which are
    * required in this module.
@@ -227,15 +204,15 @@ export interface NestModuleMetadata<
 
 export type CommonNestModuleMetadata = Partial<
   DynamicModule &
-  Pick<
-    NestModuleMetadata,
-    | 'wrapApplication'
-    | 'preWrapApplication'
-    | 'postWrapApplication'
-    | 'moduleName'
-    | 'moduleCategory'
-    | 'moduleDescription'
-  >
+    Pick<
+      NestModuleMetadata,
+      | 'wrapApplication'
+      | 'preWrapApplication'
+      | 'postWrapApplication'
+      | 'moduleName'
+      | 'moduleCategory'
+      | 'moduleDescription'
+    >
 >;
 
 export type ForRootMethodOptions<
@@ -244,14 +221,8 @@ export type ForRootMethodOptions<
   TEnvironmentsModel,
   TStaticEnvironmentsModel
 > = { contextName?: string } & {
-  environmentsOptions?: Omit<
-    EnvModelOptions,
-    | 'originalName'
-  >;
-  configurationOptions?: Omit<
-    ConfigModelOptions,
-    'originalName'
-  >;
+  environmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
+  configurationOptions?: Omit<ConfigModelOptions, 'originalName'>;
   configuration?: TConfigurationModel;
   staticConfiguration?: TStaticConfigurationModel;
   environments?: Partial<TEnvironmentsModel>;
@@ -266,24 +237,20 @@ export type ForRootAsyncMethodOptions<
 > = {
   configurationExisting?: any;
   configurationClass?: Type<TConfigurationModel>;
-  configurationFactory?: (
-    ...args: any[]
-  ) => Promise<TConfigurationModel> | TConfigurationModel;
+  configurationFactory?: (...args: any[]) => Promise<TConfigurationModel> | TConfigurationModel;
   inject?: any[];
 } & Pick<DynamicModule, 'imports'> &
-  ({ contextName?: string } &
-    ForRootMethodOptions<
-      TStaticConfigurationModel,
-      TConfigurationModel,
-      TEnvironmentsModel,
-      TStaticEnvironmentsModel
-    >);
+  ({ contextName?: string } & ForRootMethodOptions<
+    TStaticConfigurationModel,
+    TConfigurationModel,
+    TEnvironmentsModel,
+    TStaticEnvironmentsModel
+  >);
 
-export type TModuleInfoByName = {
+export type TModuleSettings = {
   environments?: EnvModelInfo;
   staticEnvironments?: EnvModelInfo;
   configuration?: ConfigModelInfo;
   staticConfiguration?: ConfigModelInfo;
   featureConfigurations?: ConfigModelInfo[];
-  nestModuleMetadata?: NestModuleMetadata;
 };

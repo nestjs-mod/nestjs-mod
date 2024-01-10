@@ -71,13 +71,13 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       }
 
       const names = Object.keys(
-        dynamicNestModuleMetadata.moduleInfo ?? { default: true }
+        dynamicNestModuleMetadata.moduleSettings ?? { default: true }
       );
       for (const name of names) {
         this.reportOfEnvModelInfo({
           lines,
           settingsModelInfo:
-            dynamicNestModuleMetadata.moduleInfo?.[name].environments,
+            dynamicNestModuleMetadata.moduleSettings?.[name].environments,
           settingsModelInfoTitle: this.appendContextName(
             'Environments',
             names.length > 1 ? name : undefined
@@ -89,7 +89,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         this.reportOfConfigModelInfo({
           lines,
           settingsModelInfo:
-            dynamicNestModuleMetadata.moduleInfo?.[name].configuration,
+            dynamicNestModuleMetadata.moduleSettings?.[name].configuration,
           settingsModelInfoTitle: this.appendContextName(
             'Configuration',
             names.length > 1 ? name : undefined
@@ -101,7 +101,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         this.reportOfEnvModelInfo({
           lines,
           settingsModelInfo:
-            dynamicNestModuleMetadata.moduleInfo?.[name].staticEnvironments,
+            dynamicNestModuleMetadata.moduleSettings?.[name].staticEnvironments,
           settingsModelInfoTitle: this.appendContextName(
             'Static environments',
             names.length > 1 ? name : undefined
@@ -113,7 +113,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         this.reportOfConfigModelInfo({
           lines,
           settingsModelInfo:
-            dynamicNestModuleMetadata.moduleInfo?.[name].staticConfiguration,
+            dynamicNestModuleMetadata.moduleSettings?.[name].staticConfiguration,
           settingsModelInfoTitle: this.appendContextName(
             'Static configuration',
             names.length > 1 ? name : undefined
@@ -123,7 +123,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         });
 
         const featureConfigurations =
-          dynamicNestModuleMetadata.moduleInfo?.[name].featureConfigurations ??
+          dynamicNestModuleMetadata.moduleSettings?.[name].featureConfigurations ??
           [];
         for (let index = 0; index < featureConfigurations.length; index++) {
           this.reportOfConfigModelInfo({

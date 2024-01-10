@@ -38,8 +38,7 @@
         "*.tsx"
       ],
       "extends": [
-        "plugin:@nx/typescript",
-        "./eslintrc-custom-overrides.json"
+        "plugin:@nx/typescript"
       ],
       "rules": {}
     },
@@ -49,8 +48,7 @@
         "*.jsx"
       ],
       "extends": [
-        "plugin:@nx/javascript",
-        "./eslintrc-custom-overrides.json"
+        "plugin:@nx/javascript"
       ],
       "rules": {}
     },

@@ -1,11 +1,5 @@
 import { constantCase } from 'case-anything';
-import {
-  EnvModelOptions,
-  EnvModelPropertyOptions,
-  EnvModelRootOptions,
-  PropertyNameFormatter,
-} from '../types';
-
+import { EnvModelOptions, EnvModelPropertyOptions, EnvModelRootOptions, PropertyNameFormatter } from '../types';
 
 export const CLEAR_WORDS = ['NESTJS', 'NEST', 'ENVIRONMENTS', 'ENVIRONMENT'];
 
@@ -28,27 +22,7 @@ export class DotEnvPropertyNameFormatter implements PropertyNameFormatter {
         'propertyOptions.name': propertyOptions.name,
         'propertyOptions.originalName': propertyOptions.originalName,
       },
-      logic: `[
-      modelRootOptions?.name ?? null,
-      modelOptions?.name
-        ? constantCase(
-          \`\${modelOptions?.name}_\${String(
-            propertyOptions.name ?? propertyOptions.originalName
-          )}\`
-        )
-        : constantCase(
-          String(propertyOptions.name ?? propertyOptions.originalName)
-        ),
-    ]
-      .filter(Boolean)
-      .map((v: string | null) => {
-        v = constantCase(v!)
-        for (const word of ['NESTJS', 'NEST', 'ENVIRONMENTS', 'ENVIRONMENT']) {
-          v = v.replace(new RegExp(word, 'g'), '')
-        }
-        return v
-      })
-      .join('_')`,
+      logic: `concat all names and convert this to CONSTANT_CASE`,
     };
   }
   format({
@@ -60,26 +34,22 @@ export class DotEnvPropertyNameFormatter implements PropertyNameFormatter {
     modelOptions: EnvModelOptions;
     propertyOptions: EnvModelPropertyOptions;
   }) {
-    return [
+    const prepareFullname = [
       modelRootOptions?.name ?? null,
       modelOptions?.name
-        ? constantCase(
-          `${modelOptions?.name}_${String(
-            propertyOptions.name ?? propertyOptions.originalName
-          )}`
-        )
-        : constantCase(
-          String(propertyOptions.name ?? propertyOptions.originalName)
-        ),
+        ? `${modelOptions?.name}_${String(propertyOptions.name ?? propertyOptions.originalName)}`
+        : String(propertyOptions.name ?? propertyOptions.originalName),
     ]
       .filter(Boolean)
       .map((v: string | null) => {
-        v = constantCase(v!)
+        v = constantCase(v!);
         for (const word of CLEAR_WORDS) {
-          v = v.replace(word, '')
+          v = v.replace(word, '');
         }
-        return v
+        return v;
       })
       .join('_');
+
+    return prepareFullname.split('_').filter(Boolean).join('_');
   }
 }

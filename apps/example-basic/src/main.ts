@@ -16,6 +16,8 @@ import { SampleWithSharedConfig } from './app/sample-with-shared-config/sample-w
 const globalPrefix = 'api';
 
 bootstrapNestApplication({
+  globalConfigurationOptions: { debug: true },
+  globalEnvironmentsOptions: { debug: true },
   project: {
     name: 'ExampleBasic',
     description: 'Example basic',
@@ -33,8 +35,9 @@ bootstrapNestApplication({
           },
           postListen: async ({ current }) => {
             Logger.log(
-              `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'
-              }:${current.staticEnvironments?.port}/${globalPrefix}`
+              `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
+                current.staticEnvironments?.port
+              }/${globalPrefix}`
             );
           },
         },
@@ -59,23 +62,15 @@ bootstrapNestApplication({
     // Disable infrastructure modules in production
     ...(!isProductionMode()
       ? {
-        infrastructure: [
-          InfrastructureMarkdownReportGenerator.forRoot({
-            staticConfiguration: {
-              markdownFile: join(
-                __dirname,
-                '..',
-                '..',
-                '..',
-                'apps',
-                'example-basic',
-                'INFRASTRUCTURE.MD'
-              ),
-            },
-          }),
-          RestInfrastructureHtmlReport.forRoot(),
-        ],
-      }
+          infrastructure: [
+            InfrastructureMarkdownReportGenerator.forRoot({
+              staticConfiguration: {
+                markdownFile: join(__dirname, '..', '..', '..', 'apps', 'example-basic', 'INFRASTRUCTURE.MD'),
+              },
+            }),
+            RestInfrastructureHtmlReport.forRoot(),
+          ],
+        }
       : {}),
   },
 });
