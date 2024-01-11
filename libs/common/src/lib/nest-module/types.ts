@@ -54,7 +54,7 @@ export type DynamicNestModuleMetadata<
   TNestApplication = INestApplication,
   TModuleName extends string = string
 > =
-  | Promise<DynamicModule> & {
+  | Promise<TDynamicModule> & {
       moduleSettings?: Record<string, TModuleSettings>;
       nestModuleMetadata?: NestModuleMetadata<
         TConfigurationModel,
@@ -66,6 +66,7 @@ export type DynamicNestModuleMetadata<
         TForRootAsyncMethodName,
         TForFeatureMethodName,
         TForFeatureAsyncMethodName,
+        TDynamicModule,
         TLinkOptions,
         TImportsWithStaticOptions,
         TControllersWithStaticOptions,
@@ -116,9 +117,10 @@ export interface NestModuleMetadata<
   TForRootAsyncMethodName extends string = typeof DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME,
   TForFeatureMethodName extends string = typeof DEFAULT_FOR_FEATURE_METHOD_NAME,
   TForFeatureAsyncMethodName extends string = typeof DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
+  TDynamicModule = DynamicModule,
   TLinkOptions = {
-    featureModule: DynamicModule;
-    settingsModule: DynamicModule;
+    featureModule: TDynamicModule;
+    settingsModule: TDynamicModule;
     staticConfiguration: TStaticConfigurationModel;
     staticEnvironments: TStaticEnvironmentsModel;
   },

@@ -130,7 +130,7 @@ export function createNestModule<
   TForFeatureMethodName extends string = typeof DEFAULT_FOR_FEATURE_METHOD_NAME,
   TForFeatureAsyncMethodName extends string = typeof DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
   TDynamicModule = DynamicModule,
-  TLinkOptions = {
+  TLinkOptions  = {
     featureModule: TDynamicModule;
     settingsModule: TDynamicModule;
     featureConfiguration: TFeatureConfigurationModel;
@@ -154,8 +154,9 @@ export function createNestModule<
     TForRootAsyncMethodName,
     TForFeatureMethodName,
     TForFeatureAsyncMethodName,
-    TImportsWithStaticOptions,
+    TDynamicModule,
     TLinkOptions,
+    TImportsWithStaticOptions,
     TControllersWithStaticOptions,
     TProvidersWithStaticOptions,
     TExportsWithStaticOptions,
@@ -319,8 +320,9 @@ export function createNestModule<
       TForRootAsyncMethodName,
       TForFeatureMethodName,
       TForFeatureAsyncMethodName,
-      TImportsWithStaticOptions,
+      TDynamicModule,
       TLinkOptions,
+      TImportsWithStaticOptions,
       TControllersWithStaticOptions,
       TProvidersWithStaticOptions,
       TExportsWithStaticOptions,
@@ -366,8 +368,9 @@ export function createNestModule<
         TForRootAsyncMethodName,
         TForFeatureMethodName,
         TForFeatureAsyncMethodName,
-        TImportsWithStaticOptions,
+        TDynamicModule,
         TLinkOptions,
+        TImportsWithStaticOptions,
         TControllersWithStaticOptions,
         TProvidersWithStaticOptions,
         TExportsWithStaticOptions,
@@ -400,8 +403,9 @@ export function createNestModule<
       TForRootAsyncMethodName,
       TForFeatureMethodName,
       TForFeatureAsyncMethodName,
-      TImportsWithStaticOptions,
+      TDynamicModule,
       TLinkOptions,
+      TImportsWithStaticOptions,
       TControllersWithStaticOptions,
       TProvidersWithStaticOptions,
       TExportsWithStaticOptions,
@@ -429,8 +433,9 @@ export function createNestModule<
       TForRootAsyncMethodName,
       TForFeatureMethodName,
       TForFeatureAsyncMethodName,
-      TImportsWithStaticOptions,
+      TDynamicModule,
       TLinkOptions,
+      TImportsWithStaticOptions,
       TControllersWithStaticOptions,
       TProvidersWithStaticOptions,
       TExportsWithStaticOptions,
@@ -808,12 +813,14 @@ export function createNestModule<
         TForRootAsyncMethodName,
         TForFeatureMethodName,
         TForFeatureAsyncMethodName,
-        TImportsWithStaticOptions,
+        TDynamicModule,
         TLinkOptions,
+        TImportsWithStaticOptions,
         TControllersWithStaticOptions,
         TProvidersWithStaticOptions,
         TExportsWithStaticOptions,
-        TNestApplication
+        TNestApplication,
+        TModuleName
       >;
     }
   }
