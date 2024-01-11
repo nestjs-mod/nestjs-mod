@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.4.0...testing-v1.5.0) (2024-01-11)
+
+
+### Features
+
+* add asyncModuleOptions for forFeature, add TLinkOptions to imports in module options ([abec61c](https://github.com/nestjs-mod/nestjs-mod/commit/abec61cecf9f3120a7e7efeac0697db3fdb7e664))
+
 # [1.4.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.3.0...testing-v1.4.0) (2024-01-11)
 
 
