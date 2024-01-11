@@ -39,9 +39,11 @@ export type DynamicNestModuleMetadata<
   TForRootAsyncMethodName extends string = typeof DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME,
   TForFeatureMethodName extends string = typeof DEFAULT_FOR_FEATURE_METHOD_NAME,
   TForFeatureAsyncMethodName extends string = typeof DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
+  TDynamicModule = DynamicModule,
   TLinkOptions = {
-    featureModule: DynamicModule;
-    settingsModule: DynamicModule;
+    featureModule: TDynamicModule;
+    settingsModule: TDynamicModule;
+    featureConfiguration: TFeatureConfigurationModel;
     staticConfiguration: TStaticConfigurationModel;
     staticEnvironments: TStaticEnvironmentsModel;
   },

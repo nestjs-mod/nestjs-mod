@@ -129,9 +129,10 @@ export function createNestModule<
   TForRootAsyncMethodName extends string = typeof DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME,
   TForFeatureMethodName extends string = typeof DEFAULT_FOR_FEATURE_METHOD_NAME,
   TForFeatureAsyncMethodName extends string = typeof DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
+  TDynamicModule = DynamicModule,
   TLinkOptions = {
-    featureModule: DynamicModule;
-    settingsModule: DynamicModule;
+    featureModule: TDynamicModule;
+    settingsModule: TDynamicModule;
     featureConfiguration: TFeatureConfigurationModel;
     staticConfiguration: TStaticConfigurationModel;
     staticEnvironments: TStaticEnvironmentsModel;
@@ -308,7 +309,7 @@ export function createNestModule<
   class InternalNestModule {
     static [forFeatureAsyncMethodName](
       asyncModuleOptions?: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel>
-    ): Promise<DynamicModule> {
+    ): Promise<TDynamicModule> {
       const getModule = async () => {
         const { featureConfiguration } = asyncModuleOptions ?? {};
         const contextName = defaultContextName(asyncModuleOptions?.contextName);
@@ -344,7 +345,7 @@ export function createNestModule<
 
     static [forFeatureMethodName](
       moduleOptions?: ForFeatureMethodOptions<TFeatureConfigurationModel>
-    ): Promise<DynamicModule> {
+    ): Promise<TDynamicModule> {
       return (this as any)[forFeatureAsyncMethodName]({
         ...moduleOptions,
       });
@@ -452,7 +453,7 @@ export function createNestModule<
         }
       };
 
-      const getModule = async (): Promise<DynamicModule> => {
+      const getModule = async (): Promise<TDynamicModule> => {
         await loadStaticSettings();
         const asyncConfigurationProviderLoaderToken = getAsyncConfigurationToken(contextName);
 
@@ -579,7 +580,7 @@ export function createNestModule<
               } as TLinkOptions);
         const exports = (!nestModuleMetadata.exports ? [] : exportsArr) ?? [];
 
-        return <DynamicModule>{
+        return <TDynamicModule>{
           module: InternalNestModule,
           imports: [settingsModule, featureModule, ...imports, ...asyncImports],
           providers: [
@@ -779,11 +780,11 @@ export function createNestModule<
     TModuleName,
     Record<
       `${TForFeatureAsyncMethodName}`,
-      (asyncModuleOptions?: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel>) => Promise<DynamicModule>
+      (asyncModuleOptions?: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel>) => Promise<TDynamicModule>
     > &
       Record<
         `${TForFeatureMethodName}`,
-        (moduleOptions?: ForFeatureMethodOptions<TFeatureConfigurationModel>) => Promise<DynamicModule>
+        (moduleOptions?: ForFeatureMethodOptions<TFeatureConfigurationModel>) => Promise<TDynamicModule>
       > &
       Record<
         `${TForRootMethodName}`,
@@ -794,7 +795,7 @@ export function createNestModule<
             TEnvironmentsModel,
             TStaticEnvironmentsModel
           >
-        ) => Promise<DynamicModule>
+        ) => Promise<TDynamicModule>
       > &
       Record<
         `${TForRootAsyncMethodName}`,
@@ -805,7 +806,7 @@ export function createNestModule<
             TEnvironmentsModel,
             TStaticEnvironmentsModel
           >
-        ) => Promise<DynamicModule>
+        ) => Promise<TDynamicModule>
       >
   >;
 }
