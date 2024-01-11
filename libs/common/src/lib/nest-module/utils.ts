@@ -130,7 +130,7 @@ export function createNestModule<
   TForFeatureMethodName extends string = typeof DEFAULT_FOR_FEATURE_METHOD_NAME,
   TForFeatureAsyncMethodName extends string = typeof DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
   TDynamicModule = DynamicModule,
-  TLinkOptions  = {
+  TLinkOptions = {
     featureModule: TDynamicModule;
     settingsModule: TDynamicModule;
     featureConfiguration: TFeatureConfigurationModel;
@@ -246,8 +246,17 @@ export function createNestModule<
   const getSharedModule = (contextName: string) => {
     const { module: settingsModule } = getOrCreateSettingsModule(contextName);
     const sharedProviders = nestModuleMetadata.sharedProviders ?? [];
+
+    const importsArr =
+      !nestModuleMetadata?.sharedImports || Array.isArray(nestModuleMetadata.sharedImports)
+        ? nestModuleMetadata?.sharedImports
+        : (nestModuleMetadata.sharedImports as any)({
+            settingsModule,
+          } as TLinkOptions);
+    const imports = (!nestModuleMetadata.imports ? [] : importsArr) ?? [];
+
     @Module({
-      imports: [settingsModule],
+      imports: [settingsModule, ...imports],
       providers: [
         ...sharedProviders,
         ...sharedProviders.map((sharedService) =>
@@ -260,6 +269,7 @@ export function createNestModule<
         ),
       ],
       exports: [
+        ...imports,
         ...sharedProviders,
         ...sharedProviders.map((sharedService) =>
           'name' in sharedService ? getServiceToken(sharedService.name, contextName) : sharedService

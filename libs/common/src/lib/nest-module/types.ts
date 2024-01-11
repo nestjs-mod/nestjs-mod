@@ -163,6 +163,11 @@ export interface NestModuleMetadata<
    */
   providers?: Provider[] | TProvidersWithStaticOptions;
   /**
+   * Optional list of imported modules that export the providers which are
+   * required in this module.
+   */
+  sharedImports?: Array<ImportsWithStaticOptionsResponse> | TImportsWithStaticOptions;
+  /**
    * Optional list of providers that will be instantiated by the NestJS injector
    * and that may be shared at least across this module.
    */
