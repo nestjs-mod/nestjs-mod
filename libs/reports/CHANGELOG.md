@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.5.2...reports-v1.5.3) (2024-01-11)
+
+
+### Bug Fixes
+
+* add sharedImports ([bc320ec](https://github.com/nestjs-mod/nestjs-mod/commit/bc320ec9b5736cd3de0db9f9e7601f124aab6c71))
+
 ## [1.5.2](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.5.1...reports-v1.5.2) (2024-01-11)
 
 

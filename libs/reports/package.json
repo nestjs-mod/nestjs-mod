@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/reports",
   "description": "Modules and utilities for generating reports on infrastructure and features.",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "keywords": [
     "nestjs",
     "nestjs-mod",
