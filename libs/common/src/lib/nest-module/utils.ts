@@ -309,7 +309,23 @@ export function createNestModule<
   class InternalNestModule {
     static [forFeatureAsyncMethodName](
       asyncModuleOptions?: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel>
-    ): Promise<TDynamicModule> {
+    ): DynamicNestModuleMetadata<
+      TConfigurationModel,
+      TStaticConfigurationModel,
+      TEnvironmentsModel,
+      TStaticEnvironmentsModel,
+      TFeatureConfigurationModel,
+      TForRootMethodName,
+      TForRootAsyncMethodName,
+      TForFeatureMethodName,
+      TForFeatureAsyncMethodName,
+      TImportsWithStaticOptions,
+      TLinkOptions,
+      TControllersWithStaticOptions,
+      TProvidersWithStaticOptions,
+      TExportsWithStaticOptions,
+      TNestApplication
+    > {
       const getModule = async () => {
         const { featureConfiguration } = asyncModuleOptions ?? {};
         const contextName = defaultContextName(asyncModuleOptions?.contextName);
@@ -340,7 +356,23 @@ export function createNestModule<
         nestModuleMetadata,
         moduleSettings,
       });
-      return result;
+      return result as DynamicNestModuleMetadata<
+        TConfigurationModel,
+        TStaticConfigurationModel,
+        TEnvironmentsModel,
+        TStaticEnvironmentsModel,
+        TFeatureConfigurationModel,
+        TForRootMethodName,
+        TForRootAsyncMethodName,
+        TForFeatureMethodName,
+        TForFeatureAsyncMethodName,
+        TImportsWithStaticOptions,
+        TLinkOptions,
+        TControllersWithStaticOptions,
+        TProvidersWithStaticOptions,
+        TExportsWithStaticOptions,
+        TNestApplication
+      >;
     }
 
     static [forFeatureMethodName](
@@ -766,7 +798,23 @@ export function createNestModule<
           return nestModuleMetadata;
         },
       });
-      return result;
+      return result as DynamicNestModuleMetadata<
+        TConfigurationModel,
+        TStaticConfigurationModel,
+        TEnvironmentsModel,
+        TStaticEnvironmentsModel,
+        TFeatureConfigurationModel,
+        TForRootMethodName,
+        TForRootAsyncMethodName,
+        TForFeatureMethodName,
+        TForFeatureAsyncMethodName,
+        TImportsWithStaticOptions,
+        TLinkOptions,
+        TControllersWithStaticOptions,
+        TProvidersWithStaticOptions,
+        TExportsWithStaticOptions,
+        TNestApplication
+      >;
     }
   }
 

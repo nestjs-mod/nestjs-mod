@@ -28,6 +28,7 @@
   "scripts": {
     "_____prod infra_____": "_____prod infra_____",
     "build": "npm run tsc:lint && npm run nx -- run-many --target=build --all",
+    "start:prod:cli": "node ./dist/apps/cli/main.js ",
     "_____dev infra_____": "_____dev infra_____",
     "start:dev:cli": "npm run nx -- serve cli",
     "start:dev:example-basic": "npm run nx -- serve example-basic --host=0.0.0.0",

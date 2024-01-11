@@ -23,6 +23,8 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm run generate
+      - run: npm run nx -- build cli
+      - run: npm run start:prod:cli
       - run: npm run build
       - run: npm run test
       - run: npx nx run-many --target=semantic-release --all --parallel=1
