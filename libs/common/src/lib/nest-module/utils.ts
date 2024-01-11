@@ -17,11 +17,14 @@ import { Observable, Subject, concatMap, isObservable, takeUntil } from 'rxjs';
 import { configTransform } from '../config-model/utils';
 import { envTransform } from '../env-model/utils';
 import {
+  DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
   DEFAULT_FOR_FEATURE_METHOD_NAME,
   DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME,
   DEFAULT_FOR_ROOT_METHOD_NAME,
   DynamicNestModuleMetadata,
   ExportsWithStaticOptionsResponse,
+  ForFeatureAsyncMethodOptions,
+  ForFeatureMethodOptions,
   ForRootAsyncMethodOptions,
   ForRootMethodOptions,
   ImportsWithStaticOptionsResponse,
@@ -121,27 +124,23 @@ export function createNestModule<
   TConfigurationModel = never,
   TEnvironmentsModel = never,
   TStaticEnvironmentsModel = never,
+  TFeatureConfigurationModel = never,
   TForRootMethodName extends string = typeof DEFAULT_FOR_ROOT_METHOD_NAME,
   TForRootAsyncMethodName extends string = typeof DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME,
   TForFeatureMethodName extends string = typeof DEFAULT_FOR_FEATURE_METHOD_NAME,
-  TImportsWithStaticOptions = (
-    staticConfiguration?: TStaticConfigurationModel,
-    staticEnvironments?: TStaticEnvironmentsModel
-  ) => Array<ImportsWithStaticOptionsResponse>,
-  TControllersWithStaticOptions = (
-    staticConfiguration?: TStaticConfigurationModel,
-    staticEnvironments?: TStaticEnvironmentsModel
-  ) => Type<any>[],
-  TProvidersWithStaticOptions = (
-    staticConfiguration?: TStaticConfigurationModel,
-    staticEnvironments?: TStaticEnvironmentsModel
-  ) => Provider[],
-  TExportsWithStaticOptions = (
-    staticConfiguration?: TStaticConfigurationModel,
-    staticEnvironments?: TStaticEnvironmentsModel
-  ) => ExportsWithStaticOptionsResponse[],
+  TForFeatureAsyncMethodName extends string = typeof DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
+  TLinkOptions = {
+    featureModule: DynamicModule;
+    settingsModule: DynamicModule;
+    featureConfiguration: TFeatureConfigurationModel;
+    staticConfiguration: TStaticConfigurationModel;
+    staticEnvironments: TStaticEnvironmentsModel;
+  },
+  TImportsWithStaticOptions = (linkOptions: TLinkOptions) => Array<ImportsWithStaticOptionsResponse>,
+  TControllersWithStaticOptions = (inkOptions: TLinkOptions) => Type<any>[],
+  TProvidersWithStaticOptions = (inkOptions: TLinkOptions) => Provider[],
+  TExportsWithStaticOptions = (inkOptions: TLinkOptions) => ExportsWithStaticOptionsResponse[],
   TNestApplication = INestApplication,
-  TFeatureConfigurationModel = never,
   TModuleName extends string = string
 >(
   nestModuleMetadata: NestModuleMetadata<
@@ -149,21 +148,25 @@ export function createNestModule<
     TStaticConfigurationModel,
     TEnvironmentsModel,
     TStaticEnvironmentsModel,
+    TFeatureConfigurationModel,
     TForRootMethodName,
     TForRootAsyncMethodName,
     TForFeatureMethodName,
+    TForFeatureAsyncMethodName,
     TImportsWithStaticOptions,
+    TLinkOptions,
     TControllersWithStaticOptions,
     TProvidersWithStaticOptions,
     TExportsWithStaticOptions,
     TNestApplication,
-    TFeatureConfigurationModel,
     TModuleName
   >
 ) {
   const forRootMethodName = nestModuleMetadata.forRootMethodName ?? DEFAULT_FOR_ROOT_METHOD_NAME;
   const forRootAsyncMethodName = nestModuleMetadata.forRootAsyncMethodName ?? DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME;
   const forFeatureMethodName = nestModuleMetadata.forFeatureMethodName ?? DEFAULT_FOR_FEATURE_METHOD_NAME;
+  const forFeatureAsyncMethodName =
+    nestModuleMetadata.forFeatureAsyncMethodName ?? DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME;
 
   const {
     defaultContextName,
@@ -292,32 +295,41 @@ export function createNestModule<
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         moduleSettings[contextName].featureConfigurations!.push(obj.info);
         featuresByName[contextName].push(obj.data as TFeatureConfigurationModel);
+        return { contextName, module: modulesByName[contextName], featureConfiguration: obj.data };
       } else {
         featuresByName[contextName].push(featureConfiguration);
+        return { contextName, module: modulesByName[contextName], featureConfiguration };
       }
     }
-    return { contextName, module: modulesByName[contextName] };
+    return { contextName, module: modulesByName[contextName], featureConfiguration: undefined };
   };
 
   @Module({})
   class InternalNestModule {
-    static [forFeatureMethodName](
-      contextName?: string | TFeatureConfigurationModel,
-      featureConfiguration?: TFeatureConfigurationModel
+    static [forFeatureAsyncMethodName](
+      asyncModuleOptions?: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel>
     ): Promise<DynamicModule> {
       const getModule = async () => {
-        if (typeof contextName !== 'string') {
-          featureConfiguration = contextName;
-          contextName = defaultContextName();
-        } else {
-          contextName = defaultContextName(contextName);
-        }
+        const { featureConfiguration } = asyncModuleOptions ?? {};
+        const contextName = defaultContextName(asyncModuleOptions?.contextName);
+
         const { module: settingsModule } = getOrCreateSettingsModule(contextName);
         const { module: featureModule } = await getOrCreateFeatureModule(contextName, featureConfiguration);
+
+        const importsArr =
+          !asyncModuleOptions?.imports || Array.isArray(asyncModuleOptions.imports)
+            ? asyncModuleOptions?.imports
+            : (asyncModuleOptions.imports as any)({
+                settingsModule,
+                featureModule,
+                featureConfiguration,
+              } as TLinkOptions);
+        const imports = (!nestModuleMetadata.imports ? [] : importsArr) ?? [];
+
         return {
           module: InternalNestModule,
           providers: [createUniqProvider()],
-          imports: [settingsModule, featureModule],
+          imports: [settingsModule, featureModule, ...imports],
           exports: [featureModule],
         };
       };
@@ -328,6 +340,14 @@ export function createNestModule<
         moduleSettings,
       });
       return result;
+    }
+
+    static [forFeatureMethodName](
+      moduleOptions?: ForFeatureMethodOptions<TFeatureConfigurationModel>
+    ): Promise<DynamicModule> {
+      return (this as any)[forFeatureAsyncMethodName]({
+        ...moduleOptions,
+      });
     }
 
     static [forRootMethodName](
@@ -342,15 +362,17 @@ export function createNestModule<
       TStaticConfigurationModel,
       TEnvironmentsModel,
       TStaticEnvironmentsModel,
+      TFeatureConfigurationModel,
       TForRootMethodName,
       TForRootAsyncMethodName,
       TForFeatureMethodName,
+      TForFeatureAsyncMethodName,
       TImportsWithStaticOptions,
+      TLinkOptions,
       TControllersWithStaticOptions,
       TProvidersWithStaticOptions,
       TExportsWithStaticOptions,
-      TNestApplication,
-      TFeatureConfigurationModel
+      TNestApplication
     > {
       return (this as any)[forRootAsyncMethodName]({
         ...moduleOptions,
@@ -369,15 +391,17 @@ export function createNestModule<
       TStaticConfigurationModel,
       TEnvironmentsModel,
       TStaticEnvironmentsModel,
+      TFeatureConfigurationModel,
       TForRootMethodName,
       TForRootAsyncMethodName,
       TForFeatureMethodName,
+      TForFeatureAsyncMethodName,
       TImportsWithStaticOptions,
+      TLinkOptions,
       TControllersWithStaticOptions,
       TProvidersWithStaticOptions,
       TExportsWithStaticOptions,
-      TNestApplication,
-      TFeatureConfigurationModel
+      TNestApplication
     > {
       const { environments } = asyncModuleOptions ?? {};
       const contextName = defaultContextName(asyncModuleOptions?.contextName);
@@ -493,35 +517,71 @@ export function createNestModule<
         }
 
         const { module: settingsModule } = getOrCreateSettingsModule(contextName);
-        const { module: featureModule } = await getOrCreateFeatureModule(contextName);
+        const { module: featureModule, featureConfiguration } = await getOrCreateFeatureModule(contextName);
 
         const importsArr =
           !nestModuleMetadata.imports || Array.isArray(nestModuleMetadata.imports)
             ? nestModuleMetadata.imports
-            : (nestModuleMetadata.imports as any)(staticConfiguration, staticEnvironments);
+            : (nestModuleMetadata.imports as any)({
+                settingsModule,
+                featureModule,
+                staticConfiguration,
+                staticEnvironments,
+                featureConfiguration,
+              } as TLinkOptions);
         const imports = (!nestModuleMetadata.imports ? [] : importsArr) ?? [];
+
+        const asyncImportsArr =
+          !asyncModuleOptions?.imports || Array.isArray(asyncModuleOptions.imports)
+            ? asyncModuleOptions?.imports
+            : (asyncModuleOptions.imports as any)({
+                settingsModule,
+                featureModule,
+                staticConfiguration,
+                staticEnvironments,
+                featureConfiguration,
+              } as TLinkOptions);
+        const asyncImports = (!asyncModuleOptions?.imports ? [] : asyncImportsArr) ?? [];
 
         const controllersArr =
           !nestModuleMetadata.controllers || Array.isArray(nestModuleMetadata.controllers)
             ? nestModuleMetadata.controllers
-            : (nestModuleMetadata.controllers as any)(staticConfiguration, staticEnvironments);
+            : (nestModuleMetadata.controllers as any)({
+                settingsModule,
+                featureModule,
+                staticConfiguration,
+                staticEnvironments,
+                featureConfiguration,
+              } as TLinkOptions);
         const controllers = (!nestModuleMetadata.controllers ? [] : controllersArr) ?? [];
 
         const providersArr =
           !nestModuleMetadata.providers || Array.isArray(nestModuleMetadata.providers)
             ? nestModuleMetadata.providers
-            : (nestModuleMetadata.providers as any)(staticConfiguration, staticEnvironments);
+            : (nestModuleMetadata.providers as any)({
+                settingsModule,
+                featureModule,
+                staticConfiguration,
+                staticEnvironments,
+                featureConfiguration,
+              } as TLinkOptions);
         const providers = (!nestModuleMetadata.providers ? [] : providersArr) ?? [];
 
         const exportsArr =
           !nestModuleMetadata.exports || Array.isArray(nestModuleMetadata.exports)
             ? nestModuleMetadata.exports
-            : (nestModuleMetadata.exports as any)(staticConfiguration, staticEnvironments);
+            : (nestModuleMetadata.exports as any)({
+                settingsModule,
+                featureModule,
+                staticConfiguration,
+                staticEnvironments,
+                featureConfiguration,
+              } as TLinkOptions);
         const exports = (!nestModuleMetadata.exports ? [] : exportsArr) ?? [];
 
         return <DynamicModule>{
           module: InternalNestModule,
-          imports: [settingsModule, featureModule, ...imports],
+          imports: [settingsModule, featureModule, ...imports, ...asyncImports],
           providers: [
             createUniqProvider(),
             OnModuleDestroyService,
@@ -718,12 +778,13 @@ export function createNestModule<
   } as unknown as Record<
     TModuleName,
     Record<
-      `${TForFeatureMethodName}`,
-      (
-        contextName?: string | TFeatureConfigurationModel,
-        featureConfiguration?: TFeatureConfigurationModel
-      ) => Promise<DynamicModule>
+      `${TForFeatureAsyncMethodName}`,
+      (asyncModuleOptions?: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel>) => Promise<DynamicModule>
     > &
+      Record<
+        `${TForFeatureMethodName}`,
+        (moduleOptions?: ForFeatureMethodOptions<TFeatureConfigurationModel>) => Promise<DynamicModule>
+      > &
       Record<
         `${TForRootMethodName}`,
         (

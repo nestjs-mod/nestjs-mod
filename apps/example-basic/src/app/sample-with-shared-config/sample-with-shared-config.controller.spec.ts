@@ -5,15 +5,9 @@ import {
   bootstrapNestApplication,
   createNestModule,
 } from '@nestjs-mod/common';
-import {
-  DefaultTestNestApplicationCreate,
-  DefaultTestNestApplicationInitializer,
-} from '@nestjs-mod/testing';
+import { DefaultTestNestApplicationCreate, DefaultTestNestApplicationInitializer } from '@nestjs-mod/testing';
 import { Controller, Get, Injectable, Module } from '@nestjs/common';
-import {
-  IsNotEmpty,
-  setClassValidatorMessages,
-} from 'class-validator-multi-lang';
+import { IsNotEmpty, setClassValidatorMessages } from 'class-validator-multi-lang';
 import { readFile } from 'fs/promises';
 import { resolve } from 'path';
 import request from 'supertest';
@@ -29,28 +23,17 @@ describe('SampleWithSharedConfigController', () => {
           description: 'Test application',
         },
         modules: {
-          system: [
-            DefaultTestNestApplicationCreate.forRoot(),
-            DefaultTestNestApplicationInitializer.forRoot(),
-          ],
+          system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
           feature: [SampleWithSharedConfig.forRoot()],
         },
       })
-    ).rejects.toHaveProperty(
-      'errors.0.constraints.isNotEmpty',
-      'var1 should not be empty'
-    );
+    ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'var1 should not be empty');
   });
 
   it('should return error if environment not set (translated errors)', async () => {
     const RU_I18N_MESSAGES = JSON.parse(
       (
-        await readFile(
-          resolve(
-            __dirname,
-            '../../../../../node_modules/class-validator-multi-lang/i18n/ru.json'
-          )
-        )
+        await readFile(resolve(__dirname, '../../../../../node_modules/class-validator-multi-lang/i18n/ru.json'))
       ).toString()
     );
     setClassValidatorMessages(RU_I18N_MESSAGES);
@@ -79,17 +62,11 @@ describe('SampleWithSharedConfigController', () => {
           description: 'Test application',
         },
         modules: {
-          system: [
-            DefaultTestNestApplicationCreate.forRoot(),
-            DefaultTestNestApplicationInitializer.forRoot(),
-          ],
+          system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
           feature: [TestAppModule.forRoot()],
         },
       })
-    ).rejects.toHaveProperty(
-      'errors.0.constraints.isNotEmpty',
-      'var1 не может быть пустым'
-    );
+    ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'var1 не может быть пустым');
   });
 
   it('should return "Hello World! (var1: var1value)", use static value in forRoot options', async () => {
@@ -99,10 +76,7 @@ describe('SampleWithSharedConfigController', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [
           SampleWithSharedConfig.forRoot({
             environments: { var1: 'var1value' },
@@ -111,10 +85,7 @@ describe('SampleWithSharedConfigController', () => {
       },
     });
 
-    await request(app.getHttpServer())
-      .get('/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: var1value)');
+    await request(app.getHttpServer()).get('/get-hello').expect(200).expect('Hello World! (var1: var1value)');
 
     await app.close();
   });
@@ -127,18 +98,12 @@ describe('SampleWithSharedConfigController', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [SampleWithSharedConfig.forRoot()],
       },
     });
 
-    await request(app.getHttpServer())
-      .get('/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: var1value)');
+    await request(app.getHttpServer()).get('/get-hello').expect(200).expect('Hello World! (var1: var1value)');
 
     await app.close();
   });
@@ -151,18 +116,12 @@ describe('SampleWithSharedConfigController', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [SampleWithSharedConfig.forRoot({ contextName: 'app11' })],
       },
     });
 
-    await request(app.getHttpServer())
-      .get('/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: var1value)');
+    await request(app.getHttpServer()).get('/get-hello').expect(200).expect('Hello World! (var1: var1value)');
 
     await app.close();
   });
@@ -176,10 +135,7 @@ describe('SampleWithSharedConfigController', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [
           SampleWithSharedConfig.forRoot({
             contextName: 'api21',
@@ -197,15 +153,9 @@ describe('SampleWithSharedConfigController', () => {
       },
     });
 
-    await request(app.getHttpServer())
-      .get('/api1/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: api1var1value)');
+    await request(app.getHttpServer()).get('/api1/get-hello').expect(200).expect('Hello World! (var1: api1var1value)');
 
-    await request(app.getHttpServer())
-      .get('/api2/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: api2var1value)');
+    await request(app.getHttpServer()).get('/api2/get-hello').expect(200).expect('Hello World! (var1: api2var1value)');
 
     await app.close();
   });
@@ -217,9 +167,7 @@ describe('SampleWithSharedConfigController', () => {
     // first
     @Injectable()
     class FirstService {
-      constructor(
-        private readonly sampleWithSharedConfigService: SampleWithSharedConfigService
-      ) {}
+      constructor(private readonly sampleWithSharedConfigService: SampleWithSharedConfigService) {}
 
       getHello(): string {
         return `First ${this.sampleWithSharedConfigService.getHello()}`;
@@ -237,7 +185,7 @@ describe('SampleWithSharedConfigController', () => {
     }
 
     @Module({
-      imports: [SampleWithSharedConfig.forFeature('api31')],
+      imports: [SampleWithSharedConfig.forFeature({ contextName: 'api31' })],
       providers: [FirstService],
       controllers: [FirstController],
     })
@@ -246,9 +194,7 @@ describe('SampleWithSharedConfigController', () => {
     // second
     @Injectable()
     class SecondService {
-      constructor(
-        private readonly sampleWithSharedConfigService: SampleWithSharedConfigService
-      ) {}
+      constructor(private readonly sampleWithSharedConfigService: SampleWithSharedConfigService) {}
 
       getHello(): string {
         return `Second ${this.sampleWithSharedConfigService.getHello()}`;
@@ -266,7 +212,7 @@ describe('SampleWithSharedConfigController', () => {
     }
 
     @Module({
-      imports: [SampleWithSharedConfig.forFeature('api32')],
+      imports: [SampleWithSharedConfig.forFeature({ contextName: 'api32' })],
       providers: [SecondService],
       controllers: [SecondController],
     })
@@ -278,10 +224,7 @@ describe('SampleWithSharedConfigController', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [
           SampleWithSharedConfig.forRoot({
             contextName: 'api31',
@@ -304,25 +247,13 @@ describe('SampleWithSharedConfigController', () => {
       },
     });
 
-    await request(app.getHttpServer())
-      .get('/api2/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: api2var1value)');
+    await request(app.getHttpServer()).get('/api2/get-hello').expect(200).expect('Hello World! (var1: api2var1value)');
 
-    await request(app.getHttpServer())
-      .get('/api1/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: api1var1value)');
+    await request(app.getHttpServer()).get('/api1/get-hello').expect(200).expect('Hello World! (var1: api1var1value)');
 
-    await request(app.getHttpServer())
-      .get('/second')
-      .expect(200)
-      .expect('Second Hello World! (var1: api2var1value)');
+    await request(app.getHttpServer()).get('/second').expect(200).expect('Second Hello World! (var1: api2var1value)');
 
-    await request(app.getHttpServer())
-      .get('/first')
-      .expect(200)
-      .expect('First Hello World! (var1: api1var1value)');
+    await request(app.getHttpServer()).get('/first').expect(200).expect('First Hello World! (var1: api1var1value)');
 
     await app.close();
   });
@@ -333,7 +264,7 @@ describe('SampleWithSharedConfigController', () => {
     @Module({
       imports: [
         SampleWithSharedConfig.forFeature({
-          featureVar: 'featureVar41',
+          featureConfiguration: { featureVar: 'featureVar41' },
         }),
       ],
     })
@@ -344,7 +275,7 @@ describe('SampleWithSharedConfigController', () => {
     @Module({
       imports: [
         SampleWithSharedConfig.forFeature({
-          featureVar: 'featureVar42',
+          featureConfiguration: { featureVar: 'featureVar42' },
         }),
       ],
     })
@@ -356,10 +287,7 @@ describe('SampleWithSharedConfigController', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [
           SampleWithSharedConfig.forRoot({
             environments: { var1: 'var1value' },

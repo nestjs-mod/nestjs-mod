@@ -18,13 +18,8 @@ export const { SampleWithSharedConfig } = createNestModule({
   environmentsModel: SampleWithSharedConfigEnvironments,
   staticEnvironmentsModel: SampleWithSharedConfigStaticEnvironments,
   featureConfigurationModel: SampleWithSharedConfigFeatureConfiguration,
-  controllers: (
-    staticOptions?: SampleWithSharedConfigStaticConfiguration,
-    staticEnvironments?: SampleWithSharedConfigStaticEnvironments
-  ) => [
-    getSampleWithSharedConfigController(
-      staticOptions?.endpoint ?? staticEnvironments?.endpoint
-    ),
+  controllers: ({ staticConfiguration, staticEnvironments }) => [
+    getSampleWithSharedConfigController(staticConfiguration?.endpoint ?? staticEnvironments?.endpoint),
   ],
   sharedProviders: [SampleWithSharedConfigService],
 });

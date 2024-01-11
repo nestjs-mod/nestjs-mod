@@ -9,10 +9,7 @@ import {
 } from '../modules/infrastructure/infrastructure-markdown-report/infrastructure-markdown-report';
 import { DefaultNestApplicationInitializer } from '../modules/system/default-nest-application/default-nest-application-initializer';
 import { DefaultNestApplicationListener } from '../modules/system/default-nest-application/default-nest-application-listener';
-import {
-  createNestModule,
-  getNestModuleDecorators,
-} from '../nest-module/utils';
+import { createNestModule, getNestModuleDecorators } from '../nest-module/utils';
 import { bootstrapNestApplication } from './utils';
 
 describe('NestJS application: Utils', () => {
@@ -262,10 +259,7 @@ describe('NestJS application: Utils', () => {
         project: { name: 'TestApp', description: 'Test application' },
         modules: {
           system: [DefaultNestApplicationInitializer.forRoot()],
-          feature: [
-            App1Module.forRoot({ configuration: { option: 'value1' } }),
-            App2Module.forRoot(),
-          ],
+          feature: [App1Module.forRoot({ configuration: { option: 'value1' } }), App2Module.forRoot()],
         },
       });
 
@@ -292,10 +286,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class AppService {
-        constructor(
-          private readonly appConfig: AppConfig,
-          private readonly appEnv: AppEnv
-        ) {}
+        constructor(private readonly appConfig: AppConfig, private readonly appEnv: AppEnv) {}
 
         getEnv() {
           return this.appEnv;
@@ -370,9 +361,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class App2Service {
-        constructor(
-          private readonly appFeatureScannerService: AppFeatureScannerService
-        ) {}
+        constructor(private readonly appFeatureScannerService: AppFeatureScannerService) {}
 
         getFeatureConfigs() {
           return this.appFeatureScannerService.getFeatureConfigs();
@@ -385,7 +374,7 @@ describe('NestJS application: Utils', () => {
         moduleName: 'App2Module',
         imports: [
           App1Module.forFeature({
-            featureOptionConfig: 'featureOptionConfig-app2',
+            featureConfiguration: { featureOptionConfig: 'featureOptionConfig-app2' },
           }),
         ],
         providers: [App2Service],
@@ -393,9 +382,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class App3Service {
-        constructor(
-          private readonly appFeatureScannerService: AppFeatureScannerService
-        ) {}
+        constructor(private readonly appFeatureScannerService: AppFeatureScannerService) {}
 
         getFeatureConfigs() {
           return this.appFeatureScannerService.getFeatureConfigs();
@@ -405,8 +392,9 @@ describe('NestJS application: Utils', () => {
       const { App3Module } = createNestModule({
         moduleName: 'App3Module',
         imports: [
-          App1Module.forFeature({
-            featureOptionConfig: 'featureOptionConfig-app3',
+          App1Module.forFeatureAsync({
+            
+            featureConfiguration: { featureOptionConfig: 'featureOptionConfig-app3' },
           }),
         ],
         providers: [App3Service],
@@ -417,11 +405,7 @@ describe('NestJS application: Utils', () => {
         project: { name: 'TestApp', description: 'Test application' },
         modules: {
           system: [DefaultNestApplicationInitializer.forRoot()],
-          feature: [
-            App1Module.forRoot(),
-            App2Module.forRoot(),
-            App3Module.forRoot(),
-          ],
+          feature: [App1Module.forRoot(), App2Module.forRoot(), App3Module.forRoot()],
         },
       });
 
@@ -449,9 +433,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class AppReportService {
-        constructor(
-          private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorage
-        ) {}
+        constructor(private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorage) {}
 
         getReport() {
           return this.infrastructureMarkdownReportStorage.report;
@@ -468,10 +450,7 @@ describe('NestJS application: Utils', () => {
       const app = await bootstrapNestApplication({
         project: { name: 'TestApp', description: 'Test application' },
         modules: {
-          infrastructure: [
-            InfrastructureMarkdownReport.forRoot(),
-            InfrastructureMarkdownReportGenerator.forRoot(),
-          ],
+          infrastructure: [InfrastructureMarkdownReport.forRoot(), InfrastructureMarkdownReportGenerator.forRoot()],
           system: [
             DefaultNestApplicationInitializer.forRoot(),
             DefaultNestApplicationListener.forRoot({
@@ -483,9 +462,7 @@ describe('NestJS application: Utils', () => {
       });
 
       const appReportService = app.get(AppReportService);
-      expect(
-        appReportService.getReport().split('  ').join('').split('\n').join('')
-      ).toEqual(
+      expect(appReportService.getReport().split('  ').join('').split('\n').join('')).toEqual(
         `# TestApp
 
     Test application

@@ -4,10 +4,7 @@ import {
   createNestModule,
   isProductionMode,
 } from '@nestjs-mod/common';
-import {
-  DefaultTestNestApplicationCreate,
-  DefaultTestNestApplicationInitializer,
-} from '@nestjs-mod/testing';
+import { DefaultTestNestApplicationCreate, DefaultTestNestApplicationInitializer } from '@nestjs-mod/testing';
 import { Controller, Get, Injectable, Module } from '@nestjs/common';
 import request from 'supertest';
 import { SampleWithSharedConfigConfiguration } from './sample-with-shared-config.config';
@@ -24,10 +21,7 @@ describe('SampleWithSharedConfigController (async)', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [
           SampleWithSharedConfig.forRootAsync({
             environments: { var1: 'var1value' },
@@ -37,38 +31,26 @@ describe('SampleWithSharedConfigController (async)', () => {
         // Disable infrastructure modules in production
         ...(!isProductionMode()
           ? {
-            infrastructure: [
-              InfrastructureMarkdownReportGenerator.forRoot({
-                staticConfiguration: {
-                  markdownFile: join(
-                    __dirname,
-                    '..',
-                    '..',
-                    '..',
-                    'TESTING_INFRASTRUCTURE.MD'
-                  ),
-                },
-              }),
-            ],
-          }
+              infrastructure: [
+                InfrastructureMarkdownReportGenerator.forRoot({
+                  staticConfiguration: {
+                    markdownFile: join(__dirname, '..', '..', '..', 'TESTING_INFRASTRUCTURE.MD'),
+                  },
+                }),
+              ],
+            }
           : {}),
       },
     });
 
-    await request(app.getHttpServer())
-      .get('/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: var1value)');
+    await request(app.getHttpServer()).get('/get-hello').expect(200).expect('Hello World! (var1: var1value)');
 
     await request(app.getHttpServer())
       .get('/get-options')
       .expect(200)
       .expect(JSON.stringify({ dynamicVar1: 'dyno' }));
 
-    await request(app.getHttpServer())
-      .get('/get-static-options')
-      .expect(200)
-      .expect(JSON.stringify({}));
+    await request(app.getHttpServer()).get('/get-static-options').expect(200).expect(JSON.stringify({}));
 
     await request(app.getHttpServer())
       .get('/get-environments')
@@ -89,10 +71,7 @@ describe('SampleWithSharedConfigController (async)', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [
           SampleWithSharedConfig.forRootAsync({
             configurationClass: DynoClass,
@@ -101,20 +80,14 @@ describe('SampleWithSharedConfigController (async)', () => {
       },
     });
 
-    await request(app.getHttpServer())
-      .get('/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: var1value)');
+    await request(app.getHttpServer()).get('/get-hello').expect(200).expect('Hello World! (var1: var1value)');
 
     await request(app.getHttpServer())
       .get('/get-options')
       .expect(200)
       .expect(JSON.stringify({ dynamicVar1: 'dyno' }));
 
-    await request(app.getHttpServer())
-      .get('/get-static-options')
-      .expect(200)
-      .expect(JSON.stringify({}));
+    await request(app.getHttpServer()).get('/get-static-options').expect(200).expect(JSON.stringify({}));
 
     await request(app.getHttpServer())
       .get('/get-environments')
@@ -132,10 +105,7 @@ describe('SampleWithSharedConfigController (async)', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [
           SampleWithSharedConfig.forRootAsync({
             contextName: 'app11',
@@ -145,20 +115,14 @@ describe('SampleWithSharedConfigController (async)', () => {
       },
     });
 
-    await request(app.getHttpServer())
-      .get('/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: var1value)');
+    await request(app.getHttpServer()).get('/get-hello').expect(200).expect('Hello World! (var1: var1value)');
 
     await request(app.getHttpServer())
       .get('/get-options')
       .expect(200)
       .expect(JSON.stringify({ dynamicVar1: 'dyno' }));
 
-    await request(app.getHttpServer())
-      .get('/get-static-options')
-      .expect(200)
-      .expect(JSON.stringify({}));
+    await request(app.getHttpServer()).get('/get-static-options').expect(200).expect(JSON.stringify({}));
 
     await request(app.getHttpServer())
       .get('/get-environments')
@@ -180,10 +144,7 @@ describe('SampleWithSharedConfigController (async)', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [
           SampleWithSharedConfig.forRootAsync({
             contextName: 'api21',
@@ -203,15 +164,9 @@ describe('SampleWithSharedConfigController (async)', () => {
       },
     });
 
-    await request(app.getHttpServer())
-      .get('/api1/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: api1var1value)');
+    await request(app.getHttpServer()).get('/api1/get-hello').expect(200).expect('Hello World! (var1: api1var1value)');
 
-    await request(app.getHttpServer())
-      .get('/api2/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: api2var1value)');
+    await request(app.getHttpServer()).get('/api2/get-hello').expect(200).expect('Hello World! (var1: api2var1value)');
 
     await request(app.getHttpServer())
       .get('/api1/get-options')
@@ -260,7 +215,7 @@ describe('SampleWithSharedConfigController (async)', () => {
         @InjectService(SampleWithSharedConfigService, 'api33')
         private readonly sampleWithSharedConfigService3: SampleWithSharedConfigService,
         private readonly sampleWithSharedConfigService: SampleWithSharedConfigService
-      ) { }
+      ) {}
 
       getHello(): string {
         return `First ${this.sampleWithSharedConfigService.getHello()}`;
@@ -277,7 +232,7 @@ describe('SampleWithSharedConfigController (async)', () => {
 
     @Controller('first')
     class FirstController {
-      constructor(readonly firstService: FirstService) { }
+      constructor(readonly firstService: FirstService) {}
 
       @Get()
       getHello(): string {
@@ -297,20 +252,18 @@ describe('SampleWithSharedConfigController (async)', () => {
 
     @Module({
       imports: [
-        SampleWithSharedConfig.forFeature('api31'),
-        SampleWithSharedConfig.forFeature('api33'),
+        SampleWithSharedConfig.forFeature({ contextName: 'api31' }),
+        SampleWithSharedConfig.forFeature({ contextName: 'api33' }),
       ],
       providers: [FirstService],
       controllers: [FirstController],
     })
-    class FirstModule { }
+    class FirstModule {}
 
     // second
     @Injectable()
     class SecondService {
-      constructor(
-        private readonly sampleWithSharedConfigService: SampleWithSharedConfigService
-      ) { }
+      constructor(private readonly sampleWithSharedConfigService: SampleWithSharedConfigService) {}
 
       getHello(): string {
         return `Second ${this.sampleWithSharedConfigService.getHello()}`;
@@ -319,7 +272,7 @@ describe('SampleWithSharedConfigController (async)', () => {
 
     @Controller('second')
     class SecondController {
-      constructor(readonly secondService: SecondService) { }
+      constructor(readonly secondService: SecondService) {}
 
       @Get()
       getHello(): string {
@@ -328,11 +281,11 @@ describe('SampleWithSharedConfigController (async)', () => {
     }
 
     @Module({
-      imports: [SampleWithSharedConfig.forFeature('api32')],
+      imports: [SampleWithSharedConfig.forFeature({ contextName: 'api32' })],
       providers: [SecondService],
       controllers: [SecondController],
     })
-    class SecondModule { }
+    class SecondModule {}
 
     const app = await bootstrapNestApplication({
       project: {
@@ -340,10 +293,7 @@ describe('SampleWithSharedConfigController (async)', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [
           SampleWithSharedConfig.forRootAsync({
             contextName: 'api31',
@@ -375,35 +325,17 @@ describe('SampleWithSharedConfigController (async)', () => {
       },
     });
 
-    await request(app.getHttpServer())
-      .get('/api2/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: api2var1value)');
+    await request(app.getHttpServer()).get('/api2/get-hello').expect(200).expect('Hello World! (var1: api2var1value)');
 
-    await request(app.getHttpServer())
-      .get('/api1/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: api1var1value)');
+    await request(app.getHttpServer()).get('/api1/get-hello').expect(200).expect('Hello World! (var1: api1var1value)');
 
-    await request(app.getHttpServer())
-      .get('/second')
-      .expect(200)
-      .expect('Second Hello World! (var1: api2var1value)');
+    await request(app.getHttpServer()).get('/second').expect(200).expect('Second Hello World! (var1: api2var1value)');
 
-    await request(app.getHttpServer())
-      .get('/first')
-      .expect(200)
-      .expect('First Hello World! (var1: api1var1value)');
+    await request(app.getHttpServer()).get('/first').expect(200).expect('First Hello World! (var1: api1var1value)');
 
-    await request(app.getHttpServer())
-      .get('/first/31')
-      .expect(200)
-      .expect('Hello World! (var1: api1var1value)');
+    await request(app.getHttpServer()).get('/first/31').expect(200).expect('Hello World! (var1: api1var1value)');
 
-    await request(app.getHttpServer())
-      .get('/first/33')
-      .expect(200)
-      .expect('Hello World! (var1: api3var1value)');
+    await request(app.getHttpServer()).get('/first/33').expect(200).expect('Hello World! (var1: api3var1value)');
     await app.close();
   });
 
@@ -420,10 +352,7 @@ describe('SampleWithSharedConfigController (async)', () => {
         description: 'Test application',
       },
       modules: {
-        system: [
-          DefaultTestNestApplicationCreate.forRoot(),
-          DefaultTestNestApplicationInitializer.forRoot(),
-        ],
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
         feature: [
           SampleWithSharedConfig.forRootAsync({
             contextName: 'api41',
@@ -438,25 +367,16 @@ describe('SampleWithSharedConfigController (async)', () => {
       },
     });
 
-    await request(app.getHttpServer())
-      .get('/api1/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: api1var1value)');
+    await request(app.getHttpServer()).get('/api1/get-hello').expect(200).expect('Hello World! (var1: api1var1value)');
 
-    await request(app.getHttpServer())
-      .get('/api2/get-hello')
-      .expect(200)
-      .expect('Hello World! (var1: api2var1value)');
+    await request(app.getHttpServer()).get('/api2/get-hello').expect(200).expect('Hello World! (var1: api2var1value)');
 
     await request(app.getHttpServer())
       .get('/api1/get-options')
       .expect(200)
       .expect(JSON.stringify({ dynamicVar1: 'dyno' }));
 
-    await request(app.getHttpServer())
-      .get('/api1/get-static-options')
-      .expect(200)
-      .expect(JSON.stringify({}));
+    await request(app.getHttpServer()).get('/api1/get-static-options').expect(200).expect(JSON.stringify({}));
 
     await request(app.getHttpServer())
       .get('/api1/get-environments')
@@ -473,10 +393,7 @@ describe('SampleWithSharedConfigController (async)', () => {
       .expect(200)
       .expect(JSON.stringify({ dynamicVar1: 'dyno' }));
 
-    await request(app.getHttpServer())
-      .get('/api2/get-static-options')
-      .expect(200)
-      .expect(JSON.stringify({}));
+    await request(app.getHttpServer()).get('/api2/get-static-options').expect(200).expect(JSON.stringify({}));
 
     await request(app.getHttpServer())
       .get('/api2/get-environments')
