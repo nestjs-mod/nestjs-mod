@@ -1,3 +1,11 @@
+## [1.5.1](https://github.com/nestjs-mod/nestjs-mod/compare/common-v1.5.0...common-v1.5.1) (2024-01-11)
+
+
+### Bug Fixes
+
+* update types for forRoot ([3612cb8](https://github.com/nestjs-mod/nestjs-mod/commit/3612cb8bbff730cce0989be4f24bbc8529d166fb))
+* update types for TLinkOptions ([73ca726](https://github.com/nestjs-mod/nestjs-mod/commit/73ca72691a3f6d8f8b7b74e4a87d1b1d661975cc))
+
 # [1.5.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v1.4.0...common-v1.5.0) (2024-01-11)
 
 
