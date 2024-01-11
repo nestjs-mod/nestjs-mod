@@ -16,6 +16,8 @@ export type ConfigModelRootOptions = Omit<ConfigModelOptions, 'originalName'>;
 export type ConfigModelPropertyOptions = {
   description?: string;
   originalName: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  default?: any;
 };
 
 export type ConfigModelInfo = {

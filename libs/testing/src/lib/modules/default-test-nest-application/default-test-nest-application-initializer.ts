@@ -14,20 +14,14 @@ class DefaultTestNestApplicationInitializerConfiguration {
     description: 'Method for additional actions before init',
   })
   preInit?: (
-    options: WrapApplicationOptions<
-      INestApplication,
-      DefaultTestNestApplicationInitializerConfiguration
-    >
+    options: WrapApplicationOptions<INestApplication, DefaultTestNestApplicationInitializerConfiguration>
   ) => Promise<void>;
 
   @ConfigModelProperty({
     description: 'Method for additional actions after init',
   })
   postInit?: (
-    options: WrapApplicationOptions<
-      INestApplication,
-      DefaultTestNestApplicationInitializerConfiguration
-    >
+    options: WrapApplicationOptions<INestApplication, DefaultTestNestApplicationInitializerConfiguration>
   ) => Promise<void>;
 }
 
@@ -40,11 +34,9 @@ export const { DefaultTestNestApplicationInitializer } = createNestModule({
       modules[current.category]!.push(
         createNestModule({
           moduleName: 'DefaultTestNestApplicationInitializer',
-          moduleDescription:
-            'Default test NestJS application initializer, no third party utilities required.',
+          moduleDescription: 'Default test NestJS application initializer, no third party utilities required.',
           moduleCategory: NestModuleCategory.system,
-          staticConfigurationModel:
-            DefaultTestNestApplicationInitializerConfiguration,
+          staticConfigurationModel: DefaultTestNestApplicationInitializerConfiguration,
           wrapApplication: async ({ app, current }) => {
             if (app) {
               if (current.staticConfiguration?.preInit) {
@@ -67,9 +59,7 @@ export const { DefaultTestNestApplicationInitializer } = createNestModule({
               modules[current.category]?.[current.index]
             );
           },
-        }).DefaultTestNestApplicationInitializer.forRootAsync({
-          ...current.asyncModuleOptions,
-        })
+        }).DefaultTestNestApplicationInitializer.forRootAsync(current.asyncModuleOptions)
       );
     }
   },

@@ -29,13 +29,13 @@ Readme generator for nestjs-mod project.
 
 #### Static configuration
 
-| Key    | Description | Constraints | Value |
-| ------ | ----------- | ----------- | ----- |
-|`utilsFolders`|Folders with utilities|**isNotEmpty** (utilsFolders should not be empty)|-|
-|`modules`|Folders with modules|**isNotEmpty** (modules should not be empty)|-|
-|`packageFile`|Name of the package.json file with information|**isNotEmpty** (packageFile should not be empty)|-|
-|`markdownFile`|Name of the markdown file in which to save|**isNotEmpty** (markdownFile should not be empty)|-|
-|`telegramGroup`|Telegram group|**optional**|-|
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`utilsFolders`|Folders with utilities|**isNotEmpty** (utilsFolders should not be empty)|-|-|
+|`modules`|Folders with modules|**isNotEmpty** (modules should not be empty)|-|-|
+|`packageFile`|Name of the package.json file with information|**isNotEmpty** (packageFile should not be empty)|-|-|
+|`markdownFile`|Name of the markdown file in which to save|**isNotEmpty** (markdownFile should not be empty)|-|-|
+|`telegramGroup`|Telegram group|**optional**|-|-|
 
 [Back to Top](#modules)
 

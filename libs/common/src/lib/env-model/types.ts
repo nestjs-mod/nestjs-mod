@@ -10,7 +10,7 @@ export type EnvModelOptions = {
   validatorPackage?: ValidatorPackage;
   validatorOptions?: ValidatorOptions;
   skipValidation?: boolean;
-  debug?:boolean;
+  debug?: boolean;
 };
 
 export type EnvModelRootOptions = Omit<EnvModelOptions, 'originalName'>;
@@ -19,6 +19,8 @@ export type EnvModelPropertyOptions = {
   name?: string;
   description?: string;
   originalName: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  default?: any;
 };
 
 export interface PropertyNameFormatter {

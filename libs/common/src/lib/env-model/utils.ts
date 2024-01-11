@@ -80,7 +80,8 @@ export async function envTransform<
     (data as any)[propertyOptions.originalName] =
       info.validations[propertyOptions.originalName].propertyValueExtractors.find((e) => e.value)?.value ??
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (data as any)[propertyOptions.originalName];
+      (data as any)[propertyOptions.originalName] ??
+      propertyOptions.default;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     info.validations[propertyOptions.originalName].value = (data as any)[propertyOptions.originalName];
   }

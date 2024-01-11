@@ -29,7 +29,7 @@ export async function configTransform<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const dataWithAllowedFields: any = {};
   for (const propertyOptions of modelPropertyOptions) {
-    dataWithAllowedFields[propertyOptions.originalName] = data?.[propertyOptions.originalName];
+    dataWithAllowedFields[propertyOptions.originalName] = data?.[propertyOptions.originalName] ?? propertyOptions.default;
     info.validations[propertyOptions.originalName] = {
       constraints: {},
       value: data?.[propertyOptions.originalName],

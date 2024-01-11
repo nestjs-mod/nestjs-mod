@@ -438,18 +438,18 @@ Default NestJS application listener, no third party utilities required.
 
 #### Static environments
 
-| Key    | Description | Sources | Constraints | Value |
-| ------ | ----------- | ------ | ----------- | ----- |
-|`port`|The port on which to run the server.|`obj['port']`, `process.env['PORT']`|**isNotEmpty** (port should not be empty)|-|
-|`hostname`|Hostname on which to listen for incoming packets.|`obj['hostname']`, `process.env['HOSTNAME']`|**optional**|-|
+| Key    | Description | Sources | Constraints | Default | Value |
+| ------ | ----------- | ------- | ----------- | ------- | ----- |
+|`port`|The port on which to run the server.|`obj['port']`, `process.env['PORT']`|**isNotEmpty** (port should not be empty)|-|-|
+|`hostname`|Hostname on which to listen for incoming packets.|`obj['hostname']`, `process.env['HOSTNAME']`|**optional**|-|-|
 
 #### Static configuration
 
-| Key    | Description | Constraints | Value |
-| ------ | ----------- | ----------- | ----- |
-|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|
-|`preListen`|Method for additional actions before listening|**optional**|-|
-|`postListen`|Method for additional actions after listening|**optional**|-|
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|-|
+|`preListen`|Method for additional actions before listening|**optional**|-|-|
+|`postListen`|Method for additional actions after listening|**optional**|-|-|
 
 [Back to Top](#modules)
 
@@ -459,12 +459,12 @@ Default NestJS application initializer, no third party utilities required.
 
 #### Static configuration
 
-| Key    | Description | Constraints | Value |
-| ------ | ----------- | ----------- | ----- |
-|`cors`|CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)|**optional**|-|
-|`bodyParser`|Whether to use underlying platform body parser.|**optional**|-|
-|`httpsOptions`|Set of configurable HTTPS options|**optional**|-|
-|`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`cors`|CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)|**optional**|-|-|
+|`bodyParser`|Whether to use underlying platform body parser.|**optional**|-|-|
+|`httpsOptions`|Set of configurable HTTPS options|**optional**|-|-|
+|`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|-|
 
 [Back to Top](#modules)
 
@@ -477,9 +477,9 @@ Infrastructure markdown report generator.
 
 #### Static configuration
 
-| Key    | Description | Constraints | Value |
-| ------ | ----------- | ----------- | ----- |
-|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|-|
 
 [Back to Top](#modules)
 

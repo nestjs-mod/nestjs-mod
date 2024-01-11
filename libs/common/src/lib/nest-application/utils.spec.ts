@@ -508,9 +508,9 @@ describe('NestJS application: Utils', () => {
     #### Static configuration
     Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 
-    | Key| Description | Constraints | Value |
-    | ------ | ----------- | ----------- | ----- |
-    |\`markdownFile\`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|
+    | Key| Description | Constraints | Default | Value |
+    | ------ | ----------- | ----------- | ------- | ----- |
+    |\`markdownFile\`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|-|
 
     ## System modules
     System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
@@ -521,12 +521,12 @@ describe('NestJS application: Utils', () => {
     #### Static configuration
     Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 
-    | Key| Description | Constraints | Value |
-    | ------ | ----------- | ----------- | ----- |
-    |\`cors\`|CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)|**optional**|-|
-    |\`bodyParser\`|Whether to use underlying platform body parser.|**optional**|-|
-    |\`httpsOptions\`|Set of configurable HTTPS options|**optional**|-|
-    |\`rawBody\`|Whether to register the raw request body on the request. Use \`req.rawBody\`.|**optional**|-|
+    | Key| Description | Constraints | Default | Value |
+    | ------ | ----------- | ----------- | ------- | ----- |
+    |\`cors\`|CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)|**optional**|-|-|
+    |\`bodyParser\`|Whether to use underlying platform body parser.|**optional**|-|-|
+    |\`httpsOptions\`|Set of configurable HTTPS options|**optional**|-|-|
+    |\`rawBody\`|Whether to register the raw request body on the request. Use \`req.rawBody\`.|**optional**|-|-|
 
 
     ### DefaultNestApplicationListener
@@ -535,19 +535,19 @@ describe('NestJS application: Utils', () => {
     #### Static environments
     Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
 
-    | Key| Description | Sources | Constraints | Value |
-    | ------ | ----------- | ------ | ----------- | ----- |
-    |\`port\`|The port on which to run the server.|\`obj['port']\`, \`process.env['PORT']\`|**isNotEmpty** (port should not be empty)|\`\`\`3012\`\`\`|
-    |\`hostname\`|Hostname on which to listen for incoming packets.|\`obj['hostname']\`, \`process.env['HOSTNAME']\`|**optional**|-|
+    | Key| Description | Sources | Constraints | Default | Value |
+    | ------ | ----------- | ------- | ----------- | ------- | ----- |
+    |\`port\`|The port on which to run the server.|\`obj['port']\`, \`process.env['PORT']\`|**isNotEmpty** (port should not be empty)|-|\`\`\`3012\`\`\`|
+    |\`hostname\`|Hostname on which to listen for incoming packets.|\`obj['hostname']\`, \`process.env['HOSTNAME']\`|**optional**|-|-|
 
     #### Static configuration
     Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 
-    | Key| Description | Constraints | Value |
-    | ------ | ----------- | ----------- | ----- |
-    |\`mode\`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|\`\`\`listen\`\`\`|
-    |\`preListen\`|Method for additional actions before listening|**optional**|-|
-    |\`postListen\`|Method for additional actions after listening|**optional**|-|
+    | Key| Description | Constraints | Default | Value |
+    | ------ | ----------- | ----------- | ------- | ----- |
+    |\`mode\`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|\`\`\`listen\`\`\`|\`\`\`listen\`\`\`|
+    |\`preListen\`|Method for additional actions before listening|**optional**|-|-|
+    |\`postListen\`|Method for additional actions after listening|**optional**|-|-|
 
     ## Feature modules
     Feature modules with business logic of the application.

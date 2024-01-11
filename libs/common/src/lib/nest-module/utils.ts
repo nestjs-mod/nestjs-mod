@@ -698,6 +698,8 @@ export function createNestModule<
             .reduce((all, cur) => ({ ...all, ...cur }), {}),
         },
         moduleSettings,
+        // need to set global options for configurations and environments
+        // todo: try remove it
         pathNestModuleMetadata: (newNestModuleMetadata: Partial<NestModuleMetadata>) => {
           Object.assign(nestModuleMetadata, newNestModuleMetadata);
           return nestModuleMetadata;

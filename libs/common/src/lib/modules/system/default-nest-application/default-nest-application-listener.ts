@@ -1,15 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { IsNotEmpty } from 'class-validator';
-import {
-  ConfigModel,
-  ConfigModelProperty,
-} from '../../../config-model/decorators';
+import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../../../env-model/decorators';
 import { NestModuleError } from '../../../nest-module/errors';
-import {
-  NestModuleCategory,
-  WrapApplicationOptions,
-} from '../../../nest-module/types';
+import { NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
 
 @EnvModel()
@@ -29,6 +23,7 @@ class DefaultNestApplicationListenerConfiguration {
   @ConfigModelProperty({
     description:
       'Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application',
+    default: 'listen',
   })
   mode?: 'init' | 'listen';
 
@@ -65,8 +60,7 @@ export const { DefaultNestApplicationListener } = createNestModule({
       modules[current.category]!.push(
         createNestModule({
           moduleName: 'DefaultNestApplicationListener',
-          moduleDescription:
-            'Default NestJS application listener, no third party utilities required.',
+          moduleDescription: 'Default NestJS application listener, no third party utilities required.',
           staticEnvironmentsModel: DefaultNestApplicationListenerEnvironments,
           staticConfigurationModel: DefaultNestApplicationListenerConfiguration,
           moduleCategory: NestModuleCategory.system,
@@ -77,15 +71,10 @@ export const { DefaultNestApplicationListener } = createNestModule({
                   await current.staticConfiguration?.preListen({
                     app,
                     current,
-                  } as WrapApplicationOptions<INestApplication,
-                    DefaultNestApplicationListenerConfiguration,
-                    DefaultNestApplicationListenerEnvironments>);
+                  } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
                 }
                 if (current.staticConfiguration?.mode === 'listen') {
-                  await app.listen(
-                    current.staticEnvironments.port,
-                    current.staticEnvironments.hostname
-                  );
+                  await app.listen(current.staticEnvironments.port, current.staticEnvironments.hostname);
                 }
                 if (current.staticConfiguration?.mode === 'init') {
                   await app.init();
@@ -94,9 +83,7 @@ export const { DefaultNestApplicationListener } = createNestModule({
                   await current.staticConfiguration?.postListen({
                     app,
                     current,
-                  } as WrapApplicationOptions<INestApplication,
-                    DefaultNestApplicationListenerConfiguration,
-                    DefaultNestApplicationListenerEnvironments>);
+                  } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
                 }
                 return;
               }
@@ -104,9 +91,7 @@ export const { DefaultNestApplicationListener } = createNestModule({
                 await current.staticConfiguration?.preListen({
                   app,
                   current,
-                } as WrapApplicationOptions<INestApplication,
-                  DefaultNestApplicationListenerConfiguration,
-                  DefaultNestApplicationListenerEnvironments>);
+                } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
               }
               if (current.staticConfiguration?.mode === 'listen') {
                 await app.listen(current.staticEnvironments.port);
@@ -118,21 +103,13 @@ export const { DefaultNestApplicationListener } = createNestModule({
                 await current.staticConfiguration?.postListen({
                   app,
                   current,
-                } as WrapApplicationOptions<INestApplication,
-                  DefaultNestApplicationListenerConfiguration,
-                  DefaultNestApplicationListenerEnvironments>);
+                } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
               }
               return;
             }
-            throw new NestModuleError(
-              'Application listener not started!',
-              modules[current.category]?.[current.index]
-            );
+            throw new NestModuleError('Application listener not started!', modules[current.category]?.[current.index]);
           },
-        }).DefaultNestApplicationListener.forRootAsync({
-          ...current.asyncModuleOptions,
-          staticConfiguration: { ...current.asyncModuleOptions.staticConfiguration, mode: current.asyncModuleOptions.staticConfiguration?.mode ?? 'listen' }
-        })
+        }).DefaultNestApplicationListener.forRootAsync(current.asyncModuleOptions)
       );
     }
   },
