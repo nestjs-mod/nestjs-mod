@@ -23,5 +23,7 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm run generate
+      - run: npm run nx -- build cli
+      - run: npm run start:prod:cli
       - run: npm run build
       - run: npm run test
