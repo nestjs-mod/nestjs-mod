@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.5.1...reports-v1.5.2) (2024-01-11)
+
+
+### Bug Fixes
+
+* update types for forRoot ([11c8b8d](https://github.com/nestjs-mod/nestjs-mod/commit/11c8b8d4cecd073d74abd1c7366396ddbbb11aa0))
+
 ## [1.5.1](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.5.0...reports-v1.5.1) (2024-01-11)
 
 
