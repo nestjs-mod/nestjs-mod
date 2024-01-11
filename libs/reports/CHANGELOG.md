@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.3.0...reports-v1.4.0) (2024-01-11)
+
+
+### Features
+
+* add default options to ConfigModelPropertyOptions and EnvModelPropertyOptions ([7656981](https://github.com/nestjs-mod/nestjs-mod/commit/7656981f2bc73184c2c23bcad33711dc13ce2906))
+
 # [1.3.0](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.2.0...reports-v1.3.0) (2024-01-10)
 
 
