@@ -255,7 +255,10 @@ export type ForRootAsyncMethodOptions<
     TStaticEnvironmentsModel
   >);
 
-export type ForFeatureMethodOptions<TFeatureConfigurationModel = any> = { contextName?: string } & {
+export type ForFeatureMethodOptions<TFeatureConfigurationModel = any> = {
+  featureModuleName: string;
+  contextName?: string;
+} & {
   featureConfiguration?: TFeatureConfigurationModel;
 };
 
@@ -289,5 +292,6 @@ export type TModuleSettings = {
   staticEnvironments?: EnvModelInfo;
   configuration?: ConfigModelInfo;
   staticConfiguration?: ConfigModelInfo;
-  featureConfigurations?: ConfigModelInfo[];
+  featureConfiguration?: ConfigModelInfo;
+  featureModuleConfigurations?: Record<string, ConfigModelInfo[]>;
 };

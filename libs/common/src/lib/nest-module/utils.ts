@@ -280,7 +280,26 @@ export function createNestModule<
     return SharedModule;
   };
 
-  const getOrCreateFeatureModule = async (contextName?: string, featureConfiguration?: TFeatureConfigurationModel) => {
+  const getFeatureModule = async ({ contextName }: { contextName?: string }) => {
+    contextName = defaultContextName(contextName);
+    if (!modulesByName[contextName]) {
+      modulesByName[contextName] = getSharedModule(contextName);
+    }
+    if (!moduleSettings[contextName]) {
+      moduleSettings[contextName] = {};
+    }
+    return { contextName, module: modulesByName[contextName], featureConfiguration: undefined };
+  };
+
+  const getOrCreateFeatureModule = async ({
+    contextName,
+    featureModuleName,
+    featureConfiguration,
+  }: {
+    contextName?: string;
+    featureModuleName: string;
+    featureConfiguration?: TFeatureConfigurationModel;
+  }) => {
     contextName = defaultContextName(contextName);
     if (!modulesByName[contextName]) {
       modulesByName[contextName] = getSharedModule(contextName);
@@ -301,11 +320,17 @@ export function createNestModule<
             ...nestModuleMetadata.globalConfigurationOptions,
           },
         });
-        if (!moduleSettings[contextName].featureConfigurations) {
-          moduleSettings[contextName].featureConfigurations = [];
+        if (!moduleSettings[contextName].featureModuleConfigurations) {
+          moduleSettings[contextName].featureModuleConfigurations = {};
+        }
+        if (
+          moduleSettings[contextName].featureModuleConfigurations &&
+          !moduleSettings[contextName].featureModuleConfigurations![featureModuleName]
+        ) {
+          moduleSettings[contextName].featureModuleConfigurations![featureModuleName] = [];
         }
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        moduleSettings[contextName].featureConfigurations!.push(obj.info);
+        moduleSettings[contextName].featureModuleConfigurations![featureModuleName]!.push(obj.info);
         featuresByName[contextName].push(obj.data as TFeatureConfigurationModel);
         return { contextName, module: modulesByName[contextName], featureConfiguration: obj.data };
       } else {
@@ -319,7 +344,7 @@ export function createNestModule<
   @Module({})
   class InternalNestModule {
     static [forFeatureAsyncMethodName](
-      asyncModuleOptions?: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel>
+      asyncModuleOptions: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel>
     ): DynamicNestModuleMetadata<
       TConfigurationModel,
       TStaticConfigurationModel,
@@ -343,7 +368,11 @@ export function createNestModule<
         const contextName = defaultContextName(asyncModuleOptions?.contextName);
 
         const { module: settingsModule } = getOrCreateSettingsModule(contextName);
-        const { module: featureModule } = await getOrCreateFeatureModule(contextName, featureConfiguration);
+        const { module: featureModule } = await getOrCreateFeatureModule({
+          contextName,
+          featureModuleName: asyncModuleOptions.featureModuleName,
+          featureConfiguration,
+        });
 
         const importsArr =
           !asyncModuleOptions?.imports || Array.isArray(asyncModuleOptions.imports)
@@ -453,12 +482,28 @@ export function createNestModule<
     > {
       const { environments } = asyncModuleOptions ?? {};
       const contextName = defaultContextName(asyncModuleOptions?.contextName);
+      let featureConfiguration: Partial<TFeatureConfigurationModel> | undefined;
       let staticConfiguration: Partial<TStaticConfigurationModel> | undefined;
       let staticEnvironments: Partial<TStaticEnvironmentsModel> | undefined;
 
       const loadStaticSettings = async () => {
         if (!moduleSettings[contextName]) {
           moduleSettings[contextName] = {};
+        }
+
+        // need for documentation
+        if (!featureConfiguration) {
+          if (nestModuleMetadata.featureConfigurationModel) {
+            const obj = await configTransform({
+              model: nestModuleMetadata.featureConfigurationModel,
+              data: {},
+              rootOptions: {
+                skipValidation: true,
+              },
+            });
+            moduleSettings[contextName].featureConfiguration = obj.info;
+            featureConfiguration = obj.data as any;
+          }
         }
 
         if (!staticConfiguration) {
@@ -565,7 +610,7 @@ export function createNestModule<
         }
 
         const { module: settingsModule } = getOrCreateSettingsModule(contextName);
-        const { module: featureModule, featureConfiguration } = await getOrCreateFeatureModule(contextName);
+        const { module: featureModule, featureConfiguration } = await getFeatureModule({ contextName });
 
         const importsArr =
           !nestModuleMetadata.imports || Array.isArray(nestModuleMetadata.imports)

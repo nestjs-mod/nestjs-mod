@@ -29,6 +29,7 @@ Readme generator for nestjs-mod project.
 
 #### Static configuration
 
+
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
 |`utilsFolders`|Folders with utilities|**isNotEmpty** (utilsFolders should not be empty)|-|-|

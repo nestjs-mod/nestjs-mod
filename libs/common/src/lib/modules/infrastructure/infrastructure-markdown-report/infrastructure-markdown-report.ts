@@ -54,6 +54,20 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         lines.push('');
       }
 
+      const sharedImports = dynamicNestModuleMetadata.nestModuleMetadata?.sharedImports ?? [];
+      if (Array.isArray(sharedImports) && sharedImports?.length > 0) {
+        lines.push('#### Shared imports');
+        lines.push(
+          sharedImports
+            .map(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (s: any) => `\`${s.nestModuleMetadata?.moduleName ?? s.name}\``
+            )
+            .join(', ')
+        );
+        lines.push('');
+      }
+
       const names = Object.keys(dynamicNestModuleMetadata.moduleSettings ?? { default: true });
       for (const name of names) {
         this.reportOfEnvModelInfo({
@@ -84,19 +98,34 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           settingsModelInfoDescription: options.nestModulesStaticConfigurationDescription,
         });
 
-        const featureConfigurations = dynamicNestModuleMetadata.moduleSettings?.[name].featureConfigurations ?? [];
-        for (let index = 0; index < featureConfigurations.length; index++) {
-          this.reportOfConfigModelInfo({
-            lines,
-            settingsModelInfo: featureConfigurations[index],
-            settingsModelInfoTitle:
-              featureConfigurations.length === 0
-                ? this.appendContextName('Feature configuration', names.length > 1 ? name : undefined)
-                : `${this.appendContextName('Feature configuration', names.length > 1 ? name : undefined)} #${
-                    index + 1
-                  }`,
-            settingsModelInfoDescription: options.nestModulesFeatureConfigurationDescription,
-          });
+        this.reportOfConfigModelInfo({
+          lines,
+          settingsModelInfo: dynamicNestModuleMetadata.moduleSettings?.[name].featureConfiguration,
+          settingsModelInfoTitle: this.appendContextName('Feature configuration', names.length > 1 ? name : undefined),
+          settingsModelInfoDescription: options.nestModulesFeatureConfigurationDescription,
+        });
+
+        const featureModuleNames = Object.keys(
+          dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleConfigurations ?? {}
+        );
+        let titleAppended = false;
+        if (featureModuleNames.length > 0) {
+          for (const featureModuleName of featureModuleNames) {
+            const featureConfigurations =
+              dynamicNestModuleMetadata.moduleSettings?.[name]?.featureModuleConfigurations?.[featureModuleName] ?? [];
+            for (const featureConfiguration of featureConfigurations) {
+              if (!titleAppended) {
+                lines.push('#### Modules that use feature configuration');
+                titleAppended = true;
+              }
+              this.reportOfConfigModelInfo({
+                titleSharps: '#####',
+                lines,
+                settingsModelInfo: featureConfiguration,
+                settingsModelInfoTitle: `Module name: ${featureModuleName}`,
+              });
+            }
+          }
         }
       }
     }
@@ -111,26 +140,31 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
   }
 
   private reportOfEnvModelInfo({
+    titleSharps,
     lines,
     settingsModelInfo,
     settingsModelInfoTitle,
     settingsModelInfoDescription,
   }: {
+    titleSharps?: string;
     lines: string[];
     settingsModelInfo: EnvModelInfo | undefined;
     settingsModelInfoTitle: string;
     settingsModelInfoDescription?: string;
   }) {
-    if (settingsModelInfo) {
+    if (!titleSharps) {
+      titleSharps = '####';
+    }
+    if (settingsModelInfo !== undefined) {
       lines.push(
-        `#### ${
+        `${titleSharps} ${
           settingsModelInfo.modelOptions.name
             ? `${settingsModelInfoTitle}: ${settingsModelInfo.modelOptions.name}`
             : settingsModelInfoTitle
         }`
       );
       const description = settingsModelInfo.modelOptions.description ?? settingsModelInfoDescription ?? '';
-      if (description) {
+      if (description !== undefined) {
         lines.push(`${description}`);
       }
       lines.push('');
@@ -169,26 +203,31 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
   }
 
   private reportOfConfigModelInfo({
+    titleSharps,
     lines,
     settingsModelInfo,
     settingsModelInfoTitle,
     settingsModelInfoDescription,
   }: {
+    titleSharps?: string;
     lines: string[];
     settingsModelInfo: ConfigModelInfo | undefined;
     settingsModelInfoTitle: string;
     settingsModelInfoDescription?: string;
   }) {
+    if (!titleSharps) {
+      titleSharps = '####';
+    }
     if (settingsModelInfo) {
       lines.push(
-        `#### ${
+        `${titleSharps} ${
           settingsModelInfo.modelOptions.name
             ? `${settingsModelInfoTitle}: ${settingsModelInfo.modelOptions.name}`
             : settingsModelInfoTitle
         }`
       );
       const description = settingsModelInfo.modelOptions.description ?? settingsModelInfoDescription ?? '';
-      if (description) {
+      if (description !== undefined) {
         lines.push(`${description}`);
       }
       lines.push('');

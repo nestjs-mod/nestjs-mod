@@ -438,12 +438,14 @@ Default NestJS application listener, no third party utilities required.
 
 #### Static environments
 
+
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
 |`port`|The port on which to run the server.|`obj['port']`, `process.env['PORT']`|**isNotEmpty** (port should not be empty)|-|-|
 |`hostname`|Hostname on which to listen for incoming packets.|`obj['hostname']`, `process.env['HOSTNAME']`|**optional**|-|-|
 
 #### Static configuration
+
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
@@ -458,6 +460,7 @@ Default NestJS application listener, no third party utilities required.
 Default NestJS application initializer, no third party utilities required.
 
 #### Static configuration
+
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
@@ -476,6 +479,7 @@ Infrastructure markdown report generator.
 `DynamicNestModuleMetadataMarkdownReportGenerator`
 
 #### Static configuration
+
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |

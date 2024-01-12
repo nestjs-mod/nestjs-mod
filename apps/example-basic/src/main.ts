@@ -51,6 +51,7 @@ bootstrapNestApplication({
         imports: [
           AppModule,
           SampleWithSharedConfig.forFeature({
+            featureModuleName: AppModule.name,
             featureConfiguration: { featureVar: 'featureVar41' },
           }),
         ],

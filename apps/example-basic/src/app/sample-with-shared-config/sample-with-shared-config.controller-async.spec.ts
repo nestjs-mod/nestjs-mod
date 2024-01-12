@@ -6,12 +6,12 @@ import {
 } from '@nestjs-mod/common';
 import { DefaultTestNestApplicationCreate, DefaultTestNestApplicationInitializer } from '@nestjs-mod/testing';
 import { Controller, Get, Injectable, Module } from '@nestjs/common';
+import { join } from 'path';
 import request from 'supertest';
 import { SampleWithSharedConfigConfiguration } from './sample-with-shared-config.config';
 import { SampleWithSharedConfig } from './sample-with-shared-config.module';
 import { SampleWithSharedConfigService } from './sample-with-shared-config.service';
 import { InjectService } from './sample-with-shared-config.utils';
-import { join } from 'path';
 
 describe('SampleWithSharedConfigController (async)', () => {
   it('should return "Hello World! (var1: var1value)", use static value in forRoot options', async () => {
@@ -252,8 +252,8 @@ describe('SampleWithSharedConfigController (async)', () => {
 
     @Module({
       imports: [
-        SampleWithSharedConfig.forFeature({ contextName: 'api31' }),
-        SampleWithSharedConfig.forFeature({ contextName: 'api33' }),
+        SampleWithSharedConfig.forFeature({ featureModuleName: 'SampleWithSharedConfig', contextName: 'api31' }),
+        SampleWithSharedConfig.forFeature({ featureModuleName: 'SampleWithSharedConfig', contextName: 'api33' }),
       ],
       providers: [FirstService],
       controllers: [FirstController],
@@ -281,7 +281,9 @@ describe('SampleWithSharedConfigController (async)', () => {
     }
 
     @Module({
-      imports: [SampleWithSharedConfig.forFeature({ contextName: 'api32' })],
+      imports: [
+        SampleWithSharedConfig.forFeature({ featureModuleName: 'SampleWithSharedConfig', contextName: 'api32' }),
+      ],
       providers: [SecondService],
       controllers: [SecondController],
     })

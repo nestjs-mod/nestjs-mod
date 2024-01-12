@@ -29,6 +29,7 @@ Default test NestJS application creator, no third party utilities required.
 
 #### Static configuration
 
+
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
 |`wrapTestingModuleBuilder`|Method for additional actions with TestingModuleBuilder|**optional**|-|-|
@@ -40,6 +41,7 @@ Default test NestJS application creator, no third party utilities required.
 Default test NestJS application initializer, no third party utilities required.
 
 #### Static configuration
+
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |

@@ -185,7 +185,9 @@ describe('SampleWithSharedConfigController', () => {
     }
 
     @Module({
-      imports: [SampleWithSharedConfig.forFeature({ contextName: 'api31' })],
+      imports: [
+        SampleWithSharedConfig.forFeature({ featureModuleName: 'SampleWithSharedConfig', contextName: 'api31' }),
+      ],
       providers: [FirstService],
       controllers: [FirstController],
     })
@@ -212,7 +214,9 @@ describe('SampleWithSharedConfigController', () => {
     }
 
     @Module({
-      imports: [SampleWithSharedConfig.forFeature({ contextName: 'api32' })],
+      imports: [
+        SampleWithSharedConfig.forFeature({ featureModuleName: 'SampleWithSharedConfig', contextName: 'api32' }),
+      ],
       providers: [SecondService],
       controllers: [SecondController],
     })
@@ -264,6 +268,7 @@ describe('SampleWithSharedConfigController', () => {
     @Module({
       imports: [
         SampleWithSharedConfig.forFeature({
+          featureModuleName: 'SampleWithSharedConfig',
           featureConfiguration: { featureVar: 'featureVar41' },
         }),
       ],
@@ -275,6 +280,7 @@ describe('SampleWithSharedConfigController', () => {
     @Module({
       imports: [
         SampleWithSharedConfig.forFeature({
+          featureModuleName: 'SampleWithSharedConfig',
           featureConfiguration: { featureVar: 'featureVar42' },
         }),
       ],

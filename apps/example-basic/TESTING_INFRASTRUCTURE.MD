@@ -33,6 +33,9 @@ Feature modules with business logic of the application.
 #### Shared providers
 `SampleWithSharedConfigService`
 
+#### Shared imports
+`SharedImport1Module`, `SharedImport2Module`
+
 #### Environments: SampleWithSharedConfig
 Variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
 
@@ -60,6 +63,13 @@ Static variables of primitive and complex types that are used in the module and 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
 |`endpoint`|-|**optional**|-|-|
+
+#### Feature configuration
+Feature variables of primitive and complex types that can be added to the current module from other modules (example: a transport for sending a message can be defined as a generalized interface, but the implementation itself will be added from a module for working with a specific transport or from an integration module).
+
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`featureVar`|-|**isNotEmpty** (featureVar should not be empty)|-|-|
 
 ## Infrastructure modules
 Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).

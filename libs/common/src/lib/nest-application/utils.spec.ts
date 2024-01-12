@@ -374,6 +374,7 @@ describe('NestJS application: Utils', () => {
         moduleName: 'App2Module',
         imports: [
           App1Module.forFeature({
+            featureModuleName: 'App1Module',
             featureConfiguration: { featureOptionConfig: 'featureOptionConfig-app2' },
           }),
         ],
@@ -393,7 +394,7 @@ describe('NestJS application: Utils', () => {
         moduleName: 'App3Module',
         imports: [
           App1Module.forFeatureAsync({
-            
+            featureModuleName: 'App3Module',
             featureConfiguration: { featureOptionConfig: 'featureOptionConfig-app3' },
           }),
         ],
