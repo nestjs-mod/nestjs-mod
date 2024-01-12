@@ -1,3 +1,10 @@
+## [1.5.4](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.5.3...reports-v1.5.4) (2024-01-12)
+
+
+### Bug Fixes
+
+* update logic for generate metadata for reports, add featureModuleName to forFeature methods ([baf0856](https://github.com/nestjs-mod/nestjs-mod/commit/baf0856fe2a3a5cad45e4897748686d9f206227f))
+
 ## [1.5.3](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.5.2...reports-v1.5.3) (2024-01-11)
 
 
