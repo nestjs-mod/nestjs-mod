@@ -1,4 +1,5 @@
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { writeFile } from 'fs/promises';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { ConfigModelInfo } from '../../../config-model/types';
@@ -12,7 +13,8 @@ import {
   NEST_MODULE_CATEGORY_DESCRIPTION,
   NEST_MODULE_CATEGORY_TITLE,
 } from '../../../nest-module/constants';
-import { DynamicNestModuleMetadata, NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
+import { DynamicNestModuleMetadata, WrapApplicationOptions } from '../../../nest-module/types';
+import { NestModuleCategory } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
 
 @Injectable()

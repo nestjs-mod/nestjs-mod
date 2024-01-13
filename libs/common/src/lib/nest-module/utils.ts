@@ -2,25 +2,23 @@
 import {
   DynamicModule,
   INestApplication,
-  Inject,
-  Injectable,
   InjectionToken,
-  Module,
   OnModuleDestroy,
   OptionalFactoryDependency,
   Provider,
-  Type,
+  Type} from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Module
 } from '@nestjs/common';
 
 import { randomUUID } from 'crypto';
-import { Observable, Subject, concatMap, isObservable, takeUntil } from 'rxjs';
+import { Observable} from 'rxjs';
+import { Subject, concatMap, isObservable, takeUntil } from 'rxjs';
 import { configTransform } from '../config-model/utils';
 import { envTransform } from '../env-model/utils';
 import {
-  DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
-  DEFAULT_FOR_FEATURE_METHOD_NAME,
-  DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME,
-  DEFAULT_FOR_ROOT_METHOD_NAME,
   DynamicNestModuleMetadata,
   ExportsWithStaticOptionsResponse,
   ForFeatureAsyncMethodOptions,
@@ -30,7 +28,12 @@ import {
   ImportsWithStaticOptionsResponse,
   NestModuleMetadata,
   TModuleSettings,
-  WrapApplicationOptions,
+  WrapApplicationOptions} from './types';
+import {
+  DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
+  DEFAULT_FOR_FEATURE_METHOD_NAME,
+  DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME,
+  DEFAULT_FOR_ROOT_METHOD_NAME
 } from './types';
 
 export function getWrapModuleMetadataMethods() {

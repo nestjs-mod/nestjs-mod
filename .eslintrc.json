@@ -15,7 +15,6 @@
         "*.jsx"
       ],
       "rules": {
-        "@typescript-eslint/consistent-type-imports": "error",
         "@nx/enforce-module-boundaries": [
           "error",
           {
@@ -42,7 +41,6 @@
         "plugin:@nx/typescript"
       ],
       "rules": {
-        "@typescript-eslint/consistent-type-imports": "error"
       }
     },
     {

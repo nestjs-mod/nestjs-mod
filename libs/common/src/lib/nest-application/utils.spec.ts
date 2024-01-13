@@ -3,9 +3,10 @@ import { IsNotEmpty } from 'class-validator';
 import { ConfigModel, ConfigModelProperty } from '../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../env-model/decorators';
 import {
+  InfrastructureMarkdownReportStorage} from '../modules/infrastructure/infrastructure-markdown-report/infrastructure-markdown-report';
+import {
   InfrastructureMarkdownReport,
-  InfrastructureMarkdownReportGenerator,
-  InfrastructureMarkdownReportStorage,
+  InfrastructureMarkdownReportGenerator
 } from '../modules/infrastructure/infrastructure-markdown-report/infrastructure-markdown-report';
 import { DefaultNestApplicationInitializer } from '../modules/system/default-nest-application/default-nest-application-initializer';
 import { DefaultNestApplicationListener } from '../modules/system/default-nest-application/default-nest-application-listener';

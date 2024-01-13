@@ -1,4 +1,5 @@
-import { Logger, Type } from '@nestjs/common';
+import { Type } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { ValidatorPackage } from '@nestjs/common/interfaces/external/validator-package.interface';
 import { loadPackage } from '../utils/load-package';
 import { ENV_MODEL_CLASS_VALIDATOR_OPTIONS, ENV_MODEL_METADATA, ENV_MODEL_PROPERTIES_METADATA } from './constants';

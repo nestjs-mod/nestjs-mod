@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
-import { NestModuleCategory, WrapApplicationOptions } from '../nest-module/types';
+import { WrapApplicationOptions } from '../nest-module/types';
+import { NestModuleCategory } from '../nest-module/types';
 import { getWrapModuleMetadataMethods } from '../nest-module/utils';
 import { NestApplicationError } from './errors';
 import { BootstrapNestApplicationOptions } from './types';

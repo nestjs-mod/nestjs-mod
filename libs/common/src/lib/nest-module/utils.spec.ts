@@ -1,5 +1,6 @@
 import { Injectable, Module } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
+import { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { IsNotEmpty } from 'class-validator';
 import { BehaviorSubject } from 'rxjs';
 import { ConfigModel, ConfigModelProperty } from '../config-model/decorators';

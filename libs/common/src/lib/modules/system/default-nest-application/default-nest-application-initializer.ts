@@ -1,4 +1,5 @@
-import { Module, NestApplicationOptions } from '@nestjs/common';
+import { NestApplicationOptions } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import {
   CorsOptions,
   CorsOptionsDelegate,
@@ -10,7 +11,8 @@ import {
   ConfigModelProperty,
 } from '../../../config-model/decorators';
 import {
-  DynamicNestModuleMetadata,
+  DynamicNestModuleMetadata} from '../../../nest-module/types';
+import {
   NestModuleCategory,
 } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';

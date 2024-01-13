@@ -3,7 +3,8 @@ import { IsNotEmpty } from 'class-validator';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../../../env-model/decorators';
 import { NestModuleError } from '../../../nest-module/errors';
-import { NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
+import { WrapApplicationOptions } from '../../../nest-module/types';
+import { NestModuleCategory } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
 
 @EnvModel()
