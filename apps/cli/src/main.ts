@@ -4,6 +4,7 @@ import {
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
   bootstrapNestApplication,
+  isInfrastructureMode,
 } from '@nestjs-mod/common';
 import { NestjsModAllReadmeGenerator } from '@nestjs-mod/reports';
 import { join } from 'path';
@@ -11,15 +12,16 @@ import { join } from 'path';
 bootstrapNestApplication({
   project: {
     name: 'nestjs-mod',
-    description:
-      'A command line interface (CLI) for create and manipulation with NestJS-mod application',
+    description: 'A command line interface (CLI) for create and manipulation with NestJS-mod application',
   },
   modules: {
     system: [
       DefaultNestApplicationInitializer.forRoot(),
       DefaultNestApplicationListener.forRoot({
         staticEnvironments: { port: 3000 },
-        staticConfiguration: { mode: 'init' },
+        staticConfiguration: {
+          mode: isInfrastructureMode() ? 'init' : 'listen',
+        },
       }),
     ],
     infrastructure: [
@@ -27,23 +29,9 @@ bootstrapNestApplication({
         contextName: 'common',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          packageFile: join(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'libs/common/package.json'
-          ),
-          markdownFile: join(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'libs/common/README.md'
-          ),
-          utilsFolders: [
-            join(__dirname, '..', '..', '..', 'libs/common/src/lib'),
-          ],
+          packageFile: join(__dirname, '..', '..', '..', 'libs/common/package.json'),
+          markdownFile: join(__dirname, '..', '..', '..', 'libs/common/README.md'),
+          utilsFolders: [join(__dirname, '..', '..', '..', 'libs/common/src/lib')],
           modules: [import('@nestjs-mod/common')],
         },
       }),
@@ -51,23 +39,9 @@ bootstrapNestApplication({
         contextName: 'reports',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          packageFile: join(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'libs/reports/package.json'
-          ),
-          markdownFile: join(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'libs/reports/README.md'
-          ),
-          utilsFolders: [
-            join(__dirname, '..', '..', '..', 'libs/reports/src/lib'),
-          ],
+          packageFile: join(__dirname, '..', '..', '..', 'libs/reports/package.json'),
+          markdownFile: join(__dirname, '..', '..', '..', 'libs/reports/README.md'),
+          utilsFolders: [join(__dirname, '..', '..', '..', 'libs/reports/src/lib')],
           modules: [import('@nestjs-mod/reports')],
         },
       }),
@@ -75,23 +49,9 @@ bootstrapNestApplication({
         contextName: 'testing',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          packageFile: join(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'libs/testing/package.json'
-          ),
-          markdownFile: join(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            'libs/testing/README.md'
-          ),
-          utilsFolders: [
-            join(__dirname, '..', '..', '..', 'libs/testing/src/lib'),
-          ],
+          packageFile: join(__dirname, '..', '..', '..', 'libs/testing/package.json'),
+          markdownFile: join(__dirname, '..', '..', '..', 'libs/testing/README.md'),
+          utilsFolders: [join(__dirname, '..', '..', '..', 'libs/testing/src/lib')],
           modules: [import('@nestjs-mod/testing')],
         },
       }),

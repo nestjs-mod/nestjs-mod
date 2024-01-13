@@ -5,6 +5,7 @@ import {
   NestModuleCategory,
   bootstrapNestApplication,
   createNestModule,
+  isInfrastructureMode,
   isProductionMode,
 } from '@nestjs-mod/common';
 import { RestInfrastructureHtmlReport } from '@nestjs-mod/reports';
@@ -28,6 +29,7 @@ bootstrapNestApplication({
       DefaultNestApplicationListener.forRoot({
         staticEnvironments: { port: 3000 },
         staticConfiguration: {
+          mode: isInfrastructureMode() ? 'init' : 'listen',
           preListen: async ({ app }) => {
             if (app) {
               app.setGlobalPrefix(globalPrefix);
@@ -61,7 +63,7 @@ bootstrapNestApplication({
       }),
     ],
     // Disable infrastructure modules in production
-    ...(!isProductionMode()
+    ...(!isProductionMode() || isInfrastructureMode()
       ? {
           infrastructure: [
             InfrastructureMarkdownReportGenerator.forRoot({

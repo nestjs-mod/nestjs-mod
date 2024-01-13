@@ -34,7 +34,7 @@ Static variables of primitive and complex types that are used in the module and 
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|```listen```|
+|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|```init```|
 |`preListen`|Method for additional actions before listening|**optional**|-|Function|
 |`postListen`|Method for additional actions after listening|**optional**|-|Function|
 
