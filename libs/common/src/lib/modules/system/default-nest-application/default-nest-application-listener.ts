@@ -66,49 +66,38 @@ export const { DefaultNestApplicationListener } = createNestModule({
           staticConfigurationModel: DefaultNestApplicationListenerConfiguration,
           moduleCategory: NestModuleCategory.system,
           wrapApplication: async ({ app, current }) => {
-            if (app && current?.staticEnvironments?.port) {
-              if (current.staticEnvironments?.hostname) {
-                if (current.staticConfiguration?.preListen) {
-                  await current.staticConfiguration?.preListen({
-                    app,
-                    current,
-                  } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
-                }
-                if (current.staticConfiguration?.mode === 'listen') {
-                  await app.listen(current.staticEnvironments.port, current.staticEnvironments.hostname);
-                }
-                if (current.staticConfiguration?.mode === 'init') {
-                  await app.init();
-                }
-                if (current.staticConfiguration?.postListen) {
-                  await current.staticConfiguration?.postListen({
-                    app,
-                    current,
-                  } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
-                }
-                return;
-              }
-              if (current.staticConfiguration?.preListen) {
-                await current.staticConfiguration?.preListen({
-                  app,
-                  current,
-                } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
-              }
-              if (current.staticConfiguration?.mode === 'listen') {
-                await app.listen(current.staticEnvironments.port);
-              }
-              if (current.staticConfiguration?.mode === 'init') {
-                await app.init();
-              }
-              if (current.staticConfiguration?.postListen) {
-                await current.staticConfiguration?.postListen({
-                  app,
-                  current,
-                } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
-              }
-              return;
+            if (current.staticConfiguration?.preListen) {
+              await current.staticConfiguration?.preListen({
+                app,
+                current,
+              } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
             }
-            throw new NestModuleError('Application listener not started!', modules[current.category]?.[current.index]);
+
+            if (app && current.staticConfiguration?.mode === 'listen') {
+              if (current?.staticEnvironments?.port) {
+                if (current?.staticEnvironments?.hostname) {
+                  await app.listen(current.staticEnvironments.port, current.staticEnvironments.hostname);
+                } else {
+                  await app.listen(current.staticEnvironments.port);
+                }
+              } else {
+                throw new NestModuleError(
+                  'Application listener not started!',
+                  modules[current.category]?.[current.index]
+                );
+              }
+            }
+
+            if (app && current.staticConfiguration?.mode === 'init') {
+              await app.init();
+            }
+
+            if (current.staticConfiguration?.postListen) {
+              await current.staticConfiguration?.postListen({
+                app,
+                current,
+              } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
+            }
           },
         }).DefaultNestApplicationListener.forRootAsync(current.asyncModuleOptions)
       );
