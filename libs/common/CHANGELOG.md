@@ -1,3 +1,15 @@
+# [1.6.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v1.5.4...common-v1.6.0) (2024-01-15)
+
+
+### Bug Fixes
+
+* ignore port and hostname on start nest application in "init" mode ([f27e042](https://github.com/nestjs-mod/nestjs-mod/commit/f27e042e0abf2c255a9013204a5e3f8e07afbca7))
+
+
+### Features
+
+* **reports:** add skipEmptySettings to DynamicNestModuleMetadataMarkdownReportGenerator ([d51aad4](https://github.com/nestjs-mod/nestjs-mod/commit/d51aad4b578e1eb71a4d0568e86d494315570d92))
+
 ## [1.5.4](https://github.com/nestjs-mod/nestjs-mod/compare/common-v1.5.3...common-v1.5.4) (2024-01-12)
 
 
