@@ -484,6 +484,7 @@ Infrastructure markdown report generator.
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
 |`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|-|
+|`skipEmptySettings`|Skip empty values of env and config models|**optional**|-|-|
 
 [Back to Top](#modules)
 

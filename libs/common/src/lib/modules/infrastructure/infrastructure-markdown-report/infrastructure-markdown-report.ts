@@ -1,5 +1,4 @@
-import { OnApplicationBootstrap } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { writeFile } from 'fs/promises';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { ConfigModelInfo } from '../../../config-model/types';
@@ -13,12 +12,28 @@ import {
   NEST_MODULE_CATEGORY_DESCRIPTION,
   NEST_MODULE_CATEGORY_TITLE,
 } from '../../../nest-module/constants';
-import { DynamicNestModuleMetadata, WrapApplicationOptions } from '../../../nest-module/types';
-import { NestModuleCategory } from '../../../nest-module/types';
+import { DynamicNestModuleMetadata, NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
+
+@ConfigModel()
+export class InfrastructureMarkdownReportGeneratorConfiguration {
+  @ConfigModelProperty({
+    description: 'Name of the markdown-file in which to save the infrastructure report',
+  })
+  markdownFile?: string;
+
+  @ConfigModelProperty({
+    description: 'Skip empty values of env and config models',
+  })
+  skipEmptySettings?: boolean;
+}
 
 @Injectable()
 export class DynamicNestModuleMetadataMarkdownReportGenerator {
+  constructor(
+    private readonly infrastructureMarkdownReportGeneratorConfiguration: InfrastructureMarkdownReportGeneratorConfiguration
+  ) {}
+
   async getReport(
     dynamicNestModuleMetadata: DynamicNestModuleMetadata,
     options: {
@@ -154,6 +169,14 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
     settingsModelInfoTitle: string;
     settingsModelInfoDescription?: string;
   }) {
+    if (
+      this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
+      !settingsModelInfo?.modelPropertyOptions.some(
+        (modelPropertyOption) => settingsModelInfo?.validations[modelPropertyOption.originalName].value
+      )
+    ) {
+      return;
+    }
     if (!titleSharps) {
       titleSharps = '####';
     }
@@ -217,6 +240,14 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
     settingsModelInfoTitle: string;
     settingsModelInfoDescription?: string;
   }) {
+    if (
+      this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
+      !settingsModelInfo?.modelPropertyOptions.some(
+        (modelPropertyOption) => settingsModelInfo?.validations[modelPropertyOption.originalName].value
+      )
+    ) {
+      return;
+    }
     if (!titleSharps) {
       titleSharps = '####';
     }
@@ -303,14 +334,6 @@ export const { InfrastructureMarkdownReport } = createNestModule({
   moduleCategory: NestModuleCategory.core,
   sharedProviders: [InfrastructureMarkdownReportStorage],
 });
-
-@ConfigModel()
-export class InfrastructureMarkdownReportGeneratorConfiguration {
-  @ConfigModelProperty({
-    description: 'Name of the markdown-file in which to save the infrastructure report',
-  })
-  markdownFile?: string;
-}
 
 function getInfrastructureMarkdownReportGeneratorBootstrap({
   project,

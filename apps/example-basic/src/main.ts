@@ -17,8 +17,14 @@ import { SampleWithSharedConfig } from './app/sample-with-shared-config/sample-w
 const globalPrefix = 'api';
 
 bootstrapNestApplication({
-  globalConfigurationOptions: { debug: true },
-  globalEnvironmentsOptions: { debug: true },
+  globalConfigurationOptions: {
+    debug: true,
+    skipValidation: isInfrastructureMode(),
+  },
+  globalEnvironmentsOptions: {
+    debug: true,
+    skipValidation: isInfrastructureMode(),
+  },
   project: {
     name: 'ExampleBasic',
     description: 'Example basic',
@@ -69,6 +75,7 @@ bootstrapNestApplication({
             InfrastructureMarkdownReportGenerator.forRoot({
               staticConfiguration: {
                 markdownFile: join(__dirname, '..', '..', '..', 'apps', 'example-basic', 'INFRASTRUCTURE.MD'),
+                skipEmptySettings: true,
               },
             }),
             RestInfrastructureHtmlReport.forRoot(),

@@ -4,12 +4,17 @@ import {
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
   bootstrapNestApplication,
-  isInfrastructureMode,
 } from '@nestjs-mod/common';
 import { NestjsModAllReadmeGenerator } from '@nestjs-mod/reports';
 import { join } from 'path';
 
 bootstrapNestApplication({
+  globalConfigurationOptions: {
+    skipValidation: true,
+  },
+  globalEnvironmentsOptions: {
+    skipValidation: true,
+  },
   project: {
     name: 'nestjs-mod',
     description: 'A command line interface (CLI) for create and manipulation with NestJS-mod application',
@@ -18,9 +23,8 @@ bootstrapNestApplication({
     system: [
       DefaultNestApplicationInitializer.forRoot(),
       DefaultNestApplicationListener.forRoot({
-        staticEnvironments: { port: 3000 },
         staticConfiguration: {
-          mode: isInfrastructureMode() ? 'init' : 'listen',
+          mode: 'init',
         },
       }),
     ],
