@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/nestjs-mod/nestjs-mod/compare/common-v1.6.0...common-v1.6.1) (2024-01-15)
+
+
+### Bug Fixes
+
+* **reports:** hide empty settings from report ([ea005e6](https://github.com/nestjs-mod/nestjs-mod/commit/ea005e69bab8960b065e5cec6463e3105c38fdb8))
+
 # [1.6.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v1.5.4...common-v1.6.0) (2024-01-15)
 
 
