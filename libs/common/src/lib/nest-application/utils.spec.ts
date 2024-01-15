@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { IsNotEmpty } from 'class-validator';
 import { ConfigModel, ConfigModelProperty } from '../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../env-model/decorators';
-import {
-  InfrastructureMarkdownReportStorage} from '../modules/infrastructure/infrastructure-markdown-report/infrastructure-markdown-report';
+import { InfrastructureMarkdownReportStorage } from '../modules/infrastructure/infrastructure-markdown-report/infrastructure-markdown-report';
 import {
   InfrastructureMarkdownReport,
-  InfrastructureMarkdownReportGenerator
+  InfrastructureMarkdownReportGenerator,
 } from '../modules/infrastructure/infrastructure-markdown-report/infrastructure-markdown-report';
 import { DefaultNestApplicationInitializer } from '../modules/system/default-nest-application/default-nest-application-initializer';
 import { DefaultNestApplicationListener } from '../modules/system/default-nest-application/default-nest-application-listener';
@@ -490,6 +489,7 @@ describe('NestJS application: Utils', () => {
     | Key| Description | Constraints | Default | Value |
     | ------ | ----------- | ----------- | ------- | ----- |
     |\`markdownFile\`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|-|
+    |\`skipEmptySettings\`|Skip empty values of env and config models|**optional**|-|-|
 
     ## System modules
     System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
