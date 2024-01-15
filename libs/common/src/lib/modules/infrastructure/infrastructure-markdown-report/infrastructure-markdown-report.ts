@@ -197,30 +197,37 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         [
           '| Key    | Description | Sources | Constraints | Default | Value |',
           '| ------ | ----------- | ------- | ----------- | ------- | ----- |',
-          ...(settingsModelInfo?.modelPropertyOptions.map((modelPropertyOption) =>
-            [
-              '',
-              // Key
-              `\`${String(modelPropertyOption.originalName)}${
-                modelPropertyOption.name ? ` (${modelPropertyOption.name})` : ''
-              }\``,
-              // Description
-              modelPropertyOption.description ?? '-',
-              // Sources
-              settingsModelInfo?.validations[modelPropertyOption.originalName].propertyValueExtractors
-                .map((propertyValueExtractor) => `\`${propertyValueExtractor.example.example}\``)
-                .join(', ') || '-',
-              // Constraints
-              Object.entries(settingsModelInfo?.validations[modelPropertyOption.originalName].constraints || {})
-                .map(([key, value]) => `**${key}** (${value})`)
-                .join(', ') || '**optional**',
-              // Default
-              this.safeValue(modelPropertyOption.default),
-              // Value
-              this.safeValue(settingsModelInfo?.validations[modelPropertyOption.originalName].value),
-              '',
-            ].join('|')
-          ) ?? []),
+          ...(settingsModelInfo?.modelPropertyOptions
+            .filter(
+              (modelPropertyOption) =>
+                !this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings ||
+                (this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
+                  settingsModelInfo?.validations[modelPropertyOption.originalName].value)
+            )
+            .map((modelPropertyOption) =>
+              [
+                '',
+                // Key
+                `\`${String(modelPropertyOption.originalName)}${
+                  modelPropertyOption.name ? ` (${modelPropertyOption.name})` : ''
+                }\``,
+                // Description
+                modelPropertyOption.description ?? '-',
+                // Sources
+                settingsModelInfo?.validations[modelPropertyOption.originalName].propertyValueExtractors
+                  .map((propertyValueExtractor) => `\`${propertyValueExtractor.example.example}\``)
+                  .join(', ') || '-',
+                // Constraints
+                Object.entries(settingsModelInfo?.validations[modelPropertyOption.originalName].constraints || {})
+                  .map(([key, value]) => `**${key}** (${value})`)
+                  .join(', ') || '**optional**',
+                // Default
+                this.safeValue(modelPropertyOption.default),
+                // Value
+                this.safeValue(settingsModelInfo?.validations[modelPropertyOption.originalName].value),
+                '',
+              ].join('|')
+            ) ?? []),
         ].join('\n')
       );
       lines.push('');
@@ -268,24 +275,31 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         [
           '| Key    | Description | Constraints | Default | Value |',
           '| ------ | ----------- | ----------- | ------- | ----- |',
-          ...(settingsModelInfo?.modelPropertyOptions.map((modelPropertyOption) =>
-            [
-              '',
-              // Key
-              `\`${String(modelPropertyOption.originalName)}\``,
-              // Description
-              modelPropertyOption.description ?? '-',
-              // Constraints
-              Object.entries(settingsModelInfo?.validations[modelPropertyOption.originalName].constraints || {})
-                .map(([key, value]) => `**${key}** (${value})`)
-                .join(', ') || '**optional**',
-              // Default
-              this.safeValue(modelPropertyOption.default),
-              // Value
-              this.safeValue(settingsModelInfo?.validations[modelPropertyOption.originalName].value),
-              '',
-            ].join('|')
-          ) ?? []),
+          ...(settingsModelInfo?.modelPropertyOptions
+            .filter(
+              (modelPropertyOption) =>
+                !this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings ||
+                (this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
+                  settingsModelInfo?.validations[modelPropertyOption.originalName].value)
+            )
+            .map((modelPropertyOption) =>
+              [
+                '',
+                // Key
+                `\`${String(modelPropertyOption.originalName)}\``,
+                // Description
+                modelPropertyOption.description ?? '-',
+                // Constraints
+                Object.entries(settingsModelInfo?.validations[modelPropertyOption.originalName].constraints || {})
+                  .map(([key, value]) => `**${key}** (${value})`)
+                  .join(', ') || '**optional**',
+                // Default
+                this.safeValue(modelPropertyOption.default),
+                // Value
+                this.safeValue(settingsModelInfo?.validations[modelPropertyOption.originalName].value),
+                '',
+              ].join('|')
+            ) ?? []),
         ].join('\n')
       );
       lines.push('');

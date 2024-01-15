@@ -42,7 +42,8 @@
     "generate": "npm run nx -- run-many -t generate --skip-nx-cache=true && npm run make-ts-list && npm run lint:fix",
     "nx": "nx",
     "make-ts-list": "./node_modules/.bin/rucken make-ts-list",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "manual:prepare": "npm run generate && npm run nx -- build cli && npm run nx -- start cli && npm run build && npm run start:infrastructure && npm run test"
   },
   "private": true,
   "devDependencies": {
