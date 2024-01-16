@@ -27,6 +27,7 @@ npm i --save @nestjs-mod/common
 | Link | Category | Description |
 | ---- | -------- | ----------- |
 | [InfrastructureMarkdownReport](#infrastructuremarkdownreport) | core | Infrastructure markdown report |
+| [ProjectUtils](#projectutils) | system | Utilities for setting global application parameters, such as project name, description, and settings validation parameters. |
 | [DefaultNestApplicationListener](#defaultnestapplicationlistener) | system | Default NestJS application listener, no third party utilities required. |
 | [DefaultNestApplicationInitializer](#defaultnestapplicationinitializer) | system | Default NestJS application initializer, no third party utilities required. |
 | [InfrastructureMarkdownReportGenerator](#infrastructuremarkdownreportgenerator) | infrastructure | Infrastructure markdown report generator. |
@@ -429,6 +430,26 @@ Infrastructure markdown report
 
 #### Shared providers
 `InfrastructureMarkdownReportStorage`
+
+[Back to Top](#modules)
+
+---
+### ProjectUtils
+Utilities for setting global application parameters, such as project name, description, and settings validation parameters.
+
+#### Shared providers
+`WrapApplicationOptionsService`, `DotEnvService`, `PackageJsonService`, `ApplicationPackageJsonService`
+
+#### Static configuration
+
+
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`applicationPackageJsonFile`|Application package.json-file|**isNotEmpty** (applicationPackageJsonFile should not be empty)|-|-|
+|`packageJsonFile`|Root package.json-file.|**optional**|-|-|
+|`envFile`|Dot-env file with environment variables.|**optional**|-|-|
+|`patchProject`|Patch project properties|**optional**|```true```|-|
+|`patchGlobalConfigurationAndEnvironmentsOptions`|Patch configuration and environments options|**optional**|```true```|-|
 
 [Back to Top](#modules)
 

@@ -220,13 +220,15 @@ ${
           asyncModule.moduleSettings = { [contextName]: asyncModule.moduleSettings?.[contextName] ?? {} };
 
           const description = asyncModule.nestModuleMetadata!.moduleDescription;
-          modules.push({
-            name: moduleName,
-            link: `[${moduleName}](#${moduleName.toLowerCase()})`,
-            category,
-            description,
-            body: await this.dynamicNestModuleMetadataMarkdownReportGenerator.getReport(asyncModule, {}),
-          });
+          if (!asyncModule.nestModuleMetadata?.moduleDisabled) {
+            modules.push({
+              name: moduleName,
+              link: `[${moduleName}](#${moduleName.toLowerCase()})`,
+              category,
+              description,
+              body: await this.dynamicNestModuleMetadataMarkdownReportGenerator.getReport(asyncModule, {}),
+            });
+          }
         }
       }
       moduleList.push(modules);

@@ -527,9 +527,6 @@ describe('NestJS application: Utils', () => {
     |\`mode\`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|\`\`\`listen\`\`\`|\`\`\`listen\`\`\`|
     |\`preListen\`|Method for additional actions before listening|**optional**|-|-|
     |\`postListen\`|Method for additional actions after listening|**optional**|-|-|
-
-    ## Feature modules
-    Feature modules with business logic of the application.
 `
           .split('  ')
           .join('')

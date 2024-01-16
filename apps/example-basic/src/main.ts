@@ -1,8 +1,11 @@
 import {
+  DOT_ENV_FILE,
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
   InfrastructureMarkdownReportGenerator,
   NestModuleCategory,
+  PACKAGE_JSON_FILE,
+  ProjectUtils,
   bootstrapNestApplication,
   createNestModule,
   isInfrastructureMode,
@@ -31,6 +34,13 @@ bootstrapNestApplication({
   },
   modules: {
     system: [
+      ProjectUtils.forRoot({
+        staticConfiguration: {
+          applicationPackageJsonFile: join(__dirname, '..', '..', '..', 'apps', 'example-basic', PACKAGE_JSON_FILE),
+          packageJsonFile: join(__dirname, '..', '..', '..', PACKAGE_JSON_FILE),
+          envFile: join(__dirname, '..', '..', '..', DOT_ENV_FILE),
+        },
+      }),
       DefaultNestApplicationInitializer.forRoot(),
       DefaultNestApplicationListener.forRoot({
         staticEnvironments: { port: 3000 },

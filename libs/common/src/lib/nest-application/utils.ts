@@ -1,6 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import { WrapApplicationOptions } from '../nest-module/types';
-import { NestModuleCategory } from '../nest-module/types';
+import { NestModuleCategory, ProjectOptions, WrapApplicationOptions } from '../nest-module/types';
 import { getWrapModuleMetadataMethods } from '../nest-module/utils';
 import { NestApplicationError } from './errors';
 import { BootstrapNestApplicationOptions } from './types';
@@ -15,41 +14,40 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
   wrapApplicationMethods: ('preWrapApplication' | 'wrapApplication' | 'postWrapApplication')[];
 }) {
   let app: TNestApplication | undefined = undefined;
+  project = project ?? ({} as ProjectOptions);
+  globalConfigurationOptions = globalConfigurationOptions ?? {};
+  globalEnvironmentsOptions = globalEnvironmentsOptions ?? {};
+
   for (const wrapApplicationMethod of wrapApplicationMethods) {
-    for (const category of Object.keys(NestModuleCategory)) {
+    for (const category of Object.keys(NestModuleCategory ?? {})) {
       let moduleIndex = 0;
       while (modules[category as NestModuleCategory]?.[moduleIndex]) {
-        if (globalConfigurationOptions) {
-          if (modules[category as NestModuleCategory]?.[moduleIndex]?.pathNestModuleMetadata) {
-            modules[category as NestModuleCategory]?.[moduleIndex].pathNestModuleMetadata!({
-              globalConfigurationOptions,
-            });
-          }
-        }
-
-        if (globalEnvironmentsOptions) {
+        if (!modules[category as NestModuleCategory]?.[moduleIndex]?.nestModuleMetadata?.moduleDisabled) {
           if (modules[category as NestModuleCategory]?.[moduleIndex]?.pathNestModuleMetadata) {
             modules[category as NestModuleCategory]?.[moduleIndex].pathNestModuleMetadata!({
               globalEnvironmentsOptions,
+              globalConfigurationOptions,
             });
           }
-        }
 
-        if (modules[category as NestModuleCategory]?.[moduleIndex]?.nestModuleMetadata?.[wrapApplicationMethod]) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const result: any = await modules[category as NestModuleCategory]?.[moduleIndex].nestModuleMetadata?.[
-            wrapApplicationMethod
-          ]!({
-            app,
-            project,
-            current: {
-              category,
-              index: moduleIndex,
-            },
-            modules,
-          } as WrapApplicationOptions);
-          if (result) {
-            app = result;
+          if (modules[category as NestModuleCategory]?.[moduleIndex]?.nestModuleMetadata?.[wrapApplicationMethod]) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const result: any = await modules[category as NestModuleCategory]?.[moduleIndex].nestModuleMetadata?.[
+              wrapApplicationMethod
+            ]!({
+              app,
+              project,
+              current: {
+                category,
+                index: moduleIndex,
+              },
+              modules,
+              globalEnvironmentsOptions,
+              globalConfigurationOptions,
+            } as WrapApplicationOptions);
+            if (result) {
+              app = result;
+            }
           }
         }
         moduleIndex = moduleIndex + 1;

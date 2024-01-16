@@ -1,12 +1,26 @@
-# ExampleBasic
+# example-basic
 
-Example basic
+Example basic application
 ## System modules
 System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
 
+### ProjectUtils
+Utilities for setting global application parameters, such as project name, description, and settings validation parameters.
+
+#### Shared providers
+`WrapApplicationOptionsService`, `DotEnvService`, `PackageJsonService`, `ApplicationPackageJsonService`
+
+#### Static configuration
+Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
+
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`applicationPackageJsonFile`|Application package.json-file|**isNotEmpty** (applicationPackageJsonFile should not be empty)|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/apps/example-basic/package.json```|
+|`packageJsonFile`|Root package.json-file.|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/package.json```|
+|`envFile`|Dot-env file with environment variables.|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/.env```|
+
 ### DefaultNestApplicationInitializer
 Default NestJS application initializer, no third party utilities required.
-
 
 ### DefaultNestApplicationListener
 Default NestJS application listener, no third party utilities required.
@@ -16,7 +30,7 @@ Static variables with primitive types used in the module and can be used at the 
 
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
-|`port`|The port on which to run the server.|`obj['port']`, `process.env['PORT']`|**isNotEmpty** (port should not be empty)|-|```3000```|
+|`port`|The port on which to run the server.|`obj['port']`, `process.env['EXAMPLE_BASIC_PORT']`|**isNotEmpty** (port should not be empty)|-|```3000```|
 
 #### Static configuration
 Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
@@ -45,7 +59,7 @@ Variables with primitive types used in the module, the values of which can be ob
 
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
-|`var1`|-|`obj['var1']`, `process.env['SAMPLE_WITH_SHARED_CONFIG_VAR_1']`|**isNotEmpty** (var1 should not be empty)|-|```var1value```|
+|`var1`|-|`obj['var1']`, `process.env['EXAMPLE_BASIC_SAMPLE_WITH_SHARED_CONFIG_VAR_1']`|**isNotEmpty** (var1 should not be empty)|-|```var1value```|
 
 #### Modules that use feature configuration
 ##### Module name: AppModule
@@ -57,7 +71,6 @@ Variables with primitive types used in the module, the values of which can be ob
 
 ## Infrastructure modules
 Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
-
 
 ### RestInfrastructureHtmlReport
 Rest infrastructure HTML-report

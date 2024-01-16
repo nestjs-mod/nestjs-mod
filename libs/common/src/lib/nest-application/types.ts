@@ -7,7 +7,7 @@ import {
 } from '../nest-module/types';
 
 export type BootstrapNestApplicationOptions = {
-  project: ProjectOptions;
+  project?: ProjectOptions;
   modules: Partial<Record<NestModuleCategory, DynamicNestModuleMetadata[]>>;
   globalEnvironmentsOptions?: Omit<
     EnvModelOptions,

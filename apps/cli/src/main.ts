@@ -3,6 +3,7 @@
 import {
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
+  InfrastructureMarkdownReportGenerator,
   bootstrapNestApplication,
 } from '@nestjs-mod/common';
 import { NestjsModAllReadmeGenerator } from '@nestjs-mod/reports';
@@ -29,6 +30,13 @@ bootstrapNestApplication({
       }),
     ],
     infrastructure: [
+      InfrastructureMarkdownReportGenerator.forRoot({
+        contextName: 'cli',
+        staticConfiguration: {
+          markdownFile: join(__dirname, '..', '..', '..', 'apps', 'cli', 'INFRASTRUCTURE.MD'),
+          skipEmptySettings: false,
+        },
+      }),
       NestjsModAllReadmeGenerator.forRoot({
         contextName: 'common',
         staticConfiguration: {

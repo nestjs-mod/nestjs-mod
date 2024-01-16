@@ -1,4 +1,4 @@
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap, Provider } from '@nestjs/common';
 import { writeFile } from 'fs/promises';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { ConfigModelInfo } from '../../../config-model/types';
@@ -57,21 +57,45 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         lines.push(`${dynamicNestModuleMetadata.nestModuleMetadata?.moduleDescription}`);
         lines.push('');
       }
-      const sharedProviders = dynamicNestModuleMetadata.nestModuleMetadata?.sharedProviders ?? [];
-      if (sharedProviders?.length > 0) {
+
+      const sharedProvidersArr =
+        !dynamicNestModuleMetadata.nestModuleMetadata?.sharedProviders ||
+        Array.isArray(dynamicNestModuleMetadata.nestModuleMetadata.sharedProviders)
+          ? dynamicNestModuleMetadata.nestModuleMetadata?.sharedProviders
+          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (dynamicNestModuleMetadata.nestModuleMetadata.sharedProviders as any)({
+              staticConfiguration: {},
+              staticEnvironments: {},
+            });
+      const sharedProviders = ((!dynamicNestModuleMetadata.nestModuleMetadata.sharedProviders
+        ? []
+        : sharedProvidersArr) ?? []) as Provider[];
+
+      if (Array.isArray(sharedProviders) && sharedProviders?.length > 0) {
         lines.push('#### Shared providers');
         lines.push(
           sharedProviders
             .map(
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (s: any) => `\`${s.name}\``
+              (s: any) => `\`${s.provide ? String(s.provide.name ?? s.provide) : s.name}\``
             )
             .join(', ')
         );
         lines.push('');
       }
 
-      const sharedImports = dynamicNestModuleMetadata.nestModuleMetadata?.sharedImports ?? [];
+      const sharedImportsArr =
+        !dynamicNestModuleMetadata.nestModuleMetadata?.sharedImports ||
+        Array.isArray(dynamicNestModuleMetadata.nestModuleMetadata.sharedImports)
+          ? dynamicNestModuleMetadata.nestModuleMetadata?.sharedImports
+          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (dynamicNestModuleMetadata.nestModuleMetadata.sharedImports as any)({
+              settingsModule: {},
+              staticConfiguration: {},
+              staticEnvironments: {},
+            });
+      const sharedImports = (!dynamicNestModuleMetadata.nestModuleMetadata.sharedImports ? [] : sharedImportsArr) ?? [];
+
       if (Array.isArray(sharedImports) && sharedImports?.length > 0) {
         lines.push('#### Shared imports');
         lines.push(
@@ -172,7 +196,9 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
     if (
       this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
       !settingsModelInfo?.modelPropertyOptions.some(
-        (modelPropertyOption) => settingsModelInfo?.validations[modelPropertyOption.originalName].value
+        (modelPropertyOption) =>
+          settingsModelInfo?.validations[modelPropertyOption.originalName].value !== undefined &&
+          settingsModelInfo?.validations[modelPropertyOption.originalName].value !== modelPropertyOption.default
       )
     ) {
       return;
@@ -202,7 +228,9 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
               (modelPropertyOption) =>
                 !this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings ||
                 (this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
-                  settingsModelInfo?.validations[modelPropertyOption.originalName].value)
+                  settingsModelInfo?.validations[modelPropertyOption.originalName].value !== undefined &&
+                  settingsModelInfo?.validations[modelPropertyOption.originalName].value !==
+                    modelPropertyOption.default)
             )
             .map((modelPropertyOption) =>
               [
@@ -250,7 +278,9 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
     if (
       this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
       !settingsModelInfo?.modelPropertyOptions.some(
-        (modelPropertyOption) => settingsModelInfo?.validations[modelPropertyOption.originalName].value
+        (modelPropertyOption) =>
+          settingsModelInfo?.validations[modelPropertyOption.originalName].value !== undefined &&
+          settingsModelInfo?.validations[modelPropertyOption.originalName].value !== modelPropertyOption.default
       )
     ) {
       return;
@@ -280,7 +310,9 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
               (modelPropertyOption) =>
                 !this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings ||
                 (this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
-                  settingsModelInfo?.validations[modelPropertyOption.originalName].value)
+                  settingsModelInfo?.validations[modelPropertyOption.originalName].value !== undefined &&
+                  settingsModelInfo?.validations[modelPropertyOption.originalName].value !==
+                    modelPropertyOption.default)
             )
             .map((modelPropertyOption) =>
               [
@@ -309,11 +341,11 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private safeValue(value?: any): string {
     try {
-      if (!value) {
+      if (value === undefined) {
         return '-';
       }
       if (Array.isArray(value)) {
-        if (value.filter((v) => Object.keys(v).length > 0).length > 0) {
+        if (value.filter((v) => Object.keys(v ?? {}).length > 0).length > 0) {
           return `[ ${value.map((v) => this.safeValue(v)).join(', ')} ]`;
         } else {
           return '-';
@@ -373,13 +405,17 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
 
     async getReport(): Promise<string> {
       const lines: string[] = [];
-      lines.push(`# ${project.name}`);
-      lines.push('');
-      if (project.description) {
-        lines.push(`${project.description}`);
+      if (project) {
+        lines.push(`# ${project.name}`);
+        lines.push('');
+        if (project.description) {
+          lines.push(`${project.description}`);
+        }
       }
-      for (const category of Object.keys(modules)) {
-        const nestModules: DynamicNestModuleMetadata[] = modules[category as NestModuleCategory] ?? [];
+      for (const category of Object.keys(modules ?? {})) {
+        const nestModules: DynamicNestModuleMetadata[] = (modules[category as NestModuleCategory] ?? []).filter(
+          (m) => m.nestModuleMetadata?.moduleCategory
+        );
         if (nestModules.length > 0) {
           lines.push(`## ${NEST_MODULE_CATEGORY_TITLE[category as NestModuleCategory]}`);
           if (NEST_MODULE_CATEGORY_DESCRIPTION[category as NestModuleCategory]) {
@@ -402,6 +438,8 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
 export const { InfrastructureMarkdownReportGenerator } = createNestModule({
   moduleName: 'InfrastructureMarkdownReportGenerator',
   staticConfigurationModel: InfrastructureMarkdownReportGeneratorConfiguration,
+  configurationOptions: { skipValidation: true },
+  environmentsOptions: { skipValidation: true },
   sharedProviders: [DynamicNestModuleMetadataMarkdownReportGenerator],
   preWrapApplication: async ({ project, modules, current }) => {
     if (modules[current.category]) {

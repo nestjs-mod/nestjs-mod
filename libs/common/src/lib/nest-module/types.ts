@@ -81,6 +81,7 @@ export type DynamicNestModuleMetadata<
 export type ProjectOptions = {
   name: string;
   description: string;
+  version?: string;
 };
 
 export type WrapApplicationOptions<
@@ -91,7 +92,7 @@ export type WrapApplicationOptions<
   TEnvironmentsModel = any
 > = {
   app?: TNestApplication;
-  project: ProjectOptions;
+  project?: ProjectOptions;
   current: {
     category: NestModuleCategory;
     index: number;
@@ -105,6 +106,8 @@ export type WrapApplicationOptions<
     staticEnvironments?: Partial<TStaticEnvironmentsModel>;
   };
   modules: Partial<Record<NestModuleCategory, DynamicNestModuleMetadata[]>>;
+  globalEnvironmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
+  globalConfigurationOptions?: Omit<ConfigModelOptions, 'originalName'>;
 };
 
 export interface NestModuleMetadata<
@@ -131,6 +134,7 @@ export interface NestModuleMetadata<
   TNestApplication = INestApplication,
   TModuleName extends string = string
 > {
+  moduleDisabled?: boolean;
   moduleName: TModuleName;
   moduleDescription?: string;
   moduleCategory?: NestModuleCategory;
@@ -171,7 +175,7 @@ export interface NestModuleMetadata<
    * Optional list of providers that will be instantiated by the NestJS injector
    * and that may be shared at least across this module.
    */
-  sharedProviders?: Provider[];
+  sharedProviders?: Provider[] | TProvidersWithStaticOptions;
   /**
    * Optional list of the subset of providers that are provided by this module
    * and should be available in other modules which import this module.

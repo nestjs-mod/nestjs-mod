@@ -14,7 +14,6 @@ Static variables of primitive and complex types that are used in the module and 
 | ------ | ----------- | ----------- | ------- | ----- |
 |`wrapTestingModuleBuilder`|Method for additional actions with TestingModuleBuilder|**optional**|-|-|
 
-
 ### DefaultTestNestApplicationInitializer
 Default test NestJS application initializer, no third party utilities required.
 
@@ -73,7 +72,6 @@ Feature variables of primitive and complex types that can be added to the curren
 
 ## Infrastructure modules
 Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
-
 
 ### InfrastructureMarkdownReportGenerator
 Infrastructure markdown report generator.

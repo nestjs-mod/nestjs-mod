@@ -28,6 +28,8 @@ class DefaultTestNestApplicationInitializerConfiguration {
 export const { DefaultTestNestApplicationInitializer } = createNestModule({
   moduleName: 'DefaultTestNestApplicationInitializer',
   staticConfigurationModel: DefaultTestNestApplicationInitializerConfiguration,
+  configurationOptions: { skipValidation: true },
+  environmentsOptions: { skipValidation: true },
   preWrapApplication: async ({ current, modules }) => {
     if (modules[current.category]) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

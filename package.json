@@ -28,10 +28,10 @@
   "scripts": {
     "_____prod infra_____": "_____prod infra_____",
     "build": "npm run tsc:lint && npm run nx -- run-many --target=build --all",
-    "start:infrastructure": "export NODE_ENV=infrastructure && npm run nx -- run-many --target=start --all",
+    "start:infrastructure": "export NODE_ENV=infrastructure && npm run nx -- run-many --target=start --all --parallel=1",
     "_____dev infra_____": "_____dev infra_____",
-    "start:dev:cli": "npm run nx -- serve cli",
-    "start:dev:example-basic": "npm run nx -- serve example-basic --host=0.0.0.0",
+    "serve:dev:cli": "npm run nx -- serve cli",
+    "serve:dev:example-basic": "npm run nx -- serve example-basic --host=0.0.0.0",
     "_____lint_____": "_____lint_____",
     "lint": "npm run tsc:lint && npm run nx -- run-many --target=lint --all",
     "lint:fix": "npm run tsc:lint && nx run-many --target=lint --all --fix",

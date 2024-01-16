@@ -59,29 +59,33 @@ export interface PropertyValueExtractor {
   }): string | undefined;
 }
 
+export type EnvModelInfoValidationsPropertyNameFormatters = {
+  name: string;
+  value: string;
+  example: {
+    options: Record<string, string>;
+    logic: string;
+  };
+};
+
+export type EnvModelInfoValidationsPropertyValueExtractors = {
+  name: string;
+  example: {
+    options: Record<string, string>;
+    logic: string;
+    example: string;
+  };
+  value: string | undefined;
+};
+
 export type EnvModelInfo = {
   modelOptions: EnvModelRootOptions;
   modelPropertyOptions: EnvModelPropertyOptions[];
   validations: Record<
     string | symbol,
     {
-      propertyNameFormatters: {
-        name: string;
-        value: string;
-        example: {
-          options: Record<string, string>;
-          logic: string;
-        };
-      }[];
-      propertyValueExtractors: {
-        name: string;
-        example: {
-          options: Record<string, string>;
-          logic: string;
-          example: string;
-        };
-        value: string | undefined;
-      }[];
+      propertyNameFormatters: EnvModelInfoValidationsPropertyNameFormatters[];
+      propertyValueExtractors: EnvModelInfoValidationsPropertyValueExtractors[];
       value: string | undefined;
       constraints: Record<string, string>;
     }
