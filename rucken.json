@@ -8,7 +8,8 @@
       "environment*",
       "*e2e*",
       "*.stories.ts",
-      "*.d.ts"
+      "*.d.ts",
+      "*.ts__tmpl__"
     ]
   }
 }

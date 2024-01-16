@@ -1,0 +1,90 @@
+{
+  "name": "schematics",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/schematics/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/schematics",
+        "tsConfig": "libs/schematics/tsconfig.lib.json",
+        "packageJson": "libs/schematics/package.json",
+        "main": "libs/schematics/src/index.ts",
+        "assets": [
+          "libs/schematics/*.md",
+          {
+            "input": "libs/schematics",
+            "glob": "**/files/**",
+            "output": "/"
+          },
+          {
+            "input": "libs/schematics",
+            "glob": "**/files/**/.gitkeep",
+            "output": "/"
+          },
+          {
+            "input": "libs/schematics",
+            "glob": "**/*.json",
+            "ignore": [
+              "**/tsconfig*.json",
+              "project.json",
+              ".eslintrc.json"
+            ],
+            "output": "/"
+          },
+          {
+            "input": "libs/schematics",
+            "glob": "**/*.js",
+            "ignore": [
+              "**/jest.config.js"
+            ],
+            "output": "/"
+          },
+          {
+            "input": "libs/schematics",
+            "glob": "**/*.d.ts",
+            "output": "/"
+          },
+          {
+            "input": "",
+            "glob": "LICENSE",
+            "output": "/"
+          }
+        ]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs schematics {args.ver} {args.tag}",
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "libs/schematics/jest.config.ts"
+      }
+    },
+    "semantic-release": {
+      "executor": "@theunderscorer/nx-semantic-release:semantic-release",
+      "options": {
+        "buildTarget": "${PROJECT_NAME}:build",
+        "outputPath": "dist/libs/${PROJECT_NAME}"
+      }
+    }
+  },
+  "tags": []
+}

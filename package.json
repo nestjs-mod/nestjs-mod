@@ -43,7 +43,9 @@
     "nx": "nx",
     "make-ts-list": "./node_modules/.bin/rucken make-ts-list",
     "prepare": "husky install",
-    "manual:prepare": "npm run generate && npm run nx -- build cli && npm run nx -- start cli && npm run build && npm run start:infrastructure && npm run test"
+    "manual:prepare": "npm run generate && npm run nx -- build cli && npm run nx -- start cli && npm run build && npm run start:infrastructure && npm run test",
+    "_____schematics_____": "_____schematics_____",
+    "local:schematics": "npm run nx -- g ./dist/libs/schematics:lib"
   },
   "private": true,
   "devDependencies": {
@@ -51,10 +53,8 @@
     "@commitlint/config-conventional": "^17.0.0",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.0.2",
-    "@nx/eslint": "17.2.8",
     "@nx/eslint-plugin": "17.2.8",
     "@nx/jest": "17.2.8",
-    "@nx/js": "17.2.8",
     "@nx/nest": "^17.2.8",
     "@nx/node": "17.2.8",
     "@nx/webpack": "17.2.8",
@@ -93,6 +93,9 @@
     "@nestjs/common": "^10.0.2",
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
+    "@nx/eslint": "^17.2.8",
+    "@nx/js": "^17.2.8",
+    "@nx/devkit": "^17.2.8",
     "axios": "^1.0.0",
     "case-anything": "^2.1.13",
     "class-validator": "^0.14.0",
