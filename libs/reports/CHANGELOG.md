@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.6.1...reports-v1.7.0) (2024-01-16)
+
+
+### Features
+
+* add ProjectUtils module and many small fix ([8069aec](https://github.com/nestjs-mod/nestjs-mod/commit/8069aec70e8109ddac6632db08ebd9da23c6e802))
+
 ## [1.6.1](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.6.0...reports-v1.6.1) (2024-01-15)
 
 
