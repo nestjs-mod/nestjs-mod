@@ -40,3 +40,6 @@ Thumbs.db
 
 .nx/cache
 .clinic
+
+/integrations/app
+/integrations/lib

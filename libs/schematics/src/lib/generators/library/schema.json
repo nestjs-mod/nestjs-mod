@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "$id": "NxNestLibraryGenerator",
-  "title": "Create a NestJS Library for Nx",
-  "description": "Create a NestJS Library for Nx.",
+  "$id": "NxNestJSModLibraryGenerator",
+  "title": "Create a NestJS-mod Library for Nx",
+  "description": "Create a NestJS-mod Library for Nx.",
   "cli": "nx",
   "type": "object",
   "examples": [

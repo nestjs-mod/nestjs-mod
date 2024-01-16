@@ -20,6 +20,7 @@ export function ensureDependencies(tree: Tree): GeneratorCallback {
     },
     {
       '@nestjs/testing': nestJsVersion,
+      "fast-glob": "^3.3.2",
     }
   );
 }

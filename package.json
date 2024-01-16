@@ -38,6 +38,7 @@
     "tsc:lint": "tsc --noEmit -p tsconfig.base.json && tsc --noEmit -p ./apps/example-basic/tsconfig.spec.json && tsc --noEmit -p ./apps/example-basic-e2e/tsconfig.json",
     "_____tests_____": "_____tests_____",
     "test": "npm run nx -- run-many -t test --skip-nx-cache=true --output-style=stream-without-prefixes",
+    "test:integrations-build": "sh ./integrations/scripts/build-application.sh",
     "_____utils_____": "_____utils_____",
     "generate": "npm run nx -- run-many -t generate --skip-nx-cache=true && npm run make-ts-list && npm run lint:fix",
     "nx": "nx",
@@ -45,7 +46,10 @@
     "prepare": "husky install",
     "manual:prepare": "npm run generate && npm run nx -- build cli && npm run nx -- start cli && npm run build && npm run start:infrastructure && npm run test",
     "_____schematics_____": "_____schematics_____",
-    "local:schematics": "npm run nx -- g ./dist/libs/schematics:lib"
+    "build:schematics": "npm run nx -- build schematics",
+    "local:schematics:init": "npm run nx -- g ./dist/libs/schematics:init",
+    "local:schematics:lib": "npm run nx -- g ./dist/libs/schematics:lib",
+    "local:schematics:app": "npm run nx -- g ./dist/libs/schematics:app"
   },
   "private": true,
   "devDependencies": {
@@ -93,9 +97,9 @@
     "@nestjs/common": "^10.0.2",
     "@nestjs/core": "^10.0.2",
     "@nestjs/platform-express": "^10.0.2",
+    "@nx/devkit": "^17.2.8",
     "@nx/eslint": "^17.2.8",
     "@nx/js": "^17.2.8",
-    "@nx/devkit": "^17.2.8",
     "axios": "^1.0.0",
     "case-anything": "^2.1.13",
     "class-validator": "^0.14.0",

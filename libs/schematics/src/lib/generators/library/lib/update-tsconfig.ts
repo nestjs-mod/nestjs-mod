@@ -7,6 +7,16 @@ export function updateTsConfigLib(tree: Tree, options: NormalizedOptions): void 
 
   return updateJson(tree, `${project.root}/tsconfig.lib.json`, (json) => {
     json.compilerOptions.target = options.target;
+
+    json.compilerOptions.skipLibCheck = true;
+    json.compilerOptions.skipDefaultLibCheck = true;
+    json.compilerOptions.allowJs = true;
+    json.compilerOptions.allowSyntheticDefaultImports = true;
+    json.compilerOptions.noImplicitOverride = true;
+    json.compilerOptions.strictPropertyInitialization = true;
+    json.compilerOptions.noImplicitReturns = true;
+    json.compilerOptions.esModuleInterop = true;
+    
     if (options.strict) {
       json.compilerOptions = {
         ...json.compilerOptions,

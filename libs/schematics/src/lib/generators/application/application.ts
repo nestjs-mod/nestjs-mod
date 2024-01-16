@@ -8,6 +8,7 @@ import { ensureDependencies } from './lib/ensure-dependencies';
 import { normalizeOptions, toNodeApplicationGeneratorOptions } from './lib/normalize-options';
 import { updateTsConfig } from './lib/update-tsconfig';
 import type { ApplicationGeneratorOptions } from './schema';
+import { addProject } from './lib/add-project';
 
 export async function applicationGenerator(
   tree: Tree,
@@ -35,6 +36,7 @@ export async function applicationGeneratorInternal(
   tasks.push(nodeApplicationTask);
   createFiles(tree, options);
   updateTsConfig(tree, options);
+  addProject(tree, options);
 
   if (!options.skipPackageJson) {
     tasks.push(ensureDependencies(tree));

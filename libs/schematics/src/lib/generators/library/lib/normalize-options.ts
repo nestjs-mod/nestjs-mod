@@ -17,7 +17,7 @@ export async function normalizeOptionsLib(tree: Tree, options: LibraryGeneratorO
     directory: options.directory,
     importPath: options.importPath,
     projectNameAndRootFormat: options.projectNameAndRootFormat,
-    callingGenerator: '@nx/nest:library',
+    callingGenerator: '@nestjs-mod/schematics:library',
   });
 
   const fileName = options.simpleName ? projectNames.projectSimpleName : projectNames.projectFileName;

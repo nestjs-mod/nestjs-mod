@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "$id": "NxNestInitGenerator",
-  "title": "Init Nest Plugin",
-  "description": "Init Nest Plugin.",
+  "$id": "NxNestJSModInitGenerator",
+  "title": "Init NestJS-mod Plugin",
+  "description": "Init NestJS-mod Plugin.",
   "cli": "nx",
   "type": "object",
   "properties": {

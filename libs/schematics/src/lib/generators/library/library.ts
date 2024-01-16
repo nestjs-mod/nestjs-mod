@@ -3,7 +3,7 @@ import { formatFiles } from '@nx/devkit';
 import { libraryGenerator as jsLibraryGenerator } from '@nx/js';
 import { addDependencies } from '../init/lib/add-dependencies';
 import { addExportsToBarrelFile } from './lib/add-exports-to-barrel';
-import { addProject } from './lib/add-project';
+import { addProjectLib } from './lib/add-project';
 import { createFilesLib } from './lib/create-files';
 import { deleteFiles } from './lib/delete-files';
 import { normalizeOptionsLib, toJsLibraryGeneratorOptions } from './lib/normalize-options';
@@ -28,7 +28,7 @@ export async function libraryGeneratorInternal(
   createFilesLib(tree, options);
   addExportsToBarrelFile(tree, options);
   updateTsConfigLib(tree, options);
-  addProject(tree, options);
+  addProjectLib(tree, options);
 
   if (!options.skipFormat) {
     await formatFiles(tree);
