@@ -188,7 +188,17 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
             const featureEnvironments =
               dynamicNestModuleMetadata.moduleSettings?.[name]?.featureModuleEnvironments?.[featureModuleName] ?? [];
             for (const featureEnvironment of featureEnvironments) {
-              if (!titleAppended) {
+              if (
+                !titleAppended &&
+                // todo: refactor
+                (!this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings ??
+                  featureEnvironment?.modelPropertyOptions.some(
+                    (modelPropertyOption) =>
+                      featureEnvironment?.validations[modelPropertyOption.originalName].value !== undefined &&
+                      featureEnvironment?.validations[modelPropertyOption.originalName].value !==
+                        modelPropertyOption.default
+                  ))
+              ) {
                 lines.push('#### Modules that use feature environments');
                 titleAppended = true;
               }
