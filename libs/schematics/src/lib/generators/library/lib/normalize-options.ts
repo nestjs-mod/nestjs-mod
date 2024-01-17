@@ -28,7 +28,7 @@ export async function normalizeOptionsLib(tree: Tree, options: LibraryGeneratorO
     strict: options.strict ?? true,
     controller: options.controller ?? false,
     fileName,
-    global: options.global ?? false,
+    category: options.category ?? 'feature',
     linter: options.linter ?? Linter.EsLint,
     parsedTags,
     prefix: getNpmScope(tree)!, // we could also allow customizing this

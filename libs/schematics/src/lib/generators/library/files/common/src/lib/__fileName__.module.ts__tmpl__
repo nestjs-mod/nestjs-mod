@@ -1,11 +1,15 @@
-import { Module<% if(global) { %>, Global<% } %> } from '@nestjs/common';<% if(controller) { %>
+
+import { createNestModule, NestModuleCategory } from '@nestjs-mod/common';<% if(controller) { %>
 import { <%= className %>Controller } from './<%= fileName %>.controller';<% } %><% if(service) { %>
 import { <%= className %>Service } from './<%= fileName %>.service';<% } %>
-<% if(global) { %>
-@Global()<% } %>
-@Module({
+import { <%= className %>Configuration } from './<%= fileName %>.configuration';
+import { <%= className %>Environments } from './<%= fileName %>.environments';
+
+export const { <%= className %>Module } = createNestModule({
+  	moduleName: '<%= className %>Module',
+  	moduleCategory: NestModuleCategory.<%- category %>,
+  	configurationModel: <%= className %>Configuration,
+  	environmentsModel: <%= className %>Environments,
 	controllers: [<% if(controller) { %><%= className %>Controller<% } %>],
-	providers: [<% if(service) { %><%= className %>Service<% } %>],
-	exports: [<% if(service) { %><%= className %>Service<% } %>],
-})
-export class <%= className %>Module {}
+	sharedProviders: [<% if(service) { %><%= className %>Service<% } %>],
+});

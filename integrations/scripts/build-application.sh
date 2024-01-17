@@ -32,25 +32,26 @@ npm run nx -- g @nestjs-mod/schematics:application --directory=apps/server-mod -
 npm run nx -- g @nestjs-mod/schematics:library feature --buildable --publishable --directory=libs/feature --simpleName=true --projectNameAndRootFormat=as-provided --strict=true
 npm i --force
 npm run tsc:lint
+npm run nx -- build feature
 
 export PORT=3010
 npm run nx -- build server
-kill -s STOP $(lsof -t -i:$PORT) | echo "Killed"
+kill -9 $(lsof -t -i:$PORT) | echo "Killed"
 node ./dist/apps/server/main.js &
 (
     sleep 5 && npm run nx -- e2e server-e2e
 )
 sleep 5
-kill -s STOP $(lsof -t -i:$PORT) | echo "Killed"
+kill -9 $(lsof -t -i:$PORT) | echo "Killed"
 
 sleep 5
 
 export PORT=3011
 npm run nx -- build server-mod
-kill -s STOP $(lsof -t -i:$PORT) | echo "Killed"
+kill -9 $(lsof -t -i:$PORT) | echo "Killed"
 node ./dist/apps/server-mod/main.js &
 (
     sleep 5 && npm run nx -- e2e server-mod-e2e
 )
 sleep 5
-kill -s STOP $(lsof -t -i:$PORT) | echo "Killed"
+kill -9 $(lsof -t -i:$PORT) | echo "Killed"

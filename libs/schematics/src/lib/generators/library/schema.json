@@ -76,10 +76,11 @@
       "description": "The library name used to import it, like @myorg/my-awesome-lib. Must be a valid npm name.",
       "type": "string"
     },
-    "global": {
-      "description": "Add the Global decorator to the generated module.",
-      "type": "boolean",
-      "default": false
+    "category": {
+      "description": "Logical category for dividing responsibilities between modules.",
+      "type": "string",
+      "enum": ["core", "feature","infrastructure", "integration", "system"],
+      "default": "feature"
     },
     "service": {
       "description": "Include a service with the library.",

@@ -1,0 +1,12 @@
+import {
+  EnvModel,
+  EnvModelProperty
+} from '@nestjs-mod/common';
+
+@EnvModel()
+export class <%= className %>Environments {    
+  @EnvModelProperty({
+    description: 'Environment name'
+  })
+  envName?: string;
+}

@@ -8,7 +8,7 @@ export interface LibraryGeneratorOptions {
   controller?: boolean;
   directory?: string;
   projectNameAndRootFormat?: ProjectNameAndRootFormat;
-  global?: boolean;
+  category?: 'core' | 'feature' | 'infrastructure' | 'integration' | 'system';
   importPath?: string;
   linter?: Linter;
   publishable?: boolean;
@@ -17,17 +17,7 @@ export interface LibraryGeneratorOptions {
   skipTsConfig?: boolean;
   strict?: boolean;
   tags?: string;
-  target?:
-    | 'es5'
-    | 'es6'
-    | 'esnext'
-    | 'es2015'
-    | 'es2016'
-    | 'es2017'
-    | 'es2018'
-    | 'es2019'
-    | 'es2020'
-    | 'es2021';
+  target?: 'es5' | 'es6' | 'esnext' | 'es2015' | 'es2016' | 'es2017' | 'es2018' | 'es2019' | 'es2020' | 'es2021';
   testEnvironment?: 'jsdom' | 'node';
   unitTestRunner?: UnitTestRunner;
   standaloneConfig?: boolean;
