@@ -451,7 +451,12 @@ export function createNestModule<
 
       const result = getModule();
       Object.assign(result, {
-        nestModuleMetadata,
+        nestModuleMetadata: {
+          ...nestModuleMetadata,
+          preWrapApplication: undefined,
+          postWrapApplication: undefined,
+          wrapApplication: undefined,
+        },
         moduleSettings,
       });
       return result as DynamicNestModuleMetadata<
