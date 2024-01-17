@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.0.2...schematics-v1.1.0) (2024-01-17)
+
+
+### Features
+
+* **schematics:** update [@nestjs-mod](https://github.com/nestjs-mod) versions from 1.7.2 to 1.9.0 ([63edf6d](https://github.com/nestjs-mod/nestjs-mod/commit/63edf6df86d4225256edb84a4ba44e36ebc0fc6f))
+
 ## [1.0.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.0.1...schematics-v1.0.2) (2024-01-17)
 
 
