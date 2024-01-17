@@ -3,12 +3,13 @@ import { formatFiles, runTasksInSerial } from '@nx/devkit';
 import { applicationGenerator as nodeApplicationGenerator } from '@nx/node';
 
 import { initGenerator } from '../init/init';
+import { addAppPackageJsonFile, addEnvFile, addScript } from '../init/lib/add-custom';
+import { addProject } from './lib/add-project';
 import { createFiles } from './lib/create-files';
 import { ensureDependencies } from './lib/ensure-dependencies';
 import { normalizeOptions, toNodeApplicationGeneratorOptions } from './lib/normalize-options';
 import { updateTsConfig } from './lib/update-tsconfig';
 import type { ApplicationGeneratorOptions } from './schema';
-import { addProject } from './lib/add-project';
 
 export async function applicationGenerator(
   tree: Tree,
@@ -35,6 +36,9 @@ export async function applicationGeneratorInternal(
   const nodeApplicationTask = await nodeApplicationGenerator(tree, toNodeApplicationGeneratorOptions(options));
   tasks.push(nodeApplicationTask);
   createFiles(tree, options);
+  await addEnvFile(tree, rawOptions.name);
+  addScript(tree, rawOptions.name);
+  addAppPackageJsonFile(tree, rawOptions.name, options.directory!);
   updateTsConfig(tree, options);
   addProject(tree, options);
 

@@ -1,6 +1,8 @@
 #!/bin/bash
 export NX_SKIP_NX_CACHE=true
 
+npm run nx -- reset
+
 rm -rf ./dist
 rm -rf ./integrations/app
 
@@ -18,8 +20,8 @@ mkdir -p ./integrations/app/lib/schematics
 cp -Rf ./dist/libs/schematics/* ./integrations/app/lib/schematics
 
 cd ./integrations/app
-npm i --force
-npm install --save-dev @nx/nest@17.2.8 --force
+git init
+npm install --save-dev @nx/nest@17.2.8
 npm run nx -- g @nx/nest:application --directory=apps/server --name=server --projectNameAndRootFormat=as-provided --strict=true
 cd ../../
 
@@ -27,31 +29,28 @@ npx --yes replace-json-property ./integrations/app/lib/schematics/package.json v
 cd ./integrations/app/lib/schematics && npm pack . && cd ../../../../
 
 cd ./integrations/app
-npm install --save-dev --no-cache ../../integrations/app/lib/schematics/nestjs-mod-schematics-0.0.0.tgz --force
+npm install --save-dev --no-cache ../../integrations/app/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
 npm run nx -- g @nestjs-mod/schematics:application --directory=apps/server-mod --name=server-mod --projectNameAndRootFormat=as-provided --strict=true
 npm run nx -- g @nestjs-mod/schematics:library feature --buildable --publishable --directory=libs/feature --simpleName=true --projectNameAndRootFormat=as-provided --strict=true
-npm i --force
-npm run tsc:lint
-npm run nx -- build feature
+npm run manual:prepare
 
-export PORT=3010
 npm run nx -- build server
-kill -9 $(lsof -t -i:$PORT) | echo "Killed"
+kill -9 $(lsof -t -i:3000) | echo "Killed"
 node ./dist/apps/server/main.js &
 (
     sleep 5 && npm run nx -- e2e server-e2e
 )
 sleep 5
-kill -9 $(lsof -t -i:$PORT) | echo "Killed"
+kill -9 $(lsof -t -i:3000) | echo "Killed"
 
 sleep 5
 
-export PORT=3011
+source .env
 npm run nx -- build server-mod
-kill -9 $(lsof -t -i:$PORT) | echo "Killed"
+kill -9 $(lsof -t -i:$SERVER_MOD_PORT) | echo "Killed"
 node ./dist/apps/server-mod/main.js &
 (
     sleep 5 && npm run nx -- e2e server-mod-e2e
 )
 sleep 5
-kill -9 $(lsof -t -i:$PORT) | echo "Killed"
+kill -9 $(lsof -t -i:$SERVER_MOD_PORT) | echo "Killed"

@@ -4,10 +4,7 @@ import { Linter } from '@nx/eslint';
 import type { Schema as NodeApplicationGeneratorOptions } from '@nx/node/src/generators/application/schema';
 import type { ApplicationGeneratorOptions, NormalizedOptions } from '../schema';
 
-export async function normalizeOptions(
-  tree: Tree,
-  options: ApplicationGeneratorOptions
-): Promise<NormalizedOptions> {
+export async function normalizeOptions(tree: Tree, options: ApplicationGeneratorOptions): Promise<NormalizedOptions> {
   const {
     projectName: appProjectName,
     projectRoot: appProjectRoot,
@@ -34,9 +31,7 @@ export async function normalizeOptions(
   };
 }
 
-export function toNodeApplicationGeneratorOptions(
-  options: NormalizedOptions
-): NodeApplicationGeneratorOptions {
+export function toNodeApplicationGeneratorOptions(options: NormalizedOptions): NodeApplicationGeneratorOptions {
   return {
     name: options.name,
     directory: options.directory,

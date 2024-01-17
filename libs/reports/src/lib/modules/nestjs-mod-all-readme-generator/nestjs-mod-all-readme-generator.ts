@@ -16,6 +16,14 @@ import { readFile, writeFile } from 'fs/promises';
 import markdownit from 'markdown-it';
 import { join } from 'path';
 
+export const NESTJS_MOD_ALL_README_GENERATOR_FOOTER = `
+## Links
+
+* https://github.com/nestjs-mod/nestjs-mod - A collection of utilities for unifying NestJS applications and modules
+* https://github.com/nestjs-mod/nestjs-mod-contrib - Contrib repository for the NestJS-mod
+* https://github.com/nestjs-mod/nestjs-mod-example - Example application built with application built with [@nestjs-mod/schematics](https://github.com/nestjs-mod/nestjs-mod/tree/master/libs/schematics)
+`;
+
 @ConfigModel()
 class NestjsModAllReadmeGeneratorConfig {
   @ConfigModelProperty({
@@ -42,6 +50,16 @@ class NestjsModAllReadmeGeneratorConfig {
   })
   @IsNotEmpty()
   markdownFile!: string;
+
+  @ConfigModelProperty({
+    description: 'Custom header markdown string',
+  })
+  markdownHeader?: string;
+
+  @ConfigModelProperty({
+    description: 'Custom footer markdown string',
+  })
+  markdownFooter?: string;
 
   @ConfigModelProperty({
     description: 'Telegram group',
@@ -102,7 +120,16 @@ ${moduleListInfo.map((m) => `| ${m.link} | ${m.category} | ${m.description?.spli
     }
 
     if (!packageJsonInfo) {
-      const readmeContent = [utilitiesHeader, modulesHeader, utilitiesBody, modulesBody].join('\n');
+      const readmeContent = [
+        this.nestjsModAllReadmeGeneratorConfig.markdownHeader,
+        utilitiesHeader,
+        modulesHeader,
+        utilitiesBody,
+        modulesBody,
+        this.nestjsModAllReadmeGeneratorConfig.markdownFooter,
+      ]
+        .filter(Boolean)
+        .join('\n');
       await writeFile(this.nestjsModAllReadmeGeneratorConfig.markdownFile, readmeContent);
       return;
     }
@@ -122,7 +149,16 @@ ${packageJsonInfo.description}
 npm i --save ${packageJsonInfo.name}
 \`\`\`
 
-${[utilitiesHeader, modulesHeader, utilitiesBody, modulesBody].join('\n')}
+${[
+  this.nestjsModAllReadmeGeneratorConfig.markdownHeader,
+  utilitiesHeader,
+  modulesHeader,
+  utilitiesBody,
+  modulesBody,
+  this.nestjsModAllReadmeGeneratorConfig.markdownFooter,
+]
+  .filter(Boolean)
+  .join('\n')}
 
 ## License
 

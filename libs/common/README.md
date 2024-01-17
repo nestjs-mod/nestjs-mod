@@ -1,7 +1,7 @@
 
 # @nestjs-mod/common
 
-A collection of utilities for unifying NestJS applications and modules.
+A collection of utilities for unifying NestJS applications and modules
 
 [![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] [![Telegram bot][telegram-image]][telegram-url]
 
@@ -508,6 +508,13 @@ Infrastructure markdown report generator.
 |`skipEmptySettings`|Skip empty values of env and config models|**optional**|-|-|
 
 [Back to Top](#modules)
+
+## Links
+
+* https://github.com/nestjs-mod/nestjs-mod - A collection of utilities for unifying NestJS applications and modules
+* https://github.com/nestjs-mod/nestjs-mod-contrib - Contrib repository for the NestJS-mod
+* https://github.com/nestjs-mod/nestjs-mod-example - Example application built with application built with [@nestjs-mod/schematics](https://github.com/nestjs-mod/nestjs-mod/tree/master/libs/schematics)
+
 
 ## License
 

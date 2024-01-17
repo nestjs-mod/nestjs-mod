@@ -3,10 +3,9 @@
 import {
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
-  InfrastructureMarkdownReportGenerator,
   bootstrapNestApplication,
 } from '@nestjs-mod/common';
-import { NestjsModAllReadmeGenerator } from '@nestjs-mod/reports';
+import { NESTJS_MOD_ALL_README_GENERATOR_FOOTER, NestjsModAllReadmeGenerator } from '@nestjs-mod/reports';
 import { join } from 'path';
 
 bootstrapNestApplication({
@@ -30,13 +29,6 @@ bootstrapNestApplication({
       }),
     ],
     infrastructure: [
-      InfrastructureMarkdownReportGenerator.forRoot({
-        contextName: 'cli',
-        staticConfiguration: {
-          markdownFile: join(__dirname, '..', '..', '..', 'apps', 'cli', 'INFRASTRUCTURE.MD'),
-          skipEmptySettings: false,
-        },
-      }),
       NestjsModAllReadmeGenerator.forRoot({
         contextName: 'common',
         staticConfiguration: {
@@ -45,6 +37,7 @@ bootstrapNestApplication({
           markdownFile: join(__dirname, '..', '..', '..', 'libs/common/README.md'),
           utilsFolders: [join(__dirname, '..', '..', '..', 'libs/common/src/lib')],
           modules: [import('@nestjs-mod/common')],
+          markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
         },
       }),
       NestjsModAllReadmeGenerator.forRoot({
@@ -55,6 +48,7 @@ bootstrapNestApplication({
           markdownFile: join(__dirname, '..', '..', '..', 'libs/reports/README.md'),
           utilsFolders: [join(__dirname, '..', '..', '..', 'libs/reports/src/lib')],
           modules: [import('@nestjs-mod/reports')],
+          markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
         },
       }),
       NestjsModAllReadmeGenerator.forRoot({
@@ -65,6 +59,7 @@ bootstrapNestApplication({
           markdownFile: join(__dirname, '..', '..', '..', 'libs/testing/README.md'),
           utilsFolders: [join(__dirname, '..', '..', '..', 'libs/testing/src/lib')],
           modules: [import('@nestjs-mod/testing')],
+          markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
         },
       }),
     ],

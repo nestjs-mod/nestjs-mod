@@ -13,7 +13,6 @@ export function updateTsConfigLib(tree: Tree, options: NormalizedOptions): void 
     json.compilerOptions.allowJs = true;
     json.compilerOptions.allowSyntheticDefaultImports = true;
     json.compilerOptions.noImplicitOverride = true;
-    json.compilerOptions.strictPropertyInitialization = true;
     json.compilerOptions.noImplicitReturns = true;
     json.compilerOptions.esModuleInterop = true;
     
@@ -23,6 +22,7 @@ export function updateTsConfigLib(tree: Tree, options: NormalizedOptions): void 
         strictNullChecks: true,
         noImplicitAny: true,
         strictBindCallApply: true,
+        strictPropertyInitialization:true,
         forceConsistentCasingInFileNames: true,
         noFallthroughCasesInSwitch: true,
       };

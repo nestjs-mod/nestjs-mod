@@ -1,6 +1,6 @@
 {
   "name": "@nestjs-mod/common",
-  "description": "A collection of utilities for unifying NestJS applications and modules.",
+  "description": "A collection of utilities for unifying NestJS applications and modules",
   "version": "1.7.0",
   "keywords": [
     "nestjs",

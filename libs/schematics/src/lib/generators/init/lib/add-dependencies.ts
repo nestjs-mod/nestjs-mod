@@ -1,6 +1,6 @@
 import type { GeneratorCallback, Tree } from '@nx/devkit';
 import { addDependenciesToPackageJson } from '@nx/devkit';
-import { nestJsModVersion, nestJsSchematicsVersion, nxVersion } from '../../../utils/versions';
+import { nestJsModVersion, nestJsSchematicsVersion } from '../../../utils/versions';
 
 export function addDependencies(tree: Tree): GeneratorCallback {
   return addDependenciesToPackageJson(
@@ -21,10 +21,14 @@ export function addDependencies(tree: Tree): GeneratorCallback {
       dotenv: '>=16.3.1',
     },
     {
+      "@commitlint/cli": "^17.0.0",
+      "@commitlint/config-conventional": "^17.0.0",
       '@theunderscorer/nx-semantic-release': '^2.10.0',
       '@nestjs/schematics': nestJsSchematicsVersion,
-      '@nx/nest': nxVersion,
       '@nestjs-mod/testing': nestJsModVersion,
+      "rucken": "^4.6.4",
+      "prettier": "^2.6.2",
+      "lint-staged": "^15.2.0",
     }
   );
 }
