@@ -33,22 +33,22 @@ npm run tsc:lint
 
 export PORT=3010
 npm run nx -- build server
-kill -l $(lsof -t -i:$PORT) | echo "Killed"
-npm run nx -- serve server &
+kill -s STOP $(lsof -t -i:$PORT) | echo "Killed"
+node ./dist/apps/server/main.js &
 (
     sleep 5 && npm run nx -- e2e server-e2e
 )
 sleep 5
-kill -l $(lsof -t -i:$PORT) | echo "Killed"
+kill -s STOP $(lsof -t -i:$PORT) | echo "Killed"
 
 sleep 5
 
 export PORT=3011
 npm run nx -- build server-mod
-kill -l $(lsof -t -i:$PORT) | echo "Killed"
-npm run nx -- serve server-mod &
+kill -s STOP $(lsof -t -i:$PORT) | echo "Killed"
+node ./dist/apps/server-mod/main.js &
 (
     sleep 5 && npm run nx -- e2e server-mod-e2e
 )
 sleep 5
-kill -l $(lsof -t -i:$PORT) | echo "Killed"
+kill -s STOP $(lsof -t -i:$PORT) | echo "Killed"
