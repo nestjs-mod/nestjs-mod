@@ -341,7 +341,7 @@ describe('NestJS modules: Utils', () => {
     it('should return all feature options', async () => {
       // App1Module
 
-      const { InjectFeatures } = getNestModuleDecorators({
+      const { InjectFeatures, InjectAllFeatures } = getNestModuleDecorators({
         moduleName: 'App1Module',
       });
 
@@ -356,11 +356,17 @@ describe('NestJS modules: Utils', () => {
       class AppFeatureScannerService {
         constructor(
           @InjectFeatures()
-          private readonly appFeatureConfigs: AppFeatureConfig[]
+          private readonly appFeatureConfigs: AppFeatureConfig[],
+          @InjectAllFeatures()
+          private readonly appAllFeatureConfigs: Record<string, AppFeatureConfig[]>
         ) {}
 
         getFeatureConfigs() {
           return this.appFeatureConfigs;
+        }
+
+        getAllFeatureConfigs() {
+          return this.appAllFeatureConfigs;
         }
       }
 
@@ -376,6 +382,10 @@ describe('NestJS modules: Utils', () => {
 
         getFeatureConfigs() {
           return this.appFeatureScannerService.getFeatureConfigs();
+        }
+
+        getAllFeatureConfigs() {
+          return this.appFeatureScannerService.getAllFeatureConfigs();
         }
       }
 
@@ -398,6 +408,10 @@ describe('NestJS modules: Utils', () => {
 
         getFeatureConfigs() {
           return this.appFeatureScannerService.getFeatureConfigs();
+        }
+
+        getAllFeatureConfigs() {
+          return this.appFeatureScannerService.getAllFeatureConfigs();
         }
       }
 
@@ -434,6 +448,25 @@ describe('NestJS modules: Utils', () => {
         { featureOptionConfig: 'featureOptionConfig-app2' },
         { featureOptionConfig: 'featureOptionConfig-app3' },
       ]);
+
+      expect(app2Service.getAllFeatureConfigs()).toMatchObject({
+        default: [
+          { featureOptionConfig: 'featureOptionConfig-app2' },
+          { featureOptionConfig: 'featureOptionConfig-app3' },
+        ],
+      });
+      expect(app3Service.getAllFeatureConfigs()).toMatchObject({
+        default: [
+          { featureOptionConfig: 'featureOptionConfig-app2' },
+          { featureOptionConfig: 'featureOptionConfig-app3' },
+        ],
+      });
+      expect(appFeatureScannerService.getAllFeatureConfigs()).toMatchObject({
+        default: [
+          { featureOptionConfig: 'featureOptionConfig-app2' },
+          { featureOptionConfig: 'featureOptionConfig-app3' },
+        ],
+      });
     });
   });
   describe('NestJS modules with useObservable (configurationStream)', () => {

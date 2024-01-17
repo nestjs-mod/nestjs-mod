@@ -53,6 +53,10 @@ function getNestModuleInternalUtils({ moduleName }: { moduleName: string }) {
     return `${moduleName}_${defaultContextName(contextName)}_feature_configurations`;
   }
 
+  function getAllFeatureConfigurationsToken(): InjectionToken {
+    return `${moduleName}_all_feature_configurations`;
+  }
+
   function getConfigurationLoaderToken(contextName?: string): InjectionToken {
     return `${moduleName}_${defaultContextName(contextName)}_configuration_loader`;
   }
@@ -94,13 +98,18 @@ function getNestModuleInternalUtils({ moduleName }: { moduleName: string }) {
     getServiceToken,
     getFeatureConfigurationsToken,
     getAsyncConfigurationToken,
+    getAllFeatureConfigurationsToken,
   };
 }
 
 export function getNestModuleDecorators({ moduleName }: { moduleName: string }) {
-  const { getFeatureConfigurationsToken, getServiceToken } = getNestModuleInternalUtils({
-    moduleName,
-  });
+  const { getFeatureConfigurationsToken, getServiceToken, getAllFeatureConfigurationsToken } =
+    getNestModuleInternalUtils({
+      moduleName,
+    });
+
+  // TODO: not worked with ReturnType<typeof Inject>
+  const InjectAllFeatures = (): any => Inject(getAllFeatureConfigurationsToken());
 
   // TODO: not worked with ReturnType<typeof Inject>
   const InjectFeatures = (contextName?: string): any => Inject(getFeatureConfigurationsToken(contextName));
@@ -117,6 +126,7 @@ export function getNestModuleDecorators({ moduleName }: { moduleName: string }) 
   return {
     InjectFeatures,
     InjectService,
+    InjectAllFeatures,
   };
 }
 
@@ -182,6 +192,7 @@ export function createNestModule<
     getConfigurationLoaderToken,
     getServiceToken,
     getFeatureConfigurationsToken,
+    getAllFeatureConfigurationsToken,
     getAsyncConfigurationToken,
   } = getNestModuleInternalUtils({
     moduleName: nestModuleMetadata.moduleName,
@@ -193,26 +204,40 @@ export function createNestModule<
   const featuresByName: Record<string, TFeatureConfigurationModel[]> = {};
   const settingsModulesByName: Record<string, any> = {};
 
-  const getFeatureProvider = (contextName?: string) => {
+  const getFeatureProviders = (contextName?: string) => {
     contextName = defaultContextName(contextName);
     if (!featuresByName[contextName]) {
       featuresByName[contextName] = [];
     }
-    return {
-      provide: getFeatureConfigurationsToken(contextName),
-      useValue: new Proxy(featuresByName[contextName], {
-        get(target, prop) {
-          contextName = defaultContextName(contextName);
-          if (prop === 'length') {
-            return featuresByName[contextName].length;
-          }
-          if (prop !== undefined) {
-            return featuresByName[contextName][prop as unknown as number];
-          }
-          return target[prop];
-        },
-      }),
-    };
+    return [
+      {
+        provide: getAllFeatureConfigurationsToken(),
+        useValue: new Proxy(featuresByName, {
+          get(target, prop) {
+            if (prop !== undefined) {
+              return featuresByName[prop as unknown as number];
+            } else {
+              return featuresByName;
+            }
+          },
+        }),
+      },
+      {
+        provide: getFeatureConfigurationsToken(contextName),
+        useValue: new Proxy(featuresByName[contextName], {
+          get(target, prop) {
+            contextName = defaultContextName(contextName);
+            if (prop === 'length') {
+              return featuresByName[contextName].length;
+            }
+            if (prop !== undefined) {
+              return featuresByName[contextName][prop as unknown as number];
+            }
+            return target[prop];
+          },
+        }),
+      },
+    ];
   };
 
   const getSettingsModule = (contextName: string) => {
@@ -220,14 +245,15 @@ export function createNestModule<
       providers: [
         ...(nestModuleMetadata.configurationModel ? [nestModuleMetadata.configurationModel] : []),
         ...(nestModuleMetadata.staticConfigurationModel ? [nestModuleMetadata.staticConfigurationModel] : []),
-        getFeatureProvider(contextName),
-        getFeatureProvider(),
+        ...getFeatureProviders(contextName),
+        ...getFeatureProviders(),
         ...(nestModuleMetadata.environmentsModel ? [nestModuleMetadata.environmentsModel] : []),
         ...(nestModuleMetadata.staticEnvironmentsModel ? [nestModuleMetadata.staticEnvironmentsModel] : []),
       ],
       exports: [
         ...(nestModuleMetadata.configurationModel ? [nestModuleMetadata.configurationModel] : []),
         ...(nestModuleMetadata.staticConfigurationModel ? [nestModuleMetadata.staticConfigurationModel] : []),
+        getAllFeatureConfigurationsToken(),
         getFeatureConfigurationsToken(contextName),
         getFeatureConfigurationsToken(),
         ...(nestModuleMetadata.environmentsModel ? [nestModuleMetadata.environmentsModel] : []),
