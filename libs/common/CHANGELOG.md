@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/nestjs-mod/nestjs-mod/compare/common-v1.7.1...common-v1.7.2) (2024-01-17)
+
+
+### Bug Fixes
+
+* updaet git ignore in schematics ([e39948b](https://github.com/nestjs-mod/nestjs-mod/commit/e39948b5a30f48025da9871b341f39ad12c0cfb2))
+
 ## [1.7.1](https://github.com/nestjs-mod/nestjs-mod/compare/common-v1.7.0...common-v1.7.1) (2024-01-17)
 
 
