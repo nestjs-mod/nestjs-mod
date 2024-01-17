@@ -15,6 +15,9 @@ export const NEST_MODULES_STATIC_CONFIGURATION_DESCRIPTION =
 export const NEST_MODULES_FEATURE_CONFIGURATION_DESCRIPTION =
   'Feature variables of primitive and complex types that can be added to the current module from other modules (example: a transport for sending a message can be defined as a generalized interface, but the implementation itself will be added from a module for working with a specific transport or from an integration module).';
 
+export const NEST_MODULES_FEATURE_ENVIRONMENTS_DESCRIPTION =
+  'Feature variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.';
+
 export const NEST_MODULE_CATEGORY_TITLE: Record<NestModuleCategory, string> = {
   [NestModuleCategory.core]: 'Core modules',
   [NestModuleCategory.feature]: 'Feature modules',
@@ -23,14 +26,10 @@ export const NEST_MODULE_CATEGORY_TITLE: Record<NestModuleCategory, string> = {
   [NestModuleCategory.infrastructure]: 'Infrastructure modules',
 };
 
-export const NEST_MODULE_CATEGORY_DESCRIPTION: Record<
-  NestModuleCategory,
-  string
-> = {
+export const NEST_MODULE_CATEGORY_DESCRIPTION: Record<NestModuleCategory, string> = {
   [NestModuleCategory.core]:
     'Core modules necessary for the operation of feature and integration modules (examples: main module with connection to the database, main module for connecting to aws, etc.).',
-  [NestModuleCategory.feature]:
-    'Feature modules with business logic of the application.',
+  [NestModuleCategory.feature]: 'Feature modules with business logic of the application.',
   [NestModuleCategory.integrations]:
     'Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module).',
   [NestModuleCategory.system]:

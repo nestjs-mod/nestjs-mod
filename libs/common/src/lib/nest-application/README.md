@@ -13,7 +13,7 @@ Types of modules (list in order of processing):
 
 #### Decorators
 
-`InjectFeatures`, `InjectService`, `InjectAllFeatures`
+`InjectFeatures`, `InjectService`, `InjectAllFeatures`, `InjectFeatureEnvironments`, `InjectAllFeatureEnvironments`
 
 #### Function
 

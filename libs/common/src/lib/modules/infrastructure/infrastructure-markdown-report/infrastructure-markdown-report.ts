@@ -7,6 +7,7 @@ import {
   NEST_MODULES_CONFIGURATION_DESCRIPTION,
   NEST_MODULES_ENVIRONMENTS_DESCRIPTION,
   NEST_MODULES_FEATURE_CONFIGURATION_DESCRIPTION,
+  NEST_MODULES_FEATURE_ENVIRONMENTS_DESCRIPTION,
   NEST_MODULES_STATIC_CONFIGURATION_DESCRIPTION,
   NEST_MODULES_STATIC_ENVIRONMENTS_DESCRIPTION,
   NEST_MODULE_CATEGORY_DESCRIPTION,
@@ -42,12 +43,14 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       nestModulesConfigurationDescription?: string;
       nestModulesStaticConfigurationDescription?: string;
       nestModulesFeatureConfigurationDescription?: string;
+      nestModulesFeatureEnvironmentsDescription?: string;
     } = {
       nestModulesEnvironmentsDescription: NEST_MODULES_ENVIRONMENTS_DESCRIPTION,
       nestModulesStaticEnvironmentsDescription: NEST_MODULES_STATIC_ENVIRONMENTS_DESCRIPTION,
       nestModulesConfigurationDescription: NEST_MODULES_CONFIGURATION_DESCRIPTION,
       nestModulesStaticConfigurationDescription: NEST_MODULES_STATIC_CONFIGURATION_DESCRIPTION,
       nestModulesFeatureConfigurationDescription: NEST_MODULES_FEATURE_CONFIGURATION_DESCRIPTION,
+      nestModulesFeatureEnvironmentsDescription: NEST_MODULES_FEATURE_ENVIRONMENTS_DESCRIPTION,
     }
   ) {
     const lines: string[] = [];
@@ -146,8 +149,18 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           settingsModelInfoDescription: options.nestModulesFeatureConfigurationDescription,
         });
 
+        this.reportOfConfigModelInfo({
+          lines,
+          settingsModelInfo: dynamicNestModuleMetadata.moduleSettings?.[name].featureEnvironments,
+          settingsModelInfoTitle: this.appendContextName('Feature environments', names.length > 1 ? name : undefined),
+          settingsModelInfoDescription: options.nestModulesFeatureEnvironmentsDescription,
+        });
+
         const featureModuleNames = Object.keys(
           dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleConfigurations ?? {}
+        );
+        const featureEnvironmentsModuleNames = Object.keys(
+          dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleEnvironments ?? {}
         );
         let titleAppended = false;
         if (featureModuleNames.length > 0) {
@@ -163,6 +176,26 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                 titleSharps: '#####',
                 lines,
                 settingsModelInfo: featureConfiguration,
+                settingsModelInfoTitle: `Module name: ${featureModuleName}`,
+              });
+            }
+          }
+        }
+
+        titleAppended = false;
+        if (featureEnvironmentsModuleNames.length > 0) {
+          for (const featureModuleName of featureEnvironmentsModuleNames) {
+            const featureEnvironments =
+              dynamicNestModuleMetadata.moduleSettings?.[name]?.featureModuleEnvironments?.[featureModuleName] ?? [];
+            for (const featureEnvironment of featureEnvironments) {
+              if (!titleAppended) {
+                lines.push('#### Modules that use feature environments');
+                titleAppended = true;
+              }
+              this.reportOfConfigModelInfo({
+                titleSharps: '#####',
+                lines,
+                settingsModelInfo: featureEnvironment,
                 settingsModelInfoTitle: `Module name: ${featureModuleName}`,
               });
             }

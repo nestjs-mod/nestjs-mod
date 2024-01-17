@@ -314,4 +314,64 @@ describe('SampleWithSharedConfigController', () => {
 
     await app.close();
   });
+
+  it('should return many feature options from environments', async () => {
+    // first
+
+    process.env['API_41_SAMPLE_WITH_SHARED_CONFIG_ENV_FEATURE_VAR'] = 'envFeatureVar41';
+    @Module({
+      imports: [
+        SampleWithSharedConfig.forFeature({
+          contextName: 'api41',
+          featureModuleName: 'SampleWithSharedConfig',
+          featureConfiguration: { featureVar: 'featureVar41' },
+          featureEnvironmentsOptions: { debug: true },
+        }),
+      ],
+    })
+    class FirstModule {}
+
+    // second
+
+    @Module({
+      imports: [
+        SampleWithSharedConfig.forFeature({
+          contextName: 'api41',
+          featureModuleName: 'SampleWithSharedConfig',
+          featureConfiguration: { featureVar: 'featureVar42' },
+          featureEnvironments: { envFeatureVar: 'envFeatureVar42' },
+          featureEnvironmentsOptions: { debug: true },
+        }),
+      ],
+    })
+    class SecondModule {}
+
+    const app = await bootstrapNestApplication({
+      project: {
+        name: 'TestApplication',
+        description: 'Test application',
+      },
+      modules: {
+        system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
+        feature: [
+          SampleWithSharedConfig.forRoot({
+            contextName: 'api41',
+            environments: { var1: 'var1value' },
+          }),
+          createNestModule({
+            moduleName: 'ChildModules',
+            moduleDescription: 'Child modules',
+            imports: [SecondModule, FirstModule],
+          }).ChildModules.forRoot(),
+        ],
+      },
+    });
+
+    await request(app.getHttpServer())
+      .get('/get-feature-environments/api41')
+      .expect(200)
+      .expect('[{"envFeatureVar":"envFeatureVar41"},{"envFeatureVar":"envFeatureVar42"}]');
+
+    await app.close();
+  });
 });

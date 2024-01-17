@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { SampleWithSharedConfigService } from './sample-with-shared-config.service';
 
 export function getSampleWithSharedConfigController(endpoint?: string) {
@@ -35,6 +35,11 @@ export function getSampleWithSharedConfigController(endpoint?: string) {
     @Get('get-features')
     getFeatures(): string {
       return JSON.stringify(this.appService.getFeatures());
+    }
+
+    @Get('get-feature-environments/:contextName')
+    getFeatureEnvironments(@Param('contextName') contextName: string): string {
+      return JSON.stringify(this.appService.getFeatureEnvironments(contextName));
     }
   }
   return SampleWithSharedConfigController;

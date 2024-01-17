@@ -1,9 +1,4 @@
-import {
-  ConfigModel,
-  ConfigModelProperty,
-  EnvModel,
-  EnvModelProperty,
-} from '@nestjs-mod/common';
+import { ConfigModel, ConfigModelProperty, EnvModel, EnvModelProperty } from '@nestjs-mod/common';
 import { IsNotEmpty } from 'class-validator';
 import { SAMPLE_WITH_SHARED_CONFIG_NAME } from './sample-with-shared-config.const';
 
@@ -37,4 +32,10 @@ export class SampleWithSharedConfigFeatureConfiguration {
   @ConfigModelProperty()
   @IsNotEmpty()
   featureVar!: string;
+}
+
+@EnvModel()
+export class SampleWithSharedConfigFeatureEnvironments {
+  @EnvModelProperty()
+  envFeatureVar!: string;
 }

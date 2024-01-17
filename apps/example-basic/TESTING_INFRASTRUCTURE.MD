@@ -70,6 +70,13 @@ Feature variables of primitive and complex types that can be added to the curren
 | ------ | ----------- | ----------- | ------- | ----- |
 |`featureVar`|-|**isNotEmpty** (featureVar should not be empty)|-|-|
 
+#### Feature environments
+Feature variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
+
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`envFeatureVar`|-|**optional**|-|-|
+
 ## Infrastructure modules
 Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
 

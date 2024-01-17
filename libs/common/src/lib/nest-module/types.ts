@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Abstract, DynamicModule, INestApplication, Provider, Type } from '@nestjs/common';
+import { Observable } from 'rxjs';
 import { ConfigModelInfo, ConfigModelOptions } from '../config-model/types';
 import { EnvModelInfo, EnvModelOptions } from '../env-model/types';
-import { Observable } from 'rxjs';
 
 export const DEFAULT_FOR_ROOT_METHOD_NAME = 'forRoot';
 export const DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME = 'forRootAsync';
@@ -35,6 +35,7 @@ export type DynamicNestModuleMetadata<
   TEnvironmentsModel = any,
   TStaticEnvironmentsModel = any,
   TFeatureConfigurationModel = never,
+  TFeatureEnvironmentsModel = never,
   TForRootMethodName extends string = typeof DEFAULT_FOR_ROOT_METHOD_NAME,
   TForRootAsyncMethodName extends string = typeof DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME,
   TForFeatureMethodName extends string = typeof DEFAULT_FOR_FEATURE_METHOD_NAME,
@@ -44,6 +45,7 @@ export type DynamicNestModuleMetadata<
     featureModule: TDynamicModule;
     settingsModule: TDynamicModule;
     featureConfiguration: TFeatureConfigurationModel;
+    featureEnvironments: TFeatureEnvironmentsModel;
     staticConfiguration: TStaticConfigurationModel;
     staticEnvironments: TStaticEnvironmentsModel;
   },
@@ -62,6 +64,7 @@ export type DynamicNestModuleMetadata<
         TEnvironmentsModel,
         TStaticEnvironmentsModel,
         TFeatureConfigurationModel,
+        TFeatureEnvironmentsModel,
         TForRootMethodName,
         TForRootAsyncMethodName,
         TForFeatureMethodName,
@@ -116,6 +119,7 @@ export interface NestModuleMetadata<
   TEnvironmentsModel = any,
   TStaticEnvironmentsModel = any,
   TFeatureConfigurationModel = never,
+  TFeatureEnvironmentsModel = never,
   TForRootMethodName extends string = typeof DEFAULT_FOR_ROOT_METHOD_NAME,
   TForRootAsyncMethodName extends string = typeof DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME,
   TForFeatureMethodName extends string = typeof DEFAULT_FOR_FEATURE_METHOD_NAME,
@@ -145,6 +149,7 @@ export interface NestModuleMetadata<
   configurationModel?: Type<TConfigurationModel>;
   staticConfigurationModel?: Type<TStaticConfigurationModel>;
   featureConfigurationModel?: Type<TFeatureConfigurationModel>;
+  featureEnvironmentsModel?: Type<TFeatureEnvironmentsModel>;
   environmentsModel?: Type<TEnvironmentsModel>;
   staticEnvironmentsModel?: Type<TStaticEnvironmentsModel>;
   environmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
@@ -259,11 +264,14 @@ export type ForRootAsyncMethodOptions<
     TStaticEnvironmentsModel
   >);
 
-export type ForFeatureMethodOptions<TFeatureConfigurationModel = any> = {
+export type ForFeatureMethodOptions<TFeatureConfigurationModel = any, TFeatureEnvironmentsModel = any> = {
   featureModuleName: string;
   contextName?: string;
 } & {
   featureConfiguration?: TFeatureConfigurationModel;
+  featureEnvironments?: TFeatureEnvironmentsModel;
+  featureConfigurationOptions?: Omit<EnvModelOptions, 'originalName'>;
+  featureEnvironmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
 };
 
 export type ForFeatureAsyncMethodOptions<
@@ -271,7 +279,8 @@ export type ForFeatureAsyncMethodOptions<
   TStaticConfigurationModel = never,
   TEnvironmentsModel = never,
   TStaticEnvironmentsModel = never,
-  TFeatureConfigurationModel = any
+  TFeatureConfigurationModel = any,
+  TFeatureEnvironmentsModel = any
 > = {
   // todo: need add later
   // featureConfigurationExisting?: any;
@@ -285,11 +294,12 @@ export type ForFeatureAsyncMethodOptions<
     TStaticConfigurationModel,
     TEnvironmentsModel,
     TStaticEnvironmentsModel,
-    TFeatureConfigurationModel
+    TFeatureConfigurationModel,
+    TFeatureEnvironmentsModel
   >,
   'imports'
 > &
-  ({ contextName?: string } & ForFeatureMethodOptions<TFeatureConfigurationModel>);
+  ({ contextName?: string } & ForFeatureMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>);
 
 export type TModuleSettings = {
   environments?: EnvModelInfo;
@@ -297,5 +307,7 @@ export type TModuleSettings = {
   configuration?: ConfigModelInfo;
   staticConfiguration?: ConfigModelInfo;
   featureConfiguration?: ConfigModelInfo;
+  featureEnvironments?: ConfigModelInfo;
   featureModuleConfigurations?: Record<string, ConfigModelInfo[]>;
+  featureModuleEnvironments?: Record<string, ConfigModelInfo[]>;
 };

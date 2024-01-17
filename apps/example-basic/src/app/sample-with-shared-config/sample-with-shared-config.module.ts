@@ -1,15 +1,16 @@
 import { createNestModule, NestModuleCategory } from '@nestjs-mod/common';
+import { Module } from '@nestjs/common';
 import {
   SampleWithSharedConfigConfiguration,
   SampleWithSharedConfigEnvironments,
   SampleWithSharedConfigFeatureConfiguration,
+  SampleWithSharedConfigFeatureEnvironments,
   SampleWithSharedConfigStaticConfiguration,
   SampleWithSharedConfigStaticEnvironments,
 } from './sample-with-shared-config.config';
 import { SAMPLE_WITH_SHARED_CONFIG_NAME } from './sample-with-shared-config.const';
 import { getSampleWithSharedConfigController } from './sample-with-shared-config.controller';
 import { SampleWithSharedConfigService } from './sample-with-shared-config.service';
-import { Module } from '@nestjs/common';
 
 @Module({})
 export class SharedImport1Module {}
@@ -25,6 +26,7 @@ export const { SampleWithSharedConfig } = createNestModule({
   environmentsModel: SampleWithSharedConfigEnvironments,
   staticEnvironmentsModel: SampleWithSharedConfigStaticEnvironments,
   featureConfigurationModel: SampleWithSharedConfigFeatureConfiguration,
+  featureEnvironmentsModel: SampleWithSharedConfigFeatureEnvironments,
   controllers: ({ staticConfiguration, staticEnvironments }) => [
     getSampleWithSharedConfigController(staticConfiguration?.endpoint ?? staticEnvironments?.endpoint),
   ],

@@ -3,16 +3,19 @@ import {
   SampleWithSharedConfigConfiguration,
   SampleWithSharedConfigEnvironments,
   SampleWithSharedConfigFeatureConfiguration,
+  SampleWithSharedConfigFeatureEnvironments,
   SampleWithSharedConfigStaticConfiguration,
   SampleWithSharedConfigStaticEnvironments,
 } from './sample-with-shared-config.config';
-import { InjectFeatures } from './sample-with-shared-config.utils';
+import { InjectAllFeatureEnvironments, InjectFeatures } from './sample-with-shared-config.utils';
 
 @Injectable()
 export class SampleWithSharedConfigService {
   constructor(
     @InjectFeatures()
     private readonly features: SampleWithSharedConfigFeatureConfiguration[],
+    @InjectAllFeatureEnvironments()
+    private readonly featureEnvironments: Record<string, SampleWithSharedConfigFeatureEnvironments[]>,
     private readonly configuration: SampleWithSharedConfigConfiguration,
     private readonly staticConfiguration: SampleWithSharedConfigStaticConfiguration,
     private readonly environments: SampleWithSharedConfigEnvironments,
@@ -41,5 +44,9 @@ export class SampleWithSharedConfigService {
 
   getFeatures() {
     return this.features;
+  }
+
+  getFeatureEnvironments(contextName: string) {
+    return this.featureEnvironments[contextName];
   }
 }
