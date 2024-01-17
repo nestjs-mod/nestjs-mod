@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.7.0...reports-v1.7.1) (2024-01-17)
+
+
+### Bug Fixes
+
+* **schematics:** tune @nestjs-mod/schematics generators for NestJS-mod ([0ca77b2](https://github.com/nestjs-mod/nestjs-mod/commit/0ca77b2e0913855da1dbfebc080e8f4822ef4b30))
+
 # [1.7.0](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.6.1...reports-v1.7.0) (2024-01-16)
 
 
