@@ -4,12 +4,14 @@ import { formatFiles } from '@nx/devkit';
 import { addGitIgnoreEntry, addRuckenFile, addScript, updateTsConfigRoot } from './lib/add-custom';
 import { addDependencies } from './lib/add-dependencies';
 import type { InitGeneratorOptions } from './schema';
+import { createFilesInit } from './lib/create-files';
 
 export async function initGenerator(tree: Tree, options: InitGeneratorOptions): Promise<GeneratorCallback> {
   addScript(tree);
   updateTsConfigRoot(tree);
   addRuckenFile(tree);
   addGitIgnoreEntry(tree);
+  createFilesInit(tree);
 
   let installPackagesTask: GeneratorCallback = () => {};
   if (!options.skipPackageJson) {

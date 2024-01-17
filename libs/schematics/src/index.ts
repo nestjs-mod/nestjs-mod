@@ -7,6 +7,7 @@ export * from './lib/generators/application/lib/update-tsconfig';
 export * from './lib/generators/init/init';
 export * from './lib/generators/init/lib/add-custom';
 export * from './lib/generators/init/lib/add-dependencies';
+export * from './lib/generators/init/lib/create-files';
 export * from './lib/generators/init/lib/get-port.utils';
 export * from './lib/generators/init/lib/package-json.utils';
 export * from './lib/generators/library/library';

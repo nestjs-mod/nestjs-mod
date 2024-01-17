@@ -24,6 +24,7 @@ export function addDependencies(tree: Tree): GeneratorCallback {
       "@commitlint/cli": "^17.0.0",
       "@commitlint/config-conventional": "^17.0.0",
       '@theunderscorer/nx-semantic-release': '^2.10.0',
+      '@nestjs-mod/schematics': '>=1.0.1',
       '@nestjs/schematics': nestJsSchematicsVersion,
       '@nestjs-mod/testing': nestJsModVersion,
       "rucken": "^4.6.4",

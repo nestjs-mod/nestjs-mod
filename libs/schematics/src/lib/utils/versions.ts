@@ -1,4 +1,4 @@
-export const nestJsModVersion = '>=1.7.0';
+export const nestJsModVersion = '>=1.7.2';
 export const nestJsVersion = '^10.0.2';
 export const nestJsSchematicsVersion = '^10.0.1';
 export const rxjsVersion = '^7.8.0';
