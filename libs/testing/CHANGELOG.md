@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.8.0...testing-v1.9.0) (2024-01-17)
+
+
+### Features
+
+* add featureEnvironments and InjectFeatureEnvironments, InjectAllFeatureEnvironments ([c46c9b5](https://github.com/nestjs-mod/nestjs-mod/commit/c46c9b5de0b3a853432246fdc88edeec2015c3c7))
+
 # [1.8.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.7.2...testing-v1.8.0) (2024-01-17)
 
 
