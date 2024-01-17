@@ -1,3 +1,15 @@
+# [1.8.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.7.2...testing-v1.8.0) (2024-01-17)
+
+
+### Bug Fixes
+
+* remove preWrapApplication, postWrapApplication, wrapApplication from feature internal module ([ad58cd7](https://github.com/nestjs-mod/nestjs-mod/commit/ad58cd72b95a96c7e052bfc47f877c1c45489aaf))
+
+
+### Features
+
+* **nest-module:** add InjectAllFeatures to get all features from module ([60de7e7](https://github.com/nestjs-mod/nestjs-mod/commit/60de7e76edd8b712c82d83d74271a749acebba86))
+
 ## [1.7.2](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.7.1...testing-v1.7.2) (2024-01-17)
 
 
