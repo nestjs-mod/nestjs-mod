@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.0.5...nestjs-mod-v1.0.6) (2024-01-17)
+
+
+### Bug Fixes
+
+* updaet git ignore in schematics ([e39948b](https://github.com/nestjs-mod/nestjs-mod/commit/e39948b5a30f48025da9871b341f39ad12c0cfb2))
+
 ## [1.0.5](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.0.4...nestjs-mod-v1.0.5) (2024-01-17)
 
 
