@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.9.0...testing-v1.9.1) (2024-01-17)
+
+
+### Bug Fixes
+
+* **reports:** remove not needed title ([ecfa43d](https://github.com/nestjs-mod/nestjs-mod/commit/ecfa43db840727d6560d8ed77a71493dfab86830))
+
 # [1.9.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.8.0...testing-v1.9.0) (2024-01-17)
 
 
