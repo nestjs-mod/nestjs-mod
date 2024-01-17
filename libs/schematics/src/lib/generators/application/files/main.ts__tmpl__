@@ -1,20 +1,86 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
+import {
+  DefaultNestApplicationInitializer,
+  DefaultNestApplicationListener,
+  InfrastructureMarkdownReportGenerator,
+  ProjectUtils,
+  bootstrapNestApplication,
+  isInfrastructureMode,
+  isProductionMode,
+} from '@nestjs-mod/common';
+import { NestjsPinoLogger } from '@nestjs-mod/pino';
+import { TerminusHealthCheck } from '@nestjs-mod/terminus';
+import { MemoryHealthIndicator } from '@nestjs/terminus';
+import { ECOSYSTEM_CONFIG_FILE, PACKAGE_JSON_FILE, Pm2 } from '@nestjs-mod/pm2';
 import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-
+import { join } from 'path';
 import { AppModule } from './app/app.module';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
-  Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
-}
+const globalPrefix = 'api';
 
-bootstrap();
+bootstrapNestApplication({
+  modules: {
+    system: [
+      ProjectUtils.forRoot({
+        staticConfiguration: {
+          applicationPackageJsonFile: join(
+            __dirname,
+            <%- pathToApp %>,
+            PACKAGE_JSON_FILE
+          ),
+          packageJsonFile: join(__dirname, <%- pathToRoot %>, PACKAGE_JSON_FILE),
+          envFile: join(__dirname, <%- pathToRoot %>, '.env'),
+        },
+      }),
+      DefaultNestApplicationInitializer.forRoot(),
+      NestjsPinoLogger.forRoot(),
+      TerminusHealthCheck.forRootAsync({
+        configurationFactory: (memoryHealthIndicator: MemoryHealthIndicator) => ({
+          standardHealthIndicator: [
+            { name: 'memory_heap', check: () => memoryHealthIndicator.checkHeap('memory_heap', 150 * 1024 * 1024) },
+          ],
+        }),
+        inject: [MemoryHealthIndicator],
+      }),
+      DefaultNestApplicationListener.forRoot({
+        staticConfiguration: {
+          // When running in infrastructure mode, the backend server does not start.
+          mode: isInfrastructureMode() ? 'init' : 'listen',
+          preListen: async ({ app }) => {
+            if (app) {
+              app.setGlobalPrefix(globalPrefix);
+            }
+          },
+          postListen: async ({ current }) => {
+            Logger.log(
+              `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
+                current.staticEnvironments?.port
+              }/${globalPrefix}`
+            );
+          },
+        },
+      }),
+    ],
+    feature: [
+      AppModule.forRoot(),
+    ],
+    // Disable infrastructure modules in production
+    ...(!isProductionMode() || isInfrastructureMode()
+      ? {
+          infrastructure: [
+            InfrastructureMarkdownReportGenerator.forRoot({
+              staticConfiguration: {
+                markdownFile: join(__dirname, <%- pathToApp %>, 'INFRASTRUCTURE.MD'),
+                skipEmptySettings: true,
+              },
+            }),
+            Pm2.forRoot({
+              configuration: {
+                ecosystemConfigFile: join(__dirname, <%- pathToRoot %>, ECOSYSTEM_CONFIG_FILE),
+                applicationScriptFile: join(<%- distFile %>),
+              },
+            }),
+          ],
+        }
+      : {}),
+  },
+});

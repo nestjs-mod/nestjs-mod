@@ -1,4 +1,6 @@
 #!/bin/bash
+export NX_SKIP_NX_CACHE=true
+
 rm -rf ./dist
 rm -rf ./integrations/app
 
