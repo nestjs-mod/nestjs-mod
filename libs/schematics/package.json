@@ -5,10 +5,10 @@
   "keywords": [
     "nestjs",
     "nestjs-mod",
-    "testing",
-    "tests",
-    "modules",
-    "mod"
+    "schematics",
+    "scaffolding",
+    "nx",
+    "generator"
   ],
   "license": "MIT",
   "author": "EndyKaufman <admin@site15.ru>",
