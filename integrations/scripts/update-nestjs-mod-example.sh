@@ -7,7 +7,10 @@ rm -rf ./dist
 rm -rf ./integrations/tmp
 mkdir -p ./integrations/tmp
 cd ./integrations/nestjs-mod-example
-rm -rf !\(".git"\)
+rm -rf ./apps
+rm -rf ./libs
+rm -rf ./tsconfig.base.json
+# rm -rf !\(".git"\)
 cd ../..
 
 npm run nx -- run-many --target=build --all
