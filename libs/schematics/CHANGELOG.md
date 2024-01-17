@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.0.1...schematics-v1.0.2) (2024-01-17)
+
+
+### Bug Fixes
+
+* **schematics:** add new readme to generated application ([e4709fe](https://github.com/nestjs-mod/nestjs-mod/commit/e4709fe61e387ec5ff3be025ef4ad659357027cb))
+
 ## [1.0.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.0.0...schematics-v1.0.1) (2024-01-17)
 
 
