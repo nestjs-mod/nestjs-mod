@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.0.0...schematics-v1.0.1) (2024-01-17)
+
+
+### Bug Fixes
+
+* updaet git ignore in schematics ([e39948b](https://github.com/nestjs-mod/nestjs-mod/commit/e39948b5a30f48025da9871b341f39ad12c0cfb2))
+
 # 1.0.0 (2024-01-17)
 
 
