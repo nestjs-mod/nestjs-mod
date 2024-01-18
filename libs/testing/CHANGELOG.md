@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.9.1...testing-v1.9.2) (2024-01-18)
+
+
+### Bug Fixes
+
+* add peerDependenciesMeta ([aee0cbe](https://github.com/nestjs-mod/nestjs-mod/commit/aee0cbeec91462d2a5d967edcae04b89ed7b81b4))
+
 ## [1.9.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.9.0...testing-v1.9.1) (2024-01-17)
 
 
