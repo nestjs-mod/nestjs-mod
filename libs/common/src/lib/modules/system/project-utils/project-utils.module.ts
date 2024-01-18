@@ -8,10 +8,10 @@ import { PackageJsonService } from './services/package-json.service';
 import { ProjectUtilsPatcherService } from './services/project-utils-patcher.service';
 import { WrapApplicationOptionsService } from './services/wrap-application-options.service';
 
-const wrapApplicationOptionsService = new WrapApplicationOptionsService();
-const dotEnvService = new DotEnvService(wrapApplicationOptionsService, {} as ProjectUtilsConfiguration);
-const packageJsonService = new PackageJsonService({} as ProjectUtilsConfiguration);
-const applicationPackageJsonService = new ApplicationPackageJsonService({} as ProjectUtilsConfiguration);
+const wrapApplicationOptionsService = {} as WrapApplicationOptionsService;
+const dotEnvService = {};
+const packageJsonService = {};
+const applicationPackageJsonService = {};
 
 export const { ProjectUtils } = createNestModule({
   moduleName: PROJECT_UTILS_MODULE_NAME,
@@ -32,27 +32,32 @@ export const { ProjectUtils } = createNestModule({
       // DotEnvService
       const tempDotEnvService = new DotEnvService(
         wrapApplicationOptionsService,
-        options.current.staticConfiguration as ProjectUtilsConfiguration
+        wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
       );
       await tempDotEnvService.read();
+      Object.setPrototypeOf(dotEnvService, tempDotEnvService);
       Object.assign(dotEnvService, tempDotEnvService);
 
       // PackageJsonService
       const tempPackageJsonService = new PackageJsonService(
-        options.current.staticConfiguration as ProjectUtilsConfiguration
+        wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
       );
+      Object.setPrototypeOf(packageJsonService, tempPackageJsonService);
       Object.assign(packageJsonService, tempPackageJsonService);
 
       // ApplicationPackageJsonService
       const tempApplicationPackageJsonService = new ApplicationPackageJsonService(
-        options.current.staticConfiguration as ProjectUtilsConfiguration
+        wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
       );
+      Object.setPrototypeOf(applicationPackageJsonService, tempApplicationPackageJsonService);
       Object.assign(applicationPackageJsonService, tempApplicationPackageJsonService);
 
       // ProjectUtilsPatcherService
       const projectUtilsPatcherService = new ProjectUtilsPatcherService(
-        options.current.staticConfiguration as ProjectUtilsConfiguration,
-        new ApplicationPackageJsonService(options.current.staticConfiguration as ProjectUtilsConfiguration),
+        wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
+        new ApplicationPackageJsonService(
+          wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
+        ),
         wrapApplicationOptionsService
       );
       await projectUtilsPatcherService.patch();

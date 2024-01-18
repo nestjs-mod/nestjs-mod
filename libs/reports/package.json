@@ -35,11 +35,24 @@
   "dependencies": {
     "tslib": ">=2.3.0",
     "markdown-it": ">=14.0.0",
-    "@nestjs-mod/common": "*",
-    "@nestjs/common": ">=8.0.0",
-    "class-validator": ">=0.14.0",
     "fast-glob": ">=3.3.2",
     "case-anything": ">=2.1.13"
+  },
+  "peerDependencies": {
+    "class-validator": "*",
+    "@nestjs-mod/common": "*",
+    "@nestjs/common": "*"
+  },
+  "peerDependenciesMeta": {
+    "class-validator": {
+      "optional": true
+    },
+    "@nestjs-mod/common": {
+      "optional": true
+    },
+    "@nestjs/common": {
+      "optional": true
+    }
   },
   "type": "commonjs",
   "main": "./src/index.js",

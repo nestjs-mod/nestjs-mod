@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 export NX_SKIP_NX_CACHE=true
 
 npm run nx -- reset
@@ -27,7 +28,7 @@ npm install --save-dev @nestjs-mod/schematics@latest
 ./node_modules/.bin/nx g @nestjs-mod/schematics:library feature-name --buildable --publishable --directory=libs/feature-name --simpleName=true --projectNameAndRootFormat=as-provided --strict=true
 npm run manual:prepare
 
-source .env
+. ./source .env
 kill -9 $(lsof -t -i:$APP_NAME_PORT) | echo "Killed"
 node ./dist/apps/app-name/main.js &
 (

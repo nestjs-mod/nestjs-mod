@@ -36,6 +36,7 @@ import {
   TModuleSettings,
   WrapApplicationOptions,
 } from './types';
+import { NestModuleError } from './errors';
 
 export function getWrapModuleMetadataMethods() {
   const nestModuleMetadataMethods: (keyof Pick<
@@ -387,9 +388,11 @@ export function createNestModule<
             exports.push(getServiceToken(detectedProviderName, contextName));
             return providers;
           }
+          exports.push(sharedService);
+          exports.push(getServiceToken(detectedProviderName, contextName));
           return [sharedService];
-        } catch (err) {
-          return undefined;
+        } catch (err: any) {
+          throw new NestModuleError(err.message);
         }
       })
       .filter(Boolean)

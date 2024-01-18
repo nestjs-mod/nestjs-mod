@@ -34,10 +34,23 @@
     }
   ],
   "dependencies": {
-    "tslib": ">=2.3.0",
+    "tslib": ">=2.3.0"
+  },
+  "peerDependencies": {
     "@nestjs-mod/common": "*",
-    "@nestjs/common": ">=8.0.0",
-    "@nestjs/testing": ">=8.0.0"
+    "@nestjs/common": "*",
+    "@nestjs/testing": "*"
+  },
+  "peerDependenciesMeta": {
+    "@nestjs-mod/common": {
+      "optional": true
+    },
+    "@nestjs/common": {
+      "optional": true
+    },
+    "@nestjs/testing": {
+      "optional": true
+    }
   },
   "type": "commonjs",
   "main": "./src/index.js",

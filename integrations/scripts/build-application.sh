@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 export NX_SKIP_NX_CACHE=true
 
 npm run nx -- reset
@@ -45,7 +46,7 @@ kill -9 $(lsof -t -i:3000) | echo "Killed"
 
 sleep 5
 
-source .env
+. ./.env
 npm run nx -- build server-mod
 kill -9 $(lsof -t -i:$SERVER_MOD_PORT) | echo "Killed"
 node ./dist/apps/server-mod/main.js &

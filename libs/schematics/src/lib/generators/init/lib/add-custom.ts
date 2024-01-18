@@ -128,7 +128,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-.nx/cache
 .clinic
 
 .nx/cache
@@ -137,12 +136,70 @@ Thumbs.db
   if (host.exists('.gitignore')) {
     let content = host.read('.gitignore', 'utf-8');
 
-    if (!content?.includes(needed)) {
+    if (!content?.includes('node_modules')) {
       content = `${content}\n${needed}\n`;
     }
     host.write('.gitignore', content);
   } else {
     host.write('.gitignore', `${needed}\n`);
+  }
+}
+
+export function addNxIgnoreEntry(host: Tree) {
+  const needed = `# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+dist
+tmp
+/out-tsc
+
+# dependencies
+node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+.clinic
+
+.nx/cache
+*.env
+`;
+  if (host.exists('.nxignore')) {
+    let content = host.read('.nxignore', 'utf-8');
+
+    if (!content?.includes('node_modules')) {
+      content = `${content}\n${needed}\n`;
+    }
+    host.write('.nxignore', content);
+  } else {
+    host.write('.nxignore', `${needed}\n`);
   }
 }
 
@@ -173,7 +230,7 @@ export function addAppPackageJsonFile(host: Tree, projectName: string, projectPa
   if (host.exists(join(projectPath, 'package.json'))) {
     let content = host.read('package.json', 'utf-8');
 
-    if (!content?.includes(needed)) {
+    if (!content?.includes('"name":')) {
       content = needed;
       host.write(join(projectPath, 'package.json'), content);
     }
@@ -199,7 +256,7 @@ export function addRuckenFile(host: Tree) {
 }`;
   if (host.exists('rucken.json')) {
     let content = host.read('rucken.json', 'utf-8');
-    if (!content?.includes(needed)) {
+    if (!content?.includes('"makeTsList":')) {
       content = needed;
       host.write('rucken.json', content);
     }

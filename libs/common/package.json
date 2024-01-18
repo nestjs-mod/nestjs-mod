@@ -37,11 +37,27 @@
   "dependencies": {
     "tslib": ">=2.3.0",
     "case-anything": ">=2.1.13",
-    "@nestjs/common": ">=8.0.0",
-    "@nestjs/core": ">=8.0.0",
-    "class-validator": ">=0.14.0",
-    "rxjs": "^7.8.0",
     "dotenv": "16.3.1"
+  },
+  "peerDependencies": {
+    "rxjs": "*",
+    "@nestjs/common": "*",
+    "@nestjs/core": "*",
+    "class-validator": "*"
+  },
+  "peerDependenciesMeta": {
+    "rxjs": {
+      "optional": true
+    },
+    "@nestjs/common": {
+      "optional": true
+    },
+    "@nestjs/core": {
+      "optional": true
+    },
+    "class-validator": {
+      "optional": true
+    }
   },
   "type": "commonjs",
   "main": "./src/index.js",
