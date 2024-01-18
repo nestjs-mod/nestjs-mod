@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.1.0...schematics-v1.1.1) (2024-01-18)
+
+
+### Bug Fixes
+
+* add peerDependenciesMeta ([aee0cbe](https://github.com/nestjs-mod/nestjs-mod/commit/aee0cbeec91462d2a5d967edcae04b89ed7b81b4))
+
 # [1.1.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.0.2...schematics-v1.1.0) (2024-01-17)
 
 
