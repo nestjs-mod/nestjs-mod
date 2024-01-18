@@ -10,11 +10,10 @@ mkdir -p ./integrations/tmp
 cd ./integrations/nestjs-mod-example
 rm -rf ./apps
 rm -rf ./libs
+rm -rf ./.nx
 rm -rf ./tsconfig.base.json
 # rm -rf !\(".git"\)
 cd ../..
-
-npm run nx -- run-many --target=build --all
 
 cd ./integrations/tmp
 npx --yes create-nx-workspace@17.2.8 --name=project-name --preset=empty --interactive=false --nx-cloud=false
