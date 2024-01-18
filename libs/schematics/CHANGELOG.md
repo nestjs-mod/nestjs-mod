@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.1.1...schematics-v1.1.2) (2024-01-18)
+
+
+### Bug Fixes
+
+* update main package json, for exclude root project ([2ca7401](https://github.com/nestjs-mod/nestjs-mod/commit/2ca7401336abd5ffd451775d0fb66254c0b6da33))
+
 ## [1.1.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.1.0...schematics-v1.1.1) (2024-01-18)
 
 
