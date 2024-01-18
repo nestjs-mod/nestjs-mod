@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.9.1...reports-v1.9.2) (2024-01-18)
+
+
+### Bug Fixes
+
+* add peerDependenciesMeta ([aee0cbe](https://github.com/nestjs-mod/nestjs-mod/commit/aee0cbeec91462d2a5d967edcae04b89ed7b81b4))
+
 ## [1.9.1](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.9.0...reports-v1.9.1) (2024-01-17)
 
 
