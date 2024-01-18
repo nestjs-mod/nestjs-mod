@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.1.3...schematics-v1.2.0) (2024-01-18)
+
+
+### Features
+
+* update detect default context name in formatter, add disableInfrastructureModulesInProduction ([fa6b4c9](https://github.com/nestjs-mod/nestjs-mod/commit/fa6b4c9d1962020f36c9f88e745bfbb64e25c9d4))
+
 ## [1.1.3](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.1.2...schematics-v1.1.3) (2024-01-18)
 
 
