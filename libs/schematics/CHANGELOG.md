@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.1.2...schematics-v1.1.3) (2024-01-18)
+
+
+### Bug Fixes
+
+* update script for run tests ([fb00684](https://github.com/nestjs-mod/nestjs-mod/commit/fb00684d63534af48069063048154dcf5d873b3b))
+
 ## [1.1.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v1.1.1...schematics-v1.1.2) (2024-01-18)
 
 
