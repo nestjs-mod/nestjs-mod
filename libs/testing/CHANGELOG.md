@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.9.2...testing-v1.10.0) (2024-01-18)
+
+
+### Features
+
+* update detect default context name in formatter, add disableInfrastructureModulesInProduction ([fa6b4c9](https://github.com/nestjs-mod/nestjs-mod/commit/fa6b4c9d1962020f36c9f88e745bfbb64e25c9d4))
+
 ## [1.9.2](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v1.9.1...testing-v1.9.2) (2024-01-18)
 
 
