@@ -11,10 +11,15 @@ Type of config or env models used in module:
 - `staticEnvironmentsModel` - Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
 - `staticConfigurationModel` - Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 - `featureConfigurationModel` - Feature variables of primitive and complex types that can be added to the current module from other modules (example: a transport for sending a message can be defined as a generalized interface, but the implementation itself will be added from a module for working with a specific transport or from an integration module).
+- `featureEnvironmentsModel` - Feature variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
 
-### Function
+#### Decorators
 
-`bootstrapNestApplication`
+`InjectFeatures`, `InjectService`, `InjectAllFeatures`, `InjectFeatureEnvironments`, `InjectAllFeatureEnvironments`
+
+#### Function
+
+`createNestModule`, `getNestModuleDecorators`
 
 ### Usage
 

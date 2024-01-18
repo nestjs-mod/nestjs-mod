@@ -11,13 +11,9 @@ Types of modules (list in order of processing):
 - `System modules` - System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
 - `Infrastructure modules` - Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
 
-#### Decorators
+### Function
 
-`InjectFeatures`, `InjectService`, `InjectAllFeatures`, `InjectFeatureEnvironments`, `InjectAllFeatureEnvironments`
-
-#### Function
-
-`createNestModule`, `getNestModuleDecorators`
+`bootstrapNestApplication`
 
 #### Usage
 
