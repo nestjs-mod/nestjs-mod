@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { config } from 'dotenv';
 import { writeFile } from 'fs/promises';
 import { EnvModelInfoValidationsPropertyNameFormatters } from '../../../../env-model/types';
+import { defaultContextName } from '../../../../utils/default-context-name';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
 import { WrapApplicationOptionsService } from './wrap-application-options.service';
 
@@ -28,9 +29,9 @@ export class DotEnvService {
         [
           ...modules
             .map((module) =>
-              Object.keys(module?.['default']?.staticEnvironments?.validations ?? {})
+              Object.keys(module?.[defaultContextName()]?.staticEnvironments?.validations ?? {})
                 .map((key) =>
-                  module?.['default']?.staticEnvironments?.validations[key]?.propertyNameFormatters
+                  module?.[defaultContextName()]?.staticEnvironments?.validations[key]?.propertyNameFormatters
                     .filter((f: EnvModelInfoValidationsPropertyNameFormatters) => f.name === 'dotenv')
                     .map((f: EnvModelInfoValidationsPropertyNameFormatters) => f.value)
                     .flat()
@@ -40,9 +41,9 @@ export class DotEnvService {
             .flat(),
           ...modules
             .map((module) =>
-              Object.keys(module?.['default']?.environments?.validations ?? {})
+              Object.keys(module?.[defaultContextName()]?.environments?.validations ?? {})
                 .map((key) =>
-                  module?.['default']?.environments?.validations[key]?.propertyNameFormatters
+                  module?.[defaultContextName()]?.environments?.validations[key]?.propertyNameFormatters
                     .filter((f: EnvModelInfoValidationsPropertyNameFormatters) => f.name === 'dotenv')
                     .map((f: EnvModelInfoValidationsPropertyNameFormatters) => f.value)
                     .flat()

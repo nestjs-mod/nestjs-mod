@@ -9,7 +9,6 @@ import {
   bootstrapNestApplication,
   createNestModule,
   isInfrastructureMode,
-  isProductionMode,
 } from '@nestjs-mod/common';
 import { RestInfrastructureHtmlReport } from '@nestjs-mod/reports';
 import { Logger } from '@nestjs/common';
@@ -78,19 +77,14 @@ bootstrapNestApplication({
         environments: { var1: 'var1value' },
       }),
     ],
-    // Disable infrastructure modules in production
-    ...(!isProductionMode() || isInfrastructureMode()
-      ? {
-          infrastructure: [
-            InfrastructureMarkdownReportGenerator.forRoot({
-              staticConfiguration: {
-                markdownFile: join(__dirname, '..', '..', '..', 'apps', 'example-basic', 'INFRASTRUCTURE.MD'),
-                skipEmptySettings: true,
-              },
-            }),
-            RestInfrastructureHtmlReport.forRoot(),
-          ],
-        }
-      : {}),
+    infrastructure: [
+      InfrastructureMarkdownReportGenerator.forRoot({
+        staticConfiguration: {
+          markdownFile: join(__dirname, '..', '..', '..', 'apps', 'example-basic', 'INFRASTRUCTURE.MD'),
+          skipEmptySettings: true,
+        },
+      }),
+      RestInfrastructureHtmlReport.forRoot(),
+    ],
   },
 });

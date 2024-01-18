@@ -17,6 +17,14 @@ export enum NestModuleCategory {
   infrastructure = 'infrastructure',
 }
 
+export const NEST_MODULE_CATEGORY_LIST: (keyof typeof NestModuleCategory)[] = [
+  'system',
+  'core',
+  'feature',
+  'integrations',
+  'infrastructure',
+];
+
 export type ImportsWithStaticOptionsResponse = Type<any> | DynamicModule | Promise<DynamicModule>;
 
 export type ExportsWithStaticOptionsResponse =

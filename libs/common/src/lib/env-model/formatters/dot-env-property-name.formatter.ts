@@ -1,5 +1,6 @@
 import { constantCase } from 'case-anything';
 import { EnvModelOptions, EnvModelPropertyOptions, EnvModelRootOptions, PropertyNameFormatter } from '../types';
+import { defaultContextName } from '../../utils/default-context-name';
 
 export const CLEAR_WORDS = ['NESTJS', 'NEST', 'ENVIRONMENTS', 'ENVIRONMENT'];
 
@@ -35,8 +36,8 @@ export class DotEnvPropertyNameFormatter implements PropertyNameFormatter {
     propertyOptions: EnvModelPropertyOptions;
   }) {
     const prepareFullname = [
-      modelRootOptions?.name ?? null,
-      modelOptions?.name
+      defaultContextName() !== modelRootOptions?.name && modelRootOptions?.name ? modelRootOptions?.name : null,
+      defaultContextName() !== modelOptions?.name && modelOptions?.name
         ? `${modelOptions?.name}_${String(propertyOptions.name ?? propertyOptions.originalName)}`
         : String(propertyOptions.name ?? propertyOptions.originalName),
     ]

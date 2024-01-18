@@ -1,6 +1,13 @@
 import { INestApplication } from '@nestjs/common';
-import { NestModuleCategory, ProjectOptions, WrapApplicationOptions } from '../nest-module/types';
+import {
+  NEST_MODULE_CATEGORY_LIST,
+  NestModuleCategory,
+  ProjectOptions,
+  WrapApplicationOptions,
+} from '../nest-module/types';
 import { getWrapModuleMetadataMethods } from '../nest-module/utils';
+import { isInfrastructureMode } from '../utils/is-infrastructure';
+import { isProductionMode } from '../utils/is-production';
 import { NestApplicationError } from './errors';
 import { BootstrapNestApplicationOptions } from './types';
 
@@ -10,6 +17,7 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
   wrapApplicationMethods,
   globalConfigurationOptions,
   globalEnvironmentsOptions,
+  disableInfrastructureModulesInProduction,
 }: BootstrapNestApplicationOptions & {
   wrapApplicationMethods: ('preWrapApplication' | 'wrapApplication' | 'postWrapApplication')[];
 }) {
@@ -17,9 +25,17 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
   project = project ?? ({} as ProjectOptions);
   globalConfigurationOptions = globalConfigurationOptions ?? {};
   globalEnvironmentsOptions = globalEnvironmentsOptions ?? {};
+  if (disableInfrastructureModulesInProduction === undefined) {
+    disableInfrastructureModulesInProduction = true;
+  }
+
+  const categories =
+    disableInfrastructureModulesInProduction && isProductionMode() && !isInfrastructureMode()
+      ? NEST_MODULE_CATEGORY_LIST.filter((c) => c !== NestModuleCategory.infrastructure)
+      : NEST_MODULE_CATEGORY_LIST;
 
   for (const wrapApplicationMethod of wrapApplicationMethods) {
-    for (const category of Object.keys(NestModuleCategory ?? {})) {
+    for (const category of categories) {
       let moduleIndex = 0;
       while (modules[category as NestModuleCategory]?.[moduleIndex]) {
         if (!modules[category as NestModuleCategory]?.[moduleIndex]?.nestModuleMetadata?.moduleDisabled) {

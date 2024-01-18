@@ -1,12 +1,8 @@
-import {
-  EnvModelOptions,
-  EnvModelPropertyOptions,
-  EnvModelRootOptions,
-  PropertyValueExtractor,
-} from '../types';
+import { defaultContextName } from '../../utils/default-context-name';
+import { EnvModelOptions, EnvModelPropertyOptions, EnvModelRootOptions, PropertyValueExtractor } from '../types';
 
 export class DefaultPropertyValueExtractor implements PropertyValueExtractor {
-  name = 'default';
+  name = defaultContextName();
   example({
     obj,
     propertyOptions,

@@ -19,7 +19,9 @@ import { ConfigModelRootOptions } from '../config-model/types';
 import { configTransform } from '../config-model/utils';
 import { EnvModelOptions } from '../env-model/types';
 import { envTransform } from '../env-model/utils';
+import { defaultContextName } from '../utils/default-context-name';
 import { detectProviderName } from '../utils/detect-provider-name';
+import { NestModuleError } from './errors';
 import {
   DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
   DEFAULT_FOR_FEATURE_METHOD_NAME,
@@ -36,7 +38,6 @@ import {
   TModuleSettings,
   WrapApplicationOptions,
 } from './types';
-import { NestModuleError } from './errors';
 
 export function getWrapModuleMetadataMethods() {
   const nestModuleMetadataMethods: (keyof Pick<
@@ -47,10 +48,6 @@ export function getWrapModuleMetadataMethods() {
 }
 
 function getNestModuleInternalUtils({ moduleName }: { moduleName: string }) {
-  function defaultContextName(contextName?: string) {
-    return contextName ?? 'default';
-  }
-
   function getFeatureEnvironmentsToken(contextName?: string): InjectionToken {
     return `${moduleName}_${defaultContextName(contextName)}_feature_environments`;
   }
@@ -491,7 +488,8 @@ export function createNestModule<
           ...featureEnvironmentsOptions,
           ...getRootConfigurationValidationOptions({
             nestModuleMetadata,
-            contextName: `${contextName}_${featureModuleName}`,
+            contextName:
+              defaultContextName() !== contextName ? `${contextName}_${featureModuleName}` : featureModuleName,
           }),
         },
       });
@@ -699,7 +697,8 @@ export function createNestModule<
                 ...getRootConfigurationValidationOptions({
                   nestModuleMetadata,
                   asyncModuleOptions,
-                  contextName: `${contextName}_FEATURE_MODULE_NAME`,
+                  contextName:
+                    defaultContextName() !== contextName ? `${contextName}_FEATURE_MODULE_NAME` : 'FEATURE_MODULE_NAME',
                 }),
                 skipValidation: true,
               },

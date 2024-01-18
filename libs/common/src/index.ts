@@ -31,6 +31,7 @@ export * from './lib/nest-module/constants';
 export * from './lib/nest-module/errors';
 export * from './lib/nest-module/types';
 export * from './lib/nest-module/utils';
+export * from './lib/utils/default-context-name';
 export * from './lib/utils/detect-provider-name';
 export * from './lib/utils/is-infrastructure';
 export * from './lib/utils/is-production';
