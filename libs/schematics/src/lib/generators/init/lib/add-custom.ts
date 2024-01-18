@@ -44,7 +44,7 @@ export function addScript(tree: Tree, projectName?: string) {
         'lint:fix': 'npm run tsc:lint && npm run nx:many -- -t=lint --fix',
         'tsc:lint': 'tsc --noEmit -p tsconfig.base.json',
         _____tests_____: '_____tests_____',
-        test: 'npm run nx:many -- -t=test --skip-nx-cache=true --output-style=stream-without-prefixes',
+        test: 'npm run nx -- run-many --all -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes',
         _____utils_____: '_____utils_____',
         generate: 'npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run lint:fix',
         nx: 'nx',

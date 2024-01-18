@@ -39,7 +39,7 @@
     "lint:fix": "npm run tsc:lint && npm run nx:many -- -t=lint --fix",
     "tsc:lint": "tsc --noEmit -p tsconfig.base.json && tsc --noEmit -p ./apps/example-basic/tsconfig.spec.json && tsc --noEmit -p ./apps/example-basic-e2e/tsconfig.json",
     "_____tests_____": "_____tests_____",
-    "test": "npm run nx:many -- -t=test --skip-nx-cache=true --output-style=stream-without-prefixes",
+    "test": "npm run nx -- run-many --all -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes",
     "test:integrations-build": "sh ./integrations/scripts/build-application.sh",
     "_____utils_____": "_____utils_____",
     "generate": "npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run lint:fix",
