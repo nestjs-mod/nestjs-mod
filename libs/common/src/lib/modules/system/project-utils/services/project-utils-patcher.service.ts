@@ -12,17 +12,13 @@ export class ProjectUtilsPatcherService {
   ) {}
 
   async patch() {
-    if (!this.wrapApplicationOptionsService.project) {
-      this.wrapApplicationOptionsService.project = {} as ProjectOptions;
-    }
     await this.patchProject();
     await this.patchGlobalConfigurationAndEnvironmentsOptions();
   }
 
   private async patchGlobalConfigurationAndEnvironmentsOptions() {
     if (
-      this.projectUtilsConfiguration.patchGlobalConfigurationAndEnvironmentsOptions &&
-      this.wrapApplicationOptionsService.project
+      this.projectUtilsConfiguration.patchGlobalConfigurationAndEnvironmentsOptions
     ) {
       if (!this.wrapApplicationOptionsService.globalConfigurationOptions) {
         this.wrapApplicationOptionsService.globalConfigurationOptions = {};
@@ -43,11 +39,7 @@ export class ProjectUtilsPatcherService {
   }
 
   private getNewGlobalConfigurationAndEnvironmentsOptions() {
-    if (!this.wrapApplicationOptionsService.project) {
-      return {};
-    }
     return {
-      name: this.wrapApplicationOptionsService.project.name,
       ...((this.wrapApplicationOptionsService.globalConfigurationOptions?.debug !== undefined
         ? {
             debug: this.wrapApplicationOptionsService.globalConfigurationOptions?.debug,
@@ -63,15 +55,17 @@ export class ProjectUtilsPatcherService {
 
   private async patchProject() {
     const applicationPackageJson = await this.applicationPackageJsonService.read();
-
-    if (this.projectUtilsConfiguration.patchProject && this.wrapApplicationOptionsService.project) {
-      if (applicationPackageJson?.name) {
+    if (!this.wrapApplicationOptionsService.project) {
+      this.wrapApplicationOptionsService.project = {} as ProjectOptions;
+    }
+    if (this.projectUtilsConfiguration.patchProject) {
+      if (!this.wrapApplicationOptionsService.project.name && applicationPackageJson?.name) {
         this.wrapApplicationOptionsService.project.name = applicationPackageJson?.name;
       }
-      if (applicationPackageJson?.description) {
+      if (!this.wrapApplicationOptionsService.project.description && applicationPackageJson?.description) {
         this.wrapApplicationOptionsService.project.description = applicationPackageJson?.description;
       }
-      if (applicationPackageJson?.version) {
+      if (!this.wrapApplicationOptionsService.project.version && applicationPackageJson?.version) {
         this.wrapApplicationOptionsService.project.version = applicationPackageJson?.version;
       }
     }

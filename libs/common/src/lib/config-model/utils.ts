@@ -1,5 +1,4 @@
-import { Type } from '@nestjs/common';
-import { Logger } from '@nestjs/common';
+import { ConsoleLogger, Type } from '@nestjs/common';
 import { ValidatorPackage } from '@nestjs/common/interfaces/external/validator-package.interface';
 import { loadPackage } from '../utils/load-package';
 import {
@@ -15,6 +14,12 @@ export async function configTransform<
   TData extends Record<string, any> = Record<string, any>,
   TModel extends Type = Type
 >({ model, data, rootOptions }: { model: TModel; data: Partial<TData>; rootOptions?: ConfigModelRootOptions }) {
+  if (!rootOptions) {
+    rootOptions = {};
+  }
+  if (!rootOptions.logger) {
+    rootOptions.logger = new ConsoleLogger('configTransform');
+  }
   const loadValidator = (validatorPackage?: ValidatorPackage): ValidatorPackage => {
     return validatorPackage ?? loadPackage('class-validator', () => require('class-validator'));
   };
@@ -30,7 +35,8 @@ export async function configTransform<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const dataWithAllowedFields: any = {};
   for (const propertyOptions of modelPropertyOptions) {
-    dataWithAllowedFields[propertyOptions.originalName] = data?.[propertyOptions.originalName] ?? propertyOptions.default;
+    dataWithAllowedFields[propertyOptions.originalName] =
+      data?.[propertyOptions.originalName] ?? propertyOptions.default;
     info.validations[propertyOptions.originalName] = {
       constraints: {},
       value: data?.[propertyOptions.originalName],
@@ -67,8 +73,9 @@ export async function configTransform<
 
   if (validateErrors.length > 0) {
     const debug = modelOptions?.debug ?? rootOptions?.debug;
-    if (debug) {
-      Logger.debug(info);
+    const logger = modelOptions?.logger ?? rootOptions?.logger;
+    if (debug && logger?.debug) {
+      logger.debug(info);
     }
     throw new ConfigModelValidationErrors(validateErrors, info);
   }

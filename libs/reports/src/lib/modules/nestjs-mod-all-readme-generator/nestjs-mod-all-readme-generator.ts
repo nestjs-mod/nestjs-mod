@@ -234,15 +234,11 @@ ${
         .map(([, value]: [string, any]) =>
           value[value.nestModuleMetadata['forRootMethodName'] ?? DEFAULT_FOR_ROOT_METHOD_NAME]({
             contextName,
-            environmentsOptions: { skipValidation: true },
-            configurationOptions: { skipValidation: true },
           })
         );
       const tempPreparedModules = await bootstrapNestApplicationWithOptions({
-        project: {
-          name: 'TestProject',
-          description: 'Test description',
-        },
+        globalEnvironmentsOptions: { skipValidation: true },
+        globalConfigurationOptions: { skipValidation: true },
         modules: { feature: asyncModules },
         wrapApplicationMethods: ['preWrapApplication'],
       });

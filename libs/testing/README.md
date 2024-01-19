@@ -31,6 +31,7 @@ Default test NestJS application creator, no third party utilities required.
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
 |`wrapTestingModuleBuilder`|Method for additional actions with TestingModuleBuilder|**optional**|-|-|
+|`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|-|
 
 [Back to Top](#modules)
 

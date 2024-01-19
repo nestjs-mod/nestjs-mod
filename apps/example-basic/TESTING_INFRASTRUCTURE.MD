@@ -2,7 +2,7 @@
 
 Test application
 ## System modules
-System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
+System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.). Only NestJS-mod compatible modules.
 
 ### DefaultTestNestApplicationCreate
 Default test NestJS application creator, no third party utilities required.
@@ -13,6 +13,7 @@ Static variables of primitive and complex types that are used in the module and 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
 |`wrapTestingModuleBuilder`|Method for additional actions with TestingModuleBuilder|**optional**|-|-|
+|`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|ConsoleLogger|
 
 ### DefaultTestNestApplicationInitializer
 Default test NestJS application initializer, no third party utilities required.
@@ -26,7 +27,7 @@ Static variables of primitive and complex types that are used in the module and 
 |`postInit`|Method for additional actions after init|**optional**|-|-|
 
 ## Feature modules
-Feature modules with business logic of the application.
+Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.
 
 ### SampleWithSharedConfig
 #### Shared providers
@@ -40,7 +41,7 @@ Variables with primitive types used in the module, the values of which can be ob
 
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
-|`var1`|-|`obj['var1']`, `process.env['SAMPLE_WITH_SHARED_CONFIG_VAR_1']`|**isNotEmpty** (var1 should not be empty)|-|```var1value```|
+|`var1`|-|`obj['var1']`, `process.env['TEST_APPLICATION_SAMPLE_WITH_SHARED_CONFIG_VAR_1']`|**isNotEmpty** (var1 should not be empty)|-|```var1value```|
 
 #### Configuration
 Variables of primitive and complex types that are used in the module; values for them must be passed when connecting the module to the application.
@@ -54,7 +55,7 @@ Static variables with primitive types used in the module and can be used at the 
 
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
-|`endpoint`|-|`obj['endpoint']`, `process.env['SAMPLE_WITH_SHARED_CONFIG_ENDPOINT']`|**optional**|-|-|
+|`endpoint`|-|`obj['endpoint']`, `process.env['TEST_APPLICATION_SAMPLE_WITH_SHARED_CONFIG_ENDPOINT']`|**optional**|-|-|
 
 #### Static configuration
 Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
@@ -78,7 +79,7 @@ Feature variables with primitive types used in the module, the values of which c
 |`envFeatureVar`|-|**optional**|-|-|
 
 ## Infrastructure modules
-Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
+Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.
 
 ### InfrastructureMarkdownReportGenerator
 Infrastructure markdown report generator.

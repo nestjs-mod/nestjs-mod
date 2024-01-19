@@ -1,8 +1,8 @@
-# example-basic
+# ExampleBasic
 
-Example basic application
+Example basic
 ## System modules
-System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
+System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.). Only NestJS-mod compatible modules.
 
 ### ProjectUtils
 Utilities for setting global application parameters, such as project name, description, and settings validation parameters.
@@ -42,7 +42,7 @@ Static variables of primitive and complex types that are used in the module and 
 |`postListen`|Method for additional actions after listening|**optional**|-|Function|
 
 ## Feature modules
-Feature modules with business logic of the application.
+Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.
 
 ### AppModule
 Main app module
@@ -70,7 +70,7 @@ Variables with primitive types used in the module, the values of which can be ob
 |`featureVar`|-|**isNotEmpty** (featureVar should not be empty)|-|```featureVar41```|
 
 ## Infrastructure modules
-Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
+Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.
 
 ### RestInfrastructureHtmlReport
 Rest infrastructure HTML-report

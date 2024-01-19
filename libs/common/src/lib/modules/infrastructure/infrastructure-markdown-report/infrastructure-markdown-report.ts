@@ -295,7 +295,10 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                 // Default
                 this.safeValue(modelPropertyOption.default),
                 // Value
-                this.safeValue(settingsModelInfo?.validations[modelPropertyOption.originalName].value),
+                this.safeValue(
+                  settingsModelInfo?.validations[modelPropertyOption.originalName].value,
+                  modelPropertyOption.default
+                ),
                 '',
               ].join('|')
             ) ?? []),
@@ -371,7 +374,10 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                 // Default
                 this.safeValue(modelPropertyOption.default),
                 // Value
-                this.safeValue(settingsModelInfo?.validations[modelPropertyOption.originalName].value),
+                this.safeValue(
+                  settingsModelInfo?.validations[modelPropertyOption.originalName].value,
+                  modelPropertyOption.default
+                ),
                 '',
               ].join('|')
             ) ?? []),
@@ -382,7 +388,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private safeValue(value?: any): string {
+  private safeValue(value?: any, defaultValue?: any): string {
     try {
       if (value === undefined) {
         return '-';
@@ -394,11 +400,33 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           return '-';
         }
       }
-      if (typeof value === 'object') {
-        return JSON.stringify(value);
+      if (typeof value === 'function') {
+        if (!/^class\s/.test(Function.prototype.toString.call(value))) {
+          return 'Function';
+        } else {
+          try {
+            return Function.prototype.toString.call(value).split('class')[1].split('{')[0].trim();
+          } catch (err) {
+            // null
+          }
+        }
       }
-      if (typeof value === 'function' && !/^class\s/.test(Function.prototype.toString.call(value))) {
-        return 'Function';
+      if (typeof value === 'object') {
+        try {
+          if (value.constructor.name) {
+            return value.constructor.name;
+          }
+        } catch (error) {
+          //
+        }
+        if (defaultValue) {
+          const def = this.safeValue(defaultValue);
+          const val = JSON.stringify(value);
+          if (JSON.stringify(def) === val) {
+            return String(defaultValue);
+          }
+        }
+        return JSON.stringify(value);
       }
       try {
         if (value.name) {

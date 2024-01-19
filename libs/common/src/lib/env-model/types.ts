@@ -1,3 +1,4 @@
+import { Logger, LoggerService } from '@nestjs/common';
 import { ValidatorPackage } from '@nestjs/common/interfaces/external/validator-package.interface';
 import { ValidatorOptions } from 'class-validator';
 
@@ -11,6 +12,7 @@ export type EnvModelOptions = {
   validatorOptions?: ValidatorOptions;
   skipValidation?: boolean;
   debug?: boolean;
+  logger?: Logger | LoggerService;
 };
 
 export type EnvModelRootOptions = Omit<EnvModelOptions, 'originalName'>;

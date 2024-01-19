@@ -1,11 +1,9 @@
-import { NestApplicationOptions } from '@nestjs/common';
-import { Module } from '@nestjs/common';
+import { ConsoleLogger, Logger, Module, NestApplicationOptions } from '@nestjs/common';
 import { CorsOptions, CorsOptionsDelegate } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { NestFactory } from '@nestjs/core';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
-import { DynamicNestModuleMetadata } from '../../../nest-module/types';
-import { NestModuleCategory } from '../../../nest-module/types';
+import { DynamicNestModuleMetadata, NestModuleCategory } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
 
 @ConfigModel()
@@ -28,6 +26,12 @@ class DefaultNestApplicationInitializerConfig implements NestApplicationOptions 
     description: 'Whether to register the raw request body on the request. Use `req.rawBody`.',
   })
   rawBody?: boolean;
+
+  @ConfigModelProperty({
+    description: 'Default logger for application',
+    default: new ConsoleLogger(),
+  })
+  defaultLogger?: Logger | null;
 }
 
 export const { DefaultNestApplicationInitializer } = createNestModule({
@@ -47,6 +51,10 @@ export const { DefaultNestApplicationInitializer } = createNestModule({
         ),
     })
     class BasicNestApp {}
-    return await NestFactory.create(BasicNestApp, current?.staticConfiguration);
+    const app = await NestFactory.create(BasicNestApp, current?.staticConfiguration);
+    if (current.staticConfiguration?.defaultLogger) {
+      app.useLogger(current.staticConfiguration?.defaultLogger);
+    }
+    return app;
   },
 });

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Abstract, DynamicModule, INestApplication, Provider, Type } from '@nestjs/common';
+import { Abstract, DynamicModule, INestApplication, Logger, LoggerService, Provider, Type } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { ConfigModelInfo, ConfigModelOptions } from '../config-model/types';
 import { EnvModelInfo, EnvModelOptions } from '../env-model/types';
@@ -119,6 +119,7 @@ export type WrapApplicationOptions<
   modules: Partial<Record<NestModuleCategory, DynamicNestModuleMetadata[]>>;
   globalEnvironmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
   globalConfigurationOptions?: Omit<ConfigModelOptions, 'originalName'>;
+  logger?: Logger | LoggerService;
 };
 
 export interface NestModuleMetadata<
@@ -221,6 +222,7 @@ export interface NestModuleMetadata<
       TEnvironmentsModel
     >
   ) => Promise<void>;
+  logger?: Logger | LoggerService;
 }
 
 export type CommonNestModuleMetadata = Partial<

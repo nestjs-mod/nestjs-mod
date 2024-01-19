@@ -118,6 +118,14 @@ async function bootstrap3() {
   await app.listen(3000);
 }
 
+// Let's try to launch the application - Example of use environment variables and contextName and start without error.
+async function bootstrap3() {
+  process.env['CTX_OPTION'] = 'value1';
+  const app = await NestFactory.create(AppModule.forRoot({ contextName: 'CTX' }));
+  console.log(app.get(AppEnv)); // output: { option: 'value1' }
+  await app.listen(3000);
+}
+
 bootstrap3();
 ```
 
@@ -353,11 +361,11 @@ When importing, all preWrapApplication methods of modules are run at the beginni
 
 Types of modules (list in order of processing):
 
-- `Core modules` - Core modules necessary for the operation of feature and integration modules (examples: main module with connection to the database, main module for connecting to aws, etc.).
-- `Feature modules` - Feature modules with business logic of the application.
-- `Integration modules` - Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module).
-- `System modules` - System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
-- `Infrastructure modules` - Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
+- `Core modules` - Core modules necessary for the operation of feature and integration modules (examples: main module with connection to the database, main module for connecting to aws, etc.). NestJS and NestJS-mod compatible modules.
+- `Feature modules` - Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.
+- `Integration modules` - Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
+- `System modules` - System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.). Only NestJS-mod compatible modules.
+- `Infrastructure modules` - Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.
 
 ### Function
 
@@ -366,7 +374,14 @@ Types of modules (list in order of processing):
 #### Usage
 
 ```typescript
-import { DefaultNestApplicationInitializer, DefaultNestApplicationListener, EnvModel, EnvModelProperty, bootstrapNestApplication, createNestModule } from '@nestjs-mod/common';
+import {
+  DefaultNestApplicationInitializer,
+  DefaultNestApplicationListener,
+  EnvModel,
+  EnvModelProperty,
+  bootstrapNestApplication,
+  createNestModule,
+} from '@nestjs-mod/common';
 import { Injectable, Logger } from '@nestjs/common';
 import { IsNotEmpty } from 'class-validator';
 
@@ -397,6 +412,75 @@ process.env['OPTION'] = 'value1';
 const globalPrefix = 'api';
 
 bootstrapNestApplication({
+  modules: {
+    system: [
+      DefaultNestApplicationInitializer.forRoot(),
+      DefaultNestApplicationListener.forRoot({
+        staticEnvironments: { port: 3000 },
+        staticConfiguration: {
+          preListen: async ({ app }) => {
+            if (app) {
+              const appService = app.get(AppService);
+              console.log(appService.getEnv()); // output: { option: 'value1' }
+              app.setGlobalPrefix(globalPrefix);
+            }
+          },
+          postListen: async ({ current }) => {
+            Logger.log(
+              `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
+                current.staticEnvironments?.port
+              }/${globalPrefix}`
+            );
+          },
+        },
+      }),
+    ],
+    feature: [AppModule.forRoot()],
+  },
+});
+```
+
+#### Usage with project name and contextName
+
+```typescript
+import {
+  DefaultNestApplicationInitializer,
+  DefaultNestApplicationListener,
+  EnvModel,
+  EnvModelProperty,
+  bootstrapNestApplication,
+  createNestModule,
+} from '@nestjs-mod/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { IsNotEmpty } from 'class-validator';
+
+@EnvModel()
+class AppEnv {
+  @EnvModelProperty()
+  @IsNotEmpty()
+  option!: string;
+}
+
+@Injectable()
+class AppService {
+  constructor(private readonly appEnv: AppEnv) {}
+
+  getEnv() {
+    return this.appEnv;
+  }
+}
+
+const { AppModule } = createNestModule({
+  moduleName: 'AppModule',
+  environmentsModel: AppEnv,
+  providers: [AppService],
+});
+
+process.env['TEST_APP_CTX_OPTION'] = 'value1';
+
+const globalPrefix = 'api';
+
+bootstrapNestApplication({
   project: { name: 'TestApp', description: 'Test application' },
   modules: {
     system: [
@@ -412,12 +496,16 @@ bootstrapNestApplication({
             }
           },
           postListen: async ({ current }) => {
-            Logger.log(`🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${current.staticEnvironments?.port}/${globalPrefix}`);
+            Logger.log(
+              `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
+                current.staticEnvironments?.port
+              }/${globalPrefix}`
+            );
           },
         },
       }),
     ],
-    feature: [AppModule.forRoot()],
+    feature: [AppModule.forRoot({ contextName: 'CTX' })],
   },
 });
 ```
@@ -490,6 +578,7 @@ Default NestJS application initializer, no third party utilities required.
 |`bodyParser`|Whether to use underlying platform body parser.|**optional**|-|-|
 |`httpsOptions`|Set of configurable HTTPS options|**optional**|-|-|
 |`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|-|
+|`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|-|
 
 [Back to Top](#modules)
 

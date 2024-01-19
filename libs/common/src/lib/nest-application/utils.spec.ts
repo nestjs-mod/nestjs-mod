@@ -1,11 +1,12 @@
+/* eslint-disable no-useless-escape */
 import { Injectable } from '@nestjs/common';
 import { IsNotEmpty } from 'class-validator';
 import { ConfigModel, ConfigModelProperty } from '../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../env-model/decorators';
-import { InfrastructureMarkdownReportStorage } from '../modules/infrastructure/infrastructure-markdown-report/infrastructure-markdown-report';
 import {
   InfrastructureMarkdownReport,
   InfrastructureMarkdownReportGenerator,
+  InfrastructureMarkdownReportStorage,
 } from '../modules/infrastructure/infrastructure-markdown-report/infrastructure-markdown-report';
 import { DefaultNestApplicationInitializer } from '../modules/system/default-nest-application/default-nest-application-initializer';
 import { DefaultNestApplicationListener } from '../modules/system/default-nest-application/default-nest-application-listener';
@@ -82,9 +83,10 @@ describe('NestJS application: Utils', () => {
         providers: [AppService],
       });
 
-      process.env['OPTION'] = 'value1';
+      process.env['TEST_APP_OPTION'] = 'value1';
 
       const app = await bootstrapNestApplication({
+        globalEnvironmentsOptions: { debug: true },
         project: { name: 'TestApp', description: 'Test application' },
         modules: {
           system: [DefaultNestApplicationInitializer.forRoot()],
@@ -135,7 +137,7 @@ describe('NestJS application: Utils', () => {
         providers: [App2Service],
       });
 
-      process.env['OPTION'] = 'value1';
+      process.env['TEST_APP_OPTION'] = 'value1';
 
       const app = await bootstrapNestApplication({
         project: { name: 'TestApp', description: 'Test application' },
@@ -304,7 +306,7 @@ describe('NestJS application: Utils', () => {
         environmentsModel: AppEnv,
       });
 
-      process.env['OPTION_ENV'] = 'optionEnv1';
+      process.env['TEST_APP_OPTION_ENV'] = 'optionEnv1';
 
       const app = await bootstrapNestApplication({
         project: { name: 'TestApp', description: 'Test application' },
@@ -468,7 +470,7 @@ describe('NestJS application: Utils', () => {
 
     Test application
     ## Infrastructure modules
-    Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application).
+    Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.
 
     ### InfrastructureMarkdownReport
     Infrastructure markdown report
@@ -492,7 +494,7 @@ describe('NestJS application: Utils', () => {
     |\`skipEmptySettings\`|Skip empty values of env and config models|**optional**|-|-|
 
     ## System modules
-    System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.).
+    System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.). Only NestJS-mod compatible modules.
 
     ### DefaultNestApplicationInitializer
     Default NestJS application initializer, no third party utilities required.
@@ -506,6 +508,7 @@ describe('NestJS application: Utils', () => {
     |\`bodyParser\`|Whether to use underlying platform body parser.|**optional**|-|-|
     |\`httpsOptions\`|Set of configurable HTTPS options|**optional**|-|-|
     |\`rawBody\`|Whether to register the raw request body on the request. Use \`req.rawBody\`.|**optional**|-|-|
+    |\`defaultLogger\`|Default logger for application|**optional**|ConsoleLogger|ConsoleLogger|
 
 
     ### DefaultNestApplicationListener
@@ -516,8 +519,8 @@ describe('NestJS application: Utils', () => {
 
     | Key| Description | Sources | Constraints | Default | Value |
     | ------ | ----------- | ------- | ----------- | ------- | ----- |
-    |\`port\`|The port on which to run the server.|\`obj['port']\`, \`process.env['PORT']\`|**isNotEmpty** (port should not be empty)|-|\`\`\`3012\`\`\`|
-    |\`hostname\`|Hostname on which to listen for incoming packets.|\`obj['hostname']\`, \`process.env['HOSTNAME']\`|**optional**|-|-|
+    |\`port\`|The port on which to run the server.|\`obj['port']\`, \`process.env['TEST_APP_PORT']\`|**isNotEmpty** (port should not be empty)|-|\`\`\`3012\`\`\`|
+    |\`hostname\`|Hostname on which to listen for incoming packets.|\`obj['hostname']\`, \`process.env['TEST_APP_HOSTNAME']\`|**optional**|-|-|
 
     #### Static configuration
     Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.

@@ -64,7 +64,7 @@ describe('NestJS modules: Utils', () => {
       });
     });
 
-    it('should return option value from service', async () => {
+    it('should return option value from service use env', async () => {
       @EnvModel()
       class AppEnv {
         @EnvModelProperty()
@@ -91,6 +91,38 @@ describe('NestJS modules: Utils', () => {
 
       const moduleRef: TestingModule = await Test.createTestingModule({
         imports: [AppModule.forRoot({})],
+      }).compile();
+      const appService = moduleRef.get(AppService);
+
+      expect(appService.getEnv()).toMatchObject({ option: 'value1' });
+    });
+    it('should return option value from service use env and contextName', async () => {
+      @EnvModel()
+      class AppEnv {
+        @EnvModelProperty()
+        @IsNotEmpty()
+        option!: string;
+      }
+
+      @Injectable()
+      class AppService {
+        constructor(private readonly appEnv: AppEnv) {}
+
+        getEnv() {
+          return this.appEnv;
+        }
+      }
+
+      const { AppModule } = createNestModule({
+        moduleName: 'AppModule',
+        environmentsModel: AppEnv,
+        providers: [AppService],
+      });
+
+      process.env['CTX_OPTION'] = 'value1';
+
+      const moduleRef: TestingModule = await Test.createTestingModule({
+        imports: [AppModule.forRoot({ contextName: 'CTX' })],
       }).compile();
       const appService = moduleRef.get(AppService);
 

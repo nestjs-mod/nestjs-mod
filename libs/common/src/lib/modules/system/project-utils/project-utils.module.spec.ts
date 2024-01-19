@@ -13,7 +13,7 @@ import { DotEnvService } from './services/dot-env.service';
 import { PackageJsonService } from './services/package-json.service';
 
 describe('Project Utils', () => {
-  it('should return report with application name from settings and simple source key for env', async () => {
+  it('should return report with application name from settings and source key with prefix for env', async () => {
     const { AppModule } = createNestModule({
       moduleName: 'AppModule',
     });
@@ -35,11 +35,11 @@ describe('Project Utils', () => {
 
     expect(infrastructureMarkdownReportStorage.report).toContain('# TestApp');
     expect(infrastructureMarkdownReportStorage.report).toContain('Test application');
-    expect(infrastructureMarkdownReportStorage.report).toContain("process.env['PORT']");
-    expect(infrastructureMarkdownReportStorage.report).toContain("process.env['HOSTNAME']");
+    expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_PORT']");
+    expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_HOSTNAME']");
   });
 
-  it('should return report with override application name from package.json and override source key for env', async () => {
+  it('should return report without override application name from package.json', async () => {
     const { AppModule } = createNestModule({
       moduleName: 'AppModule',
     });
@@ -60,8 +60,8 @@ describe('Project Utils', () => {
     });
     const infrastructureMarkdownReportStorage = app.get(InfrastructureMarkdownReportStorage);
 
-    expect(infrastructureMarkdownReportStorage.report).toContain('# test-app');
-    expect(infrastructureMarkdownReportStorage.report).toContain('Description for test-app');
+    expect(infrastructureMarkdownReportStorage.report).toContain('# TestApp');
+    expect(infrastructureMarkdownReportStorage.report).toContain('Test application');
     expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_PORT']");
     expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_HOSTNAME']");
   });

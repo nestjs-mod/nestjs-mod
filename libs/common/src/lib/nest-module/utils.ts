@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  ConsoleLogger,
   DynamicModule,
   INestApplication,
   Inject,
@@ -202,6 +203,9 @@ export function createNestModule<
     TModuleName
   >
 ) {
+  if (!nestModuleMetadata.logger) {
+    nestModuleMetadata.logger = new ConsoleLogger('createNestModule');
+  }
   const forRootMethodName = nestModuleMetadata.forRootMethodName ?? DEFAULT_FOR_ROOT_METHOD_NAME;
   const forRootAsyncMethodName = nestModuleMetadata.forRootAsyncMethodName ?? DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME;
   const forFeatureMethodName = nestModuleMetadata.forFeatureMethodName ?? DEFAULT_FOR_FEATURE_METHOD_NAME;
@@ -404,7 +408,7 @@ export function createNestModule<
     return SharedModule;
   };
 
-  const getFeatureModule = async ({ contextName }: { contextName?: string }) => {
+  const getFeatureModule = ({ contextName }: { contextName?: string }) => {
     contextName = defaultContextName(contextName);
     if (!modulesByName[contextName]) {
       modulesByName[contextName] = getSharedModule(contextName);
@@ -794,7 +798,7 @@ export function createNestModule<
         }
       };
 
-      const getModule = async (): Promise<TDynamicModule> => {
+      async function getModule() {
         await loadStaticSettings();
         const asyncConfigurationProviderLoaderToken = getAsyncConfigurationToken(contextName);
 
@@ -859,11 +863,7 @@ export function createNestModule<
         }
 
         const { module: settingsModule } = getOrCreateSettingsModule(contextName);
-        const {
-          module: featureModule,
-          featureConfiguration,
-          featureEnvironments,
-        } = await getFeatureModule({ contextName });
+        const { module: featureModule, featureConfiguration, featureEnvironments } = getFeatureModule({ contextName });
 
         const importsArr =
           !nestModuleMetadata.imports || Array.isArray(nestModuleMetadata.imports)
@@ -1068,7 +1068,7 @@ export function createNestModule<
           controllers: [...controllers],
           exports: [...exports],
         };
-      };
+      }
       const result = getModule();
       const nestModuleMetadataMethods = getWrapModuleMetadataMethods();
       Object.assign(result, {
@@ -1183,7 +1183,6 @@ export function createNestModule<
     nestModuleMetadata,
     asyncModuleOptions,
     contextName,
-    ignoreGlobalName,
   }: {
     nestModuleMetadata: NestModuleMetadata<
       TConfigurationModel,
@@ -1212,17 +1211,30 @@ export function createNestModule<
       TStaticEnvironmentsModel
     >;
     contextName: string;
-    ignoreGlobalName?: boolean;
   }): ConfigModelRootOptions | undefined {
-    return {
+    const { name: globalName, ...globalOptions } = nestModuleMetadata.globalConfigurationOptions ?? {};
+    const { contextName: asyncContextName, ...options } = asyncModuleOptions ?? {};
+    const both = {
+      ...options,
       ...nestModuleMetadata.configurationOptions,
-      ...asyncModuleOptions?.configurationOptions,
-      ...nestModuleMetadata.globalConfigurationOptions,
-      ...(contextName && defaultContextName() !== contextName ? { name: contextName } : {}),
-      ...(!ignoreGlobalName && nestModuleMetadata.globalEnvironmentsOptions?.name
-        ? { name: nestModuleMetadata.globalEnvironmentsOptions?.name }
-        : {}),
+      ...globalOptions,
     };
+
+    const nameArr = [];
+    if (globalName && globalName !== defaultContextName()) {
+      nameArr.push(globalName);
+    }
+    if (asyncContextName && asyncContextName !== defaultContextName()) {
+      nameArr.push(asyncContextName);
+    }
+    if (contextName && contextName !== defaultContextName()) {
+      nameArr.push(contextName);
+    }
+    if (both.name && both.name !== defaultContextName()) {
+      nameArr.push(both.name);
+    }
+
+    return { ...both, name: [...new Set(nameArr)].join('_') };
   }
 
   function getRootEnvironmentsValidationOptions({
@@ -1258,14 +1270,28 @@ export function createNestModule<
     >;
     contextName: string;
   }): ConfigModelRootOptions | undefined {
-    return {
+    const { name: globalName, ...globalOptions } = nestModuleMetadata.globalEnvironmentsOptions ?? {};
+    const { contextName: asyncContextName, ...options } = asyncModuleOptions ?? {};
+    const both = {
+      ...options,
       ...nestModuleMetadata.environmentsOptions,
-      ...asyncModuleOptions?.environmentsOptions,
-      ...nestModuleMetadata.globalConfigurationOptions,
-      ...(contextName && defaultContextName() !== contextName ? { name: contextName } : {}),
-      ...(nestModuleMetadata.globalEnvironmentsOptions?.name
-        ? { name: nestModuleMetadata.globalEnvironmentsOptions?.name }
-        : {}),
+      ...globalOptions,
     };
+
+    const nameArr = [];
+    if (globalName && globalName !== defaultContextName()) {
+      nameArr.push(globalName);
+    }
+    if (asyncContextName && asyncContextName !== defaultContextName()) {
+      nameArr.push(asyncContextName);
+    }
+    if (contextName && contextName !== defaultContextName()) {
+      nameArr.push(contextName);
+    }
+    if (both.name && both.name !== defaultContextName()) {
+      nameArr.push(both.name);
+    }
+
+    return { ...both, name: [...new Set(nameArr)].join('_') };
   }
 }

@@ -1,4 +1,4 @@
-import { Logger, Type } from '@nestjs/common';
+import { ConsoleLogger, Type } from '@nestjs/common';
 import { ValidatorPackage } from '@nestjs/common/interfaces/external/validator-package.interface';
 import { loadPackage } from '../utils/load-package';
 import { ENV_MODEL_CLASS_VALIDATOR_OPTIONS, ENV_MODEL_METADATA, ENV_MODEL_PROPERTIES_METADATA } from './constants';
@@ -10,6 +10,12 @@ export async function envTransform<
   TData extends Record<string, any>,
   TModel extends Type = Type
 >({ model, data, rootOptions }: { model: TModel; data: Partial<TData>; rootOptions?: EnvModelRootOptions }) {
+  if (!rootOptions) {
+    rootOptions = {};
+  }
+  if (!rootOptions.logger) {
+    rootOptions.logger = new ConsoleLogger('envTransform');
+  }
   const loadValidator = (validatorPackage?: ValidatorPackage): ValidatorPackage => {
     return validatorPackage ?? loadPackage('class-validator', () => require('class-validator'));
   };
@@ -114,9 +120,11 @@ export async function envTransform<
 
   if (validateErrors.length > 0) {
     const debug = modelOptions?.debug ?? rootOptions?.debug;
-    if (debug) {
-      Logger.debug(info);
+    const logger = modelOptions?.logger ?? rootOptions?.logger;
+    if (debug && logger?.debug) {
+      logger.debug(info);
     }
+    logger.debug!(info);
     throw new EnvModelValidationErrors(validateErrors, info);
   }
 

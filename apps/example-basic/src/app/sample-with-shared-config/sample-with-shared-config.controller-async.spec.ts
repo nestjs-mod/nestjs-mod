@@ -61,11 +61,12 @@ describe('SampleWithSharedConfigController (async)', () => {
   });
 
   it('should return "Hello World! (var1: var1value)", use process.env value in forRoot options', async () => {
-    process.env['SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'var1value';
+    process.env['TEST_APPLICATION_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'var1value';
     class DynoClass implements SampleWithSharedConfigConfiguration {
       dynamicVar1 = 'dyno';
     }
     const app = await bootstrapNestApplication({
+      globalEnvironmentsOptions: { debug: true },
       project: {
         name: 'TestApplication',
         description: 'Test application',
@@ -98,8 +99,10 @@ describe('SampleWithSharedConfigController (async)', () => {
   });
 
   it('should return "Hello World! (var1: var1value)", use process.env value in forRoot options and name for append prefix to property name', async () => {
-    process.env['APP_11_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'var1value';
+    process.env['TEST_APPLICATION_APP_11_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'var1value';
     const app = await bootstrapNestApplication({
+      globalEnvironmentsOptions: { debug: true },
+      globalConfigurationOptions: { debug: true },
       project: {
         name: 'TestApplication',
         description: 'Test application',
@@ -133,8 +136,8 @@ describe('SampleWithSharedConfigController (async)', () => {
   });
 
   it('should return "Hello World! (var1: api1var1value)" and "Hello World! (var1: api2var1value)", use process.env value in forRoot options, run two different instance of module', async () => {
-    process.env['API_21_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api1var1value';
-    process.env['API_22_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api2var1value';
+    process.env['TEST_APPLICATION_API_21_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api1var1value';
+    process.env['TEST_APPLICATION_API_22_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api2var1value';
     class DynoClass implements SampleWithSharedConfigConfiguration {
       dynamicVar1 = 'dyno';
     }
@@ -202,9 +205,9 @@ describe('SampleWithSharedConfigController (async)', () => {
   });
 
   it('should return "First Hello World! (var1: api1var1value)" and "Second Hello World! (var1: api2var1value)", use process.env value in forRoot options, run two different instance of one service', async () => {
-    process.env['API_31_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api1var1value';
-    process.env['API_32_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api2var1value';
-    process.env['API_33_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api3var1value';
+    process.env['TEST_APPLICATION_API_31_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api1var1value';
+    process.env['TEST_APPLICATION_API_32_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api2var1value';
+    process.env['TEST_APPLICATION_API_33_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api3var1value';
 
     // first
     @Injectable()
@@ -342,9 +345,9 @@ describe('SampleWithSharedConfigController (async)', () => {
   });
 
   it('should return "Hello World! (var1: api1var1value)" and "Hello World! (var1: api2var1value)", use process.env value in forRoot from staticEnvironments, run two different instance of module', async () => {
-    process.env['API_41_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api1var1value';
-    process.env['API_42_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api2var1value';
-    process.env['API_41_SAMPLE_WITH_SHARED_CONFIG_ENDPOINT'] = 'api1';
+    process.env['TEST_APPLICATION_API_41_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api1var1value';
+    process.env['TEST_APPLICATION_API_42_SAMPLE_WITH_SHARED_CONFIG_VAR_1'] = 'api2var1value';
+    process.env['TEST_APPLICATION_API_41_SAMPLE_WITH_SHARED_CONFIG_ENDPOINT'] = 'api1';
     class DynoClass implements SampleWithSharedConfigConfiguration {
       dynamicVar1 = 'dyno';
     }
