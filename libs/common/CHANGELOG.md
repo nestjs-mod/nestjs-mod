@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.0.0...common-v2.0.1) (2024-01-19)
+
+
+### Bug Fixes
+
+* **reports:** update logic safeValue in InfrastructureMarkdownReportGenerator ([630d7c9](https://github.com/nestjs-mod/nestjs-mod/commit/630d7c9a7dff593ec2e926eaed06a3ba0b4e30c3))
+
 # [2.0.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v1.10.0...common-v2.0.0) (2024-01-19)
 
 
