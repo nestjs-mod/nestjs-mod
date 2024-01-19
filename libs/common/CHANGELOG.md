@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.0.2...common-v2.1.0) (2024-01-19)
+
+
+### Features
+
+* add support pathNestModuleMetadata for forFeatureModules ([492e685](https://github.com/nestjs-mod/nestjs-mod/commit/492e6854e835d90bf287c186f49b9f540297f295))
+
 ## [2.0.2](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.0.1...common-v2.0.2) (2024-01-19)
 
 
