@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { ProjectOptions } from '../../../../nest-module/types';
 import { isInfrastructureMode } from '../../../../utils/is-infrastructure';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
@@ -5,6 +6,8 @@ import { ApplicationPackageJsonService } from './application-package-json.servic
 import { WrapApplicationOptionsService } from './wrap-application-options.service';
 
 export class ProjectUtilsPatcherService {
+  private logger = new Logger('ProjectUtilsPatcherService');
+
   constructor(
     private readonly projectUtilsConfiguration: ProjectUtilsConfiguration,
     private readonly applicationPackageJsonService: ApplicationPackageJsonService,
@@ -12,14 +15,18 @@ export class ProjectUtilsPatcherService {
   ) {}
 
   async patch() {
+    if (!this.projectUtilsConfiguration || !this.applicationPackageJsonService || !this.wrapApplicationOptionsService) {
+      this.logger.warn(
+        `projectUtilsConfiguration or applicationPackageJsonService or wrapApplicationOptionsService not set, patching not work`
+      );
+      return;
+    }
     await this.patchProject();
     await this.patchGlobalConfigurationAndEnvironmentsOptions();
   }
 
   private async patchGlobalConfigurationAndEnvironmentsOptions() {
-    if (
-      this.projectUtilsConfiguration.patchGlobalConfigurationAndEnvironmentsOptions
-    ) {
+    if (this.projectUtilsConfiguration.patchGlobalConfigurationAndEnvironmentsOptions) {
       if (!this.wrapApplicationOptionsService.globalConfigurationOptions) {
         this.wrapApplicationOptionsService.globalConfigurationOptions = {};
       }

@@ -538,7 +538,7 @@ export function createNestModule<
       TExportsWithStaticOptions,
       TNestApplication
     > {
-      const getModule = async () => {
+      async function getModule() {
         const { featureConfiguration, featureEnvironments, featureConfigurationOptions, featureEnvironmentsOptions } =
           asyncModuleOptions ?? {};
         const contextName = defaultContextName(asyncModuleOptions?.contextName);
@@ -570,17 +570,24 @@ export function createNestModule<
           imports: [settingsModule, featureModule, ...imports],
           exports: [featureModule],
         };
-      };
+      }
 
       const result = getModule();
+      const nestModuleMetadataMethods = getWrapModuleMetadataMethods();
       Object.assign(result, {
         nestModuleMetadata: {
           ...nestModuleMetadata,
-          preWrapApplication: undefined,
-          postWrapApplication: undefined,
-          wrapApplication: undefined,
+          ...nestModuleMetadataMethods
+            .map((method) => ({ [method]: undefined }))
+            .reduce((all, cur) => ({ ...all, ...cur }), {}),
         },
         moduleSettings,
+        // need to set global options for configurations and environments
+        // todo: try remove it
+        pathNestModuleMetadata: (newNestModuleMetadata: Partial<NestModuleMetadata>) => {
+          Object.assign(nestModuleMetadata, newNestModuleMetadata);
+          return nestModuleMetadata;
+        },
       });
       return result as DynamicNestModuleMetadata<
         TConfigurationModel,
