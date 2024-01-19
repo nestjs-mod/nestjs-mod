@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.0.1...testing-v2.0.2) (2024-01-19)
+
+
+### Bug Fixes
+
+* disable errors in ProjectUtilsPatcherService if version of common module is incorrect ([d2b0583](https://github.com/nestjs-mod/nestjs-mod/commit/d2b058393d8dc7f1019c53083ac07c09423e864b))
+
 ## [2.0.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.0.0...testing-v2.0.1) (2024-01-19)
 
 
