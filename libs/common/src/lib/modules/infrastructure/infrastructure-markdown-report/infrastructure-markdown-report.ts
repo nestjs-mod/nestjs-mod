@@ -405,7 +405,10 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           return 'Function';
         } else {
           try {
-            return Function.prototype.toString.call(value).split('class')[1].split('{')[0].trim();
+            const n = Function.prototype.toString.call(value).split('class')[1].split('{')[0].trim();
+            if (n !== 'Object') {
+              return n;
+            }
           } catch (err) {
             // null
           }
@@ -414,7 +417,10 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       if (typeof value === 'object') {
         try {
           if (value.constructor.name) {
-            return value.constructor.name;
+            const n = value.constructor.name;
+            if (n !== 'Object') {
+              return n;
+            }
           }
         } catch (error) {
           //
