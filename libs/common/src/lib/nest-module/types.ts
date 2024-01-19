@@ -87,6 +87,25 @@ export type DynamicNestModuleMetadata<
         TModuleName
       >;
       pathNestModuleMetadata?: (newNestModuleMetadata: Partial<NestModuleMetadata>) => NestModuleMetadata;
+      forFeatureModules?: DynamicNestModuleMetadata<
+        TConfigurationModel,
+        TStaticConfigurationModel,
+        TEnvironmentsModel,
+        TStaticEnvironmentsModel,
+        TFeatureConfigurationModel,
+        TFeatureEnvironmentsModel,
+        TForRootMethodName,
+        TForRootAsyncMethodName,
+        TForFeatureMethodName,
+        TForFeatureAsyncMethodName,
+        TDynamicModule,
+        TLinkOptions,
+        TImportsWithStaticOptions,
+        TControllersWithStaticOptions,
+        TProvidersWithStaticOptions,
+        TExportsWithStaticOptions,
+        TNestApplication
+      >[];
     };
 
 export type ProjectOptions = {

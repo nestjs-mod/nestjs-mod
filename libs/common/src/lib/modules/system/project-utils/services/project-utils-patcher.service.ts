@@ -6,7 +6,7 @@ import { ApplicationPackageJsonService } from './application-package-json.servic
 import { WrapApplicationOptionsService } from './wrap-application-options.service';
 
 export class ProjectUtilsPatcherService {
-  private logger = new Logger('ProjectUtilsPatcherService');
+  private logger = new Logger(ProjectUtilsPatcherService.name);
 
   constructor(
     private readonly projectUtilsConfiguration: ProjectUtilsConfiguration,

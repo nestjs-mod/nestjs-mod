@@ -229,6 +229,25 @@ export function createNestModule<
     moduleName: nestModuleMetadata.moduleName,
   });
 
+  const forFeatureModules: DynamicNestModuleMetadata<
+    TConfigurationModel,
+    TStaticConfigurationModel,
+    TEnvironmentsModel,
+    TStaticEnvironmentsModel,
+    TFeatureConfigurationModel,
+    TFeatureEnvironmentsModel,
+    TForRootMethodName,
+    TForRootAsyncMethodName,
+    TForFeatureMethodName,
+    TForFeatureAsyncMethodName,
+    TDynamicModule,
+    TLinkOptions,
+    TImportsWithStaticOptions,
+    TControllersWithStaticOptions,
+    TProvidersWithStaticOptions,
+    TExportsWithStaticOptions,
+    TNestApplication
+  >[] = [];
   const moduleSettings: Record<string, TModuleSettings> = {};
 
   const modulesByName: Record<string, any> = {};
@@ -589,6 +608,27 @@ export function createNestModule<
           return nestModuleMetadata;
         },
       });
+      forFeatureModules.push(
+        result as DynamicNestModuleMetadata<
+          TConfigurationModel,
+          TStaticConfigurationModel,
+          TEnvironmentsModel,
+          TStaticEnvironmentsModel,
+          TFeatureConfigurationModel,
+          TFeatureEnvironmentsModel,
+          TForRootMethodName,
+          TForRootAsyncMethodName,
+          TForFeatureMethodName,
+          TForFeatureAsyncMethodName,
+          TDynamicModule,
+          TLinkOptions,
+          TImportsWithStaticOptions,
+          TControllersWithStaticOptions,
+          TProvidersWithStaticOptions,
+          TExportsWithStaticOptions,
+          TNestApplication
+        >
+      );
       return result as DynamicNestModuleMetadata<
         TConfigurationModel,
         TStaticConfigurationModel,
@@ -680,7 +720,7 @@ export function createNestModule<
       let staticConfiguration: Partial<TStaticConfigurationModel> | undefined;
       let staticEnvironments: Partial<TStaticEnvironmentsModel> | undefined;
 
-      const loadStaticSettings = async () => {
+      async function loadStaticSettingsForInfo() {
         if (!moduleSettings[contextName]) {
           moduleSettings[contextName] = {};
         }
@@ -769,7 +809,14 @@ export function createNestModule<
             moduleSettings[contextName].staticEnvironments = obj.info;
           }
         }
+      }
 
+      const loadStaticSettings = async () => {
+        await loadStaticSettingsForInfo();
+
+        if (!moduleSettings[contextName]) {
+          moduleSettings[contextName] = {};
+        }
         if (!staticConfiguration) {
           staticConfiguration = asyncModuleOptions?.staticConfiguration;
           if (nestModuleMetadata.staticConfigurationModel) {
@@ -1116,8 +1163,21 @@ export function createNestModule<
         // todo: try remove it
         pathNestModuleMetadata: (newNestModuleMetadata: Partial<NestModuleMetadata>) => {
           Object.assign(nestModuleMetadata, newNestModuleMetadata);
+          for (const forFeatureModule of forFeatureModules) {
+            const globalConfigurationOptions = newNestModuleMetadata.globalConfigurationOptions;
+            const globalEnvironmentsOptions = newNestModuleMetadata.globalEnvironmentsOptions;
+            const logger = newNestModuleMetadata.logger;
+            if (forFeatureModule.pathNestModuleMetadata) {
+              forFeatureModule.pathNestModuleMetadata({
+                ...(globalConfigurationOptions ? { globalConfigurationOptions } : {}),
+                ...(globalEnvironmentsOptions ? { globalEnvironmentsOptions } : {}),
+                ...(logger ? { logger } : {}),
+              });
+            }
+          }
           return nestModuleMetadata;
         },
+        forFeatureModules,
       });
       return result as DynamicNestModuleMetadata<
         TConfigurationModel,
