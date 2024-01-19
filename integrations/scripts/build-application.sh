@@ -4,6 +4,9 @@ export NX_SKIP_NX_CACHE=true
 
 npm run nx -- reset
 
+log=$(git show --summary)
+if [[ $log != *"[skip integrations]"* ]];
+then
 rm -rf ./dist
 rm -rf ./integrations/app
 
@@ -55,3 +58,4 @@ node ./dist/apps/server-mod/main.js &
 )
 sleep 5
 kill -9 $(lsof -t -i:$SERVER_MOD_PORT) | echo "Killed"
+fi
