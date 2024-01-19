@@ -5,7 +5,8 @@ export NX_SKIP_NX_CACHE=true
 npm run nx -- reset
 
 log=$(git show --summary)
-if [[ $log != *"[skip integrations]"* ]];
+
+if [[ ${log} != *"[skip integrations]"* ]];
 then
 rm -rf ./dist
 rm -rf ./integrations/app
