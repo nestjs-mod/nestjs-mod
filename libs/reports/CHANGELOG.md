@@ -1,3 +1,17 @@
+# [2.0.0](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.10.0...reports-v2.0.0) (2024-01-19)
+
+
+### Features
+
+* changed logic for detect env key name ([c51ddaf](https://github.com/nestjs-mod/nestjs-mod/commit/c51ddaf808f3cc11bcd66e69b95a39ce200f03e4))
+
+
+### BREAKING CHANGES
+
+* sample key correct for DotEnvPropertyNameFormatter = `PROJECT_NAME_CONTEXT_NAME_PROPERTY_NAME`.
+Sample key if we use env for feature: `PROJECT_NAME_CONTEXT_NAME_FEATURE_NAME_PROPERTY_NAME`.
+If we not set contextName, formatter try search key by `PROJECT_NAME_PROPERTY_NAME` or `PROJECT_NAME_FEATURE_NAME_PROPERTY_NAME`
+
 # [1.10.0](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v1.9.2...reports-v1.10.0) (2024-01-18)
 
 
