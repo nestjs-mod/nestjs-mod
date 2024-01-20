@@ -33,7 +33,7 @@ export function addScript(tree: Tree, projectName?: string) {
       json[SCRIPTS_KEY_NAME] = {
         '_____prod infra_____': '_____prod infra_____',
         start: 'npm run nx:many -- -t=start',
-        build: 'npm run tsc:lint && npm run nx:many -- -t=build',
+        build: 'npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true',
         _____docs_____: '_____docs_____',
         'docs:infrastructure':
           'export NODE_ENV=infrastructure && npm run nx:many -- -t=start --parallel=1',
@@ -48,6 +48,7 @@ export function addScript(tree: Tree, projectName?: string) {
         _____utils_____: '_____utils_____',
         generate: 'npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run lint:fix',
         nx: 'nx',
+        'dep-graph':'npm run nx -- dep-graph',
         'nx:many': `npm run nx -- run-many --exclude=${json.name} --all`,
         'make-ts-list': './node_modules/.bin/rucken make-ts-list',
         prepare: 'husky install',
