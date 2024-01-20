@@ -13,6 +13,17 @@ import { DotEnvService } from './services/dot-env.service';
 import { PackageJsonService } from './services/package-json.service';
 
 describe('Project Utils', () => {
+  let originalNodeEnv: string | undefined;
+
+  beforeAll(() => {
+    originalNodeEnv = process.env['NODE_ENV'];
+    process.env['NODE_ENV'] = 'infrastructure';
+  });
+
+  afterAll(() => {
+    process.env['NODE_ENV'] = originalNodeEnv;
+  });
+
   it('should return report with application name from settings and source key with prefix for env', async () => {
     const { AppModule } = createNestModule({
       moduleName: 'AppModule',
@@ -91,7 +102,7 @@ describe('Project Utils', () => {
     expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_PORT']");
     expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_HOSTNAME']");
     expect(infrastructureMarkdownReportStorage.report).toContain('```1000```');
-    delete process.env['TEST_APP_PORT'];
+    process.env['TEST_APP_PORT'] = undefined;
   });
 
   it('should return report with application name from package.json and extended source key for env, use .env file for receiving', async () => {
@@ -100,6 +111,7 @@ describe('Project Utils', () => {
     });
 
     const app = await bootstrapNestApplication({
+      globalEnvironmentsOptions: { debug: true },
       modules: {
         system: [
           ProjectUtils.forRoot({
@@ -122,7 +134,7 @@ describe('Project Utils', () => {
     expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_PORT']");
     expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_HOSTNAME']");
     expect(infrastructureMarkdownReportStorage.report).toContain('```2000```');
-    delete process.env['TEST_APP_PORT'];
+    process.env['TEST_APP_PORT'] = undefined;
   });
 
   it('should return data from env-file', async () => {
@@ -130,7 +142,7 @@ describe('Project Utils', () => {
     class GetEnv {
       constructor(private readonly dotEnvService: DotEnvService) {}
       async getEnv() {
-        return await this.dotEnvService.read();
+        return this.dotEnvService.read();
       }
 
       getKeys() {

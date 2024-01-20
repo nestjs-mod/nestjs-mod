@@ -13,6 +13,8 @@ const dotEnvService = {};
 const packageJsonService = {};
 const applicationPackageJsonService = {};
 
+let projectUtilsPatcherService: ProjectUtilsPatcherService | undefined = undefined;
+
 export const { ProjectUtils } = createNestModule({
   moduleName: PROJECT_UTILS_MODULE_NAME,
   moduleDescription:
@@ -24,7 +26,21 @@ export const { ProjectUtils } = createNestModule({
     { provide: DotEnvService, useValue: dotEnvService },
     { provide: PackageJsonService, useValue: packageJsonService },
     { provide: ApplicationPackageJsonService, useValue: applicationPackageJsonService },
+    ProjectUtilsPatcherService,
   ],
+  // we use wrapApplication to modify some of the files after connecting all modules, since modules can add additional data that will be used when modifying files
+  wrapApplication: async () => {
+    if (projectUtilsPatcherService) {
+      await projectUtilsPatcherService.onApplicationBootstrap();
+    }
+  },
+  // we use postWrapApplication to modify some of the files after connecting all modules, since modules can add additional data that will be used when modifying files
+  postWrapApplication: async () => {
+    if (projectUtilsPatcherService) {
+      await projectUtilsPatcherService.onApplicationBootstrap();
+    }
+  },
+  // we use preWrapApplication because we need to get project data and install it globally - before running the application on NestJS
   preWrapApplication: async (options) => {
     Object.assign(wrapApplicationOptionsService, options);
 
@@ -34,7 +50,8 @@ export const { ProjectUtils } = createNestModule({
         wrapApplicationOptionsService,
         wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
       );
-      await tempDotEnvService.read();
+      tempDotEnvService.read();
+
       Object.setPrototypeOf(dotEnvService, tempDotEnvService);
       Object.assign(dotEnvService, tempDotEnvService);
 
@@ -53,14 +70,15 @@ export const { ProjectUtils } = createNestModule({
       Object.assign(applicationPackageJsonService, tempApplicationPackageJsonService);
 
       // ProjectUtilsPatcherService
-      const projectUtilsPatcherService = new ProjectUtilsPatcherService(
+      projectUtilsPatcherService = new ProjectUtilsPatcherService(
         wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
         new ApplicationPackageJsonService(
           wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
         ),
-        wrapApplicationOptionsService
+        wrapApplicationOptionsService,
+        dotEnvService as DotEnvService
       );
-      await projectUtilsPatcherService.patch();
+      await projectUtilsPatcherService.onApplicationBootstrap();
     }
   },
 });

@@ -1,8 +1,7 @@
-import { INestApplication } from '@nestjs/common';
+import { ConsoleLogger, INestApplication, Logger } from '@nestjs/common';
 import { IsNotEmpty } from 'class-validator';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../../../env-model/decorators';
-import { NestModuleError } from '../../../nest-module/errors';
 import { NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
 
@@ -48,6 +47,12 @@ class DefaultNestApplicationListenerConfiguration {
       DefaultNestApplicationListenerEnvironments
     >
   ) => Promise<void>;
+
+  @ConfigModelProperty({
+    description: 'Default logger for application',
+    default: new ConsoleLogger(),
+  })
+  defaultLogger?: Logger | null;
 }
 
 export const { DefaultNestApplicationListener } = createNestModule({
@@ -56,16 +61,21 @@ export const { DefaultNestApplicationListener } = createNestModule({
   staticConfigurationModel: DefaultNestApplicationListenerConfiguration,
   configurationOptions: { skipValidation: true },
   environmentsOptions: { skipValidation: true },
+  // we use preWrapApplication for create new module and place it to after all modules
   preWrapApplication: async ({ current, modules }) => {
+    if (!modules[NestModuleCategory.integrations]) {
+      modules[NestModuleCategory.integrations] = [];
+    }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    modules[current.category]!.push(
+    modules[NestModuleCategory.integrations]!.push(
       createNestModule({
         moduleName: 'DefaultNestApplicationListener',
         moduleDescription: 'Default NestJS application listener, no third party utilities required.',
         staticEnvironmentsModel: DefaultNestApplicationListenerEnvironments,
         staticConfigurationModel: DefaultNestApplicationListenerConfiguration,
         moduleCategory: NestModuleCategory.system,
-        wrapApplication: async ({ app, current }) => {
+        // we use postWrapApplication because we need to launch it after enabling all modules
+        postWrapApplication: async ({ app, current }) => {
           if (current.staticConfiguration?.preListen) {
             await current.staticConfiguration?.preListen({
               app,
@@ -81,10 +91,7 @@ export const { DefaultNestApplicationListener } = createNestModule({
                 await app.listen(current.staticEnvironments.port);
               }
             } else {
-              throw new NestModuleError(
-                'Application listener not started!',
-                modules[current.category]?.[current.index]
-              );
+              current.staticConfiguration.defaultLogger?.warn('Application listener not started!');
             }
           }
 

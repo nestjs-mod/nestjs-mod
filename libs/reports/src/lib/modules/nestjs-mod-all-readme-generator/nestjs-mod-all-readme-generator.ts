@@ -216,15 +216,16 @@ ${
         body: readmeContent,
       });
     }
-    return readmeList.sort((a, b) => a.name.length - b.name.length);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return readmeList.sort((a, b) => a.name.localeCompare(b?.name));
   }
 
   private async getModuleListInfo() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const moduleList: any[] = [];
     const contextName = 'nest';
-    for (const module of this.nestjsModAllReadmeGeneratorConfig?.modules ?? []) {
-      const allClasses = await module;
+    for (const m of this.nestjsModAllReadmeGeneratorConfig?.modules ?? []) {
+      const allClasses = await m;
       const onlyNestModules = Object.entries(allClasses).filter(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ([, value]: [string, any]) => value['nestModuleMetadata']
@@ -244,7 +245,9 @@ ${
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const modules: any[] = [];
-      for (const asyncModule of tempPreparedModules.modules['feature'] ?? []) {
+      for (const asyncModule of Object.entries(tempPreparedModules.modules)
+        .map(([, m]) => m)
+        .flat() ?? []) {
         await asyncModule;
         const moduleName = asyncModule.nestModuleMetadata!.moduleName;
         const category = asyncModule.nestModuleMetadata!.moduleCategory;
@@ -267,8 +270,8 @@ ${
     }
     return moduleList
       .flat()
-      .sort((a, b) => (a.name - b.name ? 0 : a.name.length - b.name.length))
-      .sort((a, b) => (a.category - b.category ? 0 : a.category.length - b.category.length));
+      .sort((a, b) => (a?.name as string).localeCompare(b?.name))
+      .sort((a, b) => a.category.localeCompare(b.category));
   }
 }
 

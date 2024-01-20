@@ -1,13 +1,19 @@
-import {
-  EnvModelOptions,
-  EnvModelPropertyOptions,
-  EnvModelRootOptions,
-  PropertyValueExtractor,
-} from '../types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { EnvModelOptions, EnvModelPropertyOptions, EnvModelRootOptions, PropertyValueExtractor } from '../types';
 
-export class ProcessEnvPropertyValueExtractor
-  implements PropertyValueExtractor {
+export class ProcessEnvPropertyValueExtractor implements PropertyValueExtractor {
   name = 'process.env';
+
+  private processEnvStorage: any;
+
+  setDemoMode(active: boolean) {
+    if (active) {
+      this.processEnvStorage = {};
+    } else {
+      this.processEnvStorage = null;
+    }
+  }
+
   example({
     formattedPropertyName,
   }: {
@@ -18,10 +24,22 @@ export class ProcessEnvPropertyValueExtractor
     modelOptions: EnvModelOptions;
     propertyOptions: EnvModelPropertyOptions;
   }) {
+    if (this.processEnvStorage) {
+      return {
+        options: {
+          'process.env': JSON.stringify({
+            [formattedPropertyName]: this.processEnvStorage[formattedPropertyName],
+          }),
+          formattedPropertyName,
+        },
+        logic: `process.env[formattedPropertyName]`,
+        example: `process.env['${formattedPropertyName}']`,
+      };
+    }
     return {
       options: {
         'process.env': JSON.stringify({
-          formattedPropertyName: process.env[formattedPropertyName],
+          [formattedPropertyName]: process.env[formattedPropertyName],
         }),
         formattedPropertyName,
       },
@@ -29,6 +47,7 @@ export class ProcessEnvPropertyValueExtractor
       example: `process.env['${formattedPropertyName}']`,
     };
   }
+
   extract({
     formattedPropertyName,
   }: {
@@ -39,6 +58,9 @@ export class ProcessEnvPropertyValueExtractor
     modelOptions: EnvModelOptions;
     propertyOptions: EnvModelPropertyOptions;
   }) {
+    if (this.processEnvStorage) {
+      return this.processEnvStorage[formattedPropertyName];
+    }
     return process.env[formattedPropertyName];
   }
 }

@@ -36,3 +36,4 @@ export * from './lib/utils/detect-provider-name';
 export * from './lib/utils/is-infrastructure';
 export * from './lib/utils/is-production';
 export * from './lib/utils/load-package';
+export * from './lib/utils/name-it-class';

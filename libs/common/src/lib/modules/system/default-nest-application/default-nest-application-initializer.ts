@@ -39,6 +39,7 @@ export const { DefaultNestApplicationInitializer } = createNestModule({
   moduleDescription: 'Default NestJS application initializer, no third party utilities required.',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: DefaultNestApplicationInitializerConfig,
+  // creating application
   wrapApplication: async ({ modules, current }) => {
     @Module({
       imports: Object.values(modules)
@@ -48,7 +49,7 @@ export const { DefaultNestApplicationInitializer } = createNestModule({
             !m.nestModuleMetadata?.moduleDisabled &&
             !m.nestModuleMetadata?.preWrapApplication &&
             !m.nestModuleMetadata?.postWrapApplication
-        ),
+        )
     })
     class BasicNestApp {}
     const app = await NestFactory.create(BasicNestApp, current?.staticConfiguration);

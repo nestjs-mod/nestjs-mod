@@ -1,71 +1,104 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { ProjectOptions } from '../../../../nest-module/types';
 import { isInfrastructureMode } from '../../../../utils/is-infrastructure';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
 import { ApplicationPackageJsonService } from './application-package-json.service';
+import { DotEnvService } from './dot-env.service';
 import { WrapApplicationOptionsService } from './wrap-application-options.service';
 
-export class ProjectUtilsPatcherService {
+@Injectable()
+export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
   private logger = new Logger(ProjectUtilsPatcherService.name);
 
   constructor(
     private readonly projectUtilsConfiguration: ProjectUtilsConfiguration,
     private readonly applicationPackageJsonService: ApplicationPackageJsonService,
-    private readonly wrapApplicationOptionsService: WrapApplicationOptionsService
+    private readonly wrapApplicationOptionsService: WrapApplicationOptionsService,
+    private readonly dotEnvService: DotEnvService
   ) {}
 
-  async patch() {
-    if (!this.projectUtilsConfiguration || !this.applicationPackageJsonService || !this.wrapApplicationOptionsService) {
+  async onApplicationBootstrap() {
+    await this.updateProject();
+    await this.updateEnvFile();
+    await this.updateGlobalConfigurationAndEnvironmentsOptions();
+  }
+
+  private async updateEnvFile() {
+    if (!this.dotEnvService && this.projectUtilsConfiguration.updateEnvFile) {
+      this.logger.warn(`dotEnvService not set, updating not work`);
+      return;
+    }
+    const keys = this.dotEnvService.keys();
+    const existsEnvJson = this.dotEnvService.read() ?? {};
+    const newEnvJson = keys.reduce(
+      (all, key) => ({ ...all, [String(key)]: existsEnvJson[key!] ? existsEnvJson[key!] : '' }),
+      existsEnvJson
+    );
+    await this.dotEnvService.write(newEnvJson);
+  }
+
+  private async updateGlobalConfigurationAndEnvironmentsOptions() {
+    if (!this.projectUtilsConfiguration || !this.wrapApplicationOptionsService) {
       this.logger.warn(
-        `projectUtilsConfiguration or applicationPackageJsonService or wrapApplicationOptionsService not set, patching not work`
+        `projectUtilsConfiguration or applicationPackageJsonService or wrapApplicationOptionsService not set, updating not work`
       );
       return;
     }
-    await this.patchProject();
-    await this.patchGlobalConfigurationAndEnvironmentsOptions();
-  }
-
-  private async patchGlobalConfigurationAndEnvironmentsOptions() {
-    if (this.projectUtilsConfiguration.patchGlobalConfigurationAndEnvironmentsOptions) {
+    if (this.projectUtilsConfiguration.updateGlobalConfigurationAndEnvironmentsOptions) {
       if (!this.wrapApplicationOptionsService.globalConfigurationOptions) {
         this.wrapApplicationOptionsService.globalConfigurationOptions = {};
       }
-      Object.assign(
-        this.wrapApplicationOptionsService.globalConfigurationOptions,
-        this.getNewGlobalConfigurationAndEnvironmentsOptions()
-      );
+      Object.assign(this.wrapApplicationOptionsService.globalConfigurationOptions, this.getNewGlobalConfiguration());
 
       if (!this.wrapApplicationOptionsService.globalEnvironmentsOptions) {
         this.wrapApplicationOptionsService.globalEnvironmentsOptions = {};
       }
-      Object.assign(
-        this.wrapApplicationOptionsService.globalEnvironmentsOptions,
-        this.getNewGlobalConfigurationAndEnvironmentsOptions()
-      );
+      Object.assign(this.wrapApplicationOptionsService.globalEnvironmentsOptions, this.getNewGlobalEnvironments());
     }
   }
 
-  private getNewGlobalConfigurationAndEnvironmentsOptions() {
+  private getNewGlobalConfiguration() {
     return {
-      ...((this.wrapApplicationOptionsService.globalConfigurationOptions?.debug !== undefined
+      ...(this.wrapApplicationOptionsService.globalConfigurationOptions?.debug === undefined
         ? {
-            debug: this.wrapApplicationOptionsService.globalConfigurationOptions?.debug,
+            debug: true,
           }
-        : {}) ?? true),
-      ...((this.wrapApplicationOptionsService.globalConfigurationOptions?.skipValidation !== undefined
+        : {}),
+      ...(this.wrapApplicationOptionsService.globalConfigurationOptions?.skipValidation === undefined
         ? {
-            skipValidation: this.wrapApplicationOptionsService.globalConfigurationOptions?.skipValidation,
+            skipValidation: isInfrastructureMode(),
           }
-        : {}) ?? isInfrastructureMode()),
+        : {}),
     };
   }
 
-  private async patchProject() {
-    const applicationPackageJson = await this.applicationPackageJsonService.read();
-    if (!this.wrapApplicationOptionsService.project) {
-      this.wrapApplicationOptionsService.project = {} as ProjectOptions;
+  private getNewGlobalEnvironments() {
+    return {
+      ...(this.wrapApplicationOptionsService.globalEnvironmentsOptions?.debug === undefined
+        ? {
+            debug: true,
+          }
+        : {}),
+      ...(this.wrapApplicationOptionsService.globalEnvironmentsOptions?.skipValidation === undefined
+        ? {
+            skipValidation: isInfrastructureMode(),
+          }
+        : {}),
+    };
+  }
+
+  private async updateProject() {
+    if (!this.projectUtilsConfiguration || !this.applicationPackageJsonService || !this.wrapApplicationOptionsService) {
+      this.logger.warn(
+        `projectUtilsConfiguration or applicationPackageJsonService or wrapApplicationOptionsService not set, updating not work`
+      );
+      return;
     }
-    if (this.projectUtilsConfiguration.patchProject) {
+    if (this.projectUtilsConfiguration.updateProjectOptions) {
+      const applicationPackageJson = await this.applicationPackageJsonService.read();
+      if (!this.wrapApplicationOptionsService.project) {
+        this.wrapApplicationOptionsService.project = {} as ProjectOptions;
+      }
       if (!this.wrapApplicationOptionsService.project.name && applicationPackageJson?.name) {
         this.wrapApplicationOptionsService.project.name = applicationPackageJson?.name;
       }

@@ -3,24 +3,20 @@
 import {
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
+  ProjectUtils,
   bootstrapNestApplication,
 } from '@nestjs-mod/common';
 import { NESTJS_MOD_ALL_README_GENERATOR_FOOTER, NestjsModAllReadmeGenerator } from '@nestjs-mod/reports';
 import { join } from 'path';
 
 bootstrapNestApplication({
-  globalConfigurationOptions: {
-    skipValidation: true,
-  },
-  globalEnvironmentsOptions: {
-    skipValidation: true,
-  },
   project: {
     name: 'nestjs-mod',
     description: 'A command line interface (CLI) for create and manipulation with NestJS-mod application',
   },
   modules: {
     system: [
+      ProjectUtils.forRoot(),
       DefaultNestApplicationInitializer.forRoot(),
       DefaultNestApplicationListener.forRoot({
         staticConfiguration: {

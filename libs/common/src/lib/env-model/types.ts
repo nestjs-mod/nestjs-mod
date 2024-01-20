@@ -11,6 +11,7 @@ export type EnvModelOptions = {
   validatorPackage?: ValidatorPackage;
   validatorOptions?: ValidatorOptions;
   skipValidation?: boolean;
+  demoMode?: boolean;
   debug?: boolean;
   logger?: Logger | LoggerService;
 };
@@ -42,6 +43,7 @@ export interface PropertyNameFormatter {
 
 export interface PropertyValueExtractor {
   name: string;
+  setDemoMode?: (active: boolean) => void;
   example(options: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     obj: any;
@@ -78,6 +80,7 @@ export type EnvModelInfoValidationsPropertyValueExtractors = {
     example: string;
   };
   value: string | undefined;
+  demoMode?: boolean;
 };
 
 export type EnvModelInfo = {

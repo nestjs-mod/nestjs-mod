@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { config } from 'dotenv';
 import { writeFile } from 'fs/promises';
 import { EnvModelInfoValidationsPropertyNameFormatters } from '../../../../env-model/types';
@@ -8,6 +8,8 @@ import { WrapApplicationOptionsService } from './wrap-application-options.servic
 
 @Injectable()
 export class DotEnvService {
+  private logger = new Logger(DotEnvService.name);
+
   constructor(
     private readonly wrapApplicationOptionsService: WrapApplicationOptionsService,
     private readonly projectUtilsConfiguration: ProjectUtilsConfiguration
@@ -24,14 +26,21 @@ export class DotEnvService {
       .filter((m) => m.nestModuleMetadata?.moduleCategory)
       .map((m) => m.moduleSettings);
 
+    const contextName = defaultContextName();
     const keys = [
       ...new Set(
         [
           ...modules
-            .map((module) =>
-              Object.keys(module?.[defaultContextName()]?.staticEnvironments?.validations ?? {})
+            .map((m) =>
+              Object.keys(m?.[contextName]?.staticEnvironments?.validations ?? {})
+                .filter(
+                  (key) =>
+                    !m?.[contextName]?.staticEnvironments?.validations[key]?.propertyValueExtractors.some(
+                      (e) => e.demoMode
+                    )
+                )
                 .map((key) =>
-                  module?.[defaultContextName()]?.staticEnvironments?.validations[key]?.propertyNameFormatters
+                  m?.[contextName]?.staticEnvironments?.validations[key]?.propertyNameFormatters
                     .filter((f: EnvModelInfoValidationsPropertyNameFormatters) => f.name === 'dotenv')
                     .map((f: EnvModelInfoValidationsPropertyNameFormatters) => f.value)
                     .flat()
@@ -40,12 +49,37 @@ export class DotEnvService {
             )
             .flat(),
           ...modules
-            .map((module) =>
-              Object.keys(module?.[defaultContextName()]?.environments?.validations ?? {})
+            .map((m) =>
+              Object.keys(m?.[contextName]?.environments?.validations ?? {})
+                .filter(
+                  (key) =>
+                    !m?.[contextName]?.environments?.validations[key]?.propertyValueExtractors.some((e) => e.demoMode)
+                )
                 .map((key) =>
-                  module?.[defaultContextName()]?.environments?.validations[key]?.propertyNameFormatters
+                  m?.[contextName]?.environments?.validations[key]?.propertyNameFormatters
                     .filter((f: EnvModelInfoValidationsPropertyNameFormatters) => f.name === 'dotenv')
                     .map((f: EnvModelInfoValidationsPropertyNameFormatters) => f.value)
+                    .flat()
+                )
+                .flat()
+            )
+            .flat(),
+          ...modules
+            .map((m) =>
+              Object.entries(m?.[contextName]?.featureModuleEnvironments ?? {})
+                .map(([, v]) =>
+                  (v ?? [])
+                    .map((vItem) =>
+                      Object.keys(vItem?.validations ?? {})
+                        .filter((key) => !vItem?.validations[key]?.propertyValueExtractors.some((e) => e.demoMode))
+                        .map((key) =>
+                          vItem?.validations[key]?.propertyNameFormatters
+                            .filter((f: EnvModelInfoValidationsPropertyNameFormatters) => f.name === 'dotenv')
+                            .map((f: EnvModelInfoValidationsPropertyNameFormatters) => f.value)
+                            .flat()
+                        )
+                    )
+                    .flat()
                     .flat()
                 )
                 .flat()
@@ -57,16 +91,19 @@ export class DotEnvService {
     return keys;
   }
 
-  async read(): Promise<Record<string, string | undefined> | undefined> {
+  read(): Record<string, string | undefined> | undefined {
     const bothEnvFile = this.getEnvFilePath();
     if (!bothEnvFile) {
       return;
     }
     try {
       const neededKeys = this.keys();
-      const existsEnvJson = (config({ path: bothEnvFile }).parsed as Record<string, string | undefined>) ?? {};
+      const existsEnvJson =
+        (config({ path: bothEnvFile, override: true }).parsed as Record<string, string | undefined>) ?? {};
       return neededKeys.reduce((all, key) => ({ ...all, [String(key)]: existsEnvJson[key!] ?? '' }), existsEnvJson);
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      this.logger.error(err, err.stack);
       return undefined;
     }
   }
@@ -78,7 +115,7 @@ export class DotEnvService {
     }
     try {
       const neededKeys = this.keys();
-      const existsEnvJson = (await this.read()) ?? {};
+      const existsEnvJson = this.read() ?? {};
       const newEnvJson = neededKeys.reduce(
         (all, key) => ({ ...all, [String(key)]: data[key!] ?? existsEnvJson?.[key!] ?? '' }),
         existsEnvJson
@@ -89,7 +126,9 @@ export class DotEnvService {
           .map(([key, value]) => `${key}=${value}`)
           .join('\n')
       );
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      this.logger.error(err, err.stack);
       return;
     }
   }

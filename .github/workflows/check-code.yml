@@ -23,8 +23,6 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm run generate
-      - run: npm run nx -- build cli
-      - run: npm run nx -- start cli
       - run: npm run build
       - run: npm run docs:infrastructure
       - run: npm run test

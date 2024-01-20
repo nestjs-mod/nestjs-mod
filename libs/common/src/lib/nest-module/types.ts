@@ -56,6 +56,8 @@ export type DynamicNestModuleMetadata<
     featureEnvironments: TFeatureEnvironmentsModel;
     staticConfiguration: TStaticConfigurationModel;
     staticEnvironments: TStaticEnvironmentsModel;
+    globalEnvironmentsOptions: Omit<EnvModelOptions, 'originalName'>;
+    globalConfigurationOptions: Omit<ConfigModelOptions, 'originalName'>;
   },
   TImportsWithStaticOptions = (linkOptions: TLinkOptions) => Array<ImportsWithStaticOptionsResponse>,
   TControllersWithStaticOptions = (inkOptions: TLinkOptions) => Type<any>[],
@@ -158,6 +160,8 @@ export interface NestModuleMetadata<
     settingsModule: TDynamicModule;
     staticConfiguration: TStaticConfigurationModel;
     staticEnvironments: TStaticEnvironmentsModel;
+    globalEnvironmentsOptions: Omit<EnvModelOptions, 'originalName'>;
+    globalConfigurationOptions: Omit<ConfigModelOptions, 'originalName'>;
   },
   TImportsWithStaticOptions = (linkOptions: TLinkOptions) => Array<ImportsWithStaticOptionsResponse>,
   TControllersWithStaticOptions = (inkOptions: TLinkOptions) => Type<any>[],
@@ -166,6 +170,7 @@ export interface NestModuleMetadata<
   TNestApplication = INestApplication,
   TModuleName extends string = string
 > {
+  project?: ProjectOptions;
   moduleDisabled?: boolean;
   moduleName: TModuleName;
   moduleDescription?: string;
@@ -242,6 +247,35 @@ export interface NestModuleMetadata<
     >
   ) => Promise<void>;
   logger?: Logger | LoggerService;
+
+  wrapForFeatureAsync?: <TWrapFeatureConfigurationModel, TWrapFeatureEnvironmentsModel>(
+    asyncModuleOptions?: ForFeatureAsyncMethodOptions<TWrapFeatureConfigurationModel, TWrapFeatureEnvironmentsModel>
+  ) => {
+    asyncModuleOptions?: ForFeatureAsyncMethodOptions<TWrapFeatureConfigurationModel, TWrapFeatureEnvironmentsModel>;
+    module?: Promise<TDynamicModule>;
+  };
+
+  wrapForRootAsync?: <
+    TWrapStaticConfigurationModel,
+    TWrapConfigurationModel,
+    TWrapEnvironmentsModel,
+    TWrapStaticEnvironmentsModel
+  >(
+    asyncModuleOptions?: ForRootMethodOptions<
+      TWrapStaticConfigurationModel,
+      TWrapConfigurationModel,
+      TWrapEnvironmentsModel,
+      TWrapStaticEnvironmentsModel
+    >
+  ) => {
+    asyncModuleOptions?: ForRootMethodOptions<
+      TWrapStaticConfigurationModel,
+      TWrapConfigurationModel,
+      TWrapEnvironmentsModel,
+      TWrapStaticEnvironmentsModel
+    >;
+    module?: Promise<TDynamicModule>;
+  };
 }
 
 export type CommonNestModuleMetadata = Partial<
@@ -336,7 +370,7 @@ export type TModuleSettings = {
   configuration?: ConfigModelInfo;
   staticConfiguration?: ConfigModelInfo;
   featureConfiguration?: ConfigModelInfo;
-  featureEnvironments?: ConfigModelInfo;
+  featureEnvironments?: EnvModelInfo;
   featureModuleConfigurations?: Record<string, ConfigModelInfo[]>;
-  featureModuleEnvironments?: Record<string, ConfigModelInfo[]>;
+  featureModuleEnvironments?: Record<string, EnvModelInfo[]>;
 };

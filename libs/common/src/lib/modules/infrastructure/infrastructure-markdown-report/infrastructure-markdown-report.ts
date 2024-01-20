@@ -13,7 +13,12 @@ import {
   NEST_MODULE_CATEGORY_DESCRIPTION,
   NEST_MODULE_CATEGORY_TITLE,
 } from '../../../nest-module/constants';
-import { DynamicNestModuleMetadata, NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
+import {
+  DynamicNestModuleMetadata,
+  NEST_MODULE_CATEGORY_LIST,
+  NestModuleCategory,
+  WrapApplicationOptions,
+} from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
 
 @ConfigModel()
@@ -53,7 +58,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       nestModulesFeatureEnvironmentsDescription: NEST_MODULES_FEATURE_ENVIRONMENTS_DESCRIPTION,
     }
   ) {
-    const lines: string[] = [];
+    let lines: string[] = [];
     if (dynamicNestModuleMetadata.nestModuleMetadata?.moduleCategory) {
       lines.push(`### ${dynamicNestModuleMetadata.nestModuleMetadata?.moduleName}`);
       if (dynamicNestModuleMetadata.nestModuleMetadata?.moduleDescription) {
@@ -93,6 +98,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           ? dynamicNestModuleMetadata.nestModuleMetadata?.sharedImports
           : // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (dynamicNestModuleMetadata.nestModuleMetadata.sharedImports as any)({
+              project: {},
               settingsModule: {},
               staticConfiguration: {},
               staticEnvironments: {},
@@ -162,52 +168,40 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         const featureEnvironmentsModuleNames = Object.keys(
           dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleEnvironments ?? {}
         );
-        let titleAppended = false;
         if (featureModuleNames.length > 0) {
           for (const featureModuleName of featureModuleNames) {
             const featureConfigurations =
               dynamicNestModuleMetadata.moduleSettings?.[name]?.featureModuleConfigurations?.[featureModuleName] ?? [];
+            const newLines: string[] = ['#### Modules that use feature configuration'];
             for (const featureConfiguration of featureConfigurations) {
-              if (!titleAppended) {
-                lines.push('#### Modules that use feature configuration');
-                titleAppended = true;
-              }
               this.reportOfConfigModelInfo({
                 titleSharps: '#####',
-                lines,
+                lines: newLines,
                 settingsModelInfo: featureConfiguration,
-                settingsModelInfoTitle: `Module name: ${featureModuleName}`,
+                settingsModelInfoTitle: `Feature module name: ${featureModuleName}`,
               });
+            }
+            if (newLines.length > 0) {
+              lines = [...lines, ...newLines];
             }
           }
         }
 
-        titleAppended = false;
         if (featureEnvironmentsModuleNames.length > 0) {
           for (const featureModuleName of featureEnvironmentsModuleNames) {
             const featureEnvironments =
               dynamicNestModuleMetadata.moduleSettings?.[name]?.featureModuleEnvironments?.[featureModuleName] ?? [];
+            const newLines: string[] = ['#### Modules that use feature environments'];
             for (const featureEnvironment of featureEnvironments) {
-              if (
-                !titleAppended &&
-                // todo: refactor
-                (!this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings ??
-                  featureEnvironment?.modelPropertyOptions.some(
-                    (modelPropertyOption) =>
-                      featureEnvironment?.validations[modelPropertyOption.originalName].value !== undefined &&
-                      featureEnvironment?.validations[modelPropertyOption.originalName].value !==
-                        modelPropertyOption.default
-                  ))
-              ) {
-                lines.push('#### Modules that use feature environments');
-                titleAppended = true;
-              }
-              this.reportOfConfigModelInfo({
+              this.reportOfEnvModelInfo({
                 titleSharps: '#####',
-                lines,
+                lines: newLines,
                 settingsModelInfo: featureEnvironment,
-                settingsModelInfoTitle: `Module name: ${featureModuleName}`,
+                settingsModelInfoTitle: `Feature module name: ${featureModuleName}`,
               });
+            }
+            if (newLines.length > 0) {
+              lines = [...lines, ...newLines];
             }
           }
         }
@@ -306,6 +300,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       );
       lines.push('');
     }
+    return lines;
   }
 
   private reportOfConfigModelInfo({
@@ -385,6 +380,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       );
       lines.push('');
     }
+    return lines;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -489,14 +485,14 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
           lines.push(`${project.description}`);
         }
       }
-      for (const category of Object.keys(modules ?? {})) {
-        const nestModules: DynamicNestModuleMetadata[] = (modules[category as NestModuleCategory] ?? []).filter(
+      for (const category of NEST_MODULE_CATEGORY_LIST) {
+        const nestModules: DynamicNestModuleMetadata[] = (modules[category] ?? []).filter(
           (m) => m.nestModuleMetadata?.moduleCategory
         );
         if (nestModules.length > 0) {
-          lines.push(`## ${NEST_MODULE_CATEGORY_TITLE[category as NestModuleCategory]}`);
-          if (NEST_MODULE_CATEGORY_DESCRIPTION[category as NestModuleCategory]) {
-            lines.push(NEST_MODULE_CATEGORY_DESCRIPTION[category as NestModuleCategory]);
+          lines.push(`## ${NEST_MODULE_CATEGORY_TITLE[category]}`);
+          if (NEST_MODULE_CATEGORY_DESCRIPTION[category]) {
+            lines.push(NEST_MODULE_CATEGORY_DESCRIPTION[category]);
           }
           lines.push('');
         }
@@ -518,24 +514,27 @@ export const { InfrastructureMarkdownReportGenerator } = createNestModule({
   configurationOptions: { skipValidation: true },
   environmentsOptions: { skipValidation: true },
   sharedProviders: [DynamicNestModuleMetadataMarkdownReportGenerator],
+  // we want collect report about all modules
+  // for than we should place new report collector to end of infrastructure section
   preWrapApplication: async ({ project, modules, current }) => {
-    if (modules[current.category]) {
-      modules[current.category]!.push(
-        createNestModule({
-          moduleName: 'InfrastructureMarkdownReportGenerator',
-          moduleDescription: 'Infrastructure markdown report generator.',
-          sharedProviders: [DynamicNestModuleMetadataMarkdownReportGenerator],
-          providers: [
-            getInfrastructureMarkdownReportGeneratorBootstrap({
-              modules,
-              project,
-            }),
-          ],
-          imports: [InfrastructureMarkdownReport.forFeature()],
-          staticConfigurationModel: InfrastructureMarkdownReportGeneratorConfiguration,
-          moduleCategory: NestModuleCategory.infrastructure,
-        }).InfrastructureMarkdownReportGenerator.forRootAsync(current.asyncModuleOptions)
-      );
+    if (!modules[NestModuleCategory.infrastructure]) {
+      modules[NestModuleCategory.infrastructure] = [];
     }
+    modules[NestModuleCategory.infrastructure]!.push(
+      createNestModule({
+        moduleName: 'InfrastructureMarkdownReportGenerator',
+        moduleDescription: 'Infrastructure markdown report generator.',
+        sharedProviders: [DynamicNestModuleMetadataMarkdownReportGenerator],
+        providers: [
+          getInfrastructureMarkdownReportGeneratorBootstrap({
+            modules,
+            project,
+          }),
+        ],
+        imports: [InfrastructureMarkdownReport.forFeature()],
+        staticConfigurationModel: InfrastructureMarkdownReportGeneratorConfiguration,
+        moduleCategory: NestModuleCategory.infrastructure,
+      }).InfrastructureMarkdownReportGenerator.forRootAsync(current.asyncModuleOptions)
+    );
   },
 });

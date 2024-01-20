@@ -15,17 +15,6 @@ Static variables of primitive and complex types that are used in the module and 
 |`wrapTestingModuleBuilder`|Method for additional actions with TestingModuleBuilder|**optional**|-|-|
 |`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|ConsoleLogger|
 
-### DefaultTestNestApplicationInitializer
-Default test NestJS application initializer, no third party utilities required.
-
-#### Static configuration
-Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
-
-| Key    | Description | Constraints | Default | Value |
-| ------ | ----------- | ----------- | ------- | ----- |
-|`preInit`|Method for additional actions before init|**optional**|-|-|
-|`postInit`|Method for additional actions after init|**optional**|-|-|
-
 ## Feature modules
 Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.
 
@@ -78,10 +67,24 @@ Feature variables with primitive types used in the module, the values of which c
 | ------ | ----------- | ----------- | ------- | ----- |
 |`envFeatureVar`|-|**optional**|-|-|
 
+## Integration modules
+Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
+
+### DefaultTestNestApplicationInitializerLoader
+Default test NestJS application initializer, no third party utilities required.
+
+#### Static configuration
+Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
+
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`preInit`|Method for additional actions before init|**optional**|-|-|
+|`postInit`|Method for additional actions after init|**optional**|-|-|
+
 ## Infrastructure modules
 Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.
 
-### InfrastructureMarkdownReportGenerator
+### InfrastructureMarkdownReportGeneratorCollector
 Infrastructure markdown report generator.
 
 #### Shared providers

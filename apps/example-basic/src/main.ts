@@ -19,18 +19,6 @@ import { SampleWithSharedConfig } from './app/sample-with-shared-config/sample-w
 const globalPrefix = 'api';
 
 bootstrapNestApplication({
-  globalConfigurationOptions: {
-    debug: true,
-    skipValidation: isInfrastructureMode(),
-  },
-  globalEnvironmentsOptions: {
-    debug: true,
-    skipValidation: isInfrastructureMode(),
-  },
-  project: {
-    name: 'ExampleBasic',
-    description: 'Example basic',
-  },
   modules: {
     system: [
       ProjectUtils.forRoot({

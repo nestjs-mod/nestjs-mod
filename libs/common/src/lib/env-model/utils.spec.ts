@@ -1,7 +1,5 @@
-import { DynamicModule} from '@nestjs/common';
-import { Injectable, Module } from '@nestjs/common';
-import { TestingModule } from '@nestjs/testing';
-import { Test } from '@nestjs/testing';
+import { DynamicModule, Injectable, Module } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import { IsNotEmpty } from 'class-validator';
 import { EnvModel, EnvModelProperty } from './decorators';
 import { envTransform } from './utils';
@@ -44,10 +42,7 @@ describe('Env model: Utils', () => {
       Test.createTestingModule({
         imports: [AppModule.forRoot({})],
       }).compile()
-    ).rejects.toHaveProperty(
-      'errors.0.constraints.isNotEmpty',
-      'option should not be empty'
-    );
+    ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'option should not be empty');
   });
 
   it('should return model info in error if option of env not set', async () => {
@@ -89,9 +84,7 @@ describe('Env model: Utils', () => {
       }).compile()
     ).rejects.toMatchObject({
       info: {
-        modelPropertyOptions: [
-          { description: 'option description', originalName: 'option' },
-        ],
+        modelPropertyOptions: [{ description: 'option description', originalName: 'option' }],
         modelOptions: {
           name: 'model name',
           description: 'model description',

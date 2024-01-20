@@ -46,6 +46,7 @@ Default test NestJS application initializer, no third party utilities required.
 | ------ | ----------- | ----------- | ------- | ----- |
 |`preInit`|Method for additional actions before init|**optional**|-|-|
 |`postInit`|Method for additional actions after init|**optional**|-|-|
+|`defaultLogger`|Default logger for test application|**optional**|ConsoleLogger|-|
 
 [Back to Top](#modules)
 

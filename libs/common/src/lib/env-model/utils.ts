@@ -27,10 +27,9 @@ export async function envTransform<
     validations: {},
   };
 
+  const propertyNameFormatters = modelOptions?.propertyNameFormatters ?? rootOptions?.propertyNameFormatters ?? [];
   for (const propertyOptions of modelPropertyOptions) {
-    for (const propertyNameFormatter of modelOptions?.propertyNameFormatters ??
-      rootOptions?.propertyNameFormatters ??
-      []) {
+    for (const propertyNameFormatter of propertyNameFormatters) {
       const formattedPropertyExample = propertyNameFormatter.example({
         modelRootOptions: rootOptions,
         modelOptions: modelOptions ?? {},
@@ -42,27 +41,35 @@ export async function envTransform<
         propertyOptions,
       });
 
+      const demoMode = modelOptions?.demoMode ?? rootOptions?.demoMode ?? false;
+
       const propertyValueExtractors = (
         modelOptions?.propertyValueExtractors ??
         rootOptions?.propertyValueExtractors ??
         []
-      ).map((extractor) => ({
-        name: extractor.name,
-        example: extractor.example({
-          obj: data,
-          modelRootOptions: rootOptions,
-          modelOptions: modelOptions ?? {},
-          propertyOptions,
-          formattedPropertyName,
-        }),
-        value: extractor.extract({
-          obj: data,
-          modelRootOptions: rootOptions,
-          modelOptions: modelOptions ?? {},
-          propertyOptions,
-          formattedPropertyName,
-        }),
-      }));
+      ).map((extractor) => {
+        if (extractor.setDemoMode) {
+          extractor.setDemoMode(demoMode);
+        }
+        return {
+          name: extractor.name,
+          example: extractor.example({
+            obj: data,
+            modelRootOptions: rootOptions,
+            modelOptions: modelOptions ?? {},
+            propertyOptions,
+            formattedPropertyName,
+          }),
+          demoMode,
+          value: extractor.extract({
+            obj: data,
+            modelRootOptions: rootOptions,
+            modelOptions: modelOptions ?? {},
+            propertyOptions,
+            formattedPropertyName,
+          }),
+        };
+      });
 
       if (!info.validations[propertyOptions.originalName]) {
         info.validations[propertyOptions.originalName] = {
@@ -124,7 +131,6 @@ export async function envTransform<
     if (debug && logger?.debug) {
       logger.debug(info);
     }
-    logger.debug!(info);
     throw new EnvModelValidationErrors(validateErrors, info);
   }
 

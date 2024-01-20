@@ -14,6 +14,7 @@ import { SampleWithSharedConfigService } from './sample-with-shared-config.servi
 
 @Module({})
 export class SharedImport1Module {}
+
 export const { SharedImport2Module } = createNestModule({
   moduleName: 'SharedImport2Module',
 });

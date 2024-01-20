@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
-import { IsNotEmpty } from 'class-validator';
 
 @ConfigModel()
 export class ProjectUtilsConfiguration {
   @ConfigModelProperty({
     description: 'Application package.json-file',
   })
-  @IsNotEmpty()
-  applicationPackageJsonFile!: string;
+  applicationPackageJsonFile?: string;
 
   @ConfigModelProperty({
     description: 'Root package.json-file.',
@@ -21,14 +19,20 @@ export class ProjectUtilsConfiguration {
   envFile?: string;
 
   @ConfigModelProperty({
-    description: 'Patch project properties',
+    description: 'Update env-file',
     default: true,
   })
-  patchProject?: boolean;
+  updateEnvFile?: boolean;
 
   @ConfigModelProperty({
-    description: 'Patch configuration and environments options',
+    description: 'Update project properties',
     default: true,
   })
-  patchGlobalConfigurationAndEnvironmentsOptions?: boolean;
+  updateProjectOptions?: boolean;
+
+  @ConfigModelProperty({
+    description: 'Update configuration and environments options',
+    default: true,
+  })
+  updateGlobalConfigurationAndEnvironmentsOptions?: boolean;
 }

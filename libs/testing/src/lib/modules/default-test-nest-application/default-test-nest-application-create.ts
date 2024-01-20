@@ -27,6 +27,7 @@ export const { DefaultTestNestApplicationCreate } = createNestModule({
   moduleDescription: 'Default test NestJS application creator, no third party utilities required.',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: DefaultTestNestApplicationCreateConfig,
+  // creating test application
   wrapApplication: async ({ modules, current }) => {
     let testingModuleBuilder = Test.createTestingModule({
       imports: Object.values(modules)

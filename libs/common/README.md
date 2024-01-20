@@ -16,10 +16,10 @@ npm i --save @nestjs-mod/common
 
 | Link | Description |
 | ---- | ----------- |
-| [Env model](#env-model) | Decorators for describing module environment variables and functions for its serialization and verification. |
 | [Config model](#config-model) | Decorators for describing the module configuration and a function for its serialization and validation. |
-| [NestJS module](#nestjs-module) | Function for creating a configurable module with the ability to use multi-providing. |
+| [Env model](#env-model) | Decorators for describing module environment variables and functions for its serialization and verification. |
 | [NestJS application](#nestjs-application) | Function for sequential import of nestModules. |
+| [NestJS module](#nestjs-module) | Function for creating a configurable module with the ability to use multi-providing. |
 
 
 ## Modules
@@ -27,14 +27,93 @@ npm i --save @nestjs-mod/common
 | Link | Category | Description |
 | ---- | -------- | ----------- |
 | [InfrastructureMarkdownReport](#infrastructuremarkdownreport) | core | Infrastructure markdown report |
-| [ProjectUtils](#projectutils) | system | Utilities for setting global application parameters, such as project name, description, and settings validation parameters. |
-| [DefaultNestApplicationListener](#defaultnestapplicationlistener) | system | Default NestJS application listener, no third party utilities required. |
-| [DefaultNestApplicationInitializer](#defaultnestapplicationinitializer) | system | Default NestJS application initializer, no third party utilities required. |
 | [InfrastructureMarkdownReportGenerator](#infrastructuremarkdownreportgenerator) | infrastructure | Infrastructure markdown report generator. |
+| [DefaultNestApplicationInitializer](#defaultnestapplicationinitializer) | system | Default NestJS application initializer, no third party utilities required. |
+| [DefaultNestApplicationListener](#defaultnestapplicationlistener) | system | Default NestJS application listener, no third party utilities required. |
+| [ProjectUtils](#projectutils) | system | Utilities for setting global application parameters, such as project name, description, and settings validation parameters. |
 
 
 ## Utilities descriptions
 
+### Config model
+
+Decorators for describing the module configuration and a function for its serialization and validation.
+Values for this type of configuration must be described in code.
+
+#### Decorators
+
+`ConfigModel`, `ConfigModelProperty`
+
+#### Function
+
+`configTransform`
+
+#### Usage
+
+```typescript
+import { ConfigModel, ConfigModelProperty, configTransform } from '@nestjs-mod/common';
+import { DynamicModule, Module } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { IsNotEmpty } from 'class-validator';
+
+// We describe the configuration.
+@ConfigModel()
+class AppConfig {
+  @ConfigModelProperty()
+  @IsNotEmpty()
+  option!: string;
+}
+
+// We describe the module.
+@Module({ providers: [AppConfig] })
+class AppModule {
+  static forRoot(config: Partial<AppConfig>): DynamicModule {
+    return {
+      module: AppModule,
+      providers: [
+        {
+          provide: `${AppConfig.name}_loader`,
+          useFactory: async (emptyAppConfig: AppConfig) => {
+            if (config.constructor !== Object) {
+              Object.setPrototypeOf(emptyAppConfig, config);
+            }
+            const obj = await configTransform({
+              model: AppConfig,
+              data: config,
+            });
+            Object.assign(emptyAppConfig, obj.data);
+          },
+          inject: [AppConfig],
+        },
+      ],
+    };
+  }
+}
+
+// Let's try to launch the application - Example with throw validation error.
+async function bootstrap1() {
+  const app = await NestFactory.create(AppModule.forRoot({}));
+  await app.listen(3000);
+}
+
+// Now we get a config validation error.
+// throw new ConfigModelValidationErrors(validateErrors);
+// isNotEmpty: option should not be empty
+bootstrap1();
+
+// Let's try to launch the application - Example of start without error.
+async function bootstrap2() {
+  const app = await NestFactory.create(AppModule.forRoot({ option: 'value1' }));
+  console.log(app.get(AppConfig)); // output: { option: 'value1' }
+  await app.listen(3000);
+}
+
+bootstrap2();
+```
+
+[Back to Top](#utilities)
+
+---
 ### Env model
 
 Decorators for describing module environment variables and functions for its serialization and verification.
@@ -127,228 +206,6 @@ async function bootstrap3() {
 }
 
 bootstrap3();
-```
-
-[Back to Top](#utilities)
-
----
-### Config model
-
-Decorators for describing the module configuration and a function for its serialization and validation.
-Values for this type of configuration must be described in code.
-
-#### Decorators
-
-`ConfigModel`, `ConfigModelProperty`
-
-#### Function
-
-`configTransform`
-
-#### Usage
-
-```typescript
-import { ConfigModel, ConfigModelProperty, configTransform } from '@nestjs-mod/common';
-import { DynamicModule, Module } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { IsNotEmpty } from 'class-validator';
-
-// We describe the configuration.
-@ConfigModel()
-class AppConfig {
-  @ConfigModelProperty()
-  @IsNotEmpty()
-  option!: string;
-}
-
-// We describe the module.
-@Module({ providers: [AppConfig] })
-class AppModule {
-  static forRoot(config: Partial<AppConfig>): DynamicModule {
-    return {
-      module: AppModule,
-      providers: [
-        {
-          provide: `${AppConfig.name}_loader`,
-          useFactory: async (emptyAppConfig: AppConfig) => {
-            if (config.constructor !== Object) {
-              Object.setPrototypeOf(emptyAppConfig, config);
-            }
-            const obj = await configTransform({
-              model: AppConfig,
-              data: config,
-            });
-            Object.assign(emptyAppConfig, obj.data);
-          },
-          inject: [AppConfig],
-        },
-      ],
-    };
-  }
-}
-
-// Let's try to launch the application - Example with throw validation error.
-async function bootstrap1() {
-  const app = await NestFactory.create(AppModule.forRoot({}));
-  await app.listen(3000);
-}
-
-// Now we get a config validation error.
-// throw new ConfigModelValidationErrors(validateErrors);
-// isNotEmpty: option should not be empty
-bootstrap1();
-
-// Let's try to launch the application - Example of start without error.
-async function bootstrap2() {
-  const app = await NestFactory.create(AppModule.forRoot({ option: 'value1' }));
-  console.log(app.get(AppConfig)); // output: { option: 'value1' }
-  await app.listen(3000);
-}
-
-bootstrap2();
-```
-
-[Back to Top](#utilities)
-
----
-## NestJS module
-
-Function for creating a configurable module with the ability to use multi-providing.
-It is possible to create and work with named module instances.
-Modules can contain code for creating and managing the application (preWrapApplication, wrapApplication, postWrapApplication).
-
-Type of config or env models used in module:
-
-- `environmentsModel` - Variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
-- `configurationModel` - Variables of primitive and complex types that are used in the module; values for them must be passed when connecting the module to the application.
-- `staticEnvironmentsModel` - Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
-- `staticConfigurationModel` - Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
-- `featureConfigurationModel` - Feature variables of primitive and complex types that can be added to the current module from other modules (example: a transport for sending a message can be defined as a generalized interface, but the implementation itself will be added from a module for working with a specific transport or from an integration module).
-- `featureEnvironmentsModel` - Feature variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
-
-#### Decorators
-
-`InjectFeatures`, `InjectService`, `InjectAllFeatures`, `InjectFeatureEnvironments`, `InjectAllFeatureEnvironments`
-
-#### Function
-
-`createNestModule`, `getNestModuleDecorators`
-
-### Usage
-
-```typescript
-import { ConfigModel, ConfigModelProperty, EnvModel, EnvModelProperty, createNestModule, getNestModuleDecorators } from '@nestjs-mod/common';
-import { Injectable } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { IsNotEmpty } from 'class-validator';
-
-// App1Module
-
-const { InjectFeatures } = getNestModuleDecorators({ moduleName: 'App1Module' });
-
-@ConfigModel()
-class AppFeatureConfig {
-  @ConfigModelProperty()
-  @IsNotEmpty()
-  featureOptionConfig!: string;
-}
-
-@Injectable()
-class AppFeaturesService {
-  constructor(
-    @InjectFeatures()
-    private readonly appFeatureConfigs: AppFeatureConfig[]
-  ) {}
-
-  getFeatureConfigs() {
-    return this.appFeatureConfigs;
-  }
-}
-
-const { App1Module } = createNestModule({
-  moduleName: 'App1Module',
-  sharedProviders: [AppFeaturesService],
-  featureConfigurationModel: AppFeatureConfig,
-});
-
-@ConfigModel()
-class App2Config {
-  @ConfigModelProperty()
-  @IsNotEmpty()
-  option!: string;
-}
-
-@Injectable()
-class App2Service {
-  constructor(private readonly appFeaturesService: AppFeaturesService, private readonly app2Config: App2Config) {}
-
-  getFeatureConfigs() {
-    return this.appFeaturesService.getFeatureConfigs();
-  }
-
-  getConfig() {
-    return this.app2Config;
-  }
-}
-
-// App2Module
-
-const { App2Module } = createNestModule({
-  moduleName: 'App2Module',
-  imports: [App1Module.forFeature({ featureOptionConfig: 'featureOptionConfig-app2' })],
-  providers: [App2Service],
-  configurationModel: App2Config,
-});
-
-@EnvModel()
-class App3Env {
-  @EnvModelProperty()
-  @IsNotEmpty()
-  option!: string;
-}
-
-@Injectable()
-class App3Service {
-  constructor(private readonly appFeaturesService: AppFeaturesService, private readonly app3Env: App3Env) {}
-
-  getFeatureConfigs() {
-    return this.appFeaturesService.getFeatureConfigs();
-  }
-
-  getEnv() {
-    return this.app3Env;
-  }
-}
-
-const { App3Module } = createNestModule({
-  moduleName: 'App3Module',
-  imports: [App1Module.forFeature({ featureOptionConfig: 'featureOptionConfig-app3' })],
-  providers: [App3Service],
-  environmentsModel: App3Env,
-});
-
-// Test
-
-const { AppModule } = createNestModule({
-  moduleName: 'AppModule',
-  imports: [App1Module.forRoot(), App2Module.forRoot({ configuration: { option: 'appConfig3value' } }), App3Module.forRoot({ environments: { option: 'appEnv2value' } })],
-});
-
-// Let's try to launch the application
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule.forRoot());
-  const appFeatureScannerService = app.get(AppFeaturesService);
-  const app2Service = app.get(App2Service);
-  const app3Service = app.get(App3Service);
-
-  console.log(appFeatureScannerService.getFeatureConfigs()); // output: [{ featureOptionConfig: 'featureOptionConfig-app2' }, { featureOptionConfig: 'featureOptionConfig-app3' }]
-  console.log(app2Service.getFeatureConfigs()); // output: [{ featureOptionConfig: 'featureOptionConfig-app2' }, { featureOptionConfig: 'featureOptionConfig-app3' }]
-  console.log(app3Service.getFeatureConfigs()); // output: [{ featureOptionConfig: 'featureOptionConfig-app2' }, { featureOptionConfig: 'featureOptionConfig-app3' }]
-  console.log(app2Service.getConfig()); // output: { option: 'appConfig3value' }
-  console.log(app3Service.getEnv()); // output: { option: 'appEnv2value' }
-}
-
-bootstrap();
 ```
 
 [Back to Top](#utilities)
@@ -512,6 +369,149 @@ bootstrapNestApplication({
 
 [Back to Top](#utilities)
 
+---
+## NestJS module
+
+Function for creating a configurable module with the ability to use multi-providing.
+It is possible to create and work with named module instances.
+Modules can contain code for creating and managing the application (preWrapApplication, wrapApplication, postWrapApplication).
+
+Type of config or env models used in module:
+
+- `environmentsModel` - Variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
+- `configurationModel` - Variables of primitive and complex types that are used in the module; values for them must be passed when connecting the module to the application.
+- `staticEnvironmentsModel` - Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
+- `staticConfigurationModel` - Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
+- `featureConfigurationModel` - Feature variables of primitive and complex types that can be added to the current module from other modules (example: a transport for sending a message can be defined as a generalized interface, but the implementation itself will be added from a module for working with a specific transport or from an integration module).
+- `featureEnvironmentsModel` - Feature variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
+
+#### Decorators
+
+`InjectFeatures`, `InjectService`, `InjectAllFeatures`, `InjectFeatureEnvironments`, `InjectAllFeatureEnvironments`
+
+#### Function
+
+`createNestModule`, `getNestModuleDecorators`
+
+### Usage
+
+```typescript
+import { ConfigModel, ConfigModelProperty, EnvModel, EnvModelProperty, createNestModule, getNestModuleDecorators } from '@nestjs-mod/common';
+import { Injectable } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { IsNotEmpty } from 'class-validator';
+
+// App1Module
+
+const { InjectFeatures } = getNestModuleDecorators({ moduleName: 'App1Module' });
+
+@ConfigModel()
+class AppFeatureConfig {
+  @ConfigModelProperty()
+  @IsNotEmpty()
+  featureOptionConfig!: string;
+}
+
+@Injectable()
+class AppFeaturesService {
+  constructor(
+    @InjectFeatures()
+    private readonly appFeatureConfigs: AppFeatureConfig[]
+  ) {}
+
+  getFeatureConfigs() {
+    return this.appFeatureConfigs;
+  }
+}
+
+const { App1Module } = createNestModule({
+  moduleName: 'App1Module',
+  sharedProviders: [AppFeaturesService],
+  featureConfigurationModel: AppFeatureConfig,
+});
+
+@ConfigModel()
+class App2Config {
+  @ConfigModelProperty()
+  @IsNotEmpty()
+  option!: string;
+}
+
+@Injectable()
+class App2Service {
+  constructor(private readonly appFeaturesService: AppFeaturesService, private readonly app2Config: App2Config) {}
+
+  getFeatureConfigs() {
+    return this.appFeaturesService.getFeatureConfigs();
+  }
+
+  getConfig() {
+    return this.app2Config;
+  }
+}
+
+// App2Module
+
+const { App2Module } = createNestModule({
+  moduleName: 'App2Module',
+  imports: [App1Module.forFeature({ featureOptionConfig: 'featureOptionConfig-app2' })],
+  providers: [App2Service],
+  configurationModel: App2Config,
+});
+
+@EnvModel()
+class App3Env {
+  @EnvModelProperty()
+  @IsNotEmpty()
+  option!: string;
+}
+
+@Injectable()
+class App3Service {
+  constructor(private readonly appFeaturesService: AppFeaturesService, private readonly app3Env: App3Env) {}
+
+  getFeatureConfigs() {
+    return this.appFeaturesService.getFeatureConfigs();
+  }
+
+  getEnv() {
+    return this.app3Env;
+  }
+}
+
+const { App3Module } = createNestModule({
+  moduleName: 'App3Module',
+  imports: [App1Module.forFeature({ featureOptionConfig: 'featureOptionConfig-app3' })],
+  providers: [App3Service],
+  environmentsModel: App3Env,
+});
+
+// Test
+
+const { AppModule } = createNestModule({
+  moduleName: 'AppModule',
+  imports: [App1Module.forRoot(), App2Module.forRoot({ configuration: { option: 'appConfig3value' } }), App3Module.forRoot({ environments: { option: 'appEnv2value' } })],
+});
+
+// Let's try to launch the application
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule.forRoot());
+  const appFeatureScannerService = app.get(AppFeaturesService);
+  const app2Service = app.get(App2Service);
+  const app3Service = app.get(App3Service);
+
+  console.log(appFeatureScannerService.getFeatureConfigs()); // output: [{ featureOptionConfig: 'featureOptionConfig-app2' }, { featureOptionConfig: 'featureOptionConfig-app3' }]
+  console.log(app2Service.getFeatureConfigs()); // output: [{ featureOptionConfig: 'featureOptionConfig-app2' }, { featureOptionConfig: 'featureOptionConfig-app3' }]
+  console.log(app3Service.getFeatureConfigs()); // output: [{ featureOptionConfig: 'featureOptionConfig-app2' }, { featureOptionConfig: 'featureOptionConfig-app3' }]
+  console.log(app2Service.getConfig()); // output: { option: 'appConfig3value' }
+  console.log(app3Service.getEnv()); // output: { option: 'appEnv2value' }
+}
+
+bootstrap();
+```
+
+[Back to Top](#utilities)
+
 ## Modules descriptions
 
 ### InfrastructureMarkdownReport
@@ -523,22 +523,36 @@ Infrastructure markdown report
 [Back to Top](#modules)
 
 ---
-### ProjectUtils
-Utilities for setting global application parameters, such as project name, description, and settings validation parameters.
+### InfrastructureMarkdownReportGenerator
+Infrastructure markdown report generator.
 
 #### Shared providers
-`WrapApplicationOptionsService`, `DotEnvService`, `PackageJsonService`, `ApplicationPackageJsonService`
+`DynamicNestModuleMetadataMarkdownReportGenerator`
 
 #### Static configuration
 
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`applicationPackageJsonFile`|Application package.json-file|**isNotEmpty** (applicationPackageJsonFile should not be empty)|-|-|
-|`packageJsonFile`|Root package.json-file.|**optional**|-|-|
-|`envFile`|Dot-env file with environment variables.|**optional**|-|-|
-|`patchProject`|Patch project properties|**optional**|```true```|-|
-|`patchGlobalConfigurationAndEnvironmentsOptions`|Patch configuration and environments options|**optional**|```true```|-|
+|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|-|
+|`skipEmptySettings`|Skip empty values of env and config models|**optional**|-|-|
+
+[Back to Top](#modules)
+
+---
+### DefaultNestApplicationInitializer
+Default NestJS application initializer, no third party utilities required.
+
+#### Static configuration
+
+
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`cors`|CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)|**optional**|-|-|
+|`bodyParser`|Whether to use underlying platform body parser.|**optional**|-|-|
+|`httpsOptions`|Set of configurable HTTPS options|**optional**|-|-|
+|`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|-|
+|`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|-|
 
 [Back to Top](#modules)
 
@@ -562,40 +576,28 @@ Default NestJS application listener, no third party utilities required.
 |`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|-|
 |`preListen`|Method for additional actions before listening|**optional**|-|-|
 |`postListen`|Method for additional actions after listening|**optional**|-|-|
-
-[Back to Top](#modules)
-
----
-### DefaultNestApplicationInitializer
-Default NestJS application initializer, no third party utilities required.
-
-#### Static configuration
-
-
-| Key    | Description | Constraints | Default | Value |
-| ------ | ----------- | ----------- | ------- | ----- |
-|`cors`|CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)|**optional**|-|-|
-|`bodyParser`|Whether to use underlying platform body parser.|**optional**|-|-|
-|`httpsOptions`|Set of configurable HTTPS options|**optional**|-|-|
-|`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|-|
 |`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|-|
 
 [Back to Top](#modules)
 
 ---
-### InfrastructureMarkdownReportGenerator
-Infrastructure markdown report generator.
+### ProjectUtils
+Utilities for setting global application parameters, such as project name, description, and settings validation parameters.
 
 #### Shared providers
-`DynamicNestModuleMetadataMarkdownReportGenerator`
+`WrapApplicationOptionsService`, `DotEnvService`, `PackageJsonService`, `ApplicationPackageJsonService`, `ProjectUtilsPatcherService`
 
 #### Static configuration
 
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|-|
-|`skipEmptySettings`|Skip empty values of env and config models|**optional**|-|-|
+|`applicationPackageJsonFile`|Application package.json-file|**optional**|-|-|
+|`packageJsonFile`|Root package.json-file.|**optional**|-|-|
+|`envFile`|Dot-env file with environment variables.|**optional**|-|-|
+|`updateEnvFile`|Update env-file|**optional**|```true```|-|
+|`updateProjectOptions`|Update project properties|**optional**|```true```|-|
+|`updateGlobalConfigurationAndEnvironmentsOptions`|Update configuration and environments options|**optional**|```true```|-|
 
 [Back to Top](#modules)
 
