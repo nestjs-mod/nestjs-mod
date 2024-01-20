@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/testing",
   "description": "Modules and utilities for writing application tests",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "keywords": [
     "nestjs",
     "nestjs-mod",
