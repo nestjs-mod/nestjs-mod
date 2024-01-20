@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.0.1...schematics-v2.0.2) (2024-01-20)
+
+
+### Bug Fixes
+
+* update for nestjs-mod v 2.2.0 ([7399e6b](https://github.com/nestjs-mod/nestjs-mod/commit/7399e6bec74bd2e87819850b8a8fb9de53f131f1))
+
 ## [2.0.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.0.0...schematics-v2.0.1) (2024-01-19)
 
 
