@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.1.0...common-v2.2.0) (2024-01-20)
+
+
+### Features
+
+* check and update all logic for work with project options in nestModules and application, add normal class name for dynamic modules ([f0c1aca](https://github.com/nestjs-mod/nestjs-mod/commit/f0c1aca1828be667695aa6173690a911818e8f77))
+
 # [2.1.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.0.2...common-v2.1.0) (2024-01-19)
 
 
