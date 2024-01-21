@@ -1,12 +1,12 @@
 import { Injectable, Module } from '@nestjs/common';
-import { TestingModule } from '@nestjs/testing';
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { IsNotEmpty } from 'class-validator';
 import { BehaviorSubject } from 'rxjs';
+import { setTimeout } from 'timers/promises';
 import { ConfigModel, ConfigModelProperty } from '../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../env-model/decorators';
+import { InjectableFeatureConfigurationType } from './types';
 import { createNestModule, getNestModuleDecorators } from './utils';
-import { setTimeout } from 'timers/promises';
 
 describe('NestJS modules: Utils', () => {
   describe('NestJS modules with env model', () => {
@@ -388,17 +388,21 @@ describe('NestJS modules: Utils', () => {
       class AppFeatureScannerService {
         constructor(
           @InjectFeatures()
-          private readonly appFeatureConfigs: AppFeatureConfig[],
+          private readonly appFeatureConfigs: InjectableFeatureConfigurationType<AppFeatureConfig>[],
           @InjectAllFeatures()
-          private readonly appAllFeatureConfigs: Record<string, AppFeatureConfig[]>
+          private readonly appAllFeatureConfigs: Record<string, InjectableFeatureConfigurationType<AppFeatureConfig>[]>
         ) {}
 
         getFeatureConfigs() {
-          return this.appFeatureConfigs;
+          return this.appFeatureConfigs.map(({ featureConfiguration }) => featureConfiguration);
         }
 
         getAllFeatureConfigs() {
-          return this.appAllFeatureConfigs;
+          return Object.entries(this.appAllFeatureConfigs)
+            .map(([key, value]) => ({
+              [key]: value.map(({ featureConfiguration }) => featureConfiguration),
+            }))
+            .reduce((all, cur) => ({ ...all, ...cur }), {});
         }
       }
 

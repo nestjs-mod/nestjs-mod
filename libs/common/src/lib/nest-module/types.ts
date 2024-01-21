@@ -25,6 +25,16 @@ export const NEST_MODULE_CATEGORY_LIST: (keyof typeof NestModuleCategory)[] = [
   'infrastructure',
 ];
 
+export type InjectableFeatureEnvironmentsType<TFeatureEnvironmentsModel> = {
+  featureModuleName: string;
+  featureEnvironments: TFeatureEnvironmentsModel;
+};
+
+export type InjectableFeatureConfigurationType<TFeatureConfigurationModel> = {
+  featureModuleName: string;
+  featureConfiguration: TFeatureConfigurationModel;
+};
+
 export type ImportsWithStaticOptionsResponse = Type<any> | DynamicModule | Promise<DynamicModule>;
 
 export type ExportsWithStaticOptionsResponse =

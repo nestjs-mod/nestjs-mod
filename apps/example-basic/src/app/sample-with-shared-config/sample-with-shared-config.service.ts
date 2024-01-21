@@ -1,3 +1,4 @@
+import { InjectableFeatureConfigurationType, InjectableFeatureEnvironmentsType } from '@nestjs-mod/common';
 import { Injectable } from '@nestjs/common';
 import {
   SampleWithSharedConfigConfiguration,
@@ -13,9 +14,12 @@ import { InjectAllFeatureEnvironments, InjectFeatures } from './sample-with-shar
 export class SampleWithSharedConfigService {
   constructor(
     @InjectFeatures()
-    private readonly features: SampleWithSharedConfigFeatureConfiguration[],
+    private readonly features: InjectableFeatureConfigurationType<SampleWithSharedConfigFeatureConfiguration>[],
     @InjectAllFeatureEnvironments()
-    private readonly featureEnvironments: Record<string, SampleWithSharedConfigFeatureEnvironments[]>,
+    private readonly featureEnvironments: Record<
+      string,
+      InjectableFeatureEnvironmentsType<SampleWithSharedConfigFeatureEnvironments>[]
+    >,
     private readonly configuration: SampleWithSharedConfigConfiguration,
     private readonly staticConfiguration: SampleWithSharedConfigStaticConfiguration,
     private readonly environments: SampleWithSharedConfigEnvironments,
@@ -43,10 +47,10 @@ export class SampleWithSharedConfigService {
   }
 
   getFeatures() {
-    return this.features;
+    return this.features.map(({ featureConfiguration }) => featureConfiguration);
   }
 
   getFeatureEnvironments(contextName: string) {
-    return this.featureEnvironments[contextName];
+    return Object.entries(this.featureEnvironments[contextName]).map(([, value]) => value.featureEnvironments);
   }
 }

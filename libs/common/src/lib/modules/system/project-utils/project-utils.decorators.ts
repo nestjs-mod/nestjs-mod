@@ -7,6 +7,8 @@ export const {
   InjectAllFeatures: InjectAllProjectUtilsFeatures,
   InjectAllFeatureEnvironments: InjectAllProjectUtilsFeatureEnvironments,
   InjectFeatureEnvironments: InjectProjectUtilsFeatureEnvironments,
+  InjectAllModuleSettings: InjectAllProjectUtilsModuleSettings,
+  InjectModuleSettings: InjectProjectUtilsModuleSettings,
 } = getNestModuleDecorators({
   moduleName: PROJECT_UTILS_MODULE_NAME,
 });

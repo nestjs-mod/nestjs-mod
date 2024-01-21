@@ -12,6 +12,7 @@ import { DefaultNestApplicationInitializer } from '../modules/system/default-nes
 import { DefaultNestApplicationListener } from '../modules/system/default-nest-application/default-nest-application-listener';
 import { createNestModule, getNestModuleDecorators } from '../nest-module/utils';
 import { bootstrapNestApplication } from './utils';
+import { InjectableFeatureConfigurationType } from '../nest-module/types';
 
 describe('NestJS application: Utils', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -347,11 +348,11 @@ describe('NestJS application: Utils', () => {
       class AppFeatureScannerService {
         constructor(
           @InjectFeatures()
-          private readonly appFeatureConfigs: AppFeatureConfig[]
+          private readonly appFeatureConfigs: InjectableFeatureConfigurationType<AppFeatureConfig>[]
         ) {}
 
         getFeatureConfigs() {
-          return this.appFeatureConfigs;
+          return this.appFeatureConfigs.map(({ featureConfiguration }) => featureConfiguration);
         }
       }
 

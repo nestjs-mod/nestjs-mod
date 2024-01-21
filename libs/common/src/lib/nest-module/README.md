@@ -24,7 +24,15 @@ Type of config or env models used in module:
 ### Usage
 
 ```typescript
-import { ConfigModel, ConfigModelProperty, EnvModel, EnvModelProperty, createNestModule, getNestModuleDecorators } from '@nestjs-mod/common';
+import {
+  ConfigModel,
+  ConfigModelProperty,
+  EnvModel,
+  EnvModelProperty,
+  createNestModule,
+  getNestModuleDecorators,
+  InjectableFeatureConfigurationType,
+} from '@nestjs-mod/common';
 import { Injectable } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { IsNotEmpty } from 'class-validator';
@@ -44,11 +52,11 @@ class AppFeatureConfig {
 class AppFeaturesService {
   constructor(
     @InjectFeatures()
-    private readonly appFeatureConfigs: AppFeatureConfig[]
+    private readonly appFeatureConfigs: InjectableFeatureConfigurationType<AppFeatureConfig>[]
   ) {}
 
   getFeatureConfigs() {
-    return this.appFeatureConfigs;
+    return this.appFeatureConfigs.map(({ featureConfiguration }) => featureConfiguration);
   }
 }
 
@@ -118,7 +126,11 @@ const { App3Module } = createNestModule({
 
 const { AppModule } = createNestModule({
   moduleName: 'AppModule',
-  imports: [App1Module.forRoot(), App2Module.forRoot({ configuration: { option: 'appConfig3value' } }), App3Module.forRoot({ environments: { option: 'appEnv2value' } })],
+  imports: [
+    App1Module.forRoot(),
+    App2Module.forRoot({ configuration: { option: 'appConfig3value' } }),
+    App3Module.forRoot({ environments: { option: 'appEnv2value' } }),
+  ],
 });
 
 // Let's try to launch the application

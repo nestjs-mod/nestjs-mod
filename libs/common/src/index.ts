@@ -22,6 +22,7 @@ export * from './lib/modules/system/project-utils/project-utils.types';
 export * from './lib/modules/system/project-utils/services/application-package-json.service';
 export * from './lib/modules/system/project-utils/services/dot-env.service';
 export * from './lib/modules/system/project-utils/services/gitignore-file';
+export * from './lib/modules/system/project-utils/services/nx-project-json.service';
 export * from './lib/modules/system/project-utils/services/package-json.service';
 export * from './lib/modules/system/project-utils/services/project-utils-patcher.service';
 export * from './lib/modules/system/project-utils/services/wrap-application-options.service';

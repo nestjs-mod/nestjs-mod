@@ -36,6 +36,8 @@ import {
   ForRootAsyncMethodOptions,
   ForRootMethodOptions,
   ImportsWithStaticOptionsResponse,
+  InjectableFeatureConfigurationType,
+  InjectableFeatureEnvironmentsType,
   NestModuleMetadata,
   ProjectOptions,
   TModuleSettings,
@@ -90,6 +92,14 @@ function getNestModuleInternalUtils({ moduleName }: { moduleName: string }) {
     return `${moduleName}_${defaultContextName(contextName)}_service_${targetName}`;
   }
 
+  function getAllModuleSettingsToken() {
+    return `${moduleName}_all_module_settings`;
+  }
+
+  function getModuleSettingsToken(contextName?: string) {
+    return `${moduleName}_${defaultContextName(contextName)}_module_settings`;
+  }
+
   function createUniqProvider() {
     const uniqValue = randomUUID();
     return {
@@ -111,6 +121,8 @@ function getNestModuleInternalUtils({ moduleName }: { moduleName: string }) {
     getAllFeatureConfigurationsToken,
     getFeatureEnvironmentsToken,
     getAllFeatureEnvironmentsToken,
+    getModuleSettingsToken,
+    getAllModuleSettingsToken,
   };
 }
 
@@ -121,9 +133,17 @@ export function getNestModuleDecorators({ moduleName }: { moduleName: string }) 
     getAllFeatureConfigurationsToken,
     getFeatureEnvironmentsToken,
     getAllFeatureEnvironmentsToken,
+    getModuleSettingsToken,
+    getAllModuleSettingsToken,
   } = getNestModuleInternalUtils({
     moduleName,
   });
+
+  // TODO: not worked with ReturnType<typeof Inject>
+  const InjectAllModuleSettings = (): any => Inject(getAllModuleSettingsToken());
+
+  // TODO: not worked with ReturnType<typeof Inject>
+  const InjectModuleSettings = (contextName?: string): any => Inject(getModuleSettingsToken(contextName));
 
   // TODO: not worked with ReturnType<typeof Inject>
   const InjectAllFeatureEnvironments = (): any => Inject(getAllFeatureEnvironmentsToken());
@@ -152,6 +172,8 @@ export function getNestModuleDecorators({ moduleName }: { moduleName: string }) 
     InjectAllFeatures,
     InjectFeatureEnvironments,
     InjectAllFeatureEnvironments,
+    InjectModuleSettings,
+    InjectAllModuleSettings,
   };
 }
 
@@ -231,6 +253,8 @@ export function createNestModule<
     getAllFeatureConfigurationsToken,
     getAllFeatureEnvironmentsToken,
     getAsyncConfigurationToken,
+    getModuleSettingsToken,
+    getAllModuleSettingsToken,
   } = getNestModuleInternalUtils({
     moduleName: nestModuleMetadata.moduleName,
   });
@@ -256,42 +280,51 @@ export function createNestModule<
   >[] = [];
   const moduleSettings: Record<string, TModuleSettings> = {};
 
-  const modulesByName: Record<string, any> = {};
-  const featuresByName: Record<string, TFeatureConfigurationModel[]> = {};
-  const featureEnvironmentsByName: Record<string, TFeatureEnvironmentsModel[]> = {};
-  const settingsModulesByName: Record<string, any> = {};
+  const modulesByContextName: Record<string, any> = {};
+  const featuresConfigurationByContextName: Record<
+    string,
+    InjectableFeatureConfigurationType<TFeatureConfigurationModel>[]
+  > = {};
+  const featuresEnvironmentsByContextName: Record<
+    string,
+    InjectableFeatureEnvironmentsType<TFeatureEnvironmentsModel>[]
+  > = {};
+  const settingsModulesByContextName: Record<string, any> = {};
 
   const getFeatureProviders = (contextName?: string) => {
     contextName = defaultContextName(contextName);
-    if (!featuresByName[contextName]) {
-      featuresByName[contextName] = [];
+    if (!featuresConfigurationByContextName[contextName]) {
+      featuresConfigurationByContextName[contextName] = [];
     }
-    if (!featureEnvironmentsByName[contextName]) {
-      featureEnvironmentsByName[contextName] = [];
+    if (!featuresEnvironmentsByContextName[contextName]) {
+      featuresEnvironmentsByContextName[contextName] = [];
+    }
+    if (!moduleSettings[contextName]) {
+      moduleSettings[contextName] = {};
     }
     return [
       {
         provide: getAllFeatureConfigurationsToken(),
-        useValue: new Proxy(featuresByName, {
+        useValue: new Proxy(featuresConfigurationByContextName, {
           get(target, prop) {
             if (prop !== undefined) {
-              return featuresByName[prop as unknown as number];
+              return featuresConfigurationByContextName[prop as unknown as number];
             } else {
-              return featuresByName;
+              return featuresConfigurationByContextName;
             }
           },
         }),
       },
       {
         provide: getFeatureConfigurationsToken(contextName),
-        useValue: new Proxy(featuresByName[contextName], {
+        useValue: new Proxy(featuresConfigurationByContextName[contextName], {
           get(target, prop) {
             contextName = defaultContextName(contextName);
             if (prop === 'length') {
-              return featuresByName[contextName].length;
+              return featuresConfigurationByContextName[contextName].length;
             }
             if (prop !== undefined) {
-              return featuresByName[contextName][prop as unknown as number];
+              return featuresConfigurationByContextName[contextName][prop as unknown as number];
             }
             return target[prop];
           },
@@ -300,28 +333,54 @@ export function createNestModule<
       //
       {
         provide: getAllFeatureEnvironmentsToken(),
-        useValue: new Proxy(featureEnvironmentsByName, {
+        useValue: new Proxy(featuresEnvironmentsByContextName, {
           get(target, prop) {
             if (prop !== undefined) {
-              return featureEnvironmentsByName[prop as unknown as number];
+              return featuresEnvironmentsByContextName[prop as unknown as number];
             } else {
-              return featureEnvironmentsByName;
+              return featuresEnvironmentsByContextName;
             }
           },
         }),
       },
       {
         provide: getFeatureEnvironmentsToken(contextName),
-        useValue: new Proxy(featureEnvironmentsByName[contextName], {
+        useValue: new Proxy(featuresEnvironmentsByContextName[contextName], {
           get(target, prop) {
             contextName = defaultContextName(contextName);
             if (prop === 'length') {
-              return featureEnvironmentsByName[contextName].length;
+              return featuresEnvironmentsByContextName[contextName].length;
             }
             if (prop !== undefined) {
-              return featureEnvironmentsByName[contextName][prop as unknown as number];
+              return featuresEnvironmentsByContextName[contextName][prop as unknown as number];
             }
             return target[prop];
+          },
+        }),
+      },
+      //
+      {
+        provide: getAllModuleSettingsToken(),
+        useValue: new Proxy(moduleSettings, {
+          get(target, prop) {
+            if (prop !== undefined) {
+              return moduleSettings[prop as unknown as number];
+            } else {
+              return moduleSettings;
+            }
+          },
+        }),
+      },
+      {
+        provide: getModuleSettingsToken(contextName),
+        useValue: new Proxy(moduleSettings[contextName], {
+          get(target, prop) {
+            contextName = defaultContextName(contextName);
+            if (prop !== undefined) {
+              return moduleSettings[contextName]?.[prop as keyof TModuleSettings];
+            } else {
+              return moduleSettings[contextName];
+            }
           },
         }),
       },
@@ -347,6 +406,8 @@ export function createNestModule<
         getFeatureConfigurationsToken(),
         getFeatureEnvironmentsToken(contextName),
         getFeatureEnvironmentsToken(),
+        getAllModuleSettingsToken(),
+        getModuleSettingsToken(contextName),
         ...(nestModuleMetadata.environmentsModel ? [nestModuleMetadata.environmentsModel] : []),
         ...(nestModuleMetadata.staticEnvironmentsModel ? [nestModuleMetadata.staticEnvironmentsModel] : []),
       ],
@@ -357,10 +418,10 @@ export function createNestModule<
 
   const getOrCreateSettingsModule = (contextName?: string) => {
     contextName = defaultContextName(contextName);
-    if (!settingsModulesByName[contextName]) {
-      settingsModulesByName[contextName] = getSettingsModule(contextName);
+    if (!settingsModulesByContextName[contextName]) {
+      settingsModulesByContextName[contextName] = getSettingsModule(contextName);
     }
-    return { contextName, module: settingsModulesByName[contextName] };
+    return { contextName, module: settingsModulesByContextName[contextName] };
   };
 
   const getSharedModule = (contextName: string) => {
@@ -453,15 +514,15 @@ export function createNestModule<
 
   const getFeatureModule = ({ contextName }: { contextName?: string }) => {
     contextName = defaultContextName(contextName);
-    if (!modulesByName[contextName]) {
-      modulesByName[contextName] = getSharedModule(contextName);
+    if (!modulesByContextName[contextName]) {
+      modulesByContextName[contextName] = getSharedModule(contextName);
     }
     if (!moduleSettings[contextName]) {
       moduleSettings[contextName] = {};
     }
     return {
       contextName,
-      module: modulesByName[contextName],
+      module: modulesByContextName[contextName],
       featureConfiguration: undefined,
       featureEnvironments: undefined,
     };
@@ -483,16 +544,16 @@ export function createNestModule<
     featureEnvironmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
   }) => {
     contextName = defaultContextName(contextName);
-    if (!modulesByName[contextName]) {
-      modulesByName[contextName] = getSharedModule(contextName);
+    if (!modulesByContextName[contextName]) {
+      modulesByContextName[contextName] = getSharedModule(contextName);
     }
     if (!moduleSettings[contextName]) {
       moduleSettings[contextName] = {};
     }
 
     if (featureConfiguration) {
-      if (!featuresByName[contextName]) {
-        featuresByName[contextName] = [];
+      if (!featuresConfigurationByContextName[contextName]) {
+        featuresConfigurationByContextName[contextName] = [];
       }
       if (nestModuleMetadata.featureConfigurationModel) {
         const obj = await configTransform({
@@ -514,15 +575,18 @@ export function createNestModule<
         }
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         moduleSettings[contextName].featureModuleConfigurations![featureModuleName]!.push(obj.info);
-        featuresByName[contextName].push(obj.data as TFeatureConfigurationModel);
+        featuresConfigurationByContextName[contextName].push({
+          featureModuleName,
+          featureConfiguration: obj.data as TFeatureConfigurationModel,
+        });
         featureConfiguration = obj.data as TFeatureConfigurationModel;
       } else {
-        featuresByName[contextName].push(featureConfiguration);
+        featuresConfigurationByContextName[contextName].push({ featureModuleName, featureConfiguration });
       }
     }
 
-    if (!featureEnvironmentsByName[contextName]) {
-      featureEnvironmentsByName[contextName] = [];
+    if (!featuresEnvironmentsByContextName[contextName]) {
+      featuresEnvironmentsByContextName[contextName] = [];
     }
     if (nestModuleMetadata.featureEnvironmentsModel) {
       if (!featureEnvironments) {
@@ -551,11 +615,14 @@ export function createNestModule<
       }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       moduleSettings[contextName].featureModuleEnvironments![featureModuleName]!.push(obj.info);
-      featureEnvironmentsByName[contextName].push(obj.data as TFeatureEnvironmentsModel);
+      featuresEnvironmentsByContextName[contextName].push({
+        featureModuleName,
+        featureEnvironments: obj.data as TFeatureEnvironmentsModel,
+      });
       featureEnvironments = obj.data as TFeatureEnvironmentsModel;
     }
 
-    return { contextName, module: modulesByName[contextName], featureConfiguration, featureEnvironments };
+    return { contextName, module: modulesByContextName[contextName], featureConfiguration, featureEnvironments };
   };
 
   @Module({})

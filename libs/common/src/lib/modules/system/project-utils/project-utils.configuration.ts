@@ -9,12 +9,17 @@ export class ProjectUtilsConfiguration {
   applicationPackageJsonFile?: string;
 
   @ConfigModelProperty({
-    description: 'Root package.json-file.',
+    description: 'Root package.json-file',
   })
   packageJsonFile?: string;
 
   @ConfigModelProperty({
-    description: 'Dot-env file with environment variables.',
+    description: 'Application project.json-file (nx)',
+  })
+  nxProjectJsonFile?: string;
+
+  @ConfigModelProperty({
+    description: 'Dot-env file with environment variables',
   })
   envFile?: string;
 

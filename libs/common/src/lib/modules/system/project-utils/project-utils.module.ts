@@ -5,15 +5,17 @@ import { PROJECT_UTILS_MODULE_NAME } from './project-utils.constants';
 import { ApplicationPackageJsonService } from './services/application-package-json.service';
 import { DotEnvService } from './services/dot-env.service';
 import { GitignoreService } from './services/gitignore-file';
+import { NxProjectJsonService } from './services/nx-project-json.service';
 import { PackageJsonService } from './services/package-json.service';
 import { ProjectUtilsPatcherService } from './services/project-utils-patcher.service';
 import { WrapApplicationOptionsService } from './services/wrap-application-options.service';
 
 const wrapApplicationOptionsService = {} as WrapApplicationOptionsService;
-const dotEnvService = {};
+const dotEnvService = {} as DotEnvService;
 const packageJsonService = {} as PackageJsonService;
-const applicationPackageJsonService = {};
+const applicationPackageJsonService = {} as ApplicationPackageJsonService;
 const gitignoreService = {};
+const nxProjectJsonService = {};
 
 let projectUtilsPatcherService: ProjectUtilsPatcherService | undefined = undefined;
 
@@ -29,6 +31,7 @@ export const { ProjectUtils } = createNestModule({
     { provide: PackageJsonService, useValue: packageJsonService },
     { provide: ApplicationPackageJsonService, useValue: applicationPackageJsonService },
     { provide: GitignoreService, useValue: gitignoreService },
+    { provide: NxProjectJsonService, useValue: nxProjectJsonService },
     ProjectUtilsPatcherService,
   ],
   // we use wrapApplication to modify some of the files after connecting all modules, since modules can add additional data that will be used when modifying files
@@ -78,6 +81,16 @@ export const { ProjectUtils } = createNestModule({
       Object.setPrototypeOf(dotEnvService, tempDotEnvService);
       Object.assign(dotEnvService, tempDotEnvService);
 
+      // NxProjectJsonService
+      const tempNxProjectJsonService = new NxProjectJsonService(
+        wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
+        applicationPackageJsonService,
+        packageJsonService,
+        dotEnvService
+      );
+      Object.setPrototypeOf(nxProjectJsonService, tempNxProjectJsonService);
+      Object.assign(nxProjectJsonService, tempNxProjectJsonService);
+
       // ProjectUtilsPatcherService
       projectUtilsPatcherService = new ProjectUtilsPatcherService(
         wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
@@ -85,7 +98,7 @@ export const { ProjectUtils } = createNestModule({
           wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
         ),
         wrapApplicationOptionsService,
-        dotEnvService as DotEnvService
+        dotEnvService
       );
       await projectUtilsPatcherService.onApplicationBootstrap();
     }
