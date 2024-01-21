@@ -912,7 +912,7 @@ export function createNestModule<
           if (nestModuleMetadata.staticConfigurationModel) {
             const obj = await configTransform({
               model: nestModuleMetadata.staticConfigurationModel,
-              data: asyncModuleOptions?.staticConfiguration ?? {},
+              data: staticConfiguration ?? {},
               rootOptions: getRootConfigurationValidationOptions({
                 nestModuleMetadata,
                 asyncModuleOptions,
@@ -934,7 +934,7 @@ export function createNestModule<
                 asyncModuleOptions,
                 contextName,
               }),
-              data: asyncModuleOptions?.staticEnvironments ?? {},
+              data: staticEnvironments ?? {},
             });
             moduleSettings[contextName].staticEnvironments = obj.info;
             staticEnvironments = obj.data as any;

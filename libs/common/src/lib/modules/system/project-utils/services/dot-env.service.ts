@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { snakeCase } from 'case-anything';
 import { config } from 'dotenv';
 import { existsSync } from 'fs';
 import { writeFile } from 'fs/promises';
@@ -96,16 +95,67 @@ export class DotEnvService {
     return keys;
   }
 
-  read(): Record<string, string | undefined> | undefined {
+  async readFile(
+    envFile: string,
+    updateProcessEnv: boolean = true
+  ): Promise<Record<string, string | undefined> | undefined> {
+    return new Promise((resolve) =>
+      process.nextTick(() => {
+        try {
+          const virtualEnv = {};
+          const loadedEnvJson =
+            (config({ path: envFile, processEnv: virtualEnv }).parsed as Record<string, string | undefined>) ?? {};
+
+          if (updateProcessEnv) {
+            for (const [key, value] of Object.entries(loadedEnvJson)) {
+              if (process.env[key] === undefined && value !== undefined) {
+                process.env[key] = value;
+              }
+            }
+          }
+          resolve(loadedEnvJson);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+          this.logger.error(err, err.stack);
+          resolve(undefined);
+        }
+      })
+    );
+  }
+
+  async writeFile(envFile: string, data: Record<string, string | undefined>) {
+    try {
+      const envContent = Object.entries(data)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('\n');
+      await writeFile(envFile, envContent);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      this.logger.error(err, err.stack);
+      return;
+    }
+  }
+
+  async read(updateProcessEnv: boolean = true): Promise<Record<string, string | undefined> | undefined> {
     const envFile = this.getEnvFilePath();
     if (!envFile) {
       return;
     }
     try {
       const neededKeys = this.keys();
-      const existsEnvJson =
-        (config({ path: envFile, override: true }).parsed as Record<string, string | undefined>) ?? {};
-      return neededKeys.reduce((all, key) => ({ ...all, [String(key)]: existsEnvJson[key!] ?? '' }), existsEnvJson);
+      const existsEnvJson = (await this.readFile(envFile, false)) ?? {};
+      const neededEnvs = neededKeys.reduce(
+        (all, key) => ({ ...all, [String(key)]: existsEnvJson[key!] ?? '' }),
+        existsEnvJson
+      );
+      if (updateProcessEnv) {
+        for (const [key, value] of Object.entries(neededEnvs)) {
+          if (process.env[key] === undefined && value !== undefined) {
+            process.env[key] = value;
+          }
+        }
+      }
+      return neededEnvs;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       this.logger.error(err, err.stack);
@@ -118,38 +168,27 @@ export class DotEnvService {
     if (!envFile) {
       return;
     }
-    const envExampleFile = envFile.replace('.env', '-example.env').replace('/-example.env', '/example.env');
 
     try {
       const neededKeys = this.keys();
-      const existsEnvJson = this.read() ?? {};
+      const existsEnvJson = (await this.readFile(envFile, false)) ?? {};
       const newEnvJson = neededKeys.reduce(
         (all, key) => ({ ...all, [String(key)]: data[key!] ?? existsEnvJson?.[key!] ?? '' }),
         existsEnvJson
       );
+      await this.writeFile(envFile, newEnvJson);
 
-      const envContent = Object.entries(newEnvJson)
-        .map(([key, value]) => `${key}=${value}`)
-        .join('\n');
-      await writeFile(envFile, envContent);
-
+      const envExampleFile = envFile.replace('.env', '-example.env').replace('/-example.env', '/example.env');
       if (existsSync(envExampleFile)) {
-        const exampleProcessEnv = {};
-        const existsExampleEnvJson =
-          (config({ path: envExampleFile, processEnv: exampleProcessEnv }).parsed as Record<
-            string,
-            string | undefined
-          >) ?? {};
-
-        const envContentExample = Object.entries(newEnvJson)
-          .map(([key]) => `${key}=${snakeCase(existsExampleEnvJson[key] ?? `value_for_${key}`)}`)
-          .join('\n');
-        await writeFile(envExampleFile, envContentExample);
+        const existsExampleEnvJson = (await this.readFile(envExampleFile, false)) ?? {};
+        const newEnvJson = neededKeys.reduce(
+          (all, key) => ({ ...all, [String(key)]: existsExampleEnvJson?.[key!] ?? `value_for_${key}` }),
+          existsExampleEnvJson
+        );
+        await this.writeFile(envExampleFile, newEnvJson);
       } else {
-        const envContentExample = Object.entries(newEnvJson)
-          .map(([key]) => `${key}=${snakeCase(`value_for_${key}`)}`)
-          .join('\n');
-        await writeFile(envExampleFile, envContentExample);
+        const newEnvJson = neededKeys.reduce((all, key) => ({ ...all, [String(key)]: `value_for_${key}` }), {});
+        await this.writeFile(envExampleFile, newEnvJson);
       }
 
       await this.gitignoreService.addGitIgnoreEntry([basename(envFile)]);

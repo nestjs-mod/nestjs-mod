@@ -105,7 +105,7 @@ describe('Project Utils', () => {
     process.env['TEST_APP_PORT'] = undefined;
   });
 
-  it('should return report with application name from package.json and extended source key for env, use .env file for receiving', async () => {
+  it('should return report with application name from package.json and extended source key for env and use contextName, use .env file for receiving', async () => {
     const { AppModule } = createNestModule({
       moduleName: 'AppModule',
     });
@@ -115,33 +115,48 @@ describe('Project Utils', () => {
       modules: {
         system: [
           ProjectUtils.forRoot({
+            contextName: 'new',
             staticConfiguration: {
               applicationPackageJsonFile: `${__filename}-package.json`,
               envFile: `${__filename}-.env`,
             },
           }),
-          DefaultNestApplicationInitializer.forRoot(),
-          DefaultNestApplicationListener.forRoot({ staticConfiguration: { mode: 'init' } }),
+          DefaultNestApplicationInitializer.forRoot({
+            contextName: 'new',
+          }),
+          DefaultNestApplicationListener.forRoot({
+            contextName: 'new',
+            staticConfiguration: { mode: 'init' },
+          }),
         ],
-        feature: [AppModule.forRoot()],
-        infrastructure: [InfrastructureMarkdownReportGenerator.forRoot()],
+        feature: [
+          AppModule.forRoot({
+            contextName: 'new',
+          }),
+        ],
+        infrastructure: [
+          InfrastructureMarkdownReportGenerator.forRoot({
+            contextName: 'new',
+          }),
+        ],
       },
     });
+
     const infrastructureMarkdownReportStorage = app.get(InfrastructureMarkdownReportStorage);
 
     expect(infrastructureMarkdownReportStorage.report).toContain('# test-app');
     expect(infrastructureMarkdownReportStorage.report).toContain('Description for test-app');
-    expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_PORT']");
-    expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_HOSTNAME']");
+    expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_NEW_PORT']");
+    expect(infrastructureMarkdownReportStorage.report).toContain("process.env['TEST_APP_NEW_HOSTNAME']");
     expect(infrastructureMarkdownReportStorage.report).toContain('```2000```');
-    process.env['TEST_APP_PORT'] = undefined;
+    process.env['TEST_APP_NEW_PORT'] = undefined;
   });
 
   it('should return data from env-file', async () => {
     @Injectable()
     class GetEnv {
       constructor(private readonly dotEnvService: DotEnvService) {}
-      async getEnv() {
+      getEnv() {
         return this.dotEnvService.read();
       }
 
@@ -174,7 +189,7 @@ describe('Project Utils', () => {
     });
     const getEnv = app.get(GetEnv);
 
-    expect(await getEnv.getEnv()).toMatchObject({ TEST_APP_PORT: '2000', TEST_APP_HOSTNAME: '' });
+    expect(await getEnv.getEnv()).toMatchObject({ TEST_APP_PORT: '2000', TEST_APP_HOSTNAME: 'host' });
     expect(getEnv.getKeys()).toEqual(['TEST_APP_PORT', 'TEST_APP_HOSTNAME']);
   });
 

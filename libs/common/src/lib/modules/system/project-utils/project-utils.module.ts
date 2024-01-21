@@ -73,7 +73,7 @@ export const { ProjectUtils } = createNestModule({
         wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
         tempGitignoreService
       );
-      tempDotEnvService.read();
+      await tempDotEnvService.read();
 
       Object.setPrototypeOf(dotEnvService, tempDotEnvService);
       Object.assign(dotEnvService, tempDotEnvService);

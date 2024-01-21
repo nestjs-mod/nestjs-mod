@@ -28,13 +28,8 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
       this.logger.warn(`dotEnvService not set, updating not work`);
       return;
     }
-    const keys = this.dotEnvService.keys();
-    const existsEnvJson = this.dotEnvService.read() ?? {};
-    const newEnvJson = keys.reduce(
-      (all, key) => ({ ...all, [String(key)]: existsEnvJson[key!] ? existsEnvJson[key!] : '' }),
-      existsEnvJson
-    );
-    await this.dotEnvService.write(newEnvJson);
+    const existsEnvJson = (await this.dotEnvService.read()) ?? {};
+    await this.dotEnvService.write(existsEnvJson);
   }
 
   private async updateGlobalConfigurationAndEnvironmentsOptions() {

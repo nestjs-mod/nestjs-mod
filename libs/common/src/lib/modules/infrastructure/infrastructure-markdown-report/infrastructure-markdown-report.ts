@@ -155,7 +155,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           settingsModelInfoDescription: options.nestModulesFeatureConfigurationDescription,
         });
 
-        this.reportOfConfigModelInfo({
+        this.reportOfEnvModelInfo({
           lines,
           settingsModelInfo: dynamicNestModuleMetadata.moduleSettings?.[name].featureEnvironments,
           settingsModelInfoTitle: this.appendContextName('Feature environments', names.length > 1 ? name : undefined),
@@ -386,7 +386,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private safeValue(value?: any, defaultValue?: any): string {
     try {
-      if (value === undefined) {
+      if (value === undefined || value === 'undefined') {
         return '-';
       }
       if (Array.isArray(value)) {
@@ -436,6 +436,9 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         }
       } catch (err) {
         // null
+      }
+      if (value === undefined || value === 'undefined') {
+        return '-';
       }
       return typeof value.split === 'function' ? '```' + value.split('`').join('\\`') + '```' : '```' + value + '```';
     } catch (err) {
