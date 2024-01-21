@@ -1,3 +1,15 @@
+# [2.4.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.3.1...testing-v2.4.0) (2024-01-21)
+
+
+### Bug Fixes
+
+* update read and write logic with envs in DotEnvService ([174f865](https://github.com/nestjs-mod/nestjs-mod/commit/174f86598e61796f160a5b65b0a51ba5a5d6e534))
+
+
+### Features
+
+* add NxProjectJsonService for work with nx project.json-file to project-utils ([7f8bdbc](https://github.com/nestjs-mod/nestjs-mod/commit/7f8bdbcb49563550a1c512e1b5e8d58614df901c))
+
 ## [2.3.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.3.0...testing-v2.3.1) (2024-01-21)
 
 
