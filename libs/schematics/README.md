@@ -42,6 +42,9 @@ npm install --save-dev @nestjs-mod/schematics@latest
 Start created application
 
 ```bash
+# Prepare all files
+npm run manual:prepare
+
 # Start application in dev mode
 npm run serve:dev:app-name
 
@@ -102,6 +105,9 @@ bootstrapNestApplication({
 You can generate a report for all modules and their configurations.
 
 ```bash
+# Build all applications and library
+npm run build
+
 # Generate markdown report
 npm run docs:infrastructure
 ```
