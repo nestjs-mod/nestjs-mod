@@ -170,6 +170,7 @@ export function createNestModule<
   TForFeatureAsyncMethodName extends string = typeof DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
   TDynamicModule = DynamicModule,
   TLinkOptions = {
+    // todo: try add asyncOptions
     project: ProjectOptions;
     featureModule: TDynamicModule;
     settingsModule: TDynamicModule;

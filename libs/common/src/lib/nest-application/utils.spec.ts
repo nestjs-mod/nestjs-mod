@@ -488,7 +488,12 @@ describe('NestJS application: Utils', () => {
     |\`httpsOptions\`|Set of configurable HTTPS options|**optional**|-|-|
     |\`rawBody\`|Whether to register the raw request body on the request. Use \`req.rawBody\`.|**optional**|-|-|
     |\`defaultLogger\`|Default logger for application|**optional**|ConsoleLogger|ConsoleLogger|
-
+    |\`logger\`|Specifies the logger to use.Pass \`false\` to turn off logging.|**optional**|-|-|
+    |\`abortOnError\`|Whether to abort the process on Error. By default, the process is exited. Pass \`false\` to override the default behavior. If \`false\` is passed, Nest will not exit the application and instead will rethrow the exception. @default true|**optional**|-|-|
+    |\`bufferLogs\`|If enabled, logs will be buffered until the \"Logger#flush\" method is called. @default false|**optional**|-|-|
+    |\`autoFlushLogs\`|If enabled, logs will be automatically flushed and buffer detached when application initialization process either completes or fails. @default true|**optional**|-|-|
+    |\`preview\`|Whether to run application in the preview mode. In the preview mode, providers/controllers are not instantiated & resolved. @default false|**optional**|-|-|
+    |\`snapshot\`|Whether to generate a serialized graph snapshot. @default false|**optional**|-|-|
     ## Integration modules
     
     Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.

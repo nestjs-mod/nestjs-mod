@@ -531,7 +531,12 @@ export const { InfrastructureMarkdownReportGenerator } = createNestModule({
             project,
           }),
         ],
-        imports: [InfrastructureMarkdownReport.forFeature()],
+        imports: [
+          InfrastructureMarkdownReport.forFeature({
+            featureModuleName: 'InfrastructureMarkdownReportGenerator',
+            contextName: current.asyncModuleOptions.contextName,
+          }),
+        ],
         staticConfigurationModel: InfrastructureMarkdownReportGeneratorConfiguration,
         moduleCategory: NestModuleCategory.infrastructure,
       }).InfrastructureMarkdownReportGenerator.forRootAsync(current.asyncModuleOptions)

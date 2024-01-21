@@ -43,3 +43,4 @@ Thumbs.db
 
 /integrations/app
 /integrations/lib
+.env

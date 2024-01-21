@@ -13,12 +13,12 @@ export class PackageJsonService {
   }
 
   async read(): Promise<PackageJsonType | undefined> {
-    const bothPackageJsonFile = this.getPackageJsonFilePath();
-    if (!bothPackageJsonFile) {
+    const packageJsonFile = this.getPackageJsonFilePath();
+    if (!packageJsonFile) {
       return undefined;
     }
     try {
-      const packageJson = JSON.parse((await readFile(bothPackageJsonFile)).toString());
+      const packageJson = JSON.parse((await readFile(packageJsonFile)).toString());
       const scripts: PackageJsonType[typeof SCRIPTS_KEY_NAME] = {};
       let category: string = DEFAULT_SCRIPTS_CATEGORY_NAME;
       for (const key of Object.keys(packageJson[SCRIPTS_KEY_NAME] ?? {})) {
@@ -39,8 +39,8 @@ export class PackageJsonService {
   }
 
   async write(data: PackageJsonType) {
-    const bothPackageJsonFile = this.getPackageJsonFilePath();
-    if (!bothPackageJsonFile) {
+    const packageJsonFile = this.getPackageJsonFilePath();
+    if (!packageJsonFile) {
       return;
     }
     const scripts: Record<string, string> = {};
@@ -57,7 +57,7 @@ export class PackageJsonService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data[SCRIPTS_KEY_NAME] = scripts as any;
     try {
-      await writeFile(bothPackageJsonFile, JSON.stringify(data, null, 2));
+      await writeFile(packageJsonFile, JSON.stringify(data, null, 2));
     } catch (err) {
       //
     }

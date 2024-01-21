@@ -27,13 +27,14 @@ export const NEST_MODULE_CATEGORY_TITLE: Record<NestModuleCategory, string> = {
 };
 
 export const NEST_MODULE_CATEGORY_DESCRIPTION: Record<NestModuleCategory, string> = {
-  [NestModuleCategory.core]:
-    'Core modules necessary for the operation of feature and integration modules (examples: main module with connection to the database, main module for connecting to aws, etc.). NestJS and NestJS-mod compatible modules.',
-  [NestModuleCategory.feature]: 'Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.',
-  [NestModuleCategory.integrations]:
-    'Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.',
   [NestModuleCategory.system]:
     'System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.). Only NestJS-mod compatible modules.',
+  [NestModuleCategory.core]:
+    'Core modules necessary for the operation of feature and integration modules (examples: main module with connection to the database, main module for connecting to aws, etc.). NestJS and NestJS-mod compatible modules.',
+  [NestModuleCategory.feature]:
+    'Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.',
+  [NestModuleCategory.integrations]:
+    'Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.',
   [NestModuleCategory.infrastructure]:
     'Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.',
 };

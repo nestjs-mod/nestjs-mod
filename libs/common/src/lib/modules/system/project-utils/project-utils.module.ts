@@ -4,14 +4,16 @@ import { ProjectUtilsConfiguration } from './project-utils.configuration';
 import { PROJECT_UTILS_MODULE_NAME } from './project-utils.constants';
 import { ApplicationPackageJsonService } from './services/application-package-json.service';
 import { DotEnvService } from './services/dot-env.service';
+import { GitignoreService } from './services/gitignore-file';
 import { PackageJsonService } from './services/package-json.service';
 import { ProjectUtilsPatcherService } from './services/project-utils-patcher.service';
 import { WrapApplicationOptionsService } from './services/wrap-application-options.service';
 
 const wrapApplicationOptionsService = {} as WrapApplicationOptionsService;
 const dotEnvService = {};
-const packageJsonService = {};
+const packageJsonService = {} as PackageJsonService;
 const applicationPackageJsonService = {};
+const gitignoreService = {};
 
 let projectUtilsPatcherService: ProjectUtilsPatcherService | undefined = undefined;
 
@@ -26,6 +28,7 @@ export const { ProjectUtils } = createNestModule({
     { provide: DotEnvService, useValue: dotEnvService },
     { provide: PackageJsonService, useValue: packageJsonService },
     { provide: ApplicationPackageJsonService, useValue: applicationPackageJsonService },
+    { provide: GitignoreService, useValue: gitignoreService },
     ProjectUtilsPatcherService,
   ],
   // we use wrapApplication to modify some of the files after connecting all modules, since modules can add additional data that will be used when modifying files
@@ -45,16 +48,6 @@ export const { ProjectUtils } = createNestModule({
     Object.assign(wrapApplicationOptionsService, options);
 
     if (options.current.staticConfiguration) {
-      // DotEnvService
-      const tempDotEnvService = new DotEnvService(
-        wrapApplicationOptionsService,
-        wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
-      );
-      tempDotEnvService.read();
-
-      Object.setPrototypeOf(dotEnvService, tempDotEnvService);
-      Object.assign(dotEnvService, tempDotEnvService);
-
       // PackageJsonService
       const tempPackageJsonService = new PackageJsonService(
         wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
@@ -68,6 +61,22 @@ export const { ProjectUtils } = createNestModule({
       );
       Object.setPrototypeOf(applicationPackageJsonService, tempApplicationPackageJsonService);
       Object.assign(applicationPackageJsonService, tempApplicationPackageJsonService);
+
+      // GitignoreService
+      const tempGitignoreService = new GitignoreService(packageJsonService);
+      Object.setPrototypeOf(gitignoreService, tempGitignoreService);
+      Object.assign(gitignoreService, tempGitignoreService);
+
+      // DotEnvService
+      const tempDotEnvService = new DotEnvService(
+        wrapApplicationOptionsService,
+        wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
+        tempGitignoreService
+      );
+      tempDotEnvService.read();
+
+      Object.setPrototypeOf(dotEnvService, tempDotEnvService);
+      Object.assign(dotEnvService, tempDotEnvService);
 
       // ProjectUtilsPatcherService
       projectUtilsPatcherService = new ProjectUtilsPatcherService(

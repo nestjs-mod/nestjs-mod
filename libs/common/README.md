@@ -218,10 +218,10 @@ When importing, all preWrapApplication methods of modules are run at the beginni
 
 Types of modules (list in order of processing):
 
+- `System modules` - System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.). Only NestJS-mod compatible modules.
 - `Core modules` - Core modules necessary for the operation of feature and integration modules (examples: main module with connection to the database, main module for connecting to aws, etc.). NestJS and NestJS-mod compatible modules.
 - `Feature modules` - Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.
 - `Integration modules` - Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
-- `System modules` - System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.). Only NestJS-mod compatible modules.
 - `Infrastructure modules` - Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.
 
 ### Function
@@ -553,6 +553,12 @@ Default NestJS application initializer, no third party utilities required.
 |`httpsOptions`|Set of configurable HTTPS options|**optional**|-|-|
 |`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|-|
 |`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|-|
+|`logger`|Specifies the logger to use.  Pass `false` to turn off logging.|**optional**|-|-|
+|`abortOnError`|Whether to abort the process on Error. By default, the process is exited. Pass `false` to override the default behavior. If `false` is passed, Nest will not exit the application and instead will rethrow the exception. @default true|**optional**|-|-|
+|`bufferLogs`|If enabled, logs will be buffered until the "Logger#flush" method is called. @default false|**optional**|-|-|
+|`autoFlushLogs`|If enabled, logs will be automatically flushed and buffer detached when application initialization process either completes or fails. @default true|**optional**|-|-|
+|`preview`|Whether to run application in the preview mode. In the preview mode, providers/controllers are not instantiated & resolved. @default false|**optional**|-|-|
+|`snapshot`|Whether to generate a serialized graph snapshot. @default false|**optional**|-|-|
 
 [Back to Top](#modules)
 
@@ -585,7 +591,7 @@ Default NestJS application listener, no third party utilities required.
 Utilities for setting global application parameters, such as project name, description, and settings validation parameters.
 
 #### Shared providers
-`WrapApplicationOptionsService`, `DotEnvService`, `PackageJsonService`, `ApplicationPackageJsonService`, `ProjectUtilsPatcherService`
+`WrapApplicationOptionsService`, `DotEnvService`, `PackageJsonService`, `ApplicationPackageJsonService`, `GitignoreService`, `ProjectUtilsPatcherService`
 
 #### Static configuration
 

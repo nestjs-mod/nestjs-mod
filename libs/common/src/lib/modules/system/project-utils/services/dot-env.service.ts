@@ -1,10 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { snakeCase } from 'case-anything';
 import { config } from 'dotenv';
 import { writeFile } from 'fs/promises';
 import { EnvModelInfoValidationsPropertyNameFormatters } from '../../../../env-model/types';
 import { defaultContextName } from '../../../../utils/default-context-name';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
 import { WrapApplicationOptionsService } from './wrap-application-options.service';
+import { GitignoreService } from './gitignore-file';
+import { basename } from 'path';
 
 @Injectable()
 export class DotEnvService {
@@ -12,7 +15,8 @@ export class DotEnvService {
 
   constructor(
     private readonly wrapApplicationOptionsService: WrapApplicationOptionsService,
-    private readonly projectUtilsConfiguration: ProjectUtilsConfiguration
+    private readonly projectUtilsConfiguration: ProjectUtilsConfiguration,
+    private readonly gitignoreService: GitignoreService
   ) {}
 
   getEnvFilePath() {
@@ -92,14 +96,14 @@ export class DotEnvService {
   }
 
   read(): Record<string, string | undefined> | undefined {
-    const bothEnvFile = this.getEnvFilePath();
-    if (!bothEnvFile) {
+    const envFile = this.getEnvFilePath();
+    if (!envFile) {
       return;
     }
     try {
       const neededKeys = this.keys();
       const existsEnvJson =
-        (config({ path: bothEnvFile, override: true }).parsed as Record<string, string | undefined>) ?? {};
+        (config({ path: envFile, override: true }).parsed as Record<string, string | undefined>) ?? {};
       return neededKeys.reduce((all, key) => ({ ...all, [String(key)]: existsEnvJson[key!] ?? '' }), existsEnvJson);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -109,8 +113,8 @@ export class DotEnvService {
   }
 
   async write(data: Record<string, string | undefined>) {
-    const bothEnvFile = this.getEnvFilePath();
-    if (!bothEnvFile) {
+    const envFile = this.getEnvFilePath();
+    if (!envFile) {
       return;
     }
     try {
@@ -120,12 +124,21 @@ export class DotEnvService {
         (all, key) => ({ ...all, [String(key)]: data[key!] ?? existsEnvJson?.[key!] ?? '' }),
         existsEnvJson
       );
+
+      const envContent = Object.entries(newEnvJson)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('\n');
+      await writeFile(envFile, envContent);
+
+      const envContentExample = Object.entries(newEnvJson)
+        .map(([key]) => `${key}=${snakeCase(`value_for_${key}`)}`)
+        .join('\n');
       await writeFile(
-        bothEnvFile,
-        Object.entries(newEnvJson)
-          .map(([key, value]) => `${key}=${value}`)
-          .join('\n')
+        envFile.replace('.env', '-example.env').replace('/-example.env', '/example.env'),
+        envContentExample
       );
+
+      await this.gitignoreService.addGitIgnoreEntry([basename(envFile)]);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       this.logger.error(err, err.stack);

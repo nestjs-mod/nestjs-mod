@@ -280,6 +280,6 @@ export const { NestjsModAllReadmeGenerator } = createNestModule({
   moduleDescription: 'Readme generator for nestjs-mod project.',
   moduleCategory: NestModuleCategory.infrastructure,
   staticConfigurationModel: NestjsModAllReadmeGeneratorConfig,
-  imports: [InfrastructureMarkdownReportGenerator.forFeature()],
+  imports: [InfrastructureMarkdownReportGenerator.forFeature({ featureModuleName: 'NestjsModAllReadmeGenerator' })],
   providers: [NestjsModAllReadmeGeneratorService],
 });

@@ -50,6 +50,7 @@ export type DynamicNestModuleMetadata<
   TForFeatureAsyncMethodName extends string = typeof DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
   TDynamicModule = DynamicModule,
   TLinkOptions = {
+    // todo: try add asyncOptions
     featureModule: TDynamicModule;
     settingsModule: TDynamicModule;
     featureConfiguration: TFeatureConfigurationModel;
@@ -156,6 +157,7 @@ export interface NestModuleMetadata<
   TForFeatureAsyncMethodName extends string = typeof DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME,
   TDynamicModule = DynamicModule,
   TLinkOptions = {
+    // todo: try add asyncOptions
     featureModule: TDynamicModule;
     settingsModule: TDynamicModule;
     staticConfiguration: TStaticConfigurationModel;

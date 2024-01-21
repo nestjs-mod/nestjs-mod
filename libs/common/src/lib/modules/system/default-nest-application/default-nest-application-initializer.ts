@@ -1,4 +1,4 @@
-import { ConsoleLogger, Logger, Module, NestApplicationOptions } from '@nestjs/common';
+import { ConsoleLogger, LogLevel, Logger, LoggerService, Module, NestApplicationOptions } from '@nestjs/common';
 import { CorsOptions, CorsOptionsDelegate } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { NestFactory } from '@nestjs/core';
@@ -32,6 +32,68 @@ class DefaultNestApplicationInitializerConfig implements NestApplicationOptions 
     default: new ConsoleLogger(),
   })
   defaultLogger?: Logger | null;
+
+  /**
+   * Specifies the logger to use.  Pass `false` to turn off logging.
+   */
+  @ConfigModelProperty({
+    description: 'Specifies the logger to use.  Pass `false` to turn off logging.',
+  })
+  logger?: LoggerService | LogLevel[] | false;
+
+  /**
+   * Whether to abort the process on Error. By default, the process is exited.
+   * Pass `false` to override the default behavior. If `false` is passed, Nest will not exit
+   * the application and instead will rethrow the exception.
+   * @default true
+   */
+  @ConfigModelProperty({
+    description:
+      'Whether to abort the process on Error. By default, the process is exited. Pass `false` to override the default behavior. If `false` is passed, Nest will not exit the application and instead will rethrow the exception. @default true',
+  })
+  abortOnError?: boolean;
+
+  /**
+   * If enabled, logs will be buffered until the "Logger#flush" method is called.
+   * @default false
+   */
+  @ConfigModelProperty({
+    description: 'If enabled, logs will be buffered until the "Logger#flush" method is called. @default false',
+  })
+  bufferLogs?: boolean;
+
+  /**
+   * If enabled, logs will be automatically flushed and buffer detached when
+   * application initialization process either completes or fails.
+   * @default true
+   */
+  @ConfigModelProperty({
+    description:
+      'If enabled, logs will be automatically flushed and buffer detached when application initialization process either completes or fails. @default true',
+  })
+  autoFlushLogs?: boolean;
+
+  /**
+   * Whether to run application in the preview mode.
+   * In the preview mode, providers/controllers are not instantiated & resolved.
+   *
+   * @default false
+   */
+  @ConfigModelProperty({
+    description:
+      'Whether to run application in the preview mode. In the preview mode, providers/controllers are not instantiated & resolved. @default false',
+  })
+  preview?: boolean;
+
+  /**
+   * Whether to generate a serialized graph snapshot.
+   *
+   * @default false
+   */
+  @ConfigModelProperty({
+    description: 'Whether to generate a serialized graph snapshot. @default false',
+  })
+  snapshot?: boolean;
 }
 
 export const { DefaultNestApplicationInitializer } = createNestModule({
@@ -49,7 +111,7 @@ export const { DefaultNestApplicationInitializer } = createNestModule({
             !m.nestModuleMetadata?.moduleDisabled &&
             !m.nestModuleMetadata?.preWrapApplication &&
             !m.nestModuleMetadata?.postWrapApplication
-        )
+        ),
     })
     class BasicNestApp {}
     const app = await NestFactory.create(BasicNestApp, current?.staticConfiguration);

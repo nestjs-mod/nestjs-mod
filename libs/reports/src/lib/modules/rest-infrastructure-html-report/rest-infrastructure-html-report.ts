@@ -9,9 +9,7 @@ import markdownit from 'markdown-it';
 
 @Controller()
 class RestInfrastructureHtmlReportController {
-  constructor(
-    private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorage
-  ) {}
+  constructor(private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorage) {}
   @Get('report')
   async getReport(): Promise<string> {
     const md = markdownit({
@@ -26,7 +24,7 @@ class RestInfrastructureHtmlReportController {
 export const { RestInfrastructureHtmlReport } = createNestModule({
   moduleName: 'RestInfrastructureHtmlReport',
   moduleDescription: 'Rest infrastructure HTML-report',
-  imports: [InfrastructureMarkdownReport.forFeature()],
+  imports: [InfrastructureMarkdownReport.forFeature({ featureModuleName: 'RestInfrastructureHtmlReport' })],
   controllers: [RestInfrastructureHtmlReportController],
   moduleCategory: NestModuleCategory.infrastructure,
 });
