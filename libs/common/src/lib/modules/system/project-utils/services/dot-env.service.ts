@@ -1,13 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { snakeCase } from 'case-anything';
 import { config } from 'dotenv';
+import { existsSync } from 'fs';
 import { writeFile } from 'fs/promises';
+import { basename } from 'path';
 import { EnvModelInfoValidationsPropertyNameFormatters } from '../../../../env-model/types';
 import { defaultContextName } from '../../../../utils/default-context-name';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
-import { WrapApplicationOptionsService } from './wrap-application-options.service';
 import { GitignoreService } from './gitignore-file';
-import { basename } from 'path';
+import { WrapApplicationOptionsService } from './wrap-application-options.service';
 
 @Injectable()
 export class DotEnvService {
@@ -117,6 +118,8 @@ export class DotEnvService {
     if (!envFile) {
       return;
     }
+    const envExampleFile = envFile.replace('.env', '-example.env').replace('/-example.env', '/example.env');
+
     try {
       const neededKeys = this.keys();
       const existsEnvJson = this.read() ?? {};
@@ -130,13 +133,24 @@ export class DotEnvService {
         .join('\n');
       await writeFile(envFile, envContent);
 
-      const envContentExample = Object.entries(newEnvJson)
-        .map(([key]) => `${key}=${snakeCase(`value_for_${key}`)}`)
-        .join('\n');
-      await writeFile(
-        envFile.replace('.env', '-example.env').replace('/-example.env', '/example.env'),
-        envContentExample
-      );
+      if (existsSync(envExampleFile)) {
+        const exampleProcessEnv = {};
+        const existsExampleEnvJson =
+          (config({ path: envExampleFile, processEnv: exampleProcessEnv }).parsed as Record<
+            string,
+            string | undefined
+          >) ?? {};
+
+        const envContentExample = Object.entries(newEnvJson)
+          .map(([key]) => `${key}=${snakeCase(existsExampleEnvJson[key] ?? `value_for_${key}`)}`)
+          .join('\n');
+        await writeFile(envExampleFile, envContentExample);
+      } else {
+        const envContentExample = Object.entries(newEnvJson)
+          .map(([key]) => `${key}=${snakeCase(`value_for_${key}`)}`)
+          .join('\n');
+        await writeFile(envExampleFile, envContentExample);
+      }
 
       await this.gitignoreService.addGitIgnoreEntry([basename(envFile)]);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
