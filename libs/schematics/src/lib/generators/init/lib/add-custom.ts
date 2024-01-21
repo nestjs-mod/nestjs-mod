@@ -30,30 +30,31 @@ export function updateTsConfigRoot(tree: Tree) {
 export function addScript(tree: Tree, projectName?: string) {
   updateJson(tree, 'package.json', (json) => {
     if (!projectName) {
-      json[SCRIPTS_KEY_NAME] = {
-        '_____prod infra_____': '_____prod infra_____',
-        start: 'npm run nx:many -- -t=start',
-        build: 'npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true',
-        _____docs_____: '_____docs_____',
-        'docs:infrastructure':
-          'export NODE_ENV=infrastructure && npm run nx:many -- -t=start --parallel=1',
-        '_____dev infra_____': '_____dev infra_____',
-        'serve:dev': 'npm run nx:many -- -t=serve --host=0.0.0.0',
-        _____lint_____: '_____lint_____',
-        lint: 'npm run tsc:lint && npm run nx:many -- -t=lint',
-        'lint:fix': 'npm run tsc:lint && npm run nx:many -- -t=lint --fix',
-        'tsc:lint': 'tsc --noEmit -p tsconfig.base.json',
-        _____tests_____: '_____tests_____',
-        test: 'npm run nx:many -- -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes',
-        _____utils_____: '_____utils_____',
-        generate: 'npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run lint:fix',
-        nx: 'nx',
-        'dep-graph':'npm run nx -- dep-graph',
-        'nx:many': `npm run nx -- run-many --exclude=${json.name} --all`,
-        'make-ts-list': './node_modules/.bin/rucken make-ts-list',
-        prepare: 'husky install',
-        'manual:prepare': 'npm run generate && npm run build && npm run docs:infrastructure && npm run test',
-      };
+      if (!json[SCRIPTS_KEY_NAME]) {
+        json[SCRIPTS_KEY_NAME] = {
+          '_____prod infra_____': '_____prod infra_____',
+          start: 'npm run nx:many -- -t=start',
+          build: 'npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true',
+          _____docs_____: '_____docs_____',
+          'docs:infrastructure': 'export NODE_ENV=infrastructure && npm run nx:many -- -t=start --parallel=1',
+          '_____dev infra_____': '_____dev infra_____',
+          'serve:dev': 'npm run nx:many -- -t=serve --host=0.0.0.0',
+          _____lint_____: '_____lint_____',
+          lint: 'npm run tsc:lint && npm run nx:many -- -t=lint',
+          'lint:fix': 'npm run tsc:lint && npm run nx:many -- -t=lint --fix',
+          'tsc:lint': 'tsc --noEmit -p tsconfig.base.json',
+          _____tests_____: '_____tests_____',
+          test: 'npm run nx:many -- -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes',
+          _____utils_____: '_____utils_____',
+          generate: 'npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run lint:fix',
+          nx: 'nx',
+          'dep-graph': 'npm run nx -- dep-graph',
+          'nx:many': `npm run nx -- run-many --exclude=${json.name} --all`,
+          'make-ts-list': './node_modules/.bin/rucken make-ts-list',
+          prepare: 'husky install',
+          'manual:prepare': 'npm run generate && npm run build && npm run docs:infrastructure && npm run test',
+        };
+      }
       if (!json['lint-staged']) {
         json['lint-staged'] = {
           '*.{js,ts}': 'eslint --fix',
