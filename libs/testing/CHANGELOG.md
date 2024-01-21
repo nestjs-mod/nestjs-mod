@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.3.0...testing-v2.3.1) (2024-01-21)
+
+
+### Bug Fixes
+
+* add ignore exists env in example file ([7a227a8](https://github.com/nestjs-mod/nestjs-mod/commit/7a227a8182ee8b485b2e49afa55077ce2b5eddd9))
+
 # [2.3.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.2.0...testing-v2.3.0) (2024-01-21)
 
 
