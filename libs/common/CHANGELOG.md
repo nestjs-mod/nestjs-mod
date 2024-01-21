@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.2.0...common-v2.3.0) (2024-01-21)
+
+
+### Features
+
+* add GitignoreService to project-utils, add all need options to DefaultNestApplicationInitializer, add generate example.env file and add .env file to .gitignore ([33fb0a1](https://github.com/nestjs-mod/nestjs-mod/commit/33fb0a10e04ab89d22c567d7dd523ad1be71ec4d))
+
 # [2.2.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.1.0...common-v2.2.0) (2024-01-20)
 
 
