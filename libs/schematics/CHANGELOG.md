@@ -1,3 +1,10 @@
+## [2.0.5](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.0.4...schematics-v2.0.5) (2024-01-21)
+
+
+### Bug Fixes
+
+* disable override all scripts section after create new application [skip integrations] ([ed7e991](https://github.com/nestjs-mod/nestjs-mod/commit/ed7e99168f126edec8ab7078d88e749eade79114))
+
 ## [2.0.4](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.0.3...schematics-v2.0.4) (2024-01-21)
 
 
