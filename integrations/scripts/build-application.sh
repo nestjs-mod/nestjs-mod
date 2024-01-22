@@ -24,20 +24,48 @@ rm -rf ./integrations/app/lib/schematics
 mkdir -p ./integrations/app/lib/schematics
 cp -Rf ./dist/libs/schematics/* ./integrations/app/lib/schematics
 
+rm -rf ./integrations/app/lib/common
+mkdir -p ./integrations/app/lib/common
+cp -Rf ./dist/libs/common/* ./integrations/app/lib/common
+
+rm -rf ./integrations/app/lib/reports
+mkdir -p ./integrations/app/lib/reports
+cp -Rf ./dist/libs/reports/* ./integrations/app/lib/reports
+
+rm -rf ./integrations/app/lib/testing
+mkdir -p ./integrations/app/lib/testing
+cp -Rf ./dist/libs/testing/* ./integrations/app/lib/testing
+
 cd ./integrations/app
 git init
 npm install --save-dev @nx/nest@17.2.8
 npm run nx -- g @nx/nest:application --directory=apps/server --name=server --projectNameAndRootFormat=as-provided --strict=true
 cd ../../
 
+npx --yes replace-json-property ./integrations/app/lib/common/package.json version 0.0.0
+cd ./integrations/app/lib/common && npm pack . && cd ../../../../
+
+npx --yes replace-json-property ./integrations/app/lib/reports/package.json version 0.0.0
+cd ./integrations/app/lib/reports && npm pack . && cd ../../../../
+
+npx --yes replace-json-property ./integrations/app/lib/testing/package.json version 0.0.0
+cd ./integrations/app/lib/testing && npm pack . && cd ../../../../
+
 npx --yes replace-json-property ./integrations/app/lib/schematics/package.json version 0.0.0
 cd ./integrations/app/lib/schematics && npm pack . && cd ../../../../
 
 cd ./integrations/app
+npm install --save-dev --no-cache ../../integrations/app/lib/common/nestjs-mod-common-0.0.0.tgz
+npm install --save-dev --no-cache ../../integrations/app/lib/reports/nestjs-mod-reports-0.0.0.tgz
+npm install --save-dev --no-cache ../../integrations/app/lib/testing/nestjs-mod-testing-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
 npm run nx -- g @nestjs-mod/schematics:application --directory=apps/server-mod --name=server-mod --projectNameAndRootFormat=as-provided --strict=true
 npm run nx -- g @nestjs-mod/schematics:library feature --buildable --publishable --directory=libs/feature --simpleName=true --projectNameAndRootFormat=as-provided --strict=true
-npm run manual:prepare
+npm install --save-dev --no-cache ../../integrations/app/lib/common/nestjs-mod-common-0.0.0.tgz
+npm install --save-dev --no-cache ../../integrations/app/lib/reports/nestjs-mod-reports-0.0.0.tgz
+npm install --save-dev --no-cache ../../integrations/app/lib/testing/nestjs-mod-testing-0.0.0.tgz
+npm install --save-dev --no-cache ../../integrations/app/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
+npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run tsc:lint && npm run build && npm run docs:infrastructure && npm run test
 
 npm run nx -- build server
 kill -9 $(lsof -t -i:3000) | echo "Killed"

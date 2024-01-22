@@ -1,9 +1,10 @@
+import { merge } from '@nestjs-mod/common';
 import type { Tree } from '@nrwl/devkit';
 import { updateJson } from '@nrwl/devkit';
-import { PackageJsonUtils, SCRIPTS_KEY_NAME } from './package-json.utils';
 import { constantCase } from 'case-anything';
 import { join } from 'path';
 import getPorts from './get-port.utils';
+import { PackageJsonUtils, SCRIPTS_KEY_NAME } from './package-json.utils';
 
 export function updateTsConfigRoot(tree: Tree) {
   if (tree.exists('tsconfig.base.json')) {
@@ -30,36 +31,65 @@ export function updateTsConfigRoot(tree: Tree) {
 export function addScript(tree: Tree, projectName?: string) {
   updateJson(tree, 'package.json', (json) => {
     if (!projectName) {
-      if (!json[SCRIPTS_KEY_NAME]) {
-        json[SCRIPTS_KEY_NAME] = {
-          '_____prod infra_____': '_____prod infra_____',
-          start: 'npm run nx:many -- -t=start',
-          build: 'npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true',
-          _____docs_____: '_____docs_____',
-          'docs:infrastructure': 'export NODE_ENV=infrastructure && npm run nx:many -- -t=start --parallel=1',
-          '_____dev infra_____': '_____dev infra_____',
-          'serve:dev': 'npm run nx:many -- -t=serve --host=0.0.0.0',
-          _____lint_____: '_____lint_____',
-          lint: 'npm run tsc:lint && npm run nx:many -- -t=lint',
-          'lint:fix': 'npm run tsc:lint && npm run nx:many -- -t=lint --fix',
-          'tsc:lint': 'tsc --noEmit -p tsconfig.base.json',
-          _____tests_____: '_____tests_____',
-          test: 'npm run nx:many -- -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes',
-          _____utils_____: '_____utils_____',
-          generate: 'npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run lint:fix',
-          nx: 'nx',
-          'dep-graph': 'npm run nx -- dep-graph',
-          'nx:many': `npm run nx -- run-many --exclude=${json.name} --all`,
-          'make-ts-list': './node_modules/.bin/rucken make-ts-list',
-          prepare: 'husky install',
-          'manual:prepare': 'npm run generate && npm run build && npm run docs:infrastructure && npm run test',
-        };
+      const packageJsonUtils = new PackageJsonUtils();
+      const jsonStructure = packageJsonUtils.toStructure(json);
+
+      if (!jsonStructure[SCRIPTS_KEY_NAME]!['prod infra']) {
+        jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'] = {};
       }
+      if (!jsonStructure[SCRIPTS_KEY_NAME]!['docs']) {
+        jsonStructure[SCRIPTS_KEY_NAME]!['docs'] = {};
+      }
+      if (!jsonStructure[SCRIPTS_KEY_NAME]!['dev infra']) {
+        jsonStructure[SCRIPTS_KEY_NAME]!['dev infra'] = {};
+      }
+      if (!jsonStructure[SCRIPTS_KEY_NAME]!['lint']) {
+        jsonStructure[SCRIPTS_KEY_NAME]!['lint'] = {};
+      }
+      if (!jsonStructure[SCRIPTS_KEY_NAME]!['tests']) {
+        jsonStructure[SCRIPTS_KEY_NAME]!['tests'] = {};
+      }
+      if (!jsonStructure[SCRIPTS_KEY_NAME]!['utils']) {
+        jsonStructure[SCRIPTS_KEY_NAME]!['utils'] = {};
+      }
+
+      jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'], {
+        start: 'npm run nx:many -- -t=start',
+        build: 'npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true',
+      });
+
+      jsonStructure[SCRIPTS_KEY_NAME]!['docs'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['docs'], {
+        'docs:infrastructure': 'export NODE_ENV=infrastructure && npm run nx:many -- -t=start --parallel=1',
+      });
+
+      jsonStructure[SCRIPTS_KEY_NAME]!['dev infra'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['dev infra'], {
+        'serve:dev': 'npm run nx:many -- -t=serve --host=0.0.0.0',
+      });
+      jsonStructure[SCRIPTS_KEY_NAME]!['lint'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['lint'], {
+        lint: 'npm run tsc:lint && npm run nx:many -- -t=lint',
+        'lint:fix': 'npm run tsc:lint && npm run nx:many -- -t=lint --fix',
+        'tsc:lint': 'tsc --noEmit -p tsconfig.base.json',
+      });
+      jsonStructure[SCRIPTS_KEY_NAME]!['tests'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['tests'], {
+        test: 'npm run nx:many -- -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes',
+      });
+      jsonStructure[SCRIPTS_KEY_NAME]!['utils'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['utils'], {
+        generate: 'npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run lint:fix',
+        nx: 'nx',
+        'dep-graph': 'npm run nx -- dep-graph',
+        'nx:many': `npm run nx -- run-many --exclude=${json.name} --all`,
+        'make-ts-list': './node_modules/.bin/rucken make-ts-list',
+        prepare: 'husky install',
+        'manual:prepare': 'npm run generate && npm run build && npm run docs:infrastructure && npm run test',
+      });
+
       if (!json['lint-staged']) {
         json['lint-staged'] = {
           '*.{js,ts}': 'eslint --fix',
         };
       }
+
+      json = packageJsonUtils.toPlain(json);
     } else {
       const packageJsonUtils = new PackageJsonUtils();
       const jsonStructure = packageJsonUtils.toStructure(json);
