@@ -97,7 +97,7 @@ export class NxProjectJsonService {
     if (!nxProjectJsonFile) {
       return undefined;
     }
-    return this.readFile(nxProjectJsonFile);
+    return await this.readFile(nxProjectJsonFile);
   }
 
   async write(data: JSONSchemaForNxProjects) {

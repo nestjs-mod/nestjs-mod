@@ -33,7 +33,7 @@ class NestjsModAllReadmeGeneratorConfig {
   utilsFolders!: string[];
 
   @ConfigModelProperty({
-    description: 'Folders with modules',
+    description: 'NodeJS modules with NestJS-mod modules',
   })
   @IsNotEmpty()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -7,7 +7,6 @@ import {
 } from '../nest-module/types';
 import { getWrapModuleMetadataMethods } from '../nest-module/utils';
 import { isInfrastructureMode } from '../utils/is-infrastructure';
-import { isProductionMode } from '../utils/is-production';
 import { NestApplicationError } from './errors';
 import { BootstrapNestApplicationOptions } from './types';
 
@@ -29,7 +28,7 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
   let app: TNestApplication | undefined = undefined;
 
   const categories =
-    disableInfrastructureModulesInProduction && isProductionMode() && !isInfrastructureMode()
+    disableInfrastructureModulesInProduction && !isInfrastructureMode()
       ? NEST_MODULE_CATEGORY_LIST.filter((c) => c !== NestModuleCategory.infrastructure)
       : NEST_MODULE_CATEGORY_LIST;
 

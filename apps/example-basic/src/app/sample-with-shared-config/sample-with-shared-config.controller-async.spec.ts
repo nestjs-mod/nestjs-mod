@@ -1,9 +1,4 @@
-import {
-  InfrastructureMarkdownReportGenerator,
-  bootstrapNestApplication,
-  createNestModule,
-  isProductionMode,
-} from '@nestjs-mod/common';
+import { InfrastructureMarkdownReportGenerator, bootstrapNestApplication, createNestModule } from '@nestjs-mod/common';
 import { DefaultTestNestApplicationCreate, DefaultTestNestApplicationInitializer } from '@nestjs-mod/testing';
 import { Controller, Get, Injectable, Module } from '@nestjs/common';
 import { join } from 'path';
@@ -28,18 +23,13 @@ describe('SampleWithSharedConfigController (async)', () => {
             configurationFactory: () => ({ dynamicVar1: 'dyno' }),
           }),
         ],
-        // Disable infrastructure modules in production
-        ...(!isProductionMode()
-          ? {
-              infrastructure: [
-                InfrastructureMarkdownReportGenerator.forRoot({
-                  staticConfiguration: {
-                    markdownFile: join(__dirname, '..', '..', '..', 'TESTING_INFRASTRUCTURE.MD'),
-                  },
-                }),
-              ],
-            }
-          : {}),
+        infrastructure: [
+          InfrastructureMarkdownReportGenerator.forRoot({
+            staticConfiguration: {
+              markdownFile: join(__dirname, '..', '..', '..', 'TESTING_INFRASTRUCTURE.MD'),
+            },
+          }),
+        ],
       },
     });
 
