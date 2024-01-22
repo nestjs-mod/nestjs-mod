@@ -6,7 +6,7 @@ npm run nx -- reset
 
 log=$(git show --summary)
 
-if [[ ${log} != *"[skip integrations1]"* ]];
+if [[ ${log} != *"[skip integrations]"* ]];
 then
 rm -rf ./dist
 rm -rf ./integrations/app
