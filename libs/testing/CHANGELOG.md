@@ -1,3 +1,10 @@
+## [2.4.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.4.0...testing-v2.4.1) (2024-01-22)
+
+
+### Bug Fixes
+
+* full disable load infrastructure section of application in isInfrastructureMode ([d4d4f02](https://github.com/nestjs-mod/nestjs-mod/commit/d4d4f02a895d0d370cd152252b450af5e933e685))
+
 # [2.4.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.3.1...testing-v2.4.0) (2024-01-21)
 
 
