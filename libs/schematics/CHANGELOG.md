@@ -1,3 +1,11 @@
+## [2.0.6](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.0.5...schematics-v2.0.6) (2024-01-22)
+
+
+### Bug Fixes
+
+* full disable load infrastructure section of application in isInfrastructureMode ([d4d4f02](https://github.com/nestjs-mod/nestjs-mod/commit/d4d4f02a895d0d370cd152252b450af5e933e685))
+* update for nestjs-mod v.2.4.0 [skip integrations] ([d62cf0e](https://github.com/nestjs-mod/nestjs-mod/commit/d62cf0e22491352a88b6c745303aab982c7e90dd))
+
 ## [2.0.5](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.0.4...schematics-v2.0.5) (2024-01-21)
 
 
