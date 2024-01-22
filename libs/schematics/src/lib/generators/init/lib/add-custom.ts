@@ -55,7 +55,7 @@ export function addScript(tree: Tree, projectName?: string) {
 
       jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'], {
         start: 'npm run nx:many -- -t=start',
-        build: 'npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true',
+        build: 'npm run generate && npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true',
       });
 
       jsonStructure[SCRIPTS_KEY_NAME]!['docs'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['docs'], {

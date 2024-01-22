@@ -28,7 +28,7 @@
   "scripts": {
     "_____prod infra_____": "_____prod infra_____",
     "start": "npm run nx:many -- -t=start",
-    "build": "npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true",
+    "build": "npm run generate && npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true",
     "_____docs_____": "_____docs_____",
     "docs:infrastructure": "export NODE_ENV=infrastructure && npm run nx:many -- -t=start --parallel=1",
     "_____dev infra_____": "_____dev infra_____",
