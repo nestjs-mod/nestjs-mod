@@ -57,6 +57,7 @@ class DefaultNestApplicationListenerConfiguration {
 
 export const { DefaultNestApplicationListener } = createNestModule({
   moduleName: 'DefaultNestApplicationListener',
+  moduleDescription: 'Default NestJS application listener, no third party utilities required.',
   staticEnvironmentsModel: DefaultNestApplicationListenerEnvironments,
   staticConfigurationModel: DefaultNestApplicationListenerConfiguration,
   configurationOptions: { skipValidation: true },

@@ -513,6 +513,7 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
 
 export const { InfrastructureMarkdownReportGenerator } = createNestModule({
   moduleName: 'InfrastructureMarkdownReportGenerator',
+  moduleDescription: 'Infrastructure markdown report generator.',
   environmentsOptions: { skipValidation: true },
   configurationOptions: { skipValidation: true },
   staticConfigurationModel: InfrastructureMarkdownReportGeneratorConfiguration,
