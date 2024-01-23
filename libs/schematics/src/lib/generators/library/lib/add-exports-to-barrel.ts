@@ -11,7 +11,7 @@ export function addExportsToBarrelFile(tree: Tree, options: NormalizedOptions): 
   }
   const indexPath = `${options.projectRoot}/src/index.ts`;
   const indexContent = tree.read(indexPath, 'utf-8');
-  let sourceFile = tsModule.createSourceFile(indexPath, indexContent ?? '', tsModule.ScriptTarget.Latest, true);
+  let sourceFile = tsModule.createSourceFile(indexPath, indexContent || '', tsModule.ScriptTarget.Latest, true);
 
   // find the export in the source file
   const exportStatement = sourceFile.statements.find((statement) => tsModule.isExportDeclaration(statement));

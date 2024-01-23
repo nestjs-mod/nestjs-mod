@@ -22,12 +22,12 @@ export async function normalizeOptions(tree: Tree, options: ApplicationGenerator
 
   return {
     ...options,
-    strict: options.strict ?? false,
+    strict: options.strict || false,
     appProjectName,
     appProjectRoot,
-    linter: options.linter ?? Linter.EsLint,
-    unitTestRunner: options.unitTestRunner ?? 'jest',
-    e2eTestRunner: options.e2eTestRunner ?? 'jest',
+    linter: options.linter || Linter.EsLint,
+    unitTestRunner: options.unitTestRunner || 'jest',
+    e2eTestRunner: options.e2eTestRunner || 'jest',
   };
 }
 

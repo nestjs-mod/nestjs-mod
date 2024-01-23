@@ -25,20 +25,20 @@ export async function normalizeOptionsLib(tree: Tree, options: LibraryGeneratorO
 
   const normalized: NormalizedOptions = {
     ...options,
-    strict: options.strict ?? true,
-    controller: options.controller ?? false,
+    strict: options.strict || true,
+    controller: options.controller || false,
     fileName,
-    category: options.category ?? 'feature',
-    linter: options.linter ?? Linter.EsLint,
+    category: options.category || 'feature',
+    linter: options.linter || Linter.EsLint,
     parsedTags,
     prefix: getNpmScope(tree)!, // we could also allow customizing this
     projectName,
     projectRoot,
     importPath,
-    service: options.service ?? false,
-    target: options.target ?? 'es6',
-    testEnvironment: options.testEnvironment ?? 'node',
-    unitTestRunner: options.unitTestRunner ?? 'jest',
+    service: options.service || false,
+    target: options.target || 'es6',
+    testEnvironment: options.testEnvironment || 'node',
+    unitTestRunner: options.unitTestRunner || 'jest',
   };
 
   return normalized;

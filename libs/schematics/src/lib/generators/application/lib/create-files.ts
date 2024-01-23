@@ -4,7 +4,7 @@ import type { NormalizedOptions } from '../schema';
 
 export function createFiles(tree: Tree, options: NormalizedOptions): void {
   const project = readProjectConfiguration(tree, options.appProjectName);
-  const sourceRootArr = project.sourceRoot?.split('/') ?? [];
+  const sourceRootArr = project.sourceRoot?.split('/') || [];
   generateFiles(tree, joinPathFragments(__dirname, '..', 'files'), joinPathFragments(options.appProjectRoot, 'src'), {
     tmpl: '',
     name: options.appProjectName,
