@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.0.7...schematics-v2.1.0) (2024-01-23)
+
+
+### Features
+
+*  add full disable infrastructure modules in production, fix many errors ([8797115](https://github.com/nestjs-mod/nestjs-mod/commit/8797115ee98710e9c1d6ec353294a7a68211b9c6))
+
 ## [2.0.7](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.0.6...schematics-v2.0.7) (2024-01-22)
 
 
