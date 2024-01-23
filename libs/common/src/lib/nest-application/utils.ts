@@ -43,16 +43,12 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
     }
 
     for (const category of categories) {
-      let moduleIndex = 0;
       // any wrap methods can create new modules, we path all them
       for (let index = 0; index < (modules[category as NestModuleCategory] || []).length; index++) {
-        if (!modules[category as NestModuleCategory]?.[moduleIndex].nestModuleMetadata?.project) {
-          modules[category as NestModuleCategory]![moduleIndex].nestModuleMetadata!.project = project;
+        if (!modules[category as NestModuleCategory]?.[index].nestModuleMetadata?.project) {
+          modules[category as NestModuleCategory]![index].nestModuleMetadata!.project = project;
         } else {
-          Object.assign(
-            modules[category as NestModuleCategory]![moduleIndex].nestModuleMetadata!.project!,
-            project || {}
-          );
+          Object.assign(modules[category as NestModuleCategory]![index].nestModuleMetadata!.project!, project || {});
         }
         if (
           modules[category as NestModuleCategory] &&
@@ -70,7 +66,6 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
           });
         }
       }
-      moduleIndex = moduleIndex + 1;
     }
   };
 
