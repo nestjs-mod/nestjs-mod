@@ -9,5 +9,4 @@ export type BootstrapNestApplicationOptions = {
   logger?: Logger | LoggerService;
   globalEnvironmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
   globalConfigurationOptions?: Omit<ConfigModelOptions, 'originalName'>;
-  disableInfrastructureModulesInProduction?: boolean;
 };

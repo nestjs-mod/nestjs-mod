@@ -13,7 +13,7 @@ export function EnvModel(options?: EnvModelRootOptions) {
   if (!options) {
     options = {};
   }
-  if (!options.propertyNameFormatters) {
+  if (!options.propertyValueExtractors) {
     options.propertyValueExtractors = [
       new DefaultPropertyValueExtractor(),
       new ProcessEnvPropertyValueExtractor(),

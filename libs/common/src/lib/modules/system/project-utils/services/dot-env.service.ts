@@ -36,7 +36,7 @@ export class DotEnvService {
         [
           ...modules
             .map((m) =>
-              Object.keys(m?.[contextName]?.staticEnvironments?.validations ?? {})
+              Object.keys(m?.[contextName]?.staticEnvironments?.validations || {})
                 .filter(
                   (key) =>
                     !m?.[contextName]?.staticEnvironments?.validations[key]?.propertyValueExtractors.some(
@@ -54,7 +54,7 @@ export class DotEnvService {
             .flat(),
           ...modules
             .map((m) =>
-              Object.keys(m?.[contextName]?.environments?.validations ?? {})
+              Object.keys(m?.[contextName]?.environments?.validations || {})
                 .filter(
                   (key) =>
                     !m?.[contextName]?.environments?.validations[key]?.propertyValueExtractors.some((e) => e.demoMode)
@@ -70,11 +70,11 @@ export class DotEnvService {
             .flat(),
           ...modules
             .map((m) =>
-              Object.entries(m?.[contextName]?.featureModuleEnvironments ?? {})
+              Object.entries(m?.[contextName]?.featureModuleEnvironments || {})
                 .map(([, v]) =>
-                  (v ?? [])
+                  (v || [])
                     .map((vItem) =>
-                      Object.keys(vItem?.validations ?? {})
+                      Object.keys(vItem?.validations || {})
                         .filter((key) => !vItem?.validations[key]?.propertyValueExtractors.some((e) => e.demoMode))
                         .map((key) =>
                           vItem?.validations[key]?.propertyNameFormatters
@@ -104,7 +104,7 @@ export class DotEnvService {
         try {
           const virtualEnv = {};
           const loadedEnvJson =
-            (config({ path: envFile, processEnv: virtualEnv }).parsed as Record<string, string | undefined>) ?? {};
+            (config({ path: envFile, processEnv: virtualEnv }).parsed as Record<string, string | undefined>) || {};
 
           if (updateProcessEnv) {
             for (const [key, value] of Object.entries(loadedEnvJson)) {
@@ -143,9 +143,9 @@ export class DotEnvService {
     }
     try {
       const neededKeys = this.keys();
-      const existsEnvJson = (await this.readFile(envFile, false)) ?? {};
+      const existsEnvJson = (await this.readFile(envFile, false)) || {};
       const neededEnvs = neededKeys.reduce(
-        (all, key) => ({ ...all, [String(key)]: existsEnvJson[key!] ?? '' }),
+        (all, key) => ({ ...all, [String(key)]: existsEnvJson[key!] || '' }),
         existsEnvJson
       );
       if (updateProcessEnv) {
@@ -171,18 +171,18 @@ export class DotEnvService {
 
     try {
       const neededKeys = this.keys();
-      const existsEnvJson = (await this.readFile(envFile, false)) ?? {};
+      const existsEnvJson = (await this.readFile(envFile, false)) || {};
       const newEnvJson = neededKeys.reduce(
-        (all, key) => ({ ...all, [String(key)]: data[key!] ?? existsEnvJson?.[key!] ?? '' }),
+        (all, key) => ({ ...all, [String(key)]: data[key!] || existsEnvJson?.[key!] || '' }),
         existsEnvJson
       );
       await this.writeFile(envFile, newEnvJson);
 
       const envExampleFile = envFile.replace('.env', '-example.env').replace('/-example.env', '/example.env');
       if (existsSync(envExampleFile)) {
-        const existsExampleEnvJson = (await this.readFile(envExampleFile, false)) ?? {};
+        const existsExampleEnvJson = (await this.readFile(envExampleFile, false)) || {};
         const newEnvJson = neededKeys.reduce(
-          (all, key) => ({ ...all, [String(key)]: existsExampleEnvJson?.[key!] ?? `value_for_${key}` }),
+          (all, key) => ({ ...all, [String(key)]: existsExampleEnvJson?.[key!] || `value_for_${key}` }),
           existsExampleEnvJson
         );
         await this.writeFile(envExampleFile, newEnvJson);

@@ -30,7 +30,7 @@ export class NxProjectJsonService {
   }
 
   async addRunCommands(lines: string[], targetName = GENERATE_TARGET_NAME) {
-    const projectJson = (await this.read()) ?? {};
+    const projectJson = (await this.read()) || {};
     if (!projectJson?.targets) {
       projectJson.targets = {};
     }

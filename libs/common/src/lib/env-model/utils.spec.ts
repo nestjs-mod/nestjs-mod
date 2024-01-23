@@ -128,7 +128,7 @@ describe('Env model: Utils', () => {
                 }
                 const obj = await envTransform({
                   model: AppEnv,
-                  data: env ?? {},
+                  data: env || {},
                 });
                 Object.assign(emptyAppEnv, obj.data);
               },
@@ -191,7 +191,7 @@ describe('Env model: Utils', () => {
                 }
                 const obj = await envTransform({
                   model: App1Env,
-                  data: env ?? {},
+                  data: env || {},
                 });
                 Object.assign(emptyAppEnv, obj.data);
               },

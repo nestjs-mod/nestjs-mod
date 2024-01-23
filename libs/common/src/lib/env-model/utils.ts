@@ -17,46 +17,47 @@ export async function envTransform<
     rootOptions.logger = new ConsoleLogger('envTransform');
   }
   const loadValidator = (validatorPackage?: ValidatorPackage): ValidatorPackage => {
-    return validatorPackage ?? loadPackage('class-validator', () => require('class-validator'));
+    return validatorPackage || loadPackage('class-validator', () => require('class-validator'));
   };
 
   const { modelPropertyOptions, modelOptions } = getEnvModelMetadata(model);
   const info: EnvModelInfo = {
     modelPropertyOptions,
-    modelOptions: modelOptions ?? {},
+    modelOptions: modelOptions || {},
     validations: {},
   };
 
-  const propertyNameFormatters = modelOptions?.propertyNameFormatters ?? rootOptions?.propertyNameFormatters ?? [];
+  const propertyNameFormatters = rootOptions?.propertyNameFormatters || modelOptions?.propertyNameFormatters || [];
+
   for (const propertyOptions of modelPropertyOptions) {
     for (const propertyNameFormatter of propertyNameFormatters) {
       const formattedPropertyExample = propertyNameFormatter.example({
         modelRootOptions: rootOptions,
-        modelOptions: modelOptions ?? {},
+        modelOptions: modelOptions || {},
         propertyOptions,
       });
       const formattedPropertyName = propertyNameFormatter.format({
         modelRootOptions: rootOptions,
-        modelOptions: modelOptions ?? {},
+        modelOptions: modelOptions || {},
         propertyOptions,
       });
 
-      const demoMode = modelOptions?.demoMode ?? rootOptions?.demoMode ?? false;
+      const demoMode = rootOptions?.demoMode || modelOptions?.demoMode || false;
 
       const propertyValueExtractors = (
-        modelOptions?.propertyValueExtractors ??
         rootOptions?.propertyValueExtractors ??
+        modelOptions?.propertyValueExtractors ??
         []
       ).map((extractor) => {
         if (extractor.setDemoMode) {
           extractor.setDemoMode(demoMode);
         }
-        return {
+        const result = {
           name: extractor.name,
           example: extractor.example({
             obj: data,
             modelRootOptions: rootOptions,
-            modelOptions: modelOptions ?? {},
+            modelOptions: modelOptions || {},
             propertyOptions,
             formattedPropertyName,
           }),
@@ -64,11 +65,15 @@ export async function envTransform<
           value: extractor.extract({
             obj: data,
             modelRootOptions: rootOptions,
-            modelOptions: modelOptions ?? {},
+            modelOptions: modelOptions || {},
             propertyOptions,
             formattedPropertyName,
           }),
         };
+        if (extractor.setDemoMode) {
+          extractor.setDemoMode(false);
+        }
+        return result;
       });
 
       if (!info.validations[propertyOptions.originalName]) {
@@ -89,6 +94,7 @@ export async function envTransform<
         ...propertyValueExtractors,
       ];
     }
+    // console.dir({ f: info.validations, data }, { depth: 20 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (data as any)[propertyOptions.originalName] =
       info.validations[propertyOptions.originalName].propertyValueExtractors.find((e) => e.value)?.value ??
@@ -99,35 +105,34 @@ export async function envTransform<
     info.validations[propertyOptions.originalName].value = (data as any)[propertyOptions.originalName];
   }
 
-  const classValidator = loadValidator(modelOptions?.validatorPackage ?? rootOptions?.validatorPackage);
+  const classValidator = loadValidator(rootOptions?.validatorPackage || modelOptions?.validatorPackage);
 
   const optionsInstance = Object.assign(new model(), data);
   const validateErrors =
-    modelOptions?.skipValidation ?? rootOptions?.skipValidation
+    rootOptions?.skipValidation || modelOptions?.skipValidation
       ? []
       : (
           await classValidator.validate(
             optionsInstance,
-            modelOptions?.validatorOptions ?? rootOptions?.validatorOptions ?? ENV_MODEL_CLASS_VALIDATOR_OPTIONS
+            rootOptions?.validatorOptions || modelOptions?.validatorOptions || ENV_MODEL_CLASS_VALIDATOR_OPTIONS
           )
         ).filter((validateError) => validateError.property);
-
   // collect constraints
   const validateErrorsForInfo = (
     await classValidator.validate(
       new model(),
-      modelOptions?.validatorOptions ?? rootOptions?.validatorOptions ?? ENV_MODEL_CLASS_VALIDATOR_OPTIONS
+      rootOptions?.validatorOptions || modelOptions?.validatorOptions || ENV_MODEL_CLASS_VALIDATOR_OPTIONS
     )
   ).filter((validateError) => validateError.property);
   for (const validateError of validateErrorsForInfo) {
     if (info.validations[validateError.property]) {
-      info.validations[validateError.property].constraints = validateError?.constraints ?? {};
+      info.validations[validateError.property].constraints = validateError?.constraints || {};
     }
   }
 
   if (validateErrors.length > 0) {
-    const debug = modelOptions?.debug ?? rootOptions?.debug;
-    const logger = modelOptions?.logger ?? rootOptions?.logger;
+    const debug = rootOptions?.debug || modelOptions?.debug || process.env['DEBUG'];
+    const logger = rootOptions?.logger || modelOptions?.logger;
     if (debug && logger?.debug) {
       logger.debug(info);
     }

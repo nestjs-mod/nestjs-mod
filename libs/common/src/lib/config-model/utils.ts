@@ -21,14 +21,14 @@ export async function configTransform<
     rootOptions.logger = new ConsoleLogger('configTransform');
   }
   const loadValidator = (validatorPackage?: ValidatorPackage): ValidatorPackage => {
-    return validatorPackage ?? loadPackage('class-validator', () => require('class-validator'));
+    return validatorPackage || loadPackage('class-validator', () => require('class-validator'));
   };
 
   const { modelPropertyOptions, modelOptions } = getConfigModelMetadata(model);
 
   const info: ConfigModelInfo = {
     modelPropertyOptions,
-    modelOptions: modelOptions ?? {},
+    modelOptions: modelOptions || {},
     validations: {},
   };
 
@@ -43,17 +43,17 @@ export async function configTransform<
     };
   }
 
-  const classValidator = loadValidator(modelOptions?.validatorPackage ?? rootOptions?.validatorPackage);
+  const classValidator = loadValidator(rootOptions?.validatorPackage || modelOptions?.validatorPackage);
 
   const optionsInstance = Object.assign(new model(), dataWithAllowedFields);
 
   const validateErrors =
-    modelOptions?.skipValidation ?? rootOptions?.skipValidation
+    rootOptions?.skipValidation || modelOptions?.skipValidation
       ? []
       : (
           await classValidator.validate(
             optionsInstance,
-            modelOptions?.validatorOptions ?? rootOptions?.validatorOptions ?? CONFIG_MODEL_CLASS_VALIDATOR_OPTIONS
+            rootOptions?.validatorOptions || modelOptions?.validatorOptions || CONFIG_MODEL_CLASS_VALIDATOR_OPTIONS
           )
         ).filter((validateError) => validateError.property);
 
@@ -61,19 +61,19 @@ export async function configTransform<
   const validateErrorsForInfo = (
     await classValidator.validate(
       new model(),
-      modelOptions?.validatorOptions ?? rootOptions?.validatorOptions ?? CONFIG_MODEL_CLASS_VALIDATOR_OPTIONS
+      rootOptions?.validatorOptions || modelOptions?.validatorOptions || CONFIG_MODEL_CLASS_VALIDATOR_OPTIONS
     )
   ).filter((validateError) => validateError.property);
 
   for (const validateError of validateErrorsForInfo) {
     if (info.validations[validateError.property]) {
-      info.validations[validateError.property].constraints = validateError?.constraints ?? {};
+      info.validations[validateError.property].constraints = validateError?.constraints || {};
     }
   }
 
   if (validateErrors.length > 0) {
-    const debug = modelOptions?.debug ?? rootOptions?.debug;
-    const logger = modelOptions?.logger ?? rootOptions?.logger;
+    const debug = rootOptions?.debug || modelOptions?.debug || process.env['DEBUG'];
+    const logger = rootOptions?.logger || modelOptions?.logger;
     if (debug && logger?.debug) {
       logger.debug(info);
     }

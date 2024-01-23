@@ -5,6 +5,7 @@ import { EnvModelOptions } from '../../../../env-model/types';
 import {
   DynamicNestModuleMetadata,
   ForRootAsyncMethodOptions,
+  ForRootMethodOptions,
   NestModuleCategory,
   ProjectOptions,
   WrapApplicationOptions,
@@ -35,7 +36,8 @@ export class WrapApplicationOptionsService<
       TStaticConfigurationModel,
       TConfigurationModel,
       TEnvironmentsModel,
-      TStaticEnvironmentsModel
+      TStaticEnvironmentsModel,
+      ForRootMethodOptions<TStaticConfigurationModel, TConfigurationModel, TEnvironmentsModel, TStaticEnvironmentsModel>
     >;
     staticConfiguration?: Partial<TStaticConfigurationModel>;
     staticEnvironments?: Partial<TStaticEnvironmentsModel>;

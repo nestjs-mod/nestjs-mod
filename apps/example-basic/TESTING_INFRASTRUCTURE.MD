@@ -63,14 +63,14 @@ Feature variables of primitive and complex types that can be added to the curren
 #### Feature environments
 Feature variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
 
-| Key    | Description | Constraints | Default | Value |
-| ------ | ----------- | ----------- | ------- | ----- |
-|`envFeatureVar`|-|**optional**|-|-|
+| Key    | Description | Sources | Constraints | Default | Value |
+| ------ | ----------- | ------- | ----------- | ------- | ----- |
+|`envFeatureVar`|-|`obj['envFeatureVar']`, `process.env['TEST_APPLICATION_FEATURE_MODULE_NAME_ENV_FEATURE_VAR']`|**optional**|-|-|
 
 ## Integration modules
 Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
 
-### DefaultTestNestApplicationInitializerLoader
+### DefaultTestNestApplicationInitializer
 Default test NestJS application initializer, no third party utilities required.
 
 #### Static configuration
@@ -80,11 +80,12 @@ Static variables of primitive and complex types that are used in the module and 
 | ------ | ----------- | ----------- | ------- | ----- |
 |`preInit`|Method for additional actions before init|**optional**|-|-|
 |`postInit`|Method for additional actions after init|**optional**|-|-|
+|`defaultLogger`|Default logger for test application|**optional**|ConsoleLogger|ConsoleLogger|
 
 ## Infrastructure modules
 Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.
 
-### InfrastructureMarkdownReportGeneratorCollector
+### InfrastructureMarkdownReportGenerator
 Infrastructure markdown report generator.
 
 #### Shared providers

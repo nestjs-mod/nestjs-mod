@@ -1,9 +1,9 @@
 import {
   ConfigModel,
   ConfigModelProperty,
-  DynamicNestModuleMetadata,
   NestModuleCategory,
   createNestModule,
+  isInfrastructureMode,
 } from '@nestjs-mod/common';
 import { ConsoleLogger, Logger } from '@nestjs/common';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
@@ -30,12 +30,10 @@ export const { DefaultTestNestApplicationCreate } = createNestModule({
   // creating test application
   wrapApplication: async ({ modules, current }) => {
     let testingModuleBuilder = Test.createTestingModule({
-      imports: Object.values(modules)
-        .flat()
-        .filter(
-          (m: DynamicNestModuleMetadata) =>
-            !m.nestModuleMetadata?.preWrapApplication && !m.nestModuleMetadata?.postWrapApplication
-        ),
+      imports: Object.entries(modules)
+        .filter(([category]) => isInfrastructureMode() || category !== NestModuleCategory.infrastructure)
+        .map(([, value]) => value)
+        .flat(),
     });
     if (current?.staticConfiguration?.wrapTestingModuleBuilder) {
       const newTestingModuleBuilder = current?.staticConfiguration.wrapTestingModuleBuilder(testingModuleBuilder);
@@ -43,6 +41,7 @@ export const { DefaultTestNestApplicationCreate } = createNestModule({
         testingModuleBuilder = newTestingModuleBuilder;
       }
     }
+
     const moduleRef: TestingModule = await testingModuleBuilder.compile();
 
     const app = moduleRef.createNestApplication();
@@ -50,6 +49,7 @@ export const { DefaultTestNestApplicationCreate } = createNestModule({
     if (current.staticConfiguration?.defaultLogger) {
       app.useLogger(current.staticConfiguration?.defaultLogger);
     }
+
     return app;
   },
 });

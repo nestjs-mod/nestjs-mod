@@ -27,6 +27,13 @@ describe('Project Utils', () => {
   it('should return report with application name from settings and source key with prefix for env', async () => {
     const { AppModule } = createNestModule({
       moduleName: 'AppModule',
+      // type checking
+      wrapForRootAsync: (asyncModuleOptions) => {
+        return { asyncModuleOptions };
+      },
+      wrapForFeatureAsync: (asyncModuleOptions) => {
+        return { asyncModuleOptions };
+      },
     });
 
     const app = await bootstrapNestApplication({

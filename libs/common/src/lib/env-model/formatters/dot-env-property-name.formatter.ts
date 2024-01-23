@@ -38,7 +38,7 @@ export class DotEnvPropertyNameFormatter implements PropertyNameFormatter {
     const prepareFullname = [
       defaultContextName() !== modelRootOptions?.name && modelRootOptions?.name ? modelRootOptions?.name : null,
       defaultContextName() !== modelOptions?.name && modelOptions?.name ? modelOptions?.name : null,
-      String(propertyOptions.name ?? propertyOptions.originalName),
+      String(propertyOptions.name || propertyOptions.originalName),
     ]
       .filter(Boolean)
       .map((v: string | null) => {

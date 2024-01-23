@@ -20,8 +20,8 @@ export class DefaultPropertyValueExtractor implements PropertyValueExtractor {
         'propertyOptions.name': propertyOptions.name,
         'propertyOptions.originalName': propertyOptions.originalName,
       },
-      logic: `obj[propertyOptions.name ?? propertyOptions.originalName]`,
-      example: `obj['${propertyOptions.name ?? propertyOptions.originalName}']`,
+      logic: `obj[propertyOptions.name || propertyOptions.originalName]`,
+      example: `obj['${propertyOptions.name || propertyOptions.originalName}']`,
     };
   }
   extract({
@@ -35,6 +35,6 @@ export class DefaultPropertyValueExtractor implements PropertyValueExtractor {
     modelOptions: EnvModelOptions;
     propertyOptions: EnvModelPropertyOptions;
   }) {
-    return obj[propertyOptions.name ?? propertyOptions.originalName];
+    return obj[propertyOptions.name || propertyOptions.originalName];
   }
 }

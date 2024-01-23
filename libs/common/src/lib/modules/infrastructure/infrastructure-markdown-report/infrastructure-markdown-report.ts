@@ -77,7 +77,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
             });
       const sharedProviders = ((!dynamicNestModuleMetadata.nestModuleMetadata.sharedProviders
         ? []
-        : sharedProvidersArr) ?? []) as Provider[];
+        : sharedProvidersArr) || []) as Provider[];
 
       if (Array.isArray(sharedProviders) && sharedProviders?.length > 0) {
         lines.push('#### Shared providers');
@@ -85,7 +85,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           sharedProviders
             .map(
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (s: any) => `\`${s.provide ? String(s.provide.name ?? s.provide) : s.name}\``
+              (s: any) => `\`${s.provide ? String(s.provide.name || s.provide) : s.name}\``
             )
             .join(', ')
         );
@@ -103,7 +103,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
               staticConfiguration: {},
               staticEnvironments: {},
             });
-      const sharedImports = (!dynamicNestModuleMetadata.nestModuleMetadata.sharedImports ? [] : sharedImportsArr) ?? [];
+      const sharedImports = (!dynamicNestModuleMetadata.nestModuleMetadata.sharedImports ? [] : sharedImportsArr) || [];
 
       if (Array.isArray(sharedImports) && sharedImports?.length > 0) {
         lines.push('#### Shared imports');
@@ -111,14 +111,14 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           sharedImports
             .map(
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (s: any) => `\`${s.nestModuleMetadata?.moduleName ?? s.name}\``
+              (s: any) => `\`${s.nestModuleMetadata?.moduleName || s.name}\``
             )
             .join(', ')
         );
         lines.push('');
       }
 
-      const names = Object.keys(dynamicNestModuleMetadata.moduleSettings ?? { default: true });
+      const names = Object.keys(dynamicNestModuleMetadata.moduleSettings || { default: true });
       for (const name of names) {
         this.reportOfEnvModelInfo({
           lines,
@@ -163,15 +163,15 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         });
 
         const featureModuleNames = Object.keys(
-          dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleConfigurations ?? {}
+          dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleConfigurations || {}
         );
         const featureEnvironmentsModuleNames = Object.keys(
-          dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleEnvironments ?? {}
+          dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleEnvironments || {}
         );
         if (featureModuleNames.length > 0) {
           for (const featureModuleName of featureModuleNames) {
             const featureConfigurations =
-              dynamicNestModuleMetadata.moduleSettings?.[name]?.featureModuleConfigurations?.[featureModuleName] ?? [];
+              dynamicNestModuleMetadata.moduleSettings?.[name]?.featureModuleConfigurations?.[featureModuleName] || [];
             const newLines: string[] = ['#### Modules that use feature configuration'];
             for (const featureConfiguration of featureConfigurations) {
               this.reportOfConfigModelInfo({
@@ -190,7 +190,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         if (featureEnvironmentsModuleNames.length > 0) {
           for (const featureModuleName of featureEnvironmentsModuleNames) {
             const featureEnvironments =
-              dynamicNestModuleMetadata.moduleSettings?.[name]?.featureModuleEnvironments?.[featureModuleName] ?? [];
+              dynamicNestModuleMetadata.moduleSettings?.[name]?.featureModuleEnvironments?.[featureModuleName] || [];
             const newLines: string[] = ['#### Modules that use feature environments'];
             for (const featureEnvironment of featureEnvironments) {
               this.reportOfEnvModelInfo({
@@ -251,7 +251,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
             : settingsModelInfoTitle
         }`
       );
-      const description = settingsModelInfo.modelOptions.description ?? settingsModelInfoDescription ?? '';
+      const description = settingsModelInfo.modelOptions.description || settingsModelInfoDescription || '';
       if (description !== undefined) {
         lines.push(`${description}`);
       }
@@ -277,7 +277,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                   modelPropertyOption.name ? ` (${modelPropertyOption.name})` : ''
                 }\``,
                 // Description
-                modelPropertyOption.description ?? '-',
+                modelPropertyOption.description || '-',
                 // Sources
                 settingsModelInfo?.validations[modelPropertyOption.originalName].propertyValueExtractors
                   .map((propertyValueExtractor) => `\`${propertyValueExtractor.example.example}\``)
@@ -295,7 +295,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                 ),
                 '',
               ].join('|')
-            ) ?? []),
+            ) || []),
         ].join('\n')
       );
       lines.push('');
@@ -337,7 +337,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
             : settingsModelInfoTitle
         }`
       );
-      const description = settingsModelInfo.modelOptions.description ?? settingsModelInfoDescription ?? '';
+      const description = settingsModelInfo.modelOptions.description || settingsModelInfoDescription || '';
       if (description !== undefined) {
         lines.push(`${description}`);
       }
@@ -361,7 +361,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                 // Key
                 `\`${String(modelPropertyOption.originalName)}\``,
                 // Description
-                modelPropertyOption.description ?? '-',
+                modelPropertyOption.description || '-',
                 // Constraints
                 Object.entries(settingsModelInfo?.validations[modelPropertyOption.originalName].constraints || {})
                   .map(([key, value]) => `**${key}** (${value})`)
@@ -375,7 +375,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                 ),
                 '',
               ].join('|')
-            ) ?? []),
+            ) || []),
         ].join('\n')
       );
       lines.push('');
@@ -390,7 +390,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         return '-';
       }
       if (Array.isArray(value)) {
-        if (value.filter((v) => Object.keys(v ?? {}).length > 0).length > 0) {
+        if (value.filter((v) => Object.keys(v || {}).length > 0).length > 0) {
           return `[ ${value.map((v) => this.safeValue(v)).join(', ')} ]`;
         } else {
           return '-';
@@ -489,7 +489,7 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
         }
       }
       for (const category of NEST_MODULE_CATEGORY_LIST) {
-        const nestModules: DynamicNestModuleMetadata[] = (modules[category] ?? []).filter(
+        const nestModules: DynamicNestModuleMetadata[] = (modules[category] || []).filter(
           (m) => m.nestModuleMetadata?.moduleCategory
         );
         if (nestModules.length > 0) {
@@ -513,9 +513,9 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
 
 export const { InfrastructureMarkdownReportGenerator } = createNestModule({
   moduleName: 'InfrastructureMarkdownReportGenerator',
-  staticConfigurationModel: InfrastructureMarkdownReportGeneratorConfiguration,
-  configurationOptions: { skipValidation: true },
   environmentsOptions: { skipValidation: true },
+  configurationOptions: { skipValidation: true },
+  staticConfigurationModel: InfrastructureMarkdownReportGeneratorConfiguration,
   sharedProviders: [DynamicNestModuleMetadataMarkdownReportGenerator],
   // we want collect report about all modules
   // for than we should place new report collector to end of infrastructure section

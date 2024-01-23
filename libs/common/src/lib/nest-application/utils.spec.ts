@@ -515,10 +515,10 @@ describe('NestJS application: Utils', () => {
 
     | Key| Description | Constraints | Default | Value |
     | ------ | ----------- | ----------- | ------- | ----- |
-    |\`mode\`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|\`\`\`listen\`\`\`|-|
+    |\`mode\`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|\`\`\`listen\`\`\`|\`\`\`listen\`\`\`|
     |\`preListen\`|Method for additional actions before listening|**optional**|-|-|
     |\`postListen\`|Method for additional actions after listening|**optional**|-|-|
-    |\`defaultLogger\`|Default logger for application|**optional**|ConsoleLogger|-|
+    |\`defaultLogger\`|Default logger for application|**optional**|ConsoleLogger|ConsoleLogger|
 
     ## Infrastructure modules
     Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.

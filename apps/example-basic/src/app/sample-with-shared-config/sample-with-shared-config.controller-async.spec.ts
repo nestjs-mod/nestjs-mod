@@ -10,6 +10,8 @@ import { InjectService } from './sample-with-shared-config.utils';
 
 describe('SampleWithSharedConfigController (async)', () => {
   it('should return "Hello World! (var1: var1value)", use static value in forRoot options', async () => {
+    const originalNodeEnv = process.env['NODE_ENV'];
+    process.env['NODE_ENV'] = 'infrastructure';
     const app = await bootstrapNestApplication({
       project: {
         name: 'TestApplication',
@@ -48,6 +50,7 @@ describe('SampleWithSharedConfigController (async)', () => {
       .expect(JSON.stringify({ var1: 'var1value' }));
 
     await app.close();
+    process.env['NODE_ENV'] = originalNodeEnv;
   });
 
   it('should return "Hello World! (var1: var1value)", use process.env value in forRoot options', async () => {

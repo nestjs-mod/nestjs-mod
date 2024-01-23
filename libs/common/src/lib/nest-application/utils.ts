@@ -17,21 +17,14 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
   wrapApplicationMethods,
   globalConfigurationOptions,
   globalEnvironmentsOptions,
-  disableInfrastructureModulesInProduction,
 }: BootstrapNestApplicationOptions & {
   wrapApplicationMethods: ('preWrapApplication' | 'wrapApplication' | 'postWrapApplication')[];
 }) {
-  if (disableInfrastructureModulesInProduction === undefined) {
-    disableInfrastructureModulesInProduction = true;
-  }
-
   let app: TNestApplication | undefined = undefined;
 
-  const categories =
-    disableInfrastructureModulesInProduction && !isInfrastructureMode()
-      ? NEST_MODULE_CATEGORY_LIST.filter((c) => c !== NestModuleCategory.infrastructure)
-      : NEST_MODULE_CATEGORY_LIST;
-
+  const categories = NEST_MODULE_CATEGORY_LIST.filter(
+    (category) => isInfrastructureMode() || category !== NestModuleCategory.infrastructure
+  );
   const pathNestModuleMetadata = () => {
     if (!project) {
       project = {} as ProjectOptions;
@@ -52,13 +45,13 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
     for (const category of categories) {
       let moduleIndex = 0;
       // any wrap methods can create new modules, we path all them
-      for (let index = 0; index < (modules[category as NestModuleCategory] ?? []).length; index++) {
+      for (let index = 0; index < (modules[category as NestModuleCategory] || []).length; index++) {
         if (!modules[category as NestModuleCategory]?.[moduleIndex].nestModuleMetadata?.project) {
           modules[category as NestModuleCategory]![moduleIndex].nestModuleMetadata!.project = project;
         } else {
           Object.assign(
             modules[category as NestModuleCategory]![moduleIndex].nestModuleMetadata!.project!,
-            project ?? {}
+            project || {}
           );
         }
         if (

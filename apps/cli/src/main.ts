@@ -5,11 +5,14 @@ import {
   DefaultNestApplicationListener,
   ProjectUtils,
   bootstrapNestApplication,
+  isInfrastructureMode,
 } from '@nestjs-mod/common';
 import { NESTJS_MOD_ALL_README_GENERATOR_FOOTER, NestjsModAllReadmeGenerator } from '@nestjs-mod/reports';
 import { join } from 'path';
 
 bootstrapNestApplication({
+  globalEnvironmentsOptions: { skipValidation: isInfrastructureMode() },
+  globalConfigurationOptions: { skipValidation: isInfrastructureMode() },
   project: {
     name: 'nestjs-mod',
     description: 'A command line interface (CLI) for create and manipulation with NestJS-mod application',

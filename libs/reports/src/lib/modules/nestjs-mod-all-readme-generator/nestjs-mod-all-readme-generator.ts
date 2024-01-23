@@ -137,7 +137,7 @@ ${moduleListInfo.map((m) => `| ${m.link} | ${m.category} | ${m.description?.spli
     const readmeContent = `
 # ${packageJsonInfo.name}
 
-${packageJsonInfo.description}
+${packageJsonInfo.description ? packageJsonInfo.description : ''}
 
 [![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] ${
       this.nestjsModAllReadmeGeneratorConfig.telegramGroup ? `[![Telegram bot][telegram-image]][telegram-url]` : ''
@@ -196,7 +196,7 @@ ${
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const readmeList: any[] = [];
     const readmeFileList = await fg(
-      (this.nestjsModAllReadmeGeneratorConfig?.utilsFolders ?? [])?.map((folder) => join(folder, '**', '*.md')),
+      (this.nestjsModAllReadmeGeneratorConfig?.utilsFolders || [])?.map((folder) => join(folder, '**', '*.md')),
       { dot: true }
     );
 
@@ -224,7 +224,7 @@ ${
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const moduleList: any[] = [];
     const contextName = 'nest';
-    for (const m of this.nestjsModAllReadmeGeneratorConfig?.modules ?? []) {
+    for (const m of this.nestjsModAllReadmeGeneratorConfig?.modules || []) {
       const allClasses = await m;
       const onlyNestModules = Object.entries(allClasses).filter(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -233,10 +233,11 @@ ${
       const asyncModules = onlyNestModules
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map(([, value]: [string, any]) =>
-          value[value.nestModuleMetadata['forRootMethodName'] ?? DEFAULT_FOR_ROOT_METHOD_NAME]({
+          value[value.nestModuleMetadata['forRootMethodName'] || DEFAULT_FOR_ROOT_METHOD_NAME]({
             contextName,
           })
         );
+      // collect new modules
       const tempPreparedModules = await bootstrapNestApplicationWithOptions({
         globalEnvironmentsOptions: { skipValidation: true },
         globalConfigurationOptions: { skipValidation: true },
@@ -247,12 +248,12 @@ ${
       const modules: any[] = [];
       for (const asyncModule of Object.entries(tempPreparedModules.modules)
         .map(([, m]) => m)
-        .flat() ?? []) {
+        .flat() || []) {
         await asyncModule;
         const moduleName = asyncModule.nestModuleMetadata!.moduleName;
         const category = asyncModule.nestModuleMetadata!.moduleCategory;
         if (category) {
-          asyncModule.moduleSettings = { [contextName]: asyncModule.moduleSettings?.[contextName] ?? {} };
+          asyncModule.moduleSettings = { [contextName]: asyncModule.moduleSettings?.[contextName] || {} };
 
           const description = asyncModule.nestModuleMetadata!.moduleDescription;
           if (!asyncModule.nestModuleMetadata?.moduleDisabled) {

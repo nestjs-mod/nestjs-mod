@@ -5,6 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { DynamicNestModuleMetadata, NestModuleCategory } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
+import { isInfrastructureMode } from '../../../utils/is-infrastructure';
 
 @ConfigModel()
 class DefaultNestApplicationInitializerConfig implements NestApplicationOptions {
@@ -104,14 +105,11 @@ export const { DefaultNestApplicationInitializer } = createNestModule({
   // creating application
   wrapApplication: async ({ modules, current }) => {
     @Module({
-      imports: Object.values(modules)
+      imports: Object.entries(modules)
+        .filter(([category]) => isInfrastructureMode() || category !== NestModuleCategory.infrastructure)
+        .map(([, value]) => value)
         .flat()
-        .filter(
-          (m: DynamicNestModuleMetadata) =>
-            !m.nestModuleMetadata?.moduleDisabled &&
-            !m.nestModuleMetadata?.preWrapApplication &&
-            !m.nestModuleMetadata?.postWrapApplication
-        ),
+        .filter((m: DynamicNestModuleMetadata) => !m.nestModuleMetadata?.moduleDisabled),
     })
     class BasicNestApp {}
     const app = await NestFactory.create(BasicNestApp, current?.staticConfiguration);

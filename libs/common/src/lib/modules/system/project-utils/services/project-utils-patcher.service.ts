@@ -28,7 +28,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
       this.logger.warn(`dotEnvService not set, updating not work`);
       return;
     }
-    const existsEnvJson = (await this.dotEnvService.read()) ?? {};
+    const existsEnvJson = (await this.dotEnvService.read()) || {};
     await this.dotEnvService.write(existsEnvJson);
   }
 

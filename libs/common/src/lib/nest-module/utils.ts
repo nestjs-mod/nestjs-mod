@@ -18,7 +18,7 @@ import { randomUUID } from 'crypto';
 import { Observable, Subject, concatMap, isObservable, takeUntil } from 'rxjs';
 import { ConfigModelOptions, ConfigModelRootOptions } from '../config-model/types';
 import { configTransform } from '../config-model/utils';
-import { EnvModelOptions } from '../env-model/types';
+import { EnvModelOptions, EnvModelRootOptions } from '../env-model/types';
 import { envTransform } from '../env-model/utils';
 import { defaultContextName } from '../utils/default-context-name';
 import { detectProviderName } from '../utils/detect-provider-name';
@@ -52,7 +52,7 @@ export function getWrapModuleMetadataMethods() {
   return nestModuleMetadataMethods;
 }
 
-function getNestModuleInternalUtils({ moduleName }: { moduleName: string }) {
+export function getNestModuleInternalUtils({ moduleName }: { moduleName: string }) {
   function getFeatureEnvironmentsToken(contextName?: string): InjectionToken {
     return `${moduleName}_${defaultContextName(contextName)}_feature_environments`;
   }
@@ -234,11 +234,11 @@ export function createNestModule<
   if (!nestModuleMetadata.logger) {
     nestModuleMetadata.logger = new ConsoleLogger('createNestModule');
   }
-  const forRootMethodName = nestModuleMetadata.forRootMethodName ?? DEFAULT_FOR_ROOT_METHOD_NAME;
-  const forRootAsyncMethodName = nestModuleMetadata.forRootAsyncMethodName ?? DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME;
-  const forFeatureMethodName = nestModuleMetadata.forFeatureMethodName ?? DEFAULT_FOR_FEATURE_METHOD_NAME;
+  const forRootMethodName = nestModuleMetadata.forRootMethodName || DEFAULT_FOR_ROOT_METHOD_NAME;
+  const forRootAsyncMethodName = nestModuleMetadata.forRootAsyncMethodName || DEFAULT_FOR_ROOT_ASYNC_METHOD_NAME;
+  const forFeatureMethodName = nestModuleMetadata.forFeatureMethodName || DEFAULT_FOR_FEATURE_METHOD_NAME;
   const forFeatureAsyncMethodName =
-    nestModuleMetadata.forFeatureAsyncMethodName ?? DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME;
+    nestModuleMetadata.forFeatureAsyncMethodName || DEFAULT_FOR_FEATURE_ASYNC_METHOD_NAME;
 
   const {
     defaultContextName,
@@ -443,7 +443,7 @@ export function createNestModule<
               contextName,
             }),
           } as TLinkOptions);
-    const sharedProviders = ((!nestModuleMetadata.sharedProviders ? [] : sharedProvidersArr) ?? []) as Provider[];
+    const sharedProviders = ((!nestModuleMetadata.sharedProviders ? [] : sharedProvidersArr) || []) as Provider[];
 
     const sharedImportsArr =
       !nestModuleMetadata?.sharedImports || Array.isArray(nestModuleMetadata.sharedImports)
@@ -462,7 +462,7 @@ export function createNestModule<
               contextName,
             }),
           } as TLinkOptions);
-    const sharedImports = (!nestModuleMetadata.sharedImports ? [] : sharedImportsArr) ?? [];
+    const sharedImports = (!nestModuleMetadata.sharedImports ? [] : sharedImportsArr) || [];
 
     const exports: ModuleMetadata['exports'] = [];
     const providers = sharedProviders
@@ -628,7 +628,7 @@ export function createNestModule<
   @Module({})
   class InternalNestModule {
     static [forFeatureAsyncMethodName](
-      asyncModuleOptions: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel>
+      asyncModuleOptions: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>
     ): DynamicNestModuleMetadata<
       TConfigurationModel,
       TStaticConfigurationModel,
@@ -654,14 +654,14 @@ export function createNestModule<
         if (wrapForFeatureAsyncModule) {
           return wrapForFeatureAsyncModule;
         }
-        if (newAsyncModuleOptions) {
-          asyncModuleOptions = newAsyncModuleOptions;
+        if (asyncModuleOptions && newAsyncModuleOptions) {
+          Object.assign(asyncModuleOptions, newAsyncModuleOptions);
         }
       }
 
-      const { featureConfiguration, featureEnvironments } = asyncModuleOptions ?? {};
+      const { featureConfiguration, featureEnvironments } = asyncModuleOptions || {};
 
-      let { featureConfigurationOptions, featureEnvironmentsOptions } = asyncModuleOptions ?? {};
+      let { featureConfigurationOptions, featureEnvironmentsOptions } = asyncModuleOptions || {};
       const contextName = defaultContextName(asyncModuleOptions?.contextName);
 
       if (!featureConfigurationOptions) {
@@ -704,13 +704,33 @@ export function createNestModule<
                   contextName,
                 }),
               } as TLinkOptions);
-        const imports = (!nestModuleMetadata.imports ? [] : importsArr) ?? [];
+        const imports = (!nestModuleMetadata.imports ? [] : importsArr) || [];
+
+        const exportsArr =
+          !nestModuleMetadata.exports || Array.isArray(nestModuleMetadata.exports)
+            ? nestModuleMetadata.exports
+            : (nestModuleMetadata.exports as any)({
+                project: nestModuleMetadata.project,
+                settingsModule,
+                featureModule,
+                featureConfiguration,
+                featureEnvironments,
+                globalConfigurationOptions: getRootConfigurationValidationOptions({
+                  nestModuleMetadata,
+                  contextName,
+                }),
+                globalEnvironmentsOptions: getRootEnvironmentsValidationOptions({
+                  nestModuleMetadata,
+                  contextName,
+                }),
+              } as TLinkOptions);
+        const exports = (!nestModuleMetadata.exports ? [] : exportsArr) || [];
 
         return {
           module: nameItClass(nestModuleMetadata.moduleName, InternalNestModule),
           providers: [createUniqProvider()],
           imports: [settingsModule, featureModule, ...imports],
-          exports: [featureModule],
+          exports: [...exports, settingsModule, featureModule],
         };
       }
 
@@ -722,7 +742,7 @@ export function createNestModule<
       Object.assign(result, {
         nestModuleMetadata: {
           ...nestModuleMetadata,
-          project: nestModuleMetadata.project ?? {},
+          project: nestModuleMetadata.project || {},
           ...nestModuleMetadataMethods
             .map((method) => ({ [method]: undefined }))
             .reduce((all, cur) => ({ ...all, ...cur }), {}),
@@ -732,10 +752,10 @@ export function createNestModule<
         // todo: try remove it
         pathNestModuleMetadata: (newNestModuleMetadata: Partial<NestModuleMetadata>) => {
           if (featureConfigurationOptions && nestModuleMetadata.globalConfigurationOptions) {
-            Object.assign(featureConfigurationOptions, nestModuleMetadata.globalConfigurationOptions ?? {});
+            Object.assign(featureConfigurationOptions, nestModuleMetadata.globalConfigurationOptions || {});
           }
           if (featureEnvironmentsOptions && nestModuleMetadata.globalEnvironmentsOptions) {
-            Object.assign(featureEnvironmentsOptions, nestModuleMetadata.globalEnvironmentsOptions ?? {});
+            Object.assign(featureEnvironmentsOptions, nestModuleMetadata.globalEnvironmentsOptions || {});
           }
           const keys = Object.keys(newNestModuleMetadata);
           for (let keyIdx = 0; keyIdx < keys.length; keyIdx++) {
@@ -744,7 +764,7 @@ export function createNestModule<
               Object.setPrototypeOf((nestModuleMetadata as any)[key], (newNestModuleMetadata as any)[key]);
             }
             if ((nestModuleMetadata as any)[key]) {
-              Object.assign((nestModuleMetadata as any)[key], (newNestModuleMetadata as any)[key] ?? {});
+              Object.assign((nestModuleMetadata as any)[key], (newNestModuleMetadata as any)[key] || {});
             } else {
               (nestModuleMetadata as any)[key] = (newNestModuleMetadata as any)[key];
             }
@@ -794,7 +814,7 @@ export function createNestModule<
     }
 
     static [forFeatureMethodName](
-      moduleOptions?: ForFeatureMethodOptions<TFeatureConfigurationModel>
+      moduleOptions?: ForFeatureMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>
     ): Promise<TDynamicModule> {
       return (this as any)[forFeatureAsyncMethodName]({
         ...moduleOptions,
@@ -837,7 +857,13 @@ export function createNestModule<
         TStaticConfigurationModel,
         TConfigurationModel,
         TEnvironmentsModel,
-        TStaticEnvironmentsModel
+        TStaticEnvironmentsModel,
+        ForRootMethodOptions<
+          TStaticConfigurationModel,
+          TConfigurationModel,
+          TEnvironmentsModel,
+          TStaticEnvironmentsModel
+        >
       >
     ): DynamicNestModuleMetadata<
       TConfigurationModel,
@@ -864,12 +890,11 @@ export function createNestModule<
         if (wrapForRootAsync) {
           return wrapForRootAsync;
         }
-        if (newAsyncModuleOptions) {
-          asyncModuleOptions = newAsyncModuleOptions;
+        if (asyncModuleOptions && newAsyncModuleOptions) {
+          Object.assign(asyncModuleOptions, newAsyncModuleOptions);
         }
       }
 
-      const { environments } = asyncModuleOptions ?? {};
       const contextName = defaultContextName(asyncModuleOptions?.contextName);
       let staticConfiguration: Partial<TStaticConfigurationModel> | undefined;
       let staticEnvironments: Partial<TStaticEnvironmentsModel> | undefined;
@@ -979,7 +1004,7 @@ export function createNestModule<
           if (nestModuleMetadata.staticConfigurationModel) {
             const obj = await configTransform({
               model: nestModuleMetadata.staticConfigurationModel,
-              data: staticConfiguration ?? {},
+              data: staticConfiguration || {},
               rootOptions: getRootConfigurationValidationOptions({
                 nestModuleMetadata,
                 asyncModuleOptions,
@@ -1001,7 +1026,7 @@ export function createNestModule<
                 asyncModuleOptions,
                 contextName,
               }),
-              data: staticEnvironments ?? {},
+              data: staticEnvironments || {},
             });
             moduleSettings[contextName].staticEnvironments = obj.info;
             staticEnvironments = obj.data as any;
@@ -1069,10 +1094,11 @@ export function createNestModule<
           if ('configuration' in asyncModuleOptions) {
             asyncOptionsProviderLoader = {
               provide: asyncConfigurationProviderLoaderToken,
-              useValue: asyncModuleOptions.configuration ?? {},
+              useValue: asyncModuleOptions.configuration || {},
             };
           }
         }
+
         // console.log({ n: nestModuleMetadata.moduleName, p: nestModuleMetadata.project });
         const { module: settingsModule } = getOrCreateSettingsModule(contextName);
         const { module: featureModule, featureConfiguration, featureEnvironments } = getFeatureModule({ contextName });
@@ -1099,7 +1125,7 @@ export function createNestModule<
                   contextName,
                 }),
               } as TLinkOptions);
-        const imports = (!nestModuleMetadata.imports ? [] : importsArr) ?? [];
+        const imports = (!nestModuleMetadata.imports ? [] : importsArr) || [];
 
         const asyncImportsArr =
           !asyncModuleOptions?.imports || Array.isArray(asyncModuleOptions.imports)
@@ -1123,7 +1149,7 @@ export function createNestModule<
                   contextName,
                 }),
               } as TLinkOptions);
-        const asyncImports = (!asyncModuleOptions?.imports ? [] : asyncImportsArr) ?? [];
+        const asyncImports = (!asyncModuleOptions?.imports ? [] : asyncImportsArr) || [];
 
         const controllersArr =
           !nestModuleMetadata.controllers || Array.isArray(nestModuleMetadata.controllers)
@@ -1147,7 +1173,7 @@ export function createNestModule<
                   contextName,
                 }),
               } as TLinkOptions);
-        const controllers = (!nestModuleMetadata.controllers ? [] : controllersArr) ?? [];
+        const controllers = (!nestModuleMetadata.controllers ? [] : controllersArr) || [];
 
         const providersArr =
           !nestModuleMetadata.providers || Array.isArray(nestModuleMetadata.providers)
@@ -1171,7 +1197,7 @@ export function createNestModule<
                   contextName,
                 }),
               } as TLinkOptions);
-        const providers = (!nestModuleMetadata.providers ? [] : providersArr) ?? [];
+        const providers = (!nestModuleMetadata.providers ? [] : providersArr) || [];
 
         const exportsArr =
           !nestModuleMetadata.exports || Array.isArray(nestModuleMetadata.exports)
@@ -1195,7 +1221,7 @@ export function createNestModule<
                   contextName,
                 }),
               } as TLinkOptions);
-        const exports = (!nestModuleMetadata.exports ? [] : exportsArr) ?? [];
+        const exports = (!nestModuleMetadata.exports ? [] : exportsArr) || [];
 
         return <TDynamicModule>{
           module: nameItClass(nestModuleMetadata.moduleName, InternalNestModule),
@@ -1213,7 +1239,7 @@ export function createNestModule<
                         moduleSettings[contextName] = {};
                       }
                       if (!nestModuleMetadata.environmentsModel) {
-                        return environments ?? {};
+                        return asyncModuleOptions?.environments || {};
                       }
                       const obj = await envTransform({
                         model: nestModuleMetadata.environmentsModel,
@@ -1222,7 +1248,7 @@ export function createNestModule<
                           asyncModuleOptions,
                           contextName,
                         }),
-                        data: environments ?? {},
+                        data: asyncModuleOptions?.environments || {},
                       });
                       moduleSettings[contextName].environments = obj.info;
                       Object.assign(emptyConfigOptions as any, obj.data);
@@ -1270,7 +1296,7 @@ export function createNestModule<
                         if (nestModuleMetadata.configurationModel) {
                           const obj = await configTransform({
                             model: nestModuleMetadata.configurationModel,
-                            data: configuration ?? {},
+                            data: configuration || {},
                             rootOptions: getRootConfigurationValidationOptions({
                               nestModuleMetadata,
                               asyncModuleOptions,
@@ -1316,7 +1342,7 @@ export function createNestModule<
                       const obj = await configTransform({
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         model: nestModuleMetadata.staticConfigurationModel!,
-                        data: staticConfiguration ?? {},
+                        data: staticConfiguration || {},
                         rootOptions: getRootConfigurationValidationOptions({
                           nestModuleMetadata,
                           asyncModuleOptions,
@@ -1345,7 +1371,7 @@ export function createNestModule<
       Object.assign(result, {
         nestModuleMetadata: {
           ...nestModuleMetadata,
-          project: nestModuleMetadata.project ?? {},
+          project: nestModuleMetadata.project || {},
           ...nestModuleMetadataMethods
             .map((method) =>
               nestModuleMetadata[method]
@@ -1384,10 +1410,10 @@ export function createNestModule<
           for (let keyIdx = 0; keyIdx < keys.length; keyIdx++) {
             const key = keys[keyIdx];
             if ((newNestModuleMetadata as any)[key].constructor !== Object) {
-              Object.setPrototypeOf((nestModuleMetadata as any)[key], (newNestModuleMetadata as any)[key] ?? {});
+              Object.setPrototypeOf((nestModuleMetadata as any)[key], (newNestModuleMetadata as any)[key] || {});
             }
             if ((nestModuleMetadata as any)[key]) {
-              Object.assign((nestModuleMetadata as any)[key], (newNestModuleMetadata as any)[key] ?? {});
+              Object.assign((nestModuleMetadata as any)[key], (newNestModuleMetadata as any)[key] || {});
             } else {
               (nestModuleMetadata as any)[key] = (newNestModuleMetadata as any)[key];
             }
@@ -1469,7 +1495,13 @@ export function createNestModule<
             TStaticConfigurationModel,
             TConfigurationModel,
             TEnvironmentsModel,
-            TStaticEnvironmentsModel
+            TStaticEnvironmentsModel,
+            ForRootMethodOptions<
+              TStaticConfigurationModel,
+              TConfigurationModel,
+              TEnvironmentsModel,
+              TStaticEnvironmentsModel
+            >
           >
         ) => Promise<TDynamicModule>
       >
@@ -1504,15 +1536,16 @@ export function createNestModule<
       TStaticConfigurationModel,
       TConfigurationModel,
       TEnvironmentsModel,
-      TStaticEnvironmentsModel
+      TStaticEnvironmentsModel,
+      ForRootMethodOptions<TStaticConfigurationModel, TConfigurationModel, TEnvironmentsModel, TStaticEnvironmentsModel>
     >;
     contextName: string;
   }): ConfigModelRootOptions | undefined {
     // console.log('getRootConfigurationValidationOptions', nestModuleMetadata.moduleName);
-    const { name: globalName, ...globalOptions } = nestModuleMetadata.globalConfigurationOptions ?? {};
-    const { contextName: asyncContextName, ...options } = asyncModuleOptions ?? {};
+    const { name: globalName, ...globalOptions } = nestModuleMetadata.globalConfigurationOptions || {};
+    const { contextName: asyncContextName, configurationOptions } = asyncModuleOptions || {};
     const both = {
-      ...options,
+      ...configurationOptions,
       ...nestModuleMetadata.configurationOptions,
       ...globalOptions,
     };
@@ -1523,9 +1556,10 @@ export function createNestModule<
     }
     if (asyncContextName && asyncContextName !== defaultContextName()) {
       nameArr.push(asyncContextName);
-    }
-    if (contextName && contextName !== defaultContextName()) {
-      nameArr.push(contextName);
+    } else {
+      if (contextName && contextName !== defaultContextName()) {
+        nameArr.push(contextName);
+      }
     }
     if (both.name && both.name !== defaultContextName()) {
       nameArr.push(both.name);
@@ -1563,14 +1597,15 @@ export function createNestModule<
       TStaticConfigurationModel,
       TConfigurationModel,
       TEnvironmentsModel,
-      TStaticEnvironmentsModel
+      TStaticEnvironmentsModel,
+      ForRootMethodOptions<TStaticConfigurationModel, TConfigurationModel, TEnvironmentsModel, TStaticEnvironmentsModel>
     >;
     contextName: string;
-  }): ConfigModelRootOptions | undefined {
-    const { name: globalName, ...globalOptions } = nestModuleMetadata.globalEnvironmentsOptions ?? {};
-    const { contextName: asyncContextName, ...options } = asyncModuleOptions ?? {};
+  }): EnvModelRootOptions | undefined {
+    const { name: globalName, ...globalOptions } = nestModuleMetadata.globalEnvironmentsOptions || {};
+    const { contextName: asyncContextName, environmentsOptions } = asyncModuleOptions || {};
     const both = {
-      ...options,
+      ...environmentsOptions,
       ...nestModuleMetadata.environmentsOptions,
       ...globalOptions,
     };
@@ -1581,9 +1616,10 @@ export function createNestModule<
     }
     if (asyncContextName && asyncContextName !== defaultContextName()) {
       nameArr.push(asyncContextName);
-    }
-    if (contextName && contextName !== defaultContextName()) {
-      nameArr.push(contextName);
+    } else {
+      if (contextName && contextName !== defaultContextName()) {
+        nameArr.push(contextName);
+      }
     }
     if (both.name && both.name !== defaultContextName()) {
       nameArr.push(both.name);

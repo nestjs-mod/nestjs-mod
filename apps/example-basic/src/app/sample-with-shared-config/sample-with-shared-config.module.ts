@@ -29,7 +29,7 @@ export const { SampleWithSharedConfig } = createNestModule({
   featureConfigurationModel: SampleWithSharedConfigFeatureConfiguration,
   featureEnvironmentsModel: SampleWithSharedConfigFeatureEnvironments,
   controllers: ({ staticConfiguration, staticEnvironments }) => [
-    getSampleWithSharedConfigController(staticConfiguration?.endpoint ?? staticEnvironments?.endpoint),
+    getSampleWithSharedConfigController(staticConfiguration?.endpoint || staticEnvironments?.endpoint),
   ],
   sharedProviders: [SampleWithSharedConfigService],
   sharedImports: [SharedImport1Module, SharedImport2Module],

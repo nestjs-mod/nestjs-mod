@@ -40,7 +40,7 @@ bootstrapNestApplication({
           },
           postListen: async ({ current }) => {
             Logger.log(
-              `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
+              `🚀 Application is running on: http://${current.staticEnvironments?.hostname || 'localhost'}:${
                 current.staticEnvironments?.port
               }/${globalPrefix}`
             );
