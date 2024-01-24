@@ -45,10 +45,12 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
     for (const category of categories) {
       // any wrap methods can create new modules, we path all them
       for (let index = 0; index < (modules[category as NestModuleCategory] || []).length; index++) {
-        if (!modules[category as NestModuleCategory]?.[index].nestModuleMetadata?.project) {
-          modules[category as NestModuleCategory]![index].nestModuleMetadata!.project = project;
-        } else {
-          Object.assign(modules[category as NestModuleCategory]![index].nestModuleMetadata!.project!, project || {});
+        if (modules[category as NestModuleCategory]?.[index]?.nestModuleMetadata) {
+          if (!modules[category as NestModuleCategory]?.[index].nestModuleMetadata?.project) {
+            modules[category as NestModuleCategory]![index].nestModuleMetadata!.project = project;
+          } else {
+            Object.assign(modules[category as NestModuleCategory]![index].nestModuleMetadata!.project!, project || {});
+          }
         }
         if (
           modules[category as NestModuleCategory] &&
