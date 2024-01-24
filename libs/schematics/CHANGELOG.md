@@ -1,3 +1,10 @@
+## [2.1.5](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.1.4...schematics-v2.1.5) (2024-01-24)
+
+
+### Bug Fixes
+
+* update code for run pathNestModuleMetadata to root modules ([c2889ba](https://github.com/nestjs-mod/nestjs-mod/commit/c2889ba017510ad5d8398793c0a0970cd2d153ef))
+
 ## [2.1.4](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.1.3...schematics-v2.1.4) (2024-01-23)
 
 
