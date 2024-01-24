@@ -13,5 +13,5 @@ export const nestJsModDeps = {
 };
 export const nestJsModDevDeps = {
   '@nestjs-mod/testing': '2.5.2',
-  '@nestjs-mod/schematics': '2.1.6'
+  '@nestjs-mod/schematics': '2.1.7'
 };
