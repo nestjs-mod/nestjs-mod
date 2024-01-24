@@ -42,8 +42,7 @@
     "@nx/node": "17.2.8",
     "@nrwl/devkit": "17.2.8",
     "case-anything": "^2.1.13",
-    "typescript": "~5.2.2",
-    "@nestjs-mod/common": "*"
+    "typescript": "~5.2.2"
   },
   "type": "commonjs",
   "main": "./src/index.js",

@@ -1,8 +1,8 @@
-import { merge } from '@nestjs-mod/common';
 import type { Tree } from '@nrwl/devkit';
 import { updateJson } from '@nrwl/devkit';
 import { constantCase } from 'case-anything';
 import { join } from 'path';
+import { merge } from '../../../utils/node-defaults';
 import getPorts from './get-port.utils';
 import { PackageJsonUtils, SCRIPTS_KEY_NAME } from './package-json.utils';
 

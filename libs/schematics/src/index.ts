@@ -21,4 +21,5 @@ export * from './lib/generators/utils/normalize-options';
 export * from './lib/generators/utils/run-nest-schematic';
 export * from './lib/generators/utils/testing';
 export * from './lib/generators/utils/types';
+export * from './lib/utils/node-defaults';
 export * from './lib/utils/versions';
