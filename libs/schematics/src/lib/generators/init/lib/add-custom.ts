@@ -79,7 +79,7 @@ export function addScript(tree: Tree, projectName?: string) {
         'dep-graph': 'npm run nx -- dep-graph',
         'nx:many': `npm run nx -- run-many --exclude=${json.name} --all`,
         'make-ts-list': './node_modules/.bin/rucken make-ts-list',
-        prepare: 'husky install',
+        // "prepare": "npx -y husky install",
         'manual:prepare': 'npm run generate && npm run build && npm run docs:infrastructure && npm run test',
       });
 
