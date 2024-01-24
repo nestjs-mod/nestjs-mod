@@ -1,3 +1,10 @@
+## [2.5.3](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.5.2...testing-v2.5.3) (2024-01-24)
+
+
+### Bug Fixes
+
+* update readme ([851f5d0](https://github.com/nestjs-mod/nestjs-mod/commit/851f5d0f2f7b96449b604489e31f8c5e3149c02b))
+
 ## [2.5.2](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.5.1...testing-v2.5.2) (2024-01-24)
 
 
