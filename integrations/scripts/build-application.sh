@@ -65,7 +65,7 @@ npm install --save-dev --no-cache ../../integrations/app/lib/common/nestjs-mod-c
 npm install --save-dev --no-cache ../../integrations/app/lib/reports/nestjs-mod-reports-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/lib/testing/nestjs-mod-testing-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
-npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run tsc:lint && npm run build && npm run docs:infrastructure && npm run test
+npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true && npm run docs:infrastructure && npm run test
 
 npm run nx -- build server
 kill -9 $(lsof -t -i:3000) | echo "Killed"
