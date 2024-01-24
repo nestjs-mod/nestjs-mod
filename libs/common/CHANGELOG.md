@@ -1,3 +1,10 @@
+## [2.5.2](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.5.1...common-v2.5.2) (2024-01-24)
+
+
+### Bug Fixes
+
+* update code for run pathNestModuleMetadata to root modules ([c2889ba](https://github.com/nestjs-mod/nestjs-mod/commit/c2889ba017510ad5d8398793c0a0970cd2d153ef))
+
 ## [2.5.1](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.5.0...common-v2.5.1) (2024-01-23)
 
 
