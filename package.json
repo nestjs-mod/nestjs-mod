@@ -49,6 +49,7 @@
     "make-ts-list": "./node_modules/.bin/rucken make-ts-list",
     "prepare": "husky install",
     "update:nestjs-mod-example": "bash ./integrations/scripts/update-nestjs-mod-example.sh",
+    "check-contrib": "bash ./integrations/scripts/check-contrib.sh",
     "manual:prepare": "npm run schematics-version-bump && yes | cp -rf ./README.md ./libs/schematics && yes | cp -rf ./README.md ./libs/schematics/src/lib/generators/init/files && npm run generate && npm run build && npm run docs:infrastructure && npm run test",
     "_____schematics_____": "_____schematics_____",
     "build:schematics": "npm run nx -- build schematics",
