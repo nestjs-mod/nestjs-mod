@@ -447,14 +447,14 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
   }
 }
 @Injectable()
-export class InfrastructureMarkdownReportStorage {
+export class InfrastructureMarkdownReportStorageService {
   report!: string;
 }
-export const { InfrastructureMarkdownReport } = createNestModule({
-  moduleName: 'InfrastructureMarkdownReport',
-  moduleDescription: 'Infrastructure markdown report',
-  moduleCategory: NestModuleCategory.core,
-  sharedProviders: [InfrastructureMarkdownReportStorage],
+export const { InfrastructureMarkdownReportStorage } = createNestModule({
+  moduleName: 'InfrastructureMarkdownReportStorage',
+  moduleDescription: 'Infrastructure markdown report storage',
+  moduleCategory: NestModuleCategory.infrastructure,
+  sharedProviders: [InfrastructureMarkdownReportStorageService],
 });
 
 function getInfrastructureMarkdownReportGeneratorBootstrap({
@@ -465,7 +465,7 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
   class InfrastructureMarkdownReportGeneratorBootstrap implements OnApplicationBootstrap {
     constructor(
       private readonly dynamicNestModuleMetadataMarkdownReportGenerator: DynamicNestModuleMetadataMarkdownReportGenerator,
-      private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorage,
+      private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorageService,
       private readonly infrastructureMarkdownReportGeneratorConfiguration: InfrastructureMarkdownReportGeneratorConfiguration
     ) {}
 
@@ -536,7 +536,7 @@ export const { InfrastructureMarkdownReportGenerator } = createNestModule({
           }),
         ],
         imports: [
-          InfrastructureMarkdownReport.forFeature({
+          InfrastructureMarkdownReportStorage.forFeature({
             featureModuleName: 'InfrastructureMarkdownReportGenerator',
             contextName: current.asyncModuleOptions.contextName,
           }),

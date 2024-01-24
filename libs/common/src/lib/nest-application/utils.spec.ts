@@ -4,15 +4,15 @@ import { IsNotEmpty } from 'class-validator';
 import { ConfigModel, ConfigModelProperty } from '../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../env-model/decorators';
 import {
-  InfrastructureMarkdownReport,
   InfrastructureMarkdownReportGenerator,
   InfrastructureMarkdownReportStorage,
+  InfrastructureMarkdownReportStorageService,
 } from '../modules/infrastructure/infrastructure-markdown-report/infrastructure-markdown-report';
 import { DefaultNestApplicationInitializer } from '../modules/system/default-nest-application/default-nest-application-initializer';
 import { DefaultNestApplicationListener } from '../modules/system/default-nest-application/default-nest-application-listener';
+import { InjectableFeatureConfigurationType } from '../nest-module/types';
 import { createNestModule, getNestModuleDecorators } from '../nest-module/utils';
 import { bootstrapNestApplication } from './utils';
-import { InjectableFeatureConfigurationType } from '../nest-module/types';
 
 describe('NestJS application: Utils', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -439,7 +439,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class AppReportService {
-        constructor(private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorage) {}
+        constructor(private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorageService) {}
 
         getReport() {
           return this.infrastructureMarkdownReportStorage.report;
@@ -448,7 +448,7 @@ describe('NestJS application: Utils', () => {
 
       const { App1Module } = createNestModule({
         moduleName: 'App1Module',
-        imports: [InfrastructureMarkdownReport.forFeature()],
+        imports: [InfrastructureMarkdownReportStorage.forFeature()],
         providers: [AppReportService],
       });
 
@@ -456,7 +456,10 @@ describe('NestJS application: Utils', () => {
       const app = await bootstrapNestApplication({
         project: { name: 'TestApp', description: 'Test application' },
         modules: {
-          infrastructure: [InfrastructureMarkdownReport.forRoot(), InfrastructureMarkdownReportGenerator.forRoot()],
+          infrastructure: [
+            InfrastructureMarkdownReportStorage.forRoot(),
+            InfrastructureMarkdownReportGenerator.forRoot(),
+          ],
           system: [
             DefaultNestApplicationInitializer.forRoot(),
             DefaultNestApplicationListener.forRoot({
@@ -523,11 +526,11 @@ describe('NestJS application: Utils', () => {
     ## Infrastructure modules
     Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.
 
-    ### InfrastructureMarkdownReport
-    Infrastructure markdown report
+    ### InfrastructureMarkdownReportStorage
+    Infrastructure markdown report storage
 
     #### Shared providers
-    \`InfrastructureMarkdownReportStorage\`
+    \`InfrastructureMarkdownReportStorageService\`
 
 
     ### InfrastructureMarkdownReportGenerator

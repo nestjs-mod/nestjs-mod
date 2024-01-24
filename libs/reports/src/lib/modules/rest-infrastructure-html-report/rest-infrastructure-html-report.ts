@@ -1,6 +1,6 @@
 import {
-  InfrastructureMarkdownReport,
   InfrastructureMarkdownReportStorage,
+  InfrastructureMarkdownReportStorageService,
   NestModuleCategory,
   createNestModule,
 } from '@nestjs-mod/common';
@@ -9,7 +9,7 @@ import markdownit from 'markdown-it';
 
 @Controller()
 class RestInfrastructureHtmlReportController {
-  constructor(private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorage) {}
+  constructor(private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorageService) {}
   @Get('report')
   async getReport(): Promise<string> {
     const md = markdownit({
@@ -24,7 +24,7 @@ class RestInfrastructureHtmlReportController {
 export const { RestInfrastructureHtmlReport } = createNestModule({
   moduleName: 'RestInfrastructureHtmlReport',
   moduleDescription: 'Rest infrastructure HTML-report',
-  imports: [InfrastructureMarkdownReport.forFeature({ featureModuleName: 'RestInfrastructureHtmlReport' })],
+  imports: [InfrastructureMarkdownReportStorage.forFeature({ featureModuleName: 'RestInfrastructureHtmlReport' })],
   controllers: [RestInfrastructureHtmlReportController],
   moduleCategory: NestModuleCategory.infrastructure,
 });

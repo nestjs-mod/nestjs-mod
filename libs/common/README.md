@@ -26,8 +26,8 @@ npm i --save @nestjs-mod/common
 
 | Link | Category | Description |
 | ---- | -------- | ----------- |
-| [InfrastructureMarkdownReport](#infrastructuremarkdownreport) | core | Infrastructure markdown report |
 | [InfrastructureMarkdownReportGenerator](#infrastructuremarkdownreportgenerator) | infrastructure | Infrastructure markdown report generator. |
+| [InfrastructureMarkdownReportStorage](#infrastructuremarkdownreportstorage) | infrastructure | Infrastructure markdown report storage |
 | [DefaultNestApplicationInitializer](#defaultnestapplicationinitializer) | system | Default NestJS application initializer, no third party utilities required. |
 | [DefaultNestApplicationListener](#defaultnestapplicationlistener) | system | Default NestJS application listener, no third party utilities required. |
 | [ProjectUtils](#projectutils) | system | Utilities for setting global application parameters, such as project name, description, and settings validation parameters. |
@@ -526,15 +526,6 @@ bootstrap();
 
 ## Modules descriptions
 
-### InfrastructureMarkdownReport
-Infrastructure markdown report
-
-#### Shared providers
-`InfrastructureMarkdownReportStorage`
-
-[Back to Top](#modules)
-
----
 ### InfrastructureMarkdownReportGenerator
 Infrastructure markdown report generator.
 
@@ -548,6 +539,15 @@ Infrastructure markdown report generator.
 | ------ | ----------- | ----------- | ------- | ----- |
 |`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|-|
 |`skipEmptySettings`|Skip empty values of env and config models|**optional**|-|-|
+
+[Back to Top](#modules)
+
+---
+### InfrastructureMarkdownReportStorage
+Infrastructure markdown report storage
+
+#### Shared providers
+`InfrastructureMarkdownReportStorageService`
 
 [Back to Top](#modules)
 

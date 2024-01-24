@@ -3,7 +3,7 @@ import { bootstrapNestApplication } from '../../../nest-application/utils';
 import { createNestModule } from '../../../nest-module/utils';
 import {
   InfrastructureMarkdownReportGenerator,
-  InfrastructureMarkdownReportStorage,
+  InfrastructureMarkdownReportStorageService,
 } from '../../infrastructure/infrastructure-markdown-report/infrastructure-markdown-report';
 import { DefaultNestApplicationInitializer } from '../../system/default-nest-application/default-nest-application-initializer';
 import { DefaultNestApplicationListener } from '../../system/default-nest-application/default-nest-application-listener';
@@ -49,7 +49,7 @@ describe('Project Utils', () => {
         infrastructure: [InfrastructureMarkdownReportGenerator.forRoot()],
       },
     });
-    const infrastructureMarkdownReportStorage = app.get(InfrastructureMarkdownReportStorage);
+    const infrastructureMarkdownReportStorage = app.get(InfrastructureMarkdownReportStorageService);
 
     expect(infrastructureMarkdownReportStorage.report).toContain('# TestApp');
     expect(infrastructureMarkdownReportStorage.report).toContain('Test application');
@@ -76,7 +76,7 @@ describe('Project Utils', () => {
         infrastructure: [InfrastructureMarkdownReportGenerator.forRoot()],
       },
     });
-    const infrastructureMarkdownReportStorage = app.get(InfrastructureMarkdownReportStorage);
+    const infrastructureMarkdownReportStorage = app.get(InfrastructureMarkdownReportStorageService);
 
     expect(infrastructureMarkdownReportStorage.report).toContain('# TestApp');
     expect(infrastructureMarkdownReportStorage.report).toContain('Test application');
@@ -102,7 +102,7 @@ describe('Project Utils', () => {
         infrastructure: [InfrastructureMarkdownReportGenerator.forRoot()],
       },
     });
-    const infrastructureMarkdownReportStorage = app.get(InfrastructureMarkdownReportStorage);
+    const infrastructureMarkdownReportStorage = app.get(InfrastructureMarkdownReportStorageService);
 
     expect(infrastructureMarkdownReportStorage.report).toContain('# test-app');
     expect(infrastructureMarkdownReportStorage.report).toContain('Description for test-app');
@@ -149,7 +149,7 @@ describe('Project Utils', () => {
       },
     });
 
-    const infrastructureMarkdownReportStorage = app.get(InfrastructureMarkdownReportStorage);
+    const infrastructureMarkdownReportStorage = app.get(InfrastructureMarkdownReportStorageService);
 
     expect(infrastructureMarkdownReportStorage.report).toContain('# test-app');
     expect(infrastructureMarkdownReportStorage.report).toContain('Description for test-app');
