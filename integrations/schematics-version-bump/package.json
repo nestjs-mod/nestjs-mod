@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "@nestjs-mod/testing": "2.5.2",
-    "@nestjs-mod/schematics": "2.1.6"
+    "@nestjs-mod/schematics": "2.1.7"
   },
   "dependencies": {
     "@nestjs-mod/common": "2.5.2",

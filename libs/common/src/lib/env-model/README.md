@@ -81,13 +81,5 @@ async function bootstrap3() {
   await app.listen(3000);
 }
 
-// Let's try to launch the application - Example of use environment variables and contextName and start without error.
-async function bootstrap3() {
-  process.env['CTX_OPTION'] = 'value1';
-  const app = await NestFactory.create(AppModule.forRoot({ contextName: 'CTX' }));
-  console.log(app.get(AppEnv)); // output: { option: 'value1' }
-  await app.listen(3000);
-}
-
 bootstrap3();
 ```

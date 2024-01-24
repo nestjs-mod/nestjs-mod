@@ -39,7 +39,9 @@ import { IsNotEmpty } from 'class-validator';
 
 // App1Module
 
-const { InjectFeatures } = getNestModuleDecorators({ moduleName: 'App1Module' });
+const { InjectFeatures } = getNestModuleDecorators({
+  moduleName: 'App1Module',
+});
 
 @ConfigModel()
 class AppFeatureConfig {
@@ -90,7 +92,12 @@ class App2Service {
 
 const { App2Module } = createNestModule({
   moduleName: 'App2Module',
-  imports: [App1Module.forFeature({ featureOptionConfig: 'featureOptionConfig-app2' })],
+  imports: [
+    App1Module.forFeature({
+      featureModuleName: 'App2Module',
+      featureConfiguration: { featureOptionConfig: 'featureOptionConfig-app2' },
+    }),
+  ],
   providers: [App2Service],
   configurationModel: App2Config,
 });
@@ -117,7 +124,12 @@ class App3Service {
 
 const { App3Module } = createNestModule({
   moduleName: 'App3Module',
-  imports: [App1Module.forFeature({ featureOptionConfig: 'featureOptionConfig-app3' })],
+  imports: [
+    App1Module.forFeature({
+      featureModuleName: 'App2Module',
+      featureConfiguration: { featureOptionConfig: 'featureOptionConfig-app3' },
+    }),
+  ],
   providers: [App3Service],
   environmentsModel: App3Env,
 });
@@ -133,7 +145,6 @@ const { AppModule } = createNestModule({
   ],
 });
 
-// Let's try to launch the application
 async function bootstrap() {
   const app = await NestFactory.create(AppModule.forRoot());
   const appFeatureScannerService = app.get(AppFeaturesService);
