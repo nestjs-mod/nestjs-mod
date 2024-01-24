@@ -1,3 +1,10 @@
+## [2.1.8](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.1.7...schematics-v2.1.8) (2024-01-24)
+
+
+### Bug Fixes
+
+* remove `husky install` script from generated application [skip integrations, skip contrib] ([c0616de](https://github.com/nestjs-mod/nestjs-mod/commit/c0616de29fe0c4e54a224d5e92d56eea0fdb1bb0))
+
 ## [2.1.7](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.1.6...schematics-v2.1.7) (2024-01-24)
 
 
