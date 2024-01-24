@@ -1,3 +1,11 @@
+## [2.1.7](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.1.6...schematics-v2.1.7) (2024-01-24)
+
+
+### Bug Fixes
+
+* remove dependencies to @nestjs-mod/common ([dcfade0](https://github.com/nestjs-mod/nestjs-mod/commit/dcfade05701fc136cf5f2c888a9f565149375266))
+* remove dependencies to @nestjs-mod/common [skip integrations, skip contrib] ([400e36e](https://github.com/nestjs-mod/nestjs-mod/commit/400e36e13ad18a8a8851dc0ac91246abef4aeac1))
+
 ## [2.1.6](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.1.5...schematics-v2.1.6) (2024-01-24)
 
 
