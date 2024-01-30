@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.1.8...schematics-v2.2.0) (2024-01-30)
+
+
+### Features
+
+* the infrastructure report has been expanded, examples of working with libraries have been added [skip contrib] ([60db271](https://github.com/nestjs-mod/nestjs-mod/commit/60db271d1d87eb66a4190d087efd808f771d20a9))
+
 ## [2.1.8](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.1.7...schematics-v2.1.8) (2024-01-24)
 
 
