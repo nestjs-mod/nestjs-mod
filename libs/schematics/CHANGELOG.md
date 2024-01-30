@@ -1,3 +1,10 @@
+## [2.2.4](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.2.3...schematics-v2.2.4) (2024-01-30)
+
+
+### Bug Fixes
+
+* update logic for generate package json scripts, add order for categories ([bb95cf5](https://github.com/nestjs-mod/nestjs-mod/commit/bb95cf56b668f65c7876bce89bead99186bb61e4))
+
 ## [2.2.3](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.2.2...schematics-v2.2.3) (2024-01-30)
 
 
