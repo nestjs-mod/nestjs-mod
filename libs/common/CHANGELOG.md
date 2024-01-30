@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.5.3...common-v2.6.0) (2024-01-30)
+
+
+### Features
+
+* the infrastructure report has been expanded, examples of working with libraries have been added [skip contrib] ([60db271](https://github.com/nestjs-mod/nestjs-mod/commit/60db271d1d87eb66a4190d087efd808f771d20a9))
+
 ## [2.5.3](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.5.2...common-v2.5.3) (2024-01-24)
 
 
