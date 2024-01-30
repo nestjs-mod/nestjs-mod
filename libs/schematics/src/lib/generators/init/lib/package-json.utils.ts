@@ -30,8 +30,8 @@ export type PackageJsonCategoryType = Record<string, PackageJsonScriptType>;
 export type PackageJsonType = ProjectOptions & {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
-  dependenciesInfo?: Record<string, {docs:true}>;
-  devDependenciesInfo?: Record<string, {docs:true}>;
+  dependenciesInfo?: Record<string, { docs: true }>;
+  devDependenciesInfo?: Record<string, { docs: true }>;
   [SCRIPTS_KEY_NAME]?: Record<string, PackageJsonCategoryType>;
   [SCRIPTS_COMMENTS_KEY_NAME]?: Record<string, string[]>;
 };
@@ -39,8 +39,8 @@ export type PackageJsonType = ProjectOptions & {
 export type BasicPackageJsonType = ProjectOptions & {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
-  dependenciesInfo?: Record<string, {docs:true}>;
-  devDependenciesInfo?: Record<string, {docs:true}>;
+  dependenciesInfo?: Record<string, { docs: true }>;
+  devDependenciesInfo?: Record<string, { docs: true }>;
   [SCRIPTS_KEY_NAME]?: Record<string, string>;
   [SCRIPTS_COMMENTS_KEY_NAME]?: Record<string, string[]>;
 };
@@ -70,11 +70,14 @@ export class PackageJsonUtils {
   toStructure(basicJson: BasicPackageJsonType): PackageJsonType {
     let categoryIsExists = false;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const def: any = {};
+    const def: PackageJsonCategoryType = {};
     for (const keyD of Object.keys(basicJson[SCRIPTS_KEY_NAME] || {})) {
       if (!keyD.startsWith('_____') && !categoryIsExists) {
-        def[keyD] = basicJson[SCRIPTS_KEY_NAME]![keyD];
-        delete basicJson[SCRIPTS_KEY_NAME]![keyD];
+        def[keyD] = {
+          commands: basicJson[SCRIPTS_KEY_NAME]?.[keyD].split('&&').map((s) => s.trim()) || [],
+          comments: basicJson[SCRIPTS_COMMENTS_KEY_NAME]?.[keyD] || [],
+        };
+        delete basicJson[SCRIPTS_KEY_NAME]?.[keyD];
       } else {
         categoryIsExists = true;
       }
@@ -83,7 +86,12 @@ export class PackageJsonUtils {
     const structuredJson = { ...basicJson } as PackageJsonType;
 
     const scripts: PackageJsonType[typeof SCRIPTS_KEY_NAME] = {};
+
     let category: string = DEFAULT_SCRIPTS_CATEGORY_NAME;
+
+    if (!categoryIsExists) {
+      scripts[category] = def;
+    }
 
     for (const key of Object.keys(basicJson[SCRIPTS_KEY_NAME] || {})) {
       if (key.startsWith('_____')) {
@@ -100,33 +108,61 @@ export class PackageJsonUtils {
         }
         scripts[category][key].commands = basicJson[SCRIPTS_KEY_NAME]?.[key]?.split(' && ') || [];
         scripts[category][key].comments = basicJson[SCRIPTS_COMMENTS_KEY_NAME]?.[key] || [];
-        if (category === DEFAULT_SCRIPTS_CATEGORY_NAME && structuredJson[SCRIPTS_KEY_NAME]?.[key]) {
-          delete structuredJson[SCRIPTS_KEY_NAME][key];
-          if (basicJson && basicJson[SCRIPTS_KEY_NAME]) {
-            delete basicJson[SCRIPTS_KEY_NAME][key];
-          }
-        }
       }
     }
-    structuredJson[SCRIPTS_KEY_NAME] = scripts;
+
+    const { utils, ...other } = scripts;
+    structuredJson[SCRIPTS_KEY_NAME] = {
+      ...Object.entries(other)
+        .sort((a, b) => {
+          let posA = 100,
+            posB = 100;
+          if (a[0].includes('dev')) {
+            posA = 1;
+          }
+          if (b[0].includes('dev')) {
+            posB = 1;
+          }
+          if (a[0].includes('prod')) {
+            posA = 2;
+          }
+          if (b[0].includes('prod')) {
+            posB = 2;
+          }
+          if (a[0].includes('doc')) {
+            posA = 3;
+          }
+          if (b[0].includes('doc')) {
+            posB = 3;
+          }
+          if (a[0].includes('test')) {
+            posA = 4;
+          }
+          if (b[0].includes('test')) {
+            posB = 4;
+          }
+          if (a[0].includes('lint')) {
+            posA = 5;
+          }
+          if (b[0].includes('lint')) {
+            posB = 5;
+          }
+          return posA - posB;
+        })
+        .reduce((all, [key, value]) => ({ ...all, [key]: value }), {}),
+      utils,
+    };
 
     return structuredJson;
   }
 
   toPlain(basicJson: BasicPackageJsonType, structuredJson: PackageJsonType) {
     const categories = Object.keys(structuredJson[SCRIPTS_KEY_NAME] || {});
+    basicJson[SCRIPTS_KEY_NAME] = {};
+    basicJson[SCRIPTS_COMMENTS_KEY_NAME] = {};
     for (const category of categories) {
-      if (!basicJson[SCRIPTS_KEY_NAME]) {
-        basicJson[SCRIPTS_KEY_NAME] = {};
-      }
-      if (!basicJson[SCRIPTS_COMMENTS_KEY_NAME]) {
-        basicJson[SCRIPTS_COMMENTS_KEY_NAME] = {};
-      }
       const categoryName = `_____${category}_____`;
-      if (
-        !basicJson[SCRIPTS_KEY_NAME][categoryName] &&
-        (categories.length > 0 || category !== DEFAULT_SCRIPTS_CATEGORY_NAME)
-      ) {
+      if (!basicJson[SCRIPTS_KEY_NAME][categoryName]) {
         basicJson[SCRIPTS_KEY_NAME][categoryName] = categoryName;
       }
       for (const key of Object.keys(structuredJson[SCRIPTS_KEY_NAME]?.[category] || {})) {

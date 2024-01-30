@@ -84,7 +84,7 @@ export function addScript(tree: Tree, projectName?: string) {
       packageJsonUtils.addScripts(
         'dev infra',
         {
-          [`start:dev:${projectName}`]: {
+          [`serve:dev:${projectName}`]: {
             commands: [`npm run nx -- serve ${projectName} --host=0.0.0.0`],
             comments: [`Running ${projectName} source code in watch mode`],
           },
