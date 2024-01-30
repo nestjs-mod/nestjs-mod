@@ -150,9 +150,32 @@ export class PackageJsonUtils {
           return posA - posB;
         })
         .reduce((all, [key, value]) => ({ ...all, [key]: value }), {}),
-      utils,
+      utils: utils || {},
     };
+    const categories = Object.keys(structuredJson[SCRIPTS_KEY_NAME] || {});
+    for (const category of categories) {
+      if (Object.keys(structuredJson[SCRIPTS_KEY_NAME]?.[category] || {}).length === 0) {
+        if (structuredJson[SCRIPTS_KEY_NAME]?.[category]) {
+          delete structuredJson[SCRIPTS_KEY_NAME]?.[category];
+        }
+      }
+    }
 
+    if (Object.keys(structuredJson[SCRIPTS_KEY_NAME]?.[DEFAULT_SCRIPTS_CATEGORY_NAME] || {}).length === 0) {
+      if (structuredJson[SCRIPTS_KEY_NAME]?.[DEFAULT_SCRIPTS_CATEGORY_NAME]) {
+        delete structuredJson[SCRIPTS_KEY_NAME]?.[DEFAULT_SCRIPTS_CATEGORY_NAME];
+      }
+    }
+    if (Object.keys(structuredJson[SCRIPTS_KEY_NAME] || {}).length === 0) {
+      if (structuredJson[SCRIPTS_KEY_NAME]) {
+        delete structuredJson[SCRIPTS_KEY_NAME];
+      }
+    }
+    if (Object.keys(structuredJson[SCRIPTS_COMMENTS_KEY_NAME] || {}).length === 0) {
+      if (structuredJson[SCRIPTS_COMMENTS_KEY_NAME]) {
+        delete structuredJson[SCRIPTS_COMMENTS_KEY_NAME];
+      }
+    }
     return structuredJson;
   }
 

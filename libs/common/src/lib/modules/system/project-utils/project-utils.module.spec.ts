@@ -240,18 +240,18 @@ describe('Project Utils', () => {
     });
     const getPackageJson = app.get(GetPackageJson);
 
+    console.log(await getPackageJson.getApplicationPackageJson());
+    console.log(await getPackageJson.getPackageJson());
+
     expect(await getPackageJson.getApplicationPackageJson()).toEqual({
       name: 'test-app',
       description: 'Description for test-app',
       version: '1.0.0',
-      scripts: {},
     });
-
     expect(await getPackageJson.getPackageJson()).toEqual({
       name: 'second-test-app',
       description: 'Description for second-test-app',
       version: '1.0.0',
-      scripts: {},
     });
   });
 });

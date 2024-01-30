@@ -32,23 +32,29 @@ npm run test:example-basic
 ## All scripts
 |Script|Description|
 |---|---|
+|**dev infra**|
+|`npm run serve:dev:cli`|Running cli application source code in watch mode|
+|`npm run serve:dev:example-basic`|Running example-basic application source code in watch mode|
 |**prod infra**|
 |`npm run start`|Launching a built NestJS application (you must first build it using the build command)|
 |`npm run start:prod:example-basic`|Launching a built example-basic (you must first build it using the build command)|
 |`npm run build`|Building a NestJS application|
 |**docs**|
 |`npm run docs:infrastructure`|Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure|
-|**dev infra**|
-|`npm run serve:dev:cli`|Running cli application source code in watch mode|
-|`npm run serve:dev:example-basic`|Running example-basic application source code in watch mode|
-|**lint**|
-|`npm run lint`|Checking the typescript code for the entire project|
-|`npm run lint:fix`|Checking the typescript code throughout the project and trying to fix everything possible|
-|`npm run tsc:lint`|Checking typescript code in libraries|
 |**tests**|
 |`npm run test`|Running tests across the entire project|
 |`npm run test:example-basic`|Running tests for example-basic|
 |`npm run test:integrations-build`|Run an integration test in which we create a new NestJS-mod application using a schematic and check its operation|
+|**lint**|
+|`npm run lint`|Checking the typescript code for the entire project|
+|`npm run lint:fix`|Checking the typescript code throughout the project and trying to fix everything possible|
+|`npm run tsc:lint`|Checking typescript code in libraries|
+|**schematics**|
+|`npm run build:schematics`|Build NestJS-mod schematic of utilities|
+|`npm run local:schematics:init`|Alias for local launch of initialization NestJS-mod schematic|
+|`npm run local:schematics:lib`|Alias for local launch schematic for generating NestJS-mod libraries|
+|`npm run local:schematics:app`|Alias for local launch schematic for generating NestJS-mod applications|
+|`npm run schematics-version-bump`|Updating libraries in the code that generates an empty NestJS-mod application|
 |**utils**|
 |`npm run generate`|Running the "generate" nx command in applications and libraries which can be customized at your discretion automatically generating an index.ts file for each library checking the code and trying to fix it|
 |`npm run nx`|Alias for running the nx version locally, which is in the project (example: `npm run nx -- dep-graph`), in order not to install nx globally in the operating system|
@@ -58,12 +64,6 @@ npm run test:example-basic
 |`npm run update:nestjs-mod-example`|Start generating an empty application using the latest versions of the NestJS-mod libraries, published in https://github.com/nestjs-mod/nestjs-mod-example|
 |`npm run check-contrib`|Clone the repository https://github.com/nestjs-mod/nestjs-mod-contrib and run the build and tests on versions of the current NestJS repository-mod|
 |`npm run manual:prepare`|Preparing code, building code, creating infrastructure documentation and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)|
-|**schematics**|
-|`npm run build:schematics`|Build NestJS-mod schematic of utilities|
-|`npm run local:schematics:init`|Alias for local launch of initialization NestJS-mod schematic|
-|`npm run local:schematics:lib`|Alias for local launch schematic for generating NestJS-mod libraries|
-|`npm run local:schematics:app`|Alias for local launch schematic for generating NestJS-mod applications|
-|`npm run schematics-version-bump`|Updating libraries in the code that generates an empty NestJS-mod application|
 ## System modules
 System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.). Only NestJS-mod compatible modules.
 
