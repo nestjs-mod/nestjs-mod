@@ -1,3 +1,10 @@
+## [2.2.5](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.2.4...schematics-v2.2.5) (2024-01-30)
+
+
+### Bug Fixes
+
+* update for nestjs-mod v.2.6.1 [skip integrations, skip contrib] ([1fc7a85](https://github.com/nestjs-mod/nestjs-mod/commit/1fc7a8516e0e3d1fd0ed4fd97c9c2db72be7ccd5))
+
 ## [2.2.4](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.2.3...schematics-v2.2.4) (2024-01-30)
 
 
