@@ -1,4 +1,5 @@
 import {
+  BasicPackageJsonType,
   ConfigModel,
   ConfigModelProperty,
   DEFAULT_FOR_ROOT_METHOD_NAME,
@@ -9,7 +10,7 @@ import {
   createNestModule,
 } from '@nestjs-mod/common';
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { kebabCase } from 'case-anything';
+import { constantCase, kebabCase } from 'case-anything';
 import { IsNotEmpty } from 'class-validator';
 import fg from 'fast-glob';
 import { readFile, writeFile } from 'fs/promises';
@@ -22,6 +23,8 @@ export const NESTJS_MOD_ALL_README_GENERATOR_FOOTER = `
 * https://github.com/nestjs-mod/nestjs-mod - A collection of utilities for unifying NestJS applications and modules
 * https://github.com/nestjs-mod/nestjs-mod-contrib - Contrib repository for the NestJS-mod
 * https://github.com/nestjs-mod/nestjs-mod-example - Example application built with [@nestjs-mod/schematics](https://github.com/nestjs-mod/nestjs-mod/tree/master/libs/schematics)
+* https://github.com/nestjs-mod/nestjs-mod/blob/master/apps/example-basic/INFRASTRUCTURE.MD - A simple example of infrastructure documentation.
+* https://github.com/nestjs-mod/nestjs-mod-contrib/blob/master/apps/example-prisma/INFRASTRUCTURE.MD - An extended example of infrastructure documentation with a docker-compose file and a data base.
 * https://dev.to/endykaufman/collection-of-nestjs-mod-utilities-for-unifying-applications-and-modules-on-nestjs-5256 - Article about the project NestJS-mod
 `;
 
@@ -53,6 +56,12 @@ class NestjsModAllReadmeGeneratorConfig {
   markdownFile!: string;
 
   @ConfigModelProperty({
+    description:
+      'A folder of markdown files with instructions for using modules in NestJS and NestJS-mod applications (example of file names: /libs/reports/NESTJS_MOD_ALL_README_GENERATOR_USE_IN_NEST_JS.md, /libs/reports/NESTJS_MOD_ALL_README_GENERATOR_USE_IN_NEST_JS_MOD.md)',
+  })
+  folderWithMarkdownFilesToUse?: string;
+
+  @ConfigModelProperty({
     description: 'Custom header markdown string',
   })
   markdownHeader?: string;
@@ -80,6 +89,19 @@ export class NestjsModAllReadmeGeneratorService implements OnModuleInit {
     const moduleListInfo = await this.getModuleListInfo();
     const packageJsonInfo = await this.getPackageJsonInfo();
 
+    let deps = [
+      ...Object.entries(packageJsonInfo?.dependenciesInfo || {})
+        .filter(([, info]) => info.docs)
+        .map(([name]) => name),
+    ].filter(Boolean);
+    const devDeps = Object.entries(packageJsonInfo?.devDependenciesInfo || {})
+      .filter(([, info]) => info.docs)
+      .map(([name]) => name)
+      .filter(Boolean);
+
+    if (packageJsonInfo && !deps.includes(packageJsonInfo?.name) && !devDeps.includes(packageJsonInfo?.name)) {
+      deps = [...deps, packageJsonInfo?.name];
+    }
     const utilitiesHeader =
       utilsListInfo.length > 0
         ? `
@@ -147,7 +169,12 @@ ${packageJsonInfo.description ? packageJsonInfo.description : ''}
 ## Installation
 
 \`\`\`bash
-npm i --save ${packageJsonInfo.name}
+${[
+  devDeps.length > 0 ? `npm i --save-dev ${devDeps.join(' ')}` : '',
+  deps.length > 0 ? `npm i --save ${deps.join(' ')}` : '',
+]
+  .filter(Boolean)
+  .join('\n')}
 \`\`\`
 
 ${[
@@ -187,7 +214,7 @@ ${
     if (!this.nestjsModAllReadmeGeneratorConfig.packageFile) {
       return undefined;
     }
-    const packageJson: { name: string; description: string } = JSON.parse(
+    const packageJson: BasicPackageJsonType = JSON.parse(
       (await readFile(this.nestjsModAllReadmeGeneratorConfig.packageFile)).toString()
     );
     return packageJson;
@@ -258,12 +285,39 @@ ${
 
           const description = asyncModule.nestModuleMetadata!.moduleDescription;
           if (!asyncModule.nestModuleMetadata?.moduleDisabled) {
+            let nestJsModUsage = '';
+            let nestJsUsage = '';
+
+            if (this.nestjsModAllReadmeGeneratorConfig.folderWithMarkdownFilesToUse) {
+              try {
+                const filePath = join(
+                  this.nestjsModAllReadmeGeneratorConfig.folderWithMarkdownFilesToUse,
+                  `${constantCase(moduleName)}_USE_IN_NEST_JS.md`
+                );
+                nestJsUsage = (await readFile(filePath)).toString();
+              } catch (err) {
+                //
+              }
+              try {
+                const filePath = join(
+                  this.nestjsModAllReadmeGeneratorConfig.folderWithMarkdownFilesToUse,
+                  `${constantCase(moduleName)}_USE_IN_NEST_JS_MOD.md`
+                );
+                nestJsModUsage = (await readFile(filePath)).toString();
+              } catch (err) {
+                //
+              }
+            }
+
             modules.push({
               name: moduleName,
               link: `[${moduleName}](#${moduleName.toLowerCase()})`,
               category,
               description,
-              body: await this.dynamicNestModuleMetadataMarkdownReportGenerator.getReport(asyncModule, {}),
+              body: await this.dynamicNestModuleMetadataMarkdownReportGenerator.getReport(asyncModule, {
+                nestJsModUsage,
+                nestJsUsage,
+              }),
             });
           }
         }
@@ -279,7 +333,7 @@ ${
 
 export const { NestjsModAllReadmeGenerator } = createNestModule({
   moduleName: 'NestjsModAllReadmeGenerator',
-  moduleDescription: 'Readme generator for nestjs-mod project.',
+  moduleDescription: 'Readme generator for nestjs-mod modules.',
   moduleCategory: NestModuleCategory.infrastructure,
   staticConfigurationModel: NestjsModAllReadmeGeneratorConfig,
   imports: [InfrastructureMarkdownReportGenerator.forFeature({ featureModuleName: 'NestjsModAllReadmeGenerator' })],

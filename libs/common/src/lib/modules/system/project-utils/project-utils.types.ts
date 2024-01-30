@@ -1,12 +1,29 @@
 import { ProjectOptions } from '../../../nest-module/types';
+import { SCRIPTS_COMMENTS_KEY_NAME, SCRIPTS_KEY_NAME } from './project-utils.constants';
 
-export type PackageJsonType = Partial<ProjectOptions> & {
+export type PackageJsonScriptType = { commands: string[]; comments: string[] };
+export type PackageJsonCategoryType = Record<string, PackageJsonScriptType>;
+
+export type PackageJsonType = ProjectOptions & {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
-  scripts?: Record<string, Record<string, string>>;
+  dependenciesInfo?: Record<string, {docs:true}>;
+  devDependenciesInfo?: Record<string, {docs:true}>;
+  [SCRIPTS_KEY_NAME]?: Record<string, PackageJsonCategoryType>;
+  [SCRIPTS_COMMENTS_KEY_NAME]?: Record<string, string[]>;
+};
+
+export type BasicPackageJsonType = ProjectOptions & {
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+  dependenciesInfo?: Record<string, {docs:true}>;
+  devDependenciesInfo?: Record<string, {docs:true}>;
+  [SCRIPTS_KEY_NAME]?: Record<string, string>;
+  [SCRIPTS_COMMENTS_KEY_NAME]?: Record<string, string[]>;
 };
 
 export interface JSONSchemaForNxProjects {
+  name?: string;
   /**
    * Configures all the targets which define what tasks you can run against the project
    */

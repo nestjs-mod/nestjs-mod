@@ -2,9 +2,8 @@ import type { Tree } from '@nrwl/devkit';
 import { updateJson } from '@nrwl/devkit';
 import { constantCase } from 'case-anything';
 import { join } from 'path';
-import { merge } from '../../../utils/node-defaults';
 import getPorts from './get-port.utils';
-import { PackageJsonUtils, SCRIPTS_KEY_NAME } from './package-json.utils';
+import { PackageJsonType, PackageJsonUtils } from './package-json.utils';
 
 export function updateTsConfigRoot(tree: Tree) {
   if (tree.exists('tsconfig.base.json')) {
@@ -29,94 +28,187 @@ export function updateTsConfigRoot(tree: Tree) {
 }
 
 export function addScript(tree: Tree, projectName?: string) {
-  updateJson(tree, 'package.json', (json) => {
-    if (!projectName) {
-      const packageJsonUtils = new PackageJsonUtils();
-      const jsonStructure = packageJsonUtils.toStructure(json);
+  updateJson(tree, 'package.json', (basicJson) => {
+    const packageJsonUtils = new PackageJsonUtils();
 
-      if (!jsonStructure[SCRIPTS_KEY_NAME]!['prod infra']) {
-        jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'] = {};
-      }
-      if (!jsonStructure[SCRIPTS_KEY_NAME]!['docs']) {
-        jsonStructure[SCRIPTS_KEY_NAME]!['docs'] = {};
-      }
-      if (!jsonStructure[SCRIPTS_KEY_NAME]!['dev infra']) {
-        jsonStructure[SCRIPTS_KEY_NAME]!['dev infra'] = {};
-      }
-      if (!jsonStructure[SCRIPTS_KEY_NAME]!['lint']) {
-        jsonStructure[SCRIPTS_KEY_NAME]!['lint'] = {};
-      }
-      if (!jsonStructure[SCRIPTS_KEY_NAME]!['tests']) {
-        jsonStructure[SCRIPTS_KEY_NAME]!['tests'] = {};
-      }
-      if (!jsonStructure[SCRIPTS_KEY_NAME]!['utils']) {
-        jsonStructure[SCRIPTS_KEY_NAME]!['utils'] = {};
-      }
-
-      jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'], {
-        start: 'npm run nx:many -- -t=start',
-        build: 'npm run generate && npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true',
-      });
-
-      jsonStructure[SCRIPTS_KEY_NAME]!['docs'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['docs'], {
-        'docs:infrastructure': 'export NODE_ENV=infrastructure && npm run nx:many -- -t=start --parallel=1',
-      });
-
-      jsonStructure[SCRIPTS_KEY_NAME]!['dev infra'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['dev infra'], {
-        'serve:dev': 'npm run nx:many -- -t=serve --host=0.0.0.0',
-      });
-      jsonStructure[SCRIPTS_KEY_NAME]!['lint'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['lint'], {
-        lint: 'npm run tsc:lint && npm run nx:many -- -t=lint',
-        'lint:fix': 'npm run tsc:lint && npm run nx:many -- -t=lint --fix',
-        'tsc:lint': 'tsc --noEmit -p tsconfig.base.json',
-      });
-      jsonStructure[SCRIPTS_KEY_NAME]!['tests'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['tests'], {
-        test: 'npm run nx:many -- -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes',
-      });
-      jsonStructure[SCRIPTS_KEY_NAME]!['utils'] = merge(jsonStructure[SCRIPTS_KEY_NAME]!['utils'], {
-        generate: 'npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run lint:fix',
-        nx: 'nx',
-        'dep-graph': 'npm run nx -- dep-graph',
-        'nx:many': `npm run nx -- run-many --exclude=${json.name} --all`,
-        'make-ts-list': './node_modules/.bin/rucken make-ts-list',
-        // "prepare": "npx -y husky install",
-        'manual:prepare': 'npm run generate && npm run build && npm run docs:infrastructure && npm run test',
-      });
-
-      if (!json['lint-staged']) {
-        json['lint-staged'] = {
-          '*.{js,ts}': 'eslint --fix',
-        };
-      }
-
-      json = packageJsonUtils.toPlain(json);
-    } else {
-      const packageJsonUtils = new PackageJsonUtils();
-      const jsonStructure = packageJsonUtils.toStructure(json);
-      if (!jsonStructure[SCRIPTS_KEY_NAME]!['dev infra']) {
-        jsonStructure[SCRIPTS_KEY_NAME]!['dev infra'] = {};
-      }
-      if (!jsonStructure[SCRIPTS_KEY_NAME]!['prod infra']) {
-        jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'] = {};
-      }
-      if (!jsonStructure[SCRIPTS_KEY_NAME]!['dev infra'][`serve:dev:${projectName}`]) {
-        jsonStructure[SCRIPTS_KEY_NAME]!['dev infra'][
-          `serve:dev:${projectName}`
-        ] = `npm run nx -- serve ${projectName} --host=0.0.0.0`;
-      }
-      if (!jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'][`start:prod:${projectName}`]) {
-        jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'][
-          `start:prod:${projectName}`
-        ] = `npm run nx -- start ${projectName} --host=0.0.0.0`;
-      }
-      if (!jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'][`build:prod:${projectName}`]) {
-        jsonStructure[SCRIPTS_KEY_NAME]!['prod infra'][
-          `build:prod:${projectName}`
-        ] = `npm run nx -- build ${projectName}`;
-      }
-      json = packageJsonUtils.toPlain(json);
+    const jsonStructure: PackageJsonType | undefined = packageJsonUtils.toStructure(basicJson);
+    packageJsonUtils.addScripts(
+      'prod infra',
+      {
+        start: {
+          commands: [`npm run nx:many -- -t=start`],
+          comments: ['Launching a built NestJS application (you must first build it using the build command)'],
+        },
+        build: {
+          commands: ['npm run generate', 'npm run tsc:lint', 'npm run nx:many -- -t=build --skip-nx-cache=true'],
+          comments: ['Building a NestJS application'],
+        },
+      },
+      jsonStructure
+    );
+    if (projectName) {
+      packageJsonUtils.addScripts(
+        'prod infra',
+        {
+          [`start:prod:${projectName}`]: {
+            commands: [`npm run nx -- start ${projectName}`],
+            comments: [`Launching a built ${projectName} (you must first build it using the build command)`],
+          },
+        },
+        jsonStructure
+      );
     }
-    return json;
+    packageJsonUtils.addScripts(
+      'docs',
+      {
+        'docs:infrastructure': {
+          commands: ['export NODE_ENV=infrastructure && npm run nx:many -- -t=start --parallel=1'],
+          comments: [
+            'Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure',
+          ],
+        },
+      },
+      jsonStructure
+    );
+    packageJsonUtils.addScripts(
+      'dev infra',
+      {
+        'serve:dev': {
+          commands: ['npm run nx:many -- -t=serve'],
+          comments: ['Running NestJS application source code in watch mode'],
+        },
+      },
+      jsonStructure
+    );
+    if (projectName) {
+      packageJsonUtils.addScripts(
+        'dev infra',
+        {
+          [`start:dev:${projectName}`]: {
+            commands: [`npm run nx -- serve ${projectName} --host=0.0.0.0`],
+            comments: [`Running ${projectName} source code in watch mode`],
+          },
+        },
+        jsonStructure
+      );
+    }
+    packageJsonUtils.addScripts(
+      'lint',
+      {
+        lint: {
+          commands: ['npm run tsc:lint', 'npm run nx:many -- -t=lint'],
+          comments: ['Checking the typescript code for the entire project'],
+        },
+        'lint:fix': {
+          commands: ['npm run tsc:lint', 'npm run nx:many -- -t=lint --fix'],
+          comments: ['Checking the typescript code throughout the project and trying to fix everything possible'],
+        },
+        'tsc:lint': {
+          commands: ['npm run tsc -- --noEmit -p tsconfig.base.json'],
+          comments: ['Checking typescript code in libraries'],
+        },
+      },
+      jsonStructure
+    );
+    packageJsonUtils.addScripts(
+      'tests',
+      {
+        test: {
+          commands: [
+            'npm run nx:many -- -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes',
+          ],
+          comments: ['Running tests across the entire project'],
+        },
+      },
+      jsonStructure
+    );
+    if (projectName) {
+      packageJsonUtils.addScripts(
+        'tests',
+        {
+          [`test:${projectName}`]: {
+            commands: [
+              `npm run nx -- test ${projectName} --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes`,
+            ],
+            comments: [`Running tests for ${projectName}`],
+          },
+        },
+        jsonStructure
+      );
+    }
+
+    packageJsonUtils.addScripts(
+      'utils',
+      {
+        generate: {
+          commands: ['npm run nx:many -- -t=generate --skip-nx-cache=true', 'npm run make-ts-list', 'npm run lint:fix'],
+          comments: [
+            'Running the "generate" nx command in applications and libraries which can be customized at your discretion',
+            'automatically generating an index.ts file for each library',
+            'checking the code and trying to fix it',
+          ],
+        },
+        tsc: {
+          commands: ['tsc'],
+          comments: [
+            'Alias for running the tsc version locally, which is in the project (example: `npm run tsc -- --noEmit -p tsconfig.base.json`),',
+            'in order not to install tsc globally in the operating system',
+          ],
+        },
+        nx: {
+          commands: ['nx'],
+          comments: [
+            'Alias for running the nx version locally, which is in the project (example: `npm run nx -- dep-graph`),',
+            'in order not to install nx globally in the operating system',
+          ],
+        },
+        'dep-graph': {
+          commands: ['npm run nx -- dep-graph'],
+          comments: ['Generating dependency diagrams for nx applications and libraries'],
+        },
+        'nx:many': {
+          commands: [`npm run nx -- run-many --exclude=${basicJson.name} --all`],
+          comments: [
+            'Alias for running many nx commands (example: `npm run nx:many -- -t=lint`),',
+            'an exception has been added for the root project,',
+            'since sometimes an attempt to run an nx command on it can lead to the command freezing',
+          ],
+        },
+        'make-ts-list': {
+          commands: [`./node_modules/.bin/rucken make-ts-list`],
+          comments: [
+            'Automatically generating an index.ts file for each library,',
+            'works only for nx applications created using the `--projectNameAndRootFormat=as-provided` flag',
+          ],
+        },
+        // "prepare": "npx -y husky install",
+        'manual:prepare': {
+          commands: ['npm run generate', 'npm run build', 'npm run docs:infrastructure', 'npm run test'],
+          comments: [
+            'Preparing code, building code, creating infrastructure documentation',
+            'and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)',
+          ],
+        },
+        rucken: {
+          commands: ['rucken'],
+          comments: [
+            'Alias for console tools and scripts for nx and not only use to automate the workflow and',
+            'speed up the development process (example: `npm run rucken -- make-ts-list`, site: https://www.npmjs.com/package/rucken)',
+          ],
+        },
+      },
+      jsonStructure
+    );
+
+    if (!basicJson['lint-staged']) {
+      basicJson['lint-staged'] = {
+        '*.{js,ts}': 'eslint --fix',
+      };
+    }
+
+    basicJson = packageJsonUtils.toPlain(basicJson, jsonStructure);
+
+    return basicJson;
   });
 }
 
@@ -258,7 +350,18 @@ export function addAppPackageJsonFile(host: Tree, projectName: string, projectPa
   "dependencies": {
     "pm2": ">=5.3.0",
     "dotenv": ">=16.3.1"
-  }
+  },
+  "devScripts": [
+    "generate",
+    "serve:dev:${projectName}"
+  ],
+  "prodScripts": [
+    "manual:prepare",
+    "start:prod:${projectName}"
+  ],
+  "testsScripts": [
+    "test:${projectName}"
+  ]
 }`;
   if (host.exists(join(projectPath, 'package.json'))) {
     let content = host.read('package.json', 'utf-8');

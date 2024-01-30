@@ -21,7 +21,7 @@ export async function normalizeOptionsLib(tree: Tree, options: LibraryGeneratorO
   });
 
   const fileName = options.simpleName ? projectNames.projectSimpleName : projectNames.projectFileName;
-  const parsedTags = options.tags ? options.tags.split(',').map((s) => s.trim()) : [];
+  const parsedTags = options.tags ? options.tags?.split(',').map((s) => s.trim()) : [];
 
   const normalized: NormalizedOptions = {
     ...options,

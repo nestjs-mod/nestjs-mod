@@ -498,8 +498,6 @@ const { App3Module } = createNestModule({
   environmentsModel: App3Env,
 });
 
-// Test
-
 const { AppModule } = createNestModule({
   moduleName: 'AppModule',
   imports: [
@@ -532,6 +530,28 @@ bootstrap();
 ### InfrastructureMarkdownReportGenerator
 Infrastructure markdown report generator.
 
+#### Use in NestJS-mod
+Use with options.
+
+```typescript
+import { bootstrapNestApplication, InfrastructureMarkdownReportGenerator } from '@nestjs-mod/common';
+import { join } from 'path';
+
+bootstrapNestApplication({
+  modules: {
+    infrastructure: [
+      InfrastructureMarkdownReportGenerator.forRoot({
+        staticConfiguration: {
+          markdownFile: join(__dirname, '..', '..', '..', 'apps', 'example-basic', 'INFRASTRUCTURE.MD'),
+          skipEmptySettings: true,
+        },
+      }),
+    ],
+  },
+});
+```
+
+
 #### Shared providers
 `DynamicNestModuleMetadataMarkdownReportGenerator`
 
@@ -549,6 +569,72 @@ Infrastructure markdown report generator.
 ### InfrastructureMarkdownReportStorage
 Infrastructure markdown report storage
 
+#### Use in NestJS-mod
+Use the forRoot method to create a global report store.
+
+```typescript
+import { bootstrapNestApplication, InfrastructureMarkdownReportStorage } from '@nestjs-mod/common';
+
+bootstrapNestApplication({
+  modules: {
+    infrastructure: [InfrastructureMarkdownReportStorage.forRoot()],
+  },
+});
+```
+
+An example of using global storage in a module.
+
+```typescript
+import {
+  bootstrapNestApplication,
+  createNestModule,
+  DefaultNestApplicationInitializer,
+  DefaultNestApplicationListener,
+  InfrastructureMarkdownReportGenerator,
+  InfrastructureMarkdownReportStorage,
+  InfrastructureMarkdownReportStorageService,
+} from '@nestjs-mod/common';
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+class AppReportService {
+  constructor(private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorageService) {}
+
+  getReport() {
+    return this.infrastructureMarkdownReportStorage.report;
+  }
+}
+
+const { App1Module } = createNestModule({
+  moduleName: 'App1Module',
+  imports: [InfrastructureMarkdownReportStorage.forFeature()],
+  providers: [AppReportService],
+});
+
+bootstrapNestApplication({
+  modules: {
+    infrastructure: [InfrastructureMarkdownReportStorage.forRoot(), InfrastructureMarkdownReportGenerator.forRoot()],
+    system: [
+      DefaultNestApplicationInitializer.forRoot(),
+      DefaultNestApplicationListener.forRoot({
+        staticConfiguration: {
+          postListen: async ({ app }) => {
+            if (app) {
+              const appReportService = app.get(AppReportService);
+
+              console.log(appReportService.getReport()); // # TestApp ...
+            }
+          },
+        },
+        staticEnvironments: { port: 3012 },
+      }),
+    ],
+    feature: [App1Module.forRoot()],
+  },
+});
+```
+
+
 #### Shared providers
 `InfrastructureMarkdownReportStorageService`
 
@@ -557,6 +643,43 @@ Infrastructure markdown report storage
 ---
 ### DefaultNestApplicationInitializer
 Default NestJS application initializer, no third party utilities required.
+
+#### Use in NestJS-mod
+Use without options.
+
+```typescript
+import { bootstrapNestApplication, DefaultNestApplicationInitializer } from '@nestjs-mod/common';
+
+bootstrapNestApplication({
+  modules: {
+    system: [DefaultNestApplicationInitializer.forRoot()],
+  },
+});
+```
+
+Example of change cors options.
+
+```typescript
+import { bootstrapNestApplication, DefaultNestApplicationInitializer } from '@nestjs-mod/common';
+
+bootstrapNestApplication({
+  modules: {
+    system: [
+      DefaultNestApplicationInitializer.forRoot({
+        staticConfiguration: {
+          cors: {
+            origin: '*',
+            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+            preflightContinue: false,
+            optionsSuccessStatus: 204,
+          },
+        },
+      }),
+    ],
+  },
+});
+```
+
 
 #### Static configuration
 
@@ -580,6 +703,46 @@ Default NestJS application initializer, no third party utilities required.
 ---
 ### DefaultNestApplicationListener
 Default NestJS application listener, no third party utilities required.
+
+#### Use in NestJS-mod
+Use with manual environments and custom configuration.
+
+```typescript
+import {
+  bootstrapNestApplication,
+  DefaultNestApplicationInitializer,
+  DefaultNestApplicationListener,
+  isInfrastructureMode,
+} from '@nestjs-mod/common';
+import { Logger } from '@nestjs/common';
+
+bootstrapNestApplication({
+  modules: {
+    system: [
+      DefaultNestApplicationInitializer.forRoot(),
+      DefaultNestApplicationListener.forRoot({
+        staticEnvironments: { port: 3000 },
+        staticConfiguration: {
+          mode: isInfrastructureMode() ? 'init' : 'listen',
+          preListen: async ({ app }) => {
+            if (app) {
+              app.setGlobalPrefix('api');
+            }
+          },
+          postListen: async ({ current }) => {
+            Logger.log(
+              `🚀 Application is running on: http://${current.staticEnvironments?.hostname || 'localhost'}:${
+                current.staticEnvironments?.port
+              }/api`
+            );
+          },
+        },
+      }),
+    ],
+  },
+});
+```
+
 
 #### Static environments
 
@@ -605,6 +768,105 @@ Default NestJS application listener, no third party utilities required.
 ### ProjectUtils
 Utilities for setting global application parameters, such as project name, description, and settings validation parameters.
 
+#### Use in NestJS-mod
+Use with options.
+
+```typescript
+import { DOT_ENV_FILE, PACKAGE_JSON_FILE, ProjectUtils, bootstrapNestApplication } from '@nestjs-mod/common';
+import { join } from 'path';
+
+const appFolder = join(__dirname, '..', '..', '..', 'apps', 'example-basic');
+const rootFolder = join(__dirname, '..', '..', '..');
+
+bootstrapNestApplication({
+  modules: {
+    system: [
+      ProjectUtils.forRoot({
+        staticConfiguration: {
+          applicationPackageJsonFile: join(appFolder, PACKAGE_JSON_FILE),
+          packageJsonFile: join(rootFolder, PACKAGE_JSON_FILE),
+          envFile: join(rootFolder, DOT_ENV_FILE),
+        },
+      }),
+    ],
+  },
+});
+```
+
+An example of access to module services with forFeature.
+
+```typescript
+import {
+  DOT_ENV_FILE,
+  DefaultNestApplicationInitializer,
+  DefaultNestApplicationListener,
+  DotEnvService,
+  PACKAGE_JSON_FILE,
+  ProjectUtils,
+  bootstrapNestApplication,
+  createNestModule,
+} from '@nestjs-mod/common';
+import { Injectable } from '@nestjs/common';
+import { join } from 'path';
+
+@Injectable()
+class GetEnv {
+  constructor(private readonly dotEnvService: DotEnvService) {}
+  getEnv() {
+    return this.dotEnvService.read();
+  }
+
+  getKeys() {
+    return this.dotEnvService.keys();
+  }
+}
+const { AppModule } = createNestModule({
+  moduleName: 'AppModule',
+  imports: [ProjectUtils.forFeature()],
+  providers: [GetEnv],
+});
+
+const appFolder = join(__dirname, '..', '..', '..', 'apps', 'example-basic');
+const rootFolder = join(__dirname, '..', '..', '..');
+
+process.env.TEST_APP_PORT = '2000';
+process.env.TEST_APP_HOSTNAME = 'host';
+
+bootstrapNestApplication({
+  project: {
+    name: 'test-app',
+    description: 'Description for test-app',
+  },
+  globalEnvironmentsOptions: { debug: true },
+  modules: {
+    system: [
+      ProjectUtils.forRoot({
+        staticConfiguration: {
+          applicationPackageJsonFile: join(appFolder, PACKAGE_JSON_FILE),
+          envFile: join(rootFolder, DOT_ENV_FILE),
+        },
+      }),
+      DefaultNestApplicationInitializer.forRoot(),
+      DefaultNestApplicationListener.forRoot({
+        staticConfiguration: {
+          mode: 'init',
+          postListen: async ({ app }) => {
+            if (app) {
+              const getEnv = app.get(GetEnv);
+              console.log(await getEnv.getEnv()); // output: { TEST_APP_PORT: '2000', TEST_APP_HOSTNAME: 'host' }
+            }
+          },
+        },
+      }),
+    ],
+    feature: [AppModule.forRoot()],
+  },
+});
+```
+
+When launched in the infrastructure documentation generation mode, the module creates an `.env` file with a list of all required variables, as well as an example `example.env`, where you can enter example variable values.
+
+
 #### Shared providers
 `WrapApplicationOptionsService`, `DotEnvService`, `PackageJsonService`, `ApplicationPackageJsonService`, `GitignoreService`, `NxProjectJsonService`, `ProjectUtilsPatcherService`
 
@@ -628,6 +890,8 @@ Utilities for setting global application parameters, such as project name, descr
 * https://github.com/nestjs-mod/nestjs-mod - A collection of utilities for unifying NestJS applications and modules
 * https://github.com/nestjs-mod/nestjs-mod-contrib - Contrib repository for the NestJS-mod
 * https://github.com/nestjs-mod/nestjs-mod-example - Example application built with [@nestjs-mod/schematics](https://github.com/nestjs-mod/nestjs-mod/tree/master/libs/schematics)
+* https://github.com/nestjs-mod/nestjs-mod/blob/master/apps/example-basic/INFRASTRUCTURE.MD - A simple example of infrastructure documentation.
+* https://github.com/nestjs-mod/nestjs-mod-contrib/blob/master/apps/example-prisma/INFRASTRUCTURE.MD - An extended example of infrastructure documentation with a docker-compose file and a data base.
 * https://dev.to/endykaufman/collection-of-nestjs-mod-utilities-for-unifying-applications-and-modules-on-nestjs-5256 - Article about the project NestJS-mod
 
 

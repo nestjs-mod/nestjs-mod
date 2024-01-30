@@ -134,8 +134,6 @@ const { App3Module } = createNestModule({
   environmentsModel: App3Env,
 });
 
-// Test
-
 const { AppModule } = createNestModule({
   moduleName: 'AppModule',
   imports: [

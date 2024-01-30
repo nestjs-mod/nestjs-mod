@@ -125,6 +125,22 @@ export type ProjectOptions = {
   name: string;
   description: string;
   version?: string;
+  license?: string;
+  repository?:
+    | {
+        type: string;
+        url: string;
+      }
+    | string;
+  maintainers?: [
+    {
+      name: string;
+      email: string;
+    }
+  ];
+  devScripts?: string[];
+  prodScripts?: string[];
+  testsScripts?: string[];
 };
 
 export type WrapApplicationOptions<

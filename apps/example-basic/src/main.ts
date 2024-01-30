@@ -10,7 +10,6 @@ import {
   createNestModule,
   isInfrastructureMode,
 } from '@nestjs-mod/common';
-import { RestInfrastructureHtmlReport } from '@nestjs-mod/reports';
 import { Logger } from '@nestjs/common';
 import { join } from 'path';
 import { AppModule } from './app/app.module';
@@ -72,7 +71,6 @@ bootstrapNestApplication({
           skipEmptySettings: true,
         },
       }),
-      RestInfrastructureHtmlReport.forRoot(),
     ],
   },
 });

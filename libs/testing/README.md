@@ -8,7 +8,7 @@ Modules and utilities for writing application tests
 ## Installation
 
 ```bash
-npm i --save @nestjs-mod/testing
+npm i --save-dev @nestjs/testing @nestjs-mod/testing
 ```
 
 
@@ -25,6 +25,51 @@ npm i --save @nestjs-mod/testing
 ### DefaultTestNestApplicationCreate
 Default test NestJS application creator, no third party utilities required.
 
+#### Use in NestJS-mod
+Use without options.
+
+```typescript
+import { bootstrapNestApplication } from '@nestjs-mod/common';
+import { DefaultTestNestApplicationCreate } from '@nestjs-mod/testing';
+
+bootstrapNestApplication({
+  modules: {
+    system: [DefaultTestNestApplicationCreate.forRoot()],
+  },
+});
+```
+
+Example of use with override provider.
+
+```typescript
+import { bootstrapNestApplication } from '@nestjs-mod/common';
+import { DefaultTestNestApplicationCreate } from '@nestjs-mod/testing';
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class CatsService {
+  findAll() {
+    return ['cats'];
+  }
+}
+
+const fakeCatsService = { findAll: () => ['test'] };
+
+bootstrapNestApplication({
+  modules: {
+    system: [
+      DefaultTestNestApplicationCreate.forRoot({
+        staticConfiguration: {
+          wrapTestingModuleBuilder: (testingModuleBuilder) =>
+            testingModuleBuilder.overrideProvider(CatsService).useValue(fakeCatsService),
+        },
+      }),
+    ],
+  },
+});
+```
+
+
 #### Static configuration
 
 
@@ -38,6 +83,54 @@ Default test NestJS application creator, no third party utilities required.
 ---
 ### DefaultTestNestApplicationInitializer
 Default test NestJS application initializer, no third party utilities required.
+
+#### Use in NestJS-mod
+Use without options.
+
+```typescript
+import { bootstrapNestApplication } from '@nestjs-mod/common';
+import { DefaultTestNestApplicationCreate, DefaultTestNestApplicationInitializer } from '@nestjs-mod/testing';
+
+bootstrapNestApplication({
+  modules: {
+    system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
+  },
+});
+```
+
+An example of getting a provider after running a test application.
+
+```typescript
+import { bootstrapNestApplication } from '@nestjs-mod/common';
+import { DefaultTestNestApplicationCreate, DefaultTestNestApplicationInitializer } from '@nestjs-mod/testing';
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class CatsService {
+  findAll() {
+    return ['cats'];
+  }
+}
+
+bootstrapNestApplication({
+  modules: {
+    system: [
+      DefaultTestNestApplicationCreate.forRoot(),
+      DefaultTestNestApplicationInitializer.forRoot({
+        staticConfiguration: {
+          postInit: async ({ app }) => {
+            if (app) {
+              const catsService = app.get(CatsService);
+              console.log(catsService.findAll());
+            }
+          },
+        },
+      }),
+    ],
+  },
+});
+```
+
 
 #### Static configuration
 
@@ -55,6 +148,8 @@ Default test NestJS application initializer, no third party utilities required.
 * https://github.com/nestjs-mod/nestjs-mod - A collection of utilities for unifying NestJS applications and modules
 * https://github.com/nestjs-mod/nestjs-mod-contrib - Contrib repository for the NestJS-mod
 * https://github.com/nestjs-mod/nestjs-mod-example - Example application built with [@nestjs-mod/schematics](https://github.com/nestjs-mod/nestjs-mod/tree/master/libs/schematics)
+* https://github.com/nestjs-mod/nestjs-mod/blob/master/apps/example-basic/INFRASTRUCTURE.MD - A simple example of infrastructure documentation.
+* https://github.com/nestjs-mod/nestjs-mod-contrib/blob/master/apps/example-prisma/INFRASTRUCTURE.MD - An extended example of infrastructure documentation with a docker-compose file and a data base.
 * https://dev.to/endykaufman/collection-of-nestjs-mod-utilities-for-unifying-applications-and-modules-on-nestjs-5256 - Article about the project NestJS-mod
 
 

@@ -5,6 +5,7 @@ import { ProjectUtilsConfiguration } from '../project-utils.configuration';
 import { ApplicationPackageJsonService } from './application-package-json.service';
 import { DotEnvService } from './dot-env.service';
 import { WrapApplicationOptionsService } from './wrap-application-options.service';
+import { PackageJsonService } from './package-json.service';
 
 @Injectable()
 export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
@@ -14,13 +15,26 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
     private readonly projectUtilsConfiguration: ProjectUtilsConfiguration,
     private readonly applicationPackageJsonService: ApplicationPackageJsonService,
     private readonly wrapApplicationOptionsService: WrapApplicationOptionsService,
-    private readonly dotEnvService: DotEnvService
+    private readonly dotEnvService: DotEnvService,
+    private readonly packageJsonService: PackageJsonService
   ) {}
 
   async onApplicationBootstrap() {
+    await this.updatePackage();
     await this.updateProject();
     await this.updateEnvFile();
     await this.updateGlobalConfigurationAndEnvironmentsOptions();
+  }
+
+  private async updatePackage() {
+    if (!this.packageJsonService) {
+      this.logger.warn(`packageJsonService not set, updating not work`);
+      return;
+    }
+    const existsJson = await this.packageJsonService.read();
+    if (existsJson) {
+      await this.packageJsonService.write(existsJson);
+    }
   }
 
   private async updateEnvFile() {
@@ -90,18 +104,43 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
       return;
     }
     if (this.projectUtilsConfiguration.updateProjectOptions) {
+      const packageJson = await this.packageJsonService.read();
       const applicationPackageJson = await this.applicationPackageJsonService.read();
       if (!this.wrapApplicationOptionsService.project) {
         this.wrapApplicationOptionsService.project = {} as ProjectOptions;
       }
-      if (!this.wrapApplicationOptionsService.project.name && applicationPackageJson?.name) {
-        this.wrapApplicationOptionsService.project.name = applicationPackageJson?.name;
+      if (!this.wrapApplicationOptionsService.project.name) {
+        this.wrapApplicationOptionsService.project.name = applicationPackageJson?.name ?? packageJson?.name ?? '';
       }
-      if (!this.wrapApplicationOptionsService.project.description && applicationPackageJson?.description) {
-        this.wrapApplicationOptionsService.project.description = applicationPackageJson?.description;
+      if (!this.wrapApplicationOptionsService.project.description) {
+        this.wrapApplicationOptionsService.project.description =
+          applicationPackageJson?.description ?? packageJson?.description ?? '';
       }
-      if (!this.wrapApplicationOptionsService.project.version && applicationPackageJson?.version) {
-        this.wrapApplicationOptionsService.project.version = applicationPackageJson?.version;
+      if (!this.wrapApplicationOptionsService.project.version) {
+        this.wrapApplicationOptionsService.project.version = applicationPackageJson?.version ?? packageJson?.version;
+      }
+      if (!this.wrapApplicationOptionsService.project.license) {
+        this.wrapApplicationOptionsService.project.license = applicationPackageJson?.license ?? packageJson?.license;
+      }
+      if (!this.wrapApplicationOptionsService.project.maintainers) {
+        this.wrapApplicationOptionsService.project.maintainers =
+          applicationPackageJson?.maintainers ?? packageJson?.maintainers;
+      }
+      if (!this.wrapApplicationOptionsService.project.repository) {
+        this.wrapApplicationOptionsService.project.repository =
+          applicationPackageJson?.repository ?? packageJson?.repository;
+      }
+      if (!this.wrapApplicationOptionsService.project.devScripts) {
+        this.wrapApplicationOptionsService.project.devScripts =
+          applicationPackageJson?.devScripts ?? packageJson?.devScripts;
+      }
+      if (!this.wrapApplicationOptionsService.project.prodScripts) {
+        this.wrapApplicationOptionsService.project.prodScripts =
+          applicationPackageJson?.prodScripts ?? packageJson?.prodScripts;
+      }
+      if (!this.wrapApplicationOptionsService.project.testsScripts) {
+        this.wrapApplicationOptionsService.project.testsScripts =
+          applicationPackageJson?.testsScripts ?? packageJson?.testsScripts;
       }
     }
   }

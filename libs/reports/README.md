@@ -16,14 +16,49 @@ npm i --save @nestjs-mod/reports
 
 | Link | Category | Description |
 | ---- | -------- | ----------- |
-| [NestjsModAllReadmeGenerator](#nestjsmodallreadmegenerator) | infrastructure | Readme generator for nestjs-mod project. |
-| [RestInfrastructureHtmlReport](#restinfrastructurehtmlreport) | infrastructure | Rest infrastructure HTML-report |
+| [NestjsModAllReadmeGenerator](#nestjsmodallreadmegenerator) | infrastructure | Readme generator for nestjs-mod modules. |
 
 
 ## Modules descriptions
 
 ### NestjsModAllReadmeGenerator
-Readme generator for nestjs-mod project.
+Readme generator for nestjs-mod modules.
+
+#### Use in NestJS-mod
+Example of use with all need options.
+
+```typescript
+import { bootstrapNestApplication } from '@nestjs-mod/common';
+import { NestjsModAllReadmeGenerator } from '@nestjs-mod/reports';
+import { join } from 'path';
+
+const libFolder = join(__dirname, '..', '..', '..', 'libs/common');
+
+bootstrapNestApplication({
+  modules: {
+    infrastructure: [
+      NestjsModAllReadmeGenerator.forRoot({
+        contextName: 'common',
+        staticConfiguration: {
+          telegramGroup: 'https://t.me/nestjs_mod',
+          packageFile: join(libFolder, 'package.json'),
+          markdownFile: join(libFolder, 'README.md'),
+          folderWithMarkdownFilesToUse: libFolder,
+          utilsFolders: [join(libFolder, 'src/lib')],
+          modules: [import('@nestjs-mod/common')],
+          markdownFooter: `
+## Links
+
+* https://github.com/nestjs-mod/nestjs-mod - A collection of utilities for unifying NestJS applications and modules
+* https://github.com/nestjs-mod/nestjs-mod-contrib - Contrib repository for the NestJS-mod
+`,
+        },
+      }),
+    ],
+  },
+});
+```
+
 
 #### Static configuration
 
@@ -34,15 +69,10 @@ Readme generator for nestjs-mod project.
 |`modules`|NodeJS modules with NestJS-mod modules|**isNotEmpty** (modules should not be empty)|-|-|
 |`packageFile`|Name of the package.json file with information|**isNotEmpty** (packageFile should not be empty)|-|-|
 |`markdownFile`|Name of the markdown file in which to save|**isNotEmpty** (markdownFile should not be empty)|-|-|
+|`folderWithMarkdownFilesToUse`|A folder of markdown files with instructions for using modules in NestJS and NestJS-mod applications (example of file names: /libs/reports/NESTJS_MOD_ALL_README_GENERATOR_USE_IN_NEST_JS.md, /libs/reports/NESTJS_MOD_ALL_README_GENERATOR_USE_IN_NEST_JS_MOD.md)|**optional**|-|-|
 |`markdownHeader`|Custom header markdown string|**optional**|-|-|
 |`markdownFooter`|Custom footer markdown string|**optional**|-|-|
 |`telegramGroup`|Telegram group|**optional**|-|-|
-
-[Back to Top](#modules)
-
----
-### RestInfrastructureHtmlReport
-Rest infrastructure HTML-report
 
 [Back to Top](#modules)
 
@@ -51,6 +81,8 @@ Rest infrastructure HTML-report
 * https://github.com/nestjs-mod/nestjs-mod - A collection of utilities for unifying NestJS applications and modules
 * https://github.com/nestjs-mod/nestjs-mod-contrib - Contrib repository for the NestJS-mod
 * https://github.com/nestjs-mod/nestjs-mod-example - Example application built with [@nestjs-mod/schematics](https://github.com/nestjs-mod/nestjs-mod/tree/master/libs/schematics)
+* https://github.com/nestjs-mod/nestjs-mod/blob/master/apps/example-basic/INFRASTRUCTURE.MD - A simple example of infrastructure documentation.
+* https://github.com/nestjs-mod/nestjs-mod-contrib/blob/master/apps/example-prisma/INFRASTRUCTURE.MD - An extended example of infrastructure documentation with a docker-compose file and a data base.
 * https://dev.to/endykaufman/collection-of-nestjs-mod-utilities-for-unifying-applications-and-modules-on-nestjs-5256 - Article about the project NestJS-mod
 
 

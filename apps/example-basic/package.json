@@ -1,4 +1,15 @@
 {
   "name": "example-basic",
-  "description": "Example basic application"
+  "description": "Example basic application",
+  "devScripts": [
+    "generate",
+    "serve:dev:example-basic"
+  ],
+  "prodScripts": [
+    "manual:prepare",
+    "start:prod:example-basic"
+  ],
+  "testsScripts": [
+    "test:example-basic"
+  ]
 }

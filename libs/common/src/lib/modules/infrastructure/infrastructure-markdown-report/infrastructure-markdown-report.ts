@@ -1,5 +1,6 @@
 import { Injectable, OnApplicationBootstrap, Provider } from '@nestjs/common';
 import { writeFile } from 'fs/promises';
+import { basename } from 'path';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { ConfigModelInfo } from '../../../config-model/types';
 import { EnvModelInfo } from '../../../env-model/types';
@@ -20,6 +21,9 @@ import {
   WrapApplicationOptions,
 } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
+import { ProjectUtils } from '../../system/project-utils/project-utils.module';
+import { PackageJsonService } from '../../system/project-utils/services/package-json.service';
+import { lowerCase } from 'case-anything';
 
 @ConfigModel()
 export class InfrastructureMarkdownReportGeneratorConfiguration {
@@ -43,6 +47,8 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
   async getReport(
     dynamicNestModuleMetadata: DynamicNestModuleMetadata,
     options: {
+      nestJsUsage?: string;
+      nestJsModUsage?: string;
       nestModulesEnvironmentsDescription?: string;
       nestModulesStaticEnvironmentsDescription?: string;
       nestModulesConfigurationDescription?: string;
@@ -63,6 +69,18 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       lines.push(`### ${dynamicNestModuleMetadata.nestModuleMetadata?.moduleName}`);
       if (dynamicNestModuleMetadata.nestModuleMetadata?.moduleDescription) {
         lines.push(`${dynamicNestModuleMetadata.nestModuleMetadata?.moduleDescription}`);
+        lines.push('');
+      }
+
+      if (options.nestJsUsage) {
+        lines.push(`#### Use in NestJS`);
+        lines.push(`${options.nestJsUsage}`);
+        lines.push('');
+      }
+
+      if (options.nestJsModUsage) {
+        lines.push(`#### Use in NestJS-mod`);
+        lines.push(`${options.nestJsModUsage}`);
         lines.push('');
       }
 
@@ -466,7 +484,8 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
     constructor(
       private readonly dynamicNestModuleMetadataMarkdownReportGenerator: DynamicNestModuleMetadataMarkdownReportGenerator,
       private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorageService,
-      private readonly infrastructureMarkdownReportGeneratorConfiguration: InfrastructureMarkdownReportGeneratorConfiguration
+      private readonly infrastructureMarkdownReportGeneratorConfiguration: InfrastructureMarkdownReportGeneratorConfiguration,
+      private readonly packageJsonService: PackageJsonService
     ) {}
 
     async onApplicationBootstrap() {
@@ -481,11 +500,96 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
 
     async getReport(): Promise<string> {
       const lines: string[] = [];
-      if (project) {
-        lines.push(`# ${project.name}`);
-        lines.push('');
-        if (project.description) {
-          lines.push(`${project.description}`);
+      const packageJson = await this.packageJsonService.read();
+
+      try {
+        if (project) {
+          lines.push(`# ${project.name}`);
+          if (project?.version) {
+            lines.push(`> Version: ${project.version}`);
+          }
+          lines.push('');
+          if (project.description) {
+            lines.push(`${project.description}`);
+          }
+        }
+        if (project?.repository) {
+          const rep = (typeof project.repository === 'string' ? project.repository : project.repository.url).replace(
+            'git+',
+            ''
+          );
+          const projectName = basename(rep).replace('.git', '');
+          lines.push(`## Installation`);
+          lines.push(`\`\`\`bash
+git clone ${rep}
+cd ${projectName}
+npm install
+\`\`\``);
+        }
+
+        if (project?.devScripts) {
+          lines.push(`## Running the app in watch mode`);
+          lines.push(`\`\`\`bash
+${project?.devScripts
+  .map((s) =>
+    [
+      packageJson?.scriptsComments?.[s]?.length ? `# ${lowerCase(packageJson?.scriptsComments?.[s].join(' '))}` : '',
+      `npm run ${s}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+  )
+  .join('\n\n')}
+\`\`\``);
+        }
+
+        if (project?.prodScripts) {
+          lines.push(`## Running the app in production mode`);
+          lines.push(`\`\`\`bash
+${project?.prodScripts
+  .map((s) =>
+    [
+      packageJson?.scriptsComments?.[s]?.length ? `# ${lowerCase(packageJson?.scriptsComments?.[s].join(' '))}` : '',
+      `npm run ${s}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+  )
+  .join('\n\n')}
+\`\`\``);
+        }
+
+        if (project?.testsScripts) {
+          lines.push(`## Test`);
+          lines.push(`\`\`\`bash
+${project?.testsScripts
+  .map((s) =>
+    [
+      packageJson?.scriptsComments?.[s]?.length ? `# ${lowerCase(packageJson?.scriptsComments?.[s].join(' '))}` : '',
+      `npm run ${s}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+  )
+  .join('\n\n')}
+\`\`\``);
+        }
+      } catch (err) {
+        // todo: add checks
+        // skip all errors
+      }
+
+      const categories = Object.keys(packageJson?.scripts || {});
+      if (categories.length > 0) {
+        lines.push('## All scripts');
+        lines.push(`|Script|Description|`);
+        lines.push(`|---|---|`);
+        for (const category of categories) {
+          lines.push(`|**${category}**|`);
+          const keys = Object.keys(packageJson?.scripts?.[category] || {});
+          for (const key of keys) {
+            lines.push(`|\`npm run ${key}\`|${packageJson?.scripts?.[category]?.[key].comments.join(' ') || ''}|`);
+          }
         }
       }
       for (const category of NEST_MODULE_CATEGORY_LIST) {
@@ -502,6 +606,23 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
         for (const nestModule of nestModules) {
           lines.push(await this.dynamicNestModuleMetadataMarkdownReportGenerator.getReport(nestModule));
         }
+      }
+      if (project?.maintainers) {
+        lines.push('');
+        lines.push('## Maintainers');
+        for (const m of project.maintainers) {
+          if (typeof m === 'string') {
+            lines.push(`- ${m}`);
+          } else {
+            lines.push(`- [${m.name}](${m.email})`);
+          }
+        }
+      }
+
+      if (project?.license) {
+        lines.push('');
+        lines.push('## License');
+        lines.push(`[${project?.license}](LICENSE)`);
       }
 
       //lines
@@ -536,6 +657,7 @@ export const { InfrastructureMarkdownReportGenerator } = createNestModule({
           }),
         ],
         imports: [
+          ProjectUtils.forFeature({ featureModuleName: 'InfrastructureMarkdownReportGenerator' }),
           InfrastructureMarkdownReportStorage.forFeature({
             featureModuleName: 'InfrastructureMarkdownReportGenerator',
             contextName: current.asyncModuleOptions.contextName,

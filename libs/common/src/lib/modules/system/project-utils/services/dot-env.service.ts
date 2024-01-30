@@ -136,7 +136,10 @@ export class DotEnvService {
     }
   }
 
-  async read(updateProcessEnv: boolean = true): Promise<Record<string, string | undefined> | undefined> {
+  async read(
+    updateProcessEnv: boolean = true,
+    ignoreCheckNeededKeys: boolean = false
+  ): Promise<Record<string, string | undefined> | undefined> {
     const envFile = this.getEnvFilePath();
     if (!envFile) {
       return;
@@ -144,10 +147,10 @@ export class DotEnvService {
     try {
       const neededKeys = this.keys();
       const existsEnvJson = (await this.readFile(envFile, false)) || {};
-      const neededEnvs = neededKeys.reduce(
-        (all, key) => ({ ...all, [String(key)]: existsEnvJson[key!] || '' }),
-        existsEnvJson
-      );
+      const neededEnvs = {
+        ...(ignoreCheckNeededKeys ? existsEnvJson : {}),
+        ...neededKeys.reduce((all, key) => ({ ...all, [String(key)]: existsEnvJson[key!] || '' }), existsEnvJson),
+      };
       if (updateProcessEnv) {
         for (const [key, value] of Object.entries(neededEnvs)) {
           if (process.env[key] === undefined && value !== undefined) {
@@ -163,7 +166,7 @@ export class DotEnvService {
     }
   }
 
-  async write(data: Record<string, string | undefined>) {
+  async write(data: Record<string, string | undefined>, ignoreCheckNeededKeys: boolean = false) {
     const envFile = this.getEnvFilePath();
     if (!envFile) {
       return;
@@ -172,22 +175,28 @@ export class DotEnvService {
     try {
       const neededKeys = this.keys();
       const existsEnvJson = (await this.readFile(envFile, false)) || {};
-      const newEnvJson = neededKeys.reduce(
-        (all, key) => ({ ...all, [String(key)]: data[key!] || existsEnvJson?.[key!] || '' }),
-        existsEnvJson
-      );
+      const newEnvJson = {
+        ...(ignoreCheckNeededKeys ? data : {}),
+        ...neededKeys.reduce(
+          (all, key) => ({ ...all, [String(key)]: data[key!] || existsEnvJson?.[key!] || '' }),
+          existsEnvJson
+        ),
+      };
       await this.writeFile(envFile, newEnvJson);
 
       const envExampleFile = envFile.replace('.env', '-example.env').replace('/-example.env', '/example.env');
       if (existsSync(envExampleFile)) {
         const existsExampleEnvJson = (await this.readFile(envExampleFile, false)) || {};
-        const newEnvJson = neededKeys.reduce(
+        const newEnvJson = [...neededKeys, ...(ignoreCheckNeededKeys ? Object.keys(data) : [])].reduce(
           (all, key) => ({ ...all, [String(key)]: existsExampleEnvJson?.[key!] || `value_for_${key}` }),
           existsExampleEnvJson
         );
         await this.writeFile(envExampleFile, newEnvJson);
       } else {
-        const newEnvJson = neededKeys.reduce((all, key) => ({ ...all, [String(key)]: `value_for_${key}` }), {});
+        const newEnvJson = [...neededKeys, ...(ignoreCheckNeededKeys ? Object.keys(data) : [])].reduce(
+          (all, key) => ({ ...all, [String(key)]: `value_for_${key}` }),
+          {}
+        );
         await this.writeFile(envExampleFile, newEnvJson);
       }
 

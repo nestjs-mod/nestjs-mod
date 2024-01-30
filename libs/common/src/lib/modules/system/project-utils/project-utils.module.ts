@@ -10,12 +10,17 @@ import { PackageJsonService } from './services/package-json.service';
 import { ProjectUtilsPatcherService } from './services/project-utils-patcher.service';
 import { WrapApplicationOptionsService } from './services/wrap-application-options.service';
 
-const wrapApplicationOptionsService = {} as WrapApplicationOptionsService;
-const dotEnvService = {} as DotEnvService;
-const packageJsonService = {} as PackageJsonService;
-const applicationPackageJsonService = {} as ApplicationPackageJsonService;
-const gitignoreService = {};
-const nxProjectJsonService = {};
+const wrapApplicationOptionsService = new WrapApplicationOptionsService();
+const packageJsonService = new PackageJsonService({});
+const gitignoreService = new GitignoreService(packageJsonService);
+const dotEnvService = new DotEnvService(wrapApplicationOptionsService, {}, gitignoreService);
+const applicationPackageJsonService = new ApplicationPackageJsonService({});
+const nxProjectJsonService = new NxProjectJsonService(
+  {},
+  applicationPackageJsonService,
+  packageJsonService,
+  dotEnvService
+);
 
 let projectUtilsPatcherService: ProjectUtilsPatcherService | undefined = undefined;
 
@@ -98,7 +103,8 @@ export const { ProjectUtils } = createNestModule({
           wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
         ),
         wrapApplicationOptionsService,
-        dotEnvService
+        dotEnvService,
+        packageJsonService
       );
       await projectUtilsPatcherService.onApplicationBootstrap();
     }
