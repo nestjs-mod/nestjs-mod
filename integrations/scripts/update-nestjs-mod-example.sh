@@ -26,6 +26,8 @@ npm install --save-dev @nestjs-mod/schematics@latest
 ./node_modules/.bin/nx g @nestjs-mod/schematics:application --directory=apps/app-name --name=app-name --projectNameAndRootFormat=as-provided --strict=true
 ./node_modules/.bin/nx g @nestjs-mod/schematics:library feature-name --buildable --publishable --directory=libs/feature-name --simpleName=true --projectNameAndRootFormat=as-provided --strict=true
 npm run manual:prepare
+# todo: fix it later
+npm run manual:prepare
 
 . ./.env
 kill -9 $(lsof -t -i:$APP_NAME_PORT) | echo "Killed"
