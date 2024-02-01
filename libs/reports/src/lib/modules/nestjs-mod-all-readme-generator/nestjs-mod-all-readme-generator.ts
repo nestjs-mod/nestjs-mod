@@ -13,9 +13,10 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { constantCase, kebabCase } from 'case-anything';
 import { IsNotEmpty } from 'class-validator';
 import fg from 'fast-glob';
-import { readFile, writeFile } from 'fs/promises';
+import { existsSync } from 'fs';
+import { mkdir, readFile, writeFile } from 'fs/promises';
 import markdownit from 'markdown-it';
-import { join } from 'path';
+import { dirname, join } from 'path';
 
 export const NESTJS_MOD_ALL_README_GENERATOR_FOOTER = `
 ## Links
@@ -153,6 +154,13 @@ ${moduleListInfo.map((m) => `| ${m.link} | ${m.category} | ${m.description?.spli
       ]
         .filter(Boolean)
         .join('\n');
+      if (!this.nestjsModAllReadmeGeneratorConfig.markdownFile) {
+        return;
+      }
+      const fileDir = dirname(this.nestjsModAllReadmeGeneratorConfig.markdownFile);
+      if (!existsSync(fileDir)) {
+        await mkdir(fileDir, { recursive: true });
+      }
       await writeFile(this.nestjsModAllReadmeGeneratorConfig.markdownFile, readmeContent);
       return;
     }
@@ -207,6 +215,13 @@ ${
 [downloads-image]: https://badgen.net/npm/dm/${packageJsonInfo.name}
 [downloads-url]: https://npmjs.org/package/${packageJsonInfo.name}
 `;
+    if (!this.nestjsModAllReadmeGeneratorConfig.markdownFile) {
+      return;
+    }
+    const fileDir = dirname(this.nestjsModAllReadmeGeneratorConfig.markdownFile);
+    if (!existsSync(fileDir)) {
+      await mkdir(fileDir, { recursive: true });
+    }
     await writeFile(this.nestjsModAllReadmeGeneratorConfig.markdownFile, readmeContent);
   }
 

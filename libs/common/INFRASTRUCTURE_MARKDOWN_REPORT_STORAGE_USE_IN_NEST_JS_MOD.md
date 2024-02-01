@@ -14,6 +14,7 @@ An example of using global storage in a module.
 
 ```typescript
 import {
+  isInfrastructureMode,
   bootstrapNestApplication,
   createNestModule,
   DefaultNestApplicationInitializer,
@@ -51,6 +52,9 @@ bootstrapNestApplication({
               const appReportService = app.get(AppReportService);
 
               console.log(appReportService.getReport()); // # TestApp ...
+            }
+            if (isInfrastructureMode()) {
+              process.exit(0);
             }
           },
         },

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { existsSync } from 'fs';
-import { readFile, writeFile } from 'fs/promises';
+import { mkdir, readFile, writeFile } from 'fs/promises';
 import { dirname } from 'path';
 import { PackageJsonService } from './package-json.service';
 
@@ -24,6 +24,13 @@ export class GitignoreService {
           }
         }
         if (changed) {
+          if (!gitignoreFilePath) {
+            return;
+          }
+          const fileDir = dirname(gitignoreFilePath);
+          if (!existsSync(fileDir)) {
+            await mkdir(fileDir, { recursive: true });
+          }
           await writeFile(gitignoreFilePath, content);
         }
       }

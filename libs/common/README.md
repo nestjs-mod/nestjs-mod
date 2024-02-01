@@ -224,6 +224,7 @@ Types of modules (list in order of processing):
 
 ```typescript
 import {
+  isInfrastructureMode,
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
   EnvModel,
@@ -275,6 +276,9 @@ bootstrapNestApplication({
             }
           },
           postListen: async ({ current }) => {
+            if (isInfrastructureMode()) {
+              process.exit(0);
+            }
             Logger.log(
               `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
                 current.staticEnvironments?.port
@@ -292,6 +296,7 @@ bootstrapNestApplication({
 #### Usage with project name and contextName
 
 ```typescript
+  isInfrastructureMode,
 import {
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
@@ -345,6 +350,9 @@ bootstrapNestApplication({
             }
           },
           postListen: async ({ current }) => {
+            if (isInfrastructureMode()) {
+              process.exit(0);
+            }
             Logger.log(
               `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
                 current.staticEnvironments?.port
@@ -586,6 +594,7 @@ An example of using global storage in a module.
 
 ```typescript
 import {
+  isInfrastructureMode,
   bootstrapNestApplication,
   createNestModule,
   DefaultNestApplicationInitializer,
@@ -623,6 +632,9 @@ bootstrapNestApplication({
               const appReportService = app.get(AppReportService);
 
               console.log(appReportService.getReport()); // # TestApp ...
+            }
+            if (isInfrastructureMode()) {
+              process.exit(0);
             }
           },
         },
@@ -730,6 +742,9 @@ bootstrapNestApplication({
             }
           },
           postListen: async ({ current }) => {
+            if (isInfrastructureMode()) {
+              process.exit(0);
+            }
             Logger.log(
               `🚀 Application is running on: http://${current.staticEnvironments?.hostname || 'localhost'}:${
                 current.staticEnvironments?.port
@@ -797,6 +812,7 @@ An example of access to module services with forFeature.
 
 ```typescript
 import {
+  isInfrastructureMode,
   DOT_ENV_FILE,
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
@@ -854,6 +870,9 @@ bootstrapNestApplication({
             if (app) {
               const getEnv = app.get(GetEnv);
               console.log(await getEnv.getEnv()); // output: { TEST_APP_PORT: '2000', TEST_APP_HOSTNAME: 'host' }
+            }
+            if (isInfrastructureMode()) {
+              process.exit(0);
             }
           },
         },

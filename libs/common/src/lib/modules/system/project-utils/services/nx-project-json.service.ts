@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { existsSync } from 'fs';
-import { readFile, writeFile } from 'fs/promises';
+import { mkdir, readFile, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
 import { GENERATE_TARGET_NAME, PROJECT_JSON_FILE } from '../project-utils.constants';
@@ -86,6 +86,13 @@ export class NxProjectJsonService {
 
   async writeFile(nxProjectJsonFile: string, data: JSONSchemaForNxProjects) {
     try {
+      if (!nxProjectJsonFile) {
+        return;
+      }
+      const fileDir = dirname(nxProjectJsonFile);
+      if (!existsSync(fileDir)) {
+        await mkdir(fileDir, { recursive: true });
+      }
       await writeFile(nxProjectJsonFile, JSON.stringify(data, null, 2));
     } catch (err) {
       //
@@ -104,6 +111,10 @@ export class NxProjectJsonService {
     const nxProjectJsonFile = this.getNxProjectJsonFilePath();
     if (!nxProjectJsonFile) {
       return;
+    }
+    const fileDir = dirname(nxProjectJsonFile);
+    if (!existsSync(fileDir)) {
+      await mkdir(fileDir, { recursive: true });
     }
     await this.writeFile(nxProjectJsonFile, data);
   }

@@ -51,6 +51,9 @@ bootstrapNestApplication({
             }
           },
           postListen: async ({ current }) => {
+            if (isInfrastructureMode()) {
+              process.exit(0);
+            }
             Logger.log(
               `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
                 current.staticEnvironments?.port

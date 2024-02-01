@@ -1,6 +1,6 @@
 import { Injectable, OnApplicationBootstrap, Provider } from '@nestjs/common';
-import { writeFile } from 'fs/promises';
-import { basename } from 'path';
+import { mkdir, writeFile } from 'fs/promises';
+import { basename, dirname } from 'path';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { ConfigModelInfo } from '../../../config-model/types';
 import { EnvModelInfo } from '../../../env-model/types';
@@ -24,6 +24,7 @@ import { createNestModule } from '../../../nest-module/utils';
 import { ProjectUtils } from '../../system/project-utils/project-utils.module';
 import { PackageJsonService } from '../../system/project-utils/services/package-json.service';
 import { lowerCase } from 'case-anything';
+import { existsSync } from 'fs';
 
 @ConfigModel()
 export class InfrastructureMarkdownReportGeneratorConfiguration {
@@ -491,6 +492,10 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
     async onApplicationBootstrap() {
       this.infrastructureMarkdownReportStorage.report = await this.getReport();
       if (this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile) {
+        const fileDir = dirname(this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile);
+        if (!existsSync(fileDir)) {
+          await mkdir(fileDir, { recursive: true });
+        }
         await writeFile(
           this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile,
           this.infrastructureMarkdownReportStorage.report

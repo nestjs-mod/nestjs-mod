@@ -19,6 +19,7 @@ Types of modules (list in order of processing):
 
 ```typescript
 import {
+  isInfrastructureMode,
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
   EnvModel,
@@ -70,6 +71,9 @@ bootstrapNestApplication({
             }
           },
           postListen: async ({ current }) => {
+            if (isInfrastructureMode()) {
+              process.exit(0);
+            }
             Logger.log(
               `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
                 current.staticEnvironments?.port
@@ -87,6 +91,7 @@ bootstrapNestApplication({
 #### Usage with project name and contextName
 
 ```typescript
+  isInfrastructureMode,
 import {
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
@@ -140,6 +145,9 @@ bootstrapNestApplication({
             }
           },
           postListen: async ({ current }) => {
+            if (isInfrastructureMode()) {
+              process.exit(0);
+            }
             Logger.log(
               `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
                 current.staticEnvironments?.port

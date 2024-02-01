@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { config } from 'dotenv';
 import { existsSync } from 'fs';
-import { writeFile } from 'fs/promises';
-import { basename } from 'path';
+import { mkdir, writeFile } from 'fs/promises';
+import { basename, dirname } from 'path';
 import { EnvModelInfoValidationsPropertyNameFormatters } from '../../../../env-model/types';
 import { defaultContextName } from '../../../../utils/default-context-name';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
@@ -128,6 +128,13 @@ export class DotEnvService {
       const envContent = Object.entries(data)
         .map(([key, value]) => `${key}=${value}`)
         .join('\n');
+      if (!envFile) {
+        return;
+      }
+      const fileDir = dirname(envFile);
+      if (!existsSync(fileDir)) {
+        await mkdir(fileDir, { recursive: true });
+      }
       await writeFile(envFile, envContent);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
