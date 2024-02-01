@@ -54,7 +54,11 @@ bootstrapNestApplication({
               console.log(appReportService.getReport()); // # TestApp ...
             }
             if (isInfrastructureMode()) {
-              process.exit(0);
+              /**
+               * When you start the application in infrastructure mode, it should automatically close;
+               * if for some reason it does not close, we forcefully close it after 30 seconds.
+               */
+              setTimeout(() => process.exit(0), 30000);
             }
           },
         },
