@@ -1,3 +1,10 @@
+## [2.6.2](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.6.1...reports-v2.6.2) (2024-02-01)
+
+
+### Bug Fixes
+
+* add create directory when we try create or update some files from infrastructure logic ([d613800](https://github.com/nestjs-mod/nestjs-mod/commit/d613800dc7e3042e52470da8ffecde2b348c0591))
+
 ## [2.6.1](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.6.0...reports-v2.6.1) (2024-01-30)
 
 
