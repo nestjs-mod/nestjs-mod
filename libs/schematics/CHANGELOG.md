@@ -1,3 +1,10 @@
+## [2.2.9](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.2.8...schematics-v2.2.9) (2024-02-01)
+
+
+### Bug Fixes
+
+* add setTimeout before close application when we start application is InfrastructureMode ([8bc56d7](https://github.com/nestjs-mod/nestjs-mod/commit/8bc56d76c7af17fdcf216fe073b34027ce58b735))
+
 ## [2.2.8](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.2.7...schematics-v2.2.8) (2024-02-01)
 
 
