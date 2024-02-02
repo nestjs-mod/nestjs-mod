@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.0.6...nestjs-mod-v1.0.7) (2024-02-02)
+
+
+### Bug Fixes
+
+* update logic for addRunCommands to project.json, remove empty feature sections from report ([6b10f7f](https://github.com/nestjs-mod/nestjs-mod/commit/6b10f7f22186255698ae7b230c484956f03cbd34))
+
 ## [1.0.6](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.0.5...nestjs-mod-v1.0.6) (2024-01-17)
 
 
