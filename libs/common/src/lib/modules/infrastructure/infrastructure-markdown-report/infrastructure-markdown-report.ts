@@ -191,7 +191,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           for (const featureModuleName of featureModuleNames) {
             const featureConfigurations =
               dynamicNestModuleMetadata.moduleSettings?.[name]?.featureModuleConfigurations?.[featureModuleName] || [];
-            const newLines: string[] = ['#### Modules that use feature configuration'];
+            const newLines: string[] = [];
             for (const featureConfiguration of featureConfigurations) {
               this.reportOfConfigModelInfo({
                 titleSharps: '#####',
@@ -201,7 +201,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
               });
             }
             if (newLines.length > 0) {
-              lines = [...lines, ...newLines];
+              lines = [...lines, '#### Modules that use feature configuration', ...newLines];
             }
           }
         }
@@ -210,7 +210,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           for (const featureModuleName of featureEnvironmentsModuleNames) {
             const featureEnvironments =
               dynamicNestModuleMetadata.moduleSettings?.[name]?.featureModuleEnvironments?.[featureModuleName] || [];
-            const newLines: string[] = ['#### Modules that use feature environments'];
+            const newLines: string[] = [];
             for (const featureEnvironment of featureEnvironments) {
               this.reportOfEnvModelInfo({
                 titleSharps: '#####',
@@ -220,7 +220,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
               });
             }
             if (newLines.length > 0) {
-              lines = [...lines, ...newLines];
+              lines = [...lines, '#### Modules that use feature environments', ...newLines];
             }
           }
         }

@@ -113,7 +113,6 @@ Variables with primitive types used in the module, the values of which can be ob
 | ------ | ----------- | ----------- | ------- | ----- |
 |`featureVar`|-|**isNotEmpty** (featureVar should not be empty)|-|```featureVar41```|
 
-#### Modules that use feature environments
 ## Integration modules
 Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
 
