@@ -1,3 +1,10 @@
+## [2.2.10](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.2.9...schematics-v2.2.10) (2024-02-02)
+
+
+### Bug Fixes
+
+* update logic for addRunCommands to project.json, remove empty feature sections from report ([6b10f7f](https://github.com/nestjs-mod/nestjs-mod/commit/6b10f7f22186255698ae7b230c484956f03cbd34))
+
 ## [2.2.9](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.2.8...schematics-v2.2.9) (2024-02-01)
 
 
