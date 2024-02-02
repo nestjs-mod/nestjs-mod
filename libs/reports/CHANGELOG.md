@@ -1,3 +1,10 @@
+## [2.6.3](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.6.2...reports-v2.6.3) (2024-02-02)
+
+
+### Bug Fixes
+
+* update logic for addRunCommands to project.json, remove empty feature sections from report ([6b10f7f](https://github.com/nestjs-mod/nestjs-mod/commit/6b10f7f22186255698ae7b230c484956f03cbd34))
+
 ## [2.6.2](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.6.1...reports-v2.6.2) (2024-02-01)
 
 
