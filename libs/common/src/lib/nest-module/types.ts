@@ -61,6 +61,7 @@ export type DynamicNestModuleMetadata<
   TDynamicModule = DynamicModule,
   TLinkOptions = {
     // todo: try add asyncOptions
+    contextName?: string;
     featureModule: TDynamicModule;
     settingsModule: TDynamicModule;
     featureConfiguration: TFeatureConfigurationModel;
@@ -71,15 +72,16 @@ export type DynamicNestModuleMetadata<
     globalConfigurationOptions: Omit<ConfigModelOptions, 'originalName'>;
   },
   TImportsWithStaticOptions = (linkOptions: TLinkOptions) => Array<ImportsWithStaticOptionsResponse>,
-  TControllersWithStaticOptions = (inkOptions: TLinkOptions) => Type<any>[],
-  TProvidersWithStaticOptions = (inkOptions: TLinkOptions) => Provider[],
-  TExportsWithStaticOptions = (inkOptions: TLinkOptions) => ExportsWithStaticOptionsResponse[],
+  TControllersWithStaticOptions = (linkOptions: TLinkOptions) => Type<any>[],
+  TProvidersWithStaticOptions = (linkOptions: TLinkOptions) => Provider[],
+  TSharedProvidersWithStaticOptions = (linkOptions: TLinkOptions) => Provider[],
+  TExportsWithStaticOptions = (linkOptions: TLinkOptions) => ExportsWithStaticOptionsResponse[],
   TNestApplication = INestApplication,
   TModuleName extends string = string
 > =
   | Promise<TDynamicModule> & {
       moduleSettings?: Record<string, TModuleSettings>;
-      nestModuleMetadata?: NestModuleMetadata<
+      getNestModuleMetadata?: () => NestModuleMetadata<
         TConfigurationModel,
         TStaticConfigurationModel,
         TEnvironmentsModel,
@@ -95,6 +97,7 @@ export type DynamicNestModuleMetadata<
         TImportsWithStaticOptions,
         TControllersWithStaticOptions,
         TProvidersWithStaticOptions,
+        TSharedProvidersWithStaticOptions,
         TExportsWithStaticOptions,
         TNestApplication,
         TModuleName
@@ -116,6 +119,7 @@ export type DynamicNestModuleMetadata<
         TImportsWithStaticOptions,
         TControllersWithStaticOptions,
         TProvidersWithStaticOptions,
+        TSharedProvidersWithStaticOptions,
         TExportsWithStaticOptions,
         TNestApplication
       >[];
@@ -192,6 +196,7 @@ export interface NestModuleMetadata<
   TDynamicModule = DynamicModule,
   TLinkOptions = {
     // todo: try add asyncOptions
+    contextName?: string;
     featureModule: TDynamicModule;
     settingsModule: TDynamicModule;
     staticConfiguration: TStaticConfigurationModel;
@@ -200,9 +205,10 @@ export interface NestModuleMetadata<
     globalConfigurationOptions: Omit<ConfigModelOptions, 'originalName'>;
   },
   TImportsWithStaticOptions = (linkOptions: TLinkOptions) => Array<ImportsWithStaticOptionsResponse>,
-  TControllersWithStaticOptions = (inkOptions: TLinkOptions) => Type<any>[],
-  TProvidersWithStaticOptions = (inkOptions: TLinkOptions) => Provider[],
-  TExportsWithStaticOptions = (inkOptions: TLinkOptions) => ExportsWithStaticOptionsResponse[],
+  TControllersWithStaticOptions = (linkOptions: TLinkOptions) => Type<any>[],
+  TProvidersWithStaticOptions = (linkOptions: TLinkOptions) => Provider[],
+  TSharedProvidersWithStaticOptions = (linkOptions: TLinkOptions) => Provider[],
+  TExportsWithStaticOptions = (linkOptions: TLinkOptions) => ExportsWithStaticOptionsResponse[],
   TNestApplication = INestApplication,
   TModuleName extends string = string,
   TForRootMethodOptions = ForRootMethodOptions<
@@ -263,7 +269,7 @@ export interface NestModuleMetadata<
    * Optional list of providers that will be instantiated by the NestJS injector
    * and that may be shared at least across this module.
    */
-  sharedProviders?: Provider[] | TProvidersWithStaticOptions;
+  sharedProviders?: Provider[] | TSharedProvidersWithStaticOptions;
   /**
    * Optional list of the subset of providers that are provided by this module
    * and should be available in other modules which import this module.

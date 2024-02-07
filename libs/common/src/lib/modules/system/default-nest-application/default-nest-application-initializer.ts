@@ -109,7 +109,7 @@ export const { DefaultNestApplicationInitializer } = createNestModule({
         .filter(([category]) => isInfrastructureMode() || category !== NestModuleCategory.infrastructure)
         .map(([, value]) => value)
         .flat()
-        .filter((m: DynamicNestModuleMetadata) => !m.nestModuleMetadata?.moduleDisabled),
+        .filter((m: DynamicNestModuleMetadata) => !m.getNestModuleMetadata?.()?.moduleDisabled),
     })
     class BasicNestApp {}
     const app = await NestFactory.create(BasicNestApp, current?.staticConfiguration);

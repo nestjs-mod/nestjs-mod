@@ -42,13 +42,13 @@ export const { ProjectUtils } = createNestModule({
   // we use wrapApplication to modify some of the files after connecting all modules, since modules can add additional data that will be used when modifying files
   wrapApplication: async () => {
     if (projectUtilsPatcherService) {
-      await projectUtilsPatcherService.onApplicationBootstrap();
+      projectUtilsPatcherService.onApplicationBootstrap();
     }
   },
   // we use postWrapApplication to modify some of the files after connecting all modules, since modules can add additional data that will be used when modifying files
   postWrapApplication: async () => {
     if (projectUtilsPatcherService) {
-      await projectUtilsPatcherService.onApplicationBootstrap();
+      projectUtilsPatcherService.onApplicationBootstrap();
     }
   },
   // we use preWrapApplication because we need to get project data and install it globally - before running the application on NestJS
@@ -81,7 +81,7 @@ export const { ProjectUtils } = createNestModule({
         wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
         tempGitignoreService
       );
-      await tempDotEnvService.read();
+      tempDotEnvService.read();
 
       Object.setPrototypeOf(dotEnvService, tempDotEnvService);
       Object.assign(dotEnvService, tempDotEnvService);
@@ -106,7 +106,7 @@ export const { ProjectUtils } = createNestModule({
         dotEnvService,
         packageJsonService
       );
-      await projectUtilsPatcherService.onApplicationBootstrap();
+      projectUtilsPatcherService.onApplicationBootstrap();
     }
   },
 });

@@ -4,8 +4,8 @@ import { isInfrastructureMode } from '../../../../utils/is-infrastructure';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
 import { ApplicationPackageJsonService } from './application-package-json.service';
 import { DotEnvService } from './dot-env.service';
-import { WrapApplicationOptionsService } from './wrap-application-options.service';
 import { PackageJsonService } from './package-json.service';
+import { WrapApplicationOptionsService } from './wrap-application-options.service';
 
 @Injectable()
 export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
@@ -19,34 +19,34 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
     private readonly packageJsonService: PackageJsonService
   ) {}
 
-  async onApplicationBootstrap() {
-    await this.updatePackage();
-    await this.updateProject();
-    await this.updateEnvFile();
-    await this.updateGlobalConfigurationAndEnvironmentsOptions();
+  onApplicationBootstrap() {
+    this.updatePackage();
+    this.updateProject();
+    this.updateEnvFile();
+    this.updateGlobalConfigurationAndEnvironmentsOptions();
   }
 
-  private async updatePackage() {
+  private updatePackage() {
     if (!this.packageJsonService) {
       this.logger.warn(`packageJsonService not set, updating not work`);
       return;
     }
-    const existsJson = await this.packageJsonService.read();
+    const existsJson = this.packageJsonService.read();
     if (existsJson) {
-      await this.packageJsonService.write(existsJson);
+      this.packageJsonService.write(existsJson);
     }
   }
 
-  private async updateEnvFile() {
+  private updateEnvFile() {
     if (!this.dotEnvService && this.projectUtilsConfiguration.updateEnvFile) {
       this.logger.warn(`dotEnvService not set, updating not work`);
       return;
     }
-    const existsEnvJson = (await this.dotEnvService.read()) || {};
-    await this.dotEnvService.write(existsEnvJson);
+    const existsEnvJson = this.dotEnvService.read() || {};
+    this.dotEnvService.write(existsEnvJson);
   }
 
-  private async updateGlobalConfigurationAndEnvironmentsOptions() {
+  private updateGlobalConfigurationAndEnvironmentsOptions() {
     if (!this.projectUtilsConfiguration || !this.wrapApplicationOptionsService) {
       this.logger.warn(
         `projectUtilsConfiguration or applicationPackageJsonService or wrapApplicationOptionsService not set, updating not work`
@@ -96,7 +96,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
     };
   }
 
-  private async updateProject() {
+  private updateProject() {
     if (!this.projectUtilsConfiguration || !this.applicationPackageJsonService || !this.wrapApplicationOptionsService) {
       this.logger.warn(
         `projectUtilsConfiguration or applicationPackageJsonService or wrapApplicationOptionsService not set, updating not work`
@@ -104,8 +104,8 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
       return;
     }
     if (this.projectUtilsConfiguration.updateProjectOptions) {
-      const packageJson = await this.packageJsonService.read();
-      const applicationPackageJson = await this.applicationPackageJsonService.read();
+      const packageJson = this.packageJsonService.read();
+      const applicationPackageJson = this.applicationPackageJsonService.read();
       if (!this.wrapApplicationOptionsService.project) {
         this.wrapApplicationOptionsService.project = {} as ProjectOptions;
       }

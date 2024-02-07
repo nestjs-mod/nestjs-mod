@@ -13,8 +13,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { constantCase, kebabCase } from 'case-anything';
 import { IsNotEmpty } from 'class-validator';
 import fg from 'fast-glob';
-import { existsSync } from 'fs';
-import { mkdir, readFile, writeFile } from 'fs/promises';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import markdownit from 'markdown-it';
 import { dirname, join } from 'path';
 
@@ -88,7 +87,7 @@ export class NestjsModAllReadmeGeneratorService implements OnModuleInit {
   async onModuleInit() {
     const utilsListInfo = await this.getUtilsListInfo();
     const moduleListInfo = await this.getModuleListInfo();
-    const packageJsonInfo = await this.getPackageJsonInfo();
+    const packageJsonInfo = this.getPackageJsonInfo();
 
     let deps = [
       ...Object.entries(packageJsonInfo?.dependenciesInfo || {})
@@ -159,9 +158,9 @@ ${moduleListInfo.map((m) => `| ${m.link} | ${m.category} | ${m.description?.spli
       }
       const fileDir = dirname(this.nestjsModAllReadmeGeneratorConfig.markdownFile);
       if (!existsSync(fileDir)) {
-        await mkdir(fileDir, { recursive: true });
+        mkdirSync(fileDir, { recursive: true });
       }
-      await writeFile(this.nestjsModAllReadmeGeneratorConfig.markdownFile, readmeContent);
+      writeFileSync(this.nestjsModAllReadmeGeneratorConfig.markdownFile, readmeContent);
       return;
     }
 
@@ -220,17 +219,17 @@ ${
     }
     const fileDir = dirname(this.nestjsModAllReadmeGeneratorConfig.markdownFile);
     if (!existsSync(fileDir)) {
-      await mkdir(fileDir, { recursive: true });
+      mkdirSync(fileDir, { recursive: true });
     }
-    await writeFile(this.nestjsModAllReadmeGeneratorConfig.markdownFile, readmeContent);
+    writeFileSync(this.nestjsModAllReadmeGeneratorConfig.markdownFile, readmeContent);
   }
 
-  private async getPackageJsonInfo() {
+  private getPackageJsonInfo() {
     if (!this.nestjsModAllReadmeGeneratorConfig.packageFile) {
       return undefined;
     }
     const packageJson: BasicPackageJsonType = JSON.parse(
-      (await readFile(this.nestjsModAllReadmeGeneratorConfig.packageFile)).toString()
+      readFileSync(this.nestjsModAllReadmeGeneratorConfig.packageFile).toString()
     );
     return packageJson;
   }
@@ -249,7 +248,7 @@ ${
       typographer: true,
     });
     for (const readmeFile of readmeFileList) {
-      const readmeContent = (await readFile(readmeFile)).toString();
+      const readmeContent = readFileSync(readmeFile).toString();
       const readmeParsed = md.parse(readmeContent, {});
       const [utilName, description] = readmeParsed.map((p) => p.content).filter(Boolean);
       readmeList.push({
@@ -269,14 +268,15 @@ ${
     const contextName = 'nest';
     for (const m of this.nestjsModAllReadmeGeneratorConfig?.modules || []) {
       const allClasses = await m;
+
       const onlyNestModules = Object.entries(allClasses).filter(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ([, value]: [string, any]) => value['nestModuleMetadata']
+        ([, value]: [string, any]) => value['getNestModuleMetadata']
       );
       const asyncModules = onlyNestModules
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map(([, value]: [string, any]) =>
-          value[value.nestModuleMetadata['forRootMethodName'] || DEFAULT_FOR_ROOT_METHOD_NAME]({
+          value[value.getNestModuleMetadata()['forRootMethodName'] || DEFAULT_FOR_ROOT_METHOD_NAME]({
             contextName,
           })
         );
@@ -293,13 +293,16 @@ ${
         .map(([, m]) => m)
         .flat() || []) {
         await asyncModule;
-        const moduleName = asyncModule.nestModuleMetadata!.moduleName;
-        const category = asyncModule.nestModuleMetadata!.moduleCategory;
+        const moduleName = asyncModule.getNestModuleMetadata?.()!.moduleName;
+        if (!moduleName) {
+          throw new Error('moduleName not set');
+        }
+        const category = asyncModule.getNestModuleMetadata?.()!.moduleCategory;
         if (category) {
           asyncModule.moduleSettings = { [contextName]: asyncModule.moduleSettings?.[contextName] || {} };
 
-          const description = asyncModule.nestModuleMetadata!.moduleDescription;
-          if (!asyncModule.nestModuleMetadata?.moduleDisabled) {
+          const description = asyncModule.getNestModuleMetadata?.()!.moduleDescription;
+          if (!asyncModule.getNestModuleMetadata?.()?.moduleDisabled) {
             let nestJsModUsage = '';
             let nestJsUsage = '';
 
@@ -309,7 +312,7 @@ ${
                   this.nestjsModAllReadmeGeneratorConfig.folderWithMarkdownFilesToUse,
                   `${constantCase(moduleName)}_USE_IN_NEST_JS.md`
                 );
-                nestJsUsage = (await readFile(filePath)).toString();
+                nestJsUsage = readFileSync(filePath).toString();
               } catch (err) {
                 //
               }
@@ -318,7 +321,7 @@ ${
                   this.nestjsModAllReadmeGeneratorConfig.folderWithMarkdownFilesToUse,
                   `${constantCase(moduleName)}_USE_IN_NEST_JS_MOD.md`
                 );
-                nestJsModUsage = (await readFile(filePath)).toString();
+                nestJsModUsage = readFileSync(filePath).toString();
               } catch (err) {
                 //
               }
@@ -329,7 +332,7 @@ ${
               link: `[${moduleName}](#${moduleName.toLowerCase()})`,
               category,
               description,
-              body: await this.dynamicNestModuleMetadataMarkdownReportGenerator.getReport(asyncModule, {
+              body: this.dynamicNestModuleMetadataMarkdownReportGenerator.getReport(asyncModule, {
                 nestJsModUsage,
                 nestJsUsage,
               }),

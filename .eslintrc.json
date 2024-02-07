@@ -14,6 +14,11 @@
         "*.js",
         "*.jsx"
       ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.*?.json"
+        ]
+      },
       "rules": {
         "@nx/enforce-module-boundaries": [
           "error",
@@ -29,7 +34,8 @@
               }
             ]
           }
-        ]
+        ],
+        "@typescript-eslint/await-thenable": "error"
       }
     },
     {
@@ -40,8 +46,7 @@
       "extends": [
         "plugin:@nx/typescript"
       ],
-      "rules": {
-      }
+      "rules": {}
     },
     {
       "files": [

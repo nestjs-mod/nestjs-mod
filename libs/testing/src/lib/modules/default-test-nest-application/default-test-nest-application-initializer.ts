@@ -33,8 +33,8 @@ class DefaultTestNestApplicationInitializerConfiguration {
 export const { DefaultTestNestApplicationInitializer } = createNestModule({
   moduleName: 'DefaultTestNestApplicationInitializer',
   staticConfigurationModel: DefaultTestNestApplicationInitializerConfiguration,
-  configurationOptions: { skipValidation: true },
-  environmentsOptions: { skipValidation: true },
+  globalConfigurationOptions: { skipValidation: true },
+  globalEnvironmentsOptions: { skipValidation: true },
   // we use preWrapApplication for create new module and place it to after all modules
   preWrapApplication: async ({ current, modules }) => {
     if (!modules[NestModuleCategory.integrations]) {

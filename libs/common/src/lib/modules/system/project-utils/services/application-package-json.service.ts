@@ -13,11 +13,11 @@ export class ApplicationPackageJsonService extends PackageJsonService {
     return this.projectUtilsConfiguration.applicationPackageJsonFile;
   }
 
-  override async read(): Promise<PackageJsonType | undefined> {
+  override read(): PackageJsonType | undefined {
     return super.read();
   }
 
-  override async write(data: PackageJsonType) {
+  override write(data: PackageJsonType) {
     super.write(data);
   }
 }

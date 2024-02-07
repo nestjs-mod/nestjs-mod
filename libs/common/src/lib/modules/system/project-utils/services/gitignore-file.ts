@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { existsSync } from 'fs';
-import { mkdir, readFile, writeFile } from 'fs/promises';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname } from 'path';
 import { PackageJsonService } from './package-json.service';
 
@@ -8,13 +7,13 @@ import { PackageJsonService } from './package-json.service';
 export class GitignoreService {
   constructor(private readonly packageJsonService: PackageJsonService) {}
 
-  async addGitIgnoreEntry(lines: string[]) {
-    const packageJson = await this.packageJsonService.read();
+  addGitIgnoreEntry(lines: string[]) {
+    const packageJson = this.packageJsonService.read();
     const packageJsonFilePath = this.packageJsonService.getPackageJsonFilePath();
     if (packageJson && packageJsonFilePath) {
       const gitignoreFilePath = `${dirname(packageJsonFilePath)}/.gitignore`;
       if (existsSync(gitignoreFilePath)) {
-        let content = (await readFile(gitignoreFilePath, 'utf-8')).toString();
+        let content = readFileSync(gitignoreFilePath, 'utf-8').toString();
 
         let changed = false;
         for (const line of lines) {
@@ -29,9 +28,9 @@ export class GitignoreService {
           }
           const fileDir = dirname(gitignoreFilePath);
           if (!existsSync(fileDir)) {
-            await mkdir(fileDir, { recursive: true });
+            mkdirSync(fileDir, { recursive: true });
           }
-          await writeFile(gitignoreFilePath, content);
+          writeFileSync(gitignoreFilePath, content);
         }
       }
     }

@@ -8,7 +8,7 @@ import {
 import { DefaultTestNestApplicationCreate, DefaultTestNestApplicationInitializer } from '@nestjs-mod/testing';
 import { Controller, Get, Injectable, Module } from '@nestjs/common';
 import { IsNotEmpty, setClassValidatorMessages } from 'class-validator-multi-lang';
-import { readFile } from 'fs/promises';
+import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import request from 'supertest';
 import { SampleWithSharedConfig } from './sample-with-shared-config.module';
@@ -32,9 +32,7 @@ describe('SampleWithSharedConfigController', () => {
 
   it('should return error if environment not set (translated errors)', async () => {
     const RU_I18N_MESSAGES = JSON.parse(
-      (
-        await readFile(resolve(__dirname, '../../../../../node_modules/class-validator-multi-lang/i18n/ru.json'))
-      ).toString()
+      readFileSync(resolve(__dirname, '../../../../../node_modules/class-validator-multi-lang/i18n/ru.json')).toString()
     );
     setClassValidatorMessages(RU_I18N_MESSAGES);
 

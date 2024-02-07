@@ -1,5 +1,6 @@
 import { Injectable, OnApplicationBootstrap, Provider } from '@nestjs/common';
-import { mkdir, writeFile } from 'fs/promises';
+import { lowerCase } from 'case-anything';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { basename, dirname } from 'path';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { ConfigModelInfo } from '../../../config-model/types';
@@ -18,13 +19,12 @@ import {
   DynamicNestModuleMetadata,
   NEST_MODULE_CATEGORY_LIST,
   NestModuleCategory,
+  NestModuleMetadata,
   WrapApplicationOptions,
 } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
 import { ProjectUtils } from '../../system/project-utils/project-utils.module';
 import { PackageJsonService } from '../../system/project-utils/services/package-json.service';
-import { lowerCase } from 'case-anything';
-import { existsSync } from 'fs';
 
 @ConfigModel()
 export class InfrastructureMarkdownReportGeneratorConfiguration {
@@ -45,7 +45,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
     private readonly infrastructureMarkdownReportGeneratorConfiguration: InfrastructureMarkdownReportGeneratorConfiguration
   ) {}
 
-  async getReport(
+  getReport(
     dynamicNestModuleMetadata: DynamicNestModuleMetadata,
     options: {
       nestJsUsage?: string;
@@ -66,10 +66,13 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
     }
   ) {
     let lines: string[] = [];
-    if (dynamicNestModuleMetadata.nestModuleMetadata?.moduleCategory) {
-      lines.push(`### ${dynamicNestModuleMetadata.nestModuleMetadata?.moduleName}`);
-      if (dynamicNestModuleMetadata.nestModuleMetadata?.moduleDescription) {
-        lines.push(`${dynamicNestModuleMetadata.nestModuleMetadata?.moduleDescription}`);
+    const moduleMetadata: NestModuleMetadata | undefined =
+      dynamicNestModuleMetadata.getNestModuleMetadata?.() as NestModuleMetadata;
+
+    if (moduleMetadata?.moduleCategory) {
+      lines.push(`### ${moduleMetadata.moduleName}`);
+      if (moduleMetadata.moduleDescription) {
+        lines.push(`${moduleMetadata.moduleDescription}`);
         lines.push('');
       }
 
@@ -86,17 +89,14 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       }
 
       const sharedProvidersArr =
-        !dynamicNestModuleMetadata.nestModuleMetadata?.sharedProviders ||
-        Array.isArray(dynamicNestModuleMetadata.nestModuleMetadata.sharedProviders)
-          ? dynamicNestModuleMetadata.nestModuleMetadata?.sharedProviders
+        !moduleMetadata.sharedProviders || Array.isArray(moduleMetadata.sharedProviders)
+          ? moduleMetadata.sharedProviders
           : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (dynamicNestModuleMetadata.nestModuleMetadata.sharedProviders as any)({
+            (moduleMetadata.sharedProviders as any)({
               staticConfiguration: {},
               staticEnvironments: {},
             });
-      const sharedProviders = ((!dynamicNestModuleMetadata.nestModuleMetadata.sharedProviders
-        ? []
-        : sharedProvidersArr) || []) as Provider[];
+      const sharedProviders = ((!moduleMetadata.sharedProviders ? [] : sharedProvidersArr) ?? []) as Provider[];
 
       if (Array.isArray(sharedProviders) && sharedProviders?.length > 0) {
         lines.push('#### Shared providers');
@@ -112,17 +112,16 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       }
 
       const sharedImportsArr =
-        !dynamicNestModuleMetadata.nestModuleMetadata?.sharedImports ||
-        Array.isArray(dynamicNestModuleMetadata.nestModuleMetadata.sharedImports)
-          ? dynamicNestModuleMetadata.nestModuleMetadata?.sharedImports
+        !moduleMetadata.sharedImports || Array.isArray(moduleMetadata.sharedImports)
+          ? moduleMetadata.sharedImports
           : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (dynamicNestModuleMetadata.nestModuleMetadata.sharedImports as any)({
+            (moduleMetadata.sharedImports as any)({
               project: {},
               settingsModule: {},
               staticConfiguration: {},
               staticEnvironments: {},
             });
-      const sharedImports = (!dynamicNestModuleMetadata.nestModuleMetadata.sharedImports ? [] : sharedImportsArr) || [];
+      const sharedImports = (!moduleMetadata.sharedImports ? [] : sharedImportsArr) || [];
 
       if (Array.isArray(sharedImports) && sharedImports?.length > 0) {
         lines.push('#### Shared imports');
@@ -130,7 +129,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           sharedImports
             .map(
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (s: any) => `\`${s.nestModuleMetadata?.moduleName || s.name}\``
+              (s: any) => `\`${s.getNestModuleMetadata?.().moduleName || s.name}\``
             )
             .join(', ')
         );
@@ -489,23 +488,23 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
       private readonly packageJsonService: PackageJsonService
     ) {}
 
-    async onApplicationBootstrap() {
-      this.infrastructureMarkdownReportStorage.report = await this.getReport();
+    onApplicationBootstrap() {
+      this.infrastructureMarkdownReportStorage.report = this.getReport();
       if (this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile) {
         const fileDir = dirname(this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile);
         if (!existsSync(fileDir)) {
-          await mkdir(fileDir, { recursive: true });
+          mkdirSync(fileDir, { recursive: true });
         }
-        await writeFile(
+        writeFileSync(
           this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile,
           this.infrastructureMarkdownReportStorage.report
         );
       }
     }
 
-    async getReport(): Promise<string> {
+    getReport(): string {
       const lines: string[] = [];
-      const packageJson = await this.packageJsonService.read();
+      const packageJson = this.packageJsonService.read();
 
       try {
         if (project) {
@@ -599,7 +598,7 @@ ${project?.testsScripts
       }
       for (const category of NEST_MODULE_CATEGORY_LIST) {
         const nestModules: DynamicNestModuleMetadata[] = (modules[category] || []).filter(
-          (m) => m.nestModuleMetadata?.moduleCategory
+          (m) => m.getNestModuleMetadata?.().moduleCategory
         );
         if (nestModules.length > 0) {
           lines.push(`## ${NEST_MODULE_CATEGORY_TITLE[category]}`);
@@ -609,7 +608,7 @@ ${project?.testsScripts
           lines.push('');
         }
         for (const nestModule of nestModules) {
-          lines.push(await this.dynamicNestModuleMetadataMarkdownReportGenerator.getReport(nestModule));
+          lines.push(this.dynamicNestModuleMetadataMarkdownReportGenerator.getReport(nestModule));
         }
       }
       if (project?.maintainers) {
@@ -640,8 +639,8 @@ ${project?.testsScripts
 export const { InfrastructureMarkdownReportGenerator } = createNestModule({
   moduleName: 'InfrastructureMarkdownReportGenerator',
   moduleDescription: 'Infrastructure markdown report generator.',
-  environmentsOptions: { skipValidation: true },
-  configurationOptions: { skipValidation: true },
+  globalEnvironmentsOptions: { skipValidation: true },
+  globalConfigurationOptions: { skipValidation: true },
   staticConfigurationModel: InfrastructureMarkdownReportGeneratorConfiguration,
   sharedProviders: [DynamicNestModuleMetadataMarkdownReportGenerator],
   // we want collect report about all modules

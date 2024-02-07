@@ -45,11 +45,16 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
     for (const category of categories) {
       // any wrap methods can create new modules, we path all them
       for (let index = 0; index < (modules[category as NestModuleCategory] || []).length; index++) {
-        if (modules[category as NestModuleCategory]?.[index]?.nestModuleMetadata) {
-          if (!modules[category as NestModuleCategory]?.[index].nestModuleMetadata?.project) {
-            modules[category as NestModuleCategory]![index].nestModuleMetadata!.project = project;
+        if (modules[category as NestModuleCategory]?.[index]?.getNestModuleMetadata?.()) {
+          if (!modules[category as NestModuleCategory]?.[index].getNestModuleMetadata?.()?.project) {
+            // todo: change to pathNestModuleMetadata
+            modules[category as NestModuleCategory]![index].getNestModuleMetadata!().project = project;
           } else {
-            Object.assign(modules[category as NestModuleCategory]![index].nestModuleMetadata!.project!, project || {});
+            // todo: change to pathNestModuleMetadata
+            Object.assign(
+              modules[category as NestModuleCategory]![index].getNestModuleMetadata!().project!,
+              project || {}
+            );
           }
         }
         if (
@@ -77,12 +82,14 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
     for (const category of categories) {
       let moduleIndex = 0;
       while (modules[category as NestModuleCategory]?.[moduleIndex]) {
-        if (!modules[category as NestModuleCategory]?.[moduleIndex]?.nestModuleMetadata?.moduleDisabled) {
-          if (modules[category as NestModuleCategory]?.[moduleIndex]?.nestModuleMetadata?.[wrapApplicationMethod]) {
+        if (!modules[category as NestModuleCategory]?.[moduleIndex]?.getNestModuleMetadata?.()?.moduleDisabled) {
+          if (
+            modules[category as NestModuleCategory]?.[moduleIndex]?.getNestModuleMetadata?.()?.[wrapApplicationMethod]
+          ) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const result: any = await modules[category as NestModuleCategory]?.[moduleIndex].nestModuleMetadata?.[
-              wrapApplicationMethod
-            ]!({
+            const result: any = await modules[category as NestModuleCategory]?.[
+              moduleIndex
+            ].getNestModuleMetadata?.()?.[wrapApplicationMethod]!({
               app,
               project,
               current: {

@@ -26,7 +26,6 @@ An example of access to module services with forFeature.
 
 ```typescript
 import {
-  isInfrastructureMode,
   DOT_ENV_FILE,
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
@@ -84,13 +83,6 @@ bootstrapNestApplication({
             if (app) {
               const getEnv = app.get(GetEnv);
               console.log(await getEnv.getEnv()); // output: { TEST_APP_PORT: '2000', TEST_APP_HOSTNAME: 'host' }
-            }
-            if (isInfrastructureMode()) {
-              /**
-               * When you start the application in infrastructure mode, it should automatically close;
-               * if for some reason it does not close, we forcefully close it after 30 seconds.
-               */
-              setTimeout(() => process.exit(0), 30000);
             }
           },
         },

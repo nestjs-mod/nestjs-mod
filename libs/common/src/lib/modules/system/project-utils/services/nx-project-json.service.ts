@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { existsSync } from 'fs';
-import { mkdir, readFile, writeFile } from 'fs/promises';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
 import { GENERATE_TARGET_NAME, PROJECT_JSON_FILE } from '../project-utils.constants';
@@ -29,8 +28,8 @@ export class NxProjectJsonService {
     return undefined;
   }
 
-  async addRunCommands(lines: string[], targetName = GENERATE_TARGET_NAME) {
-    const projectJson = (await this.read()) || {};
+  addRunCommands(lines: string[], targetName = GENERATE_TARGET_NAME) {
+    const projectJson = this.read() || {};
     if (!projectJson?.targets) {
       projectJson.targets = {};
     }
@@ -71,49 +70,49 @@ export class NxProjectJsonService {
     if (!projectJson.targets[targetName].options!['color']) {
       projectJson.targets[targetName].options!['color'] = true;
     }
-    await this.write(projectJson);
+    this.write(projectJson);
   }
 
-  async readFile(nxProjectJsonFile: string): Promise<JSONSchemaForNxProjects | undefined> {
+  readFile(nxProjectJsonFile: string): JSONSchemaForNxProjects | undefined {
     try {
-      return JSON.parse((await readFile(nxProjectJsonFile)).toString());
+      return JSON.parse(readFileSync(nxProjectJsonFile).toString());
     } catch (err) {
       return undefined;
     }
   }
 
-  async writeFile(nxProjectJsonFile: string, data: JSONSchemaForNxProjects) {
+  writeFile(nxProjectJsonFile: string, data: JSONSchemaForNxProjects) {
     try {
       if (!nxProjectJsonFile) {
         return;
       }
       const fileDir = dirname(nxProjectJsonFile);
       if (!existsSync(fileDir)) {
-        await mkdir(fileDir, { recursive: true });
+        mkdirSync(fileDir, { recursive: true });
       }
-      await writeFile(nxProjectJsonFile, JSON.stringify(data, null, 2));
+      writeFileSync(nxProjectJsonFile, JSON.stringify(data, null, 2));
     } catch (err) {
       //
     }
   }
 
-  async read(): Promise<JSONSchemaForNxProjects | undefined> {
+  read(): JSONSchemaForNxProjects | undefined {
     const nxProjectJsonFile = this.getNxProjectJsonFilePath();
     if (!nxProjectJsonFile) {
       return undefined;
     }
-    return await this.readFile(nxProjectJsonFile);
+    return this.readFile(nxProjectJsonFile);
   }
 
-  async write(data: JSONSchemaForNxProjects) {
+  write(data: JSONSchemaForNxProjects) {
     const nxProjectJsonFile = this.getNxProjectJsonFilePath();
     if (!nxProjectJsonFile) {
       return;
     }
     const fileDir = dirname(nxProjectJsonFile);
     if (!existsSync(fileDir)) {
-      await mkdir(fileDir, { recursive: true });
+      mkdirSync(fileDir, { recursive: true });
     }
-    await this.writeFile(nxProjectJsonFile, data);
+    this.writeFile(nxProjectJsonFile, data);
   }
 }

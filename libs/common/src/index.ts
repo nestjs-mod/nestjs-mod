@@ -11,6 +11,7 @@ export * from './lib/env-model/utils';
 export * from './lib/env-model/extractors/default-property-value.extractor';
 export * from './lib/env-model/extractors/process-env-property-value.extractor';
 export * from './lib/env-model/formatters/dot-env-property-name.formatter';
+export * from './lib/env-model/formatters/feature-dot-env-property-name.formatter';
 export * from './lib/modules/infrastructure/infrastructure-markdown-report/infrastructure-markdown-report';
 export * from './lib/modules/system/default-nest-application/default-nest-application-initializer';
 export * from './lib/modules/system/default-nest-application/default-nest-application-listener';

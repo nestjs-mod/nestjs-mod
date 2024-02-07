@@ -196,7 +196,7 @@ describe('Project Utils', () => {
     });
     const getEnv = app.get(GetEnv);
 
-    expect(await getEnv.getEnv()).toMatchObject({ TEST_APP_PORT: '2000', TEST_APP_HOSTNAME: 'host' });
+    expect(getEnv.getEnv()).toMatchObject({ TEST_APP_PORT: '2000', TEST_APP_HOSTNAME: 'host' });
     expect(getEnv.getKeys()).toEqual(['TEST_APP_PORT', 'TEST_APP_HOSTNAME']);
   });
 
@@ -207,11 +207,13 @@ describe('Project Utils', () => {
         private readonly applicationPackageJsonService: ApplicationPackageJsonService,
         private readonly packageJsonService: PackageJsonService
       ) {}
-      async getApplicationPackageJson() {
-        return await this.applicationPackageJsonService.read();
+
+      getApplicationPackageJson() {
+        return this.applicationPackageJsonService.read();
       }
-      async getPackageJson() {
-        return await this.packageJsonService.read();
+
+      getPackageJson() {
+        return this.packageJsonService.read();
       }
     }
     const { AppModule } = createNestModule({
@@ -240,15 +242,12 @@ describe('Project Utils', () => {
     });
     const getPackageJson = app.get(GetPackageJson);
 
-    console.log(await getPackageJson.getApplicationPackageJson());
-    console.log(await getPackageJson.getPackageJson());
-
-    expect(await getPackageJson.getApplicationPackageJson()).toEqual({
+    expect(getPackageJson.getApplicationPackageJson()).toEqual({
       name: 'test-app',
       description: 'Description for test-app',
       version: '1.0.0',
     });
-    expect(await getPackageJson.getPackageJson()).toEqual({
+    expect(getPackageJson.getPackageJson()).toEqual({
       name: 'second-test-app',
       description: 'Description for second-test-app',
       version: '1.0.0',

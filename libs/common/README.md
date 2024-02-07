@@ -232,7 +232,7 @@ import {
   bootstrapNestApplication,
   createNestModule,
 } from '@nestjs-mod/common';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { IsNotEmpty } from 'class-validator';
 
 @EnvModel()
@@ -259,8 +259,6 @@ const { AppModule } = createNestModule({
 
 process.env['OPTION'] = 'value1';
 
-const globalPrefix = 'api';
-
 bootstrapNestApplication({
   modules: {
     system: [
@@ -272,22 +270,7 @@ bootstrapNestApplication({
             if (app) {
               const appService = app.get(AppService);
               console.log(appService.getEnv()); // output: { option: 'value1' }
-              app.setGlobalPrefix(globalPrefix);
             }
-          },
-          postListen: async ({ current }) => {
-            if (isInfrastructureMode()) {
-              /**
-               * When you start the application in infrastructure mode, it should automatically close;
-               * if for some reason it does not close, we forcefully close it after 30 seconds.
-               */
-              setTimeout(() => process.exit(0), 30000);
-            }
-            Logger.log(
-              `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
-                current.staticEnvironments?.port
-              }/${globalPrefix}`
-            );
           },
         },
       }),
@@ -309,7 +292,7 @@ import {
   bootstrapNestApplication,
   createNestModule,
 } from '@nestjs-mod/common';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { IsNotEmpty } from 'class-validator';
 
 @EnvModel()
@@ -336,8 +319,6 @@ const { AppModule } = createNestModule({
 
 process.env['TEST_APP_CTX_OPTION'] = 'value1';
 
-const globalPrefix = 'api';
-
 bootstrapNestApplication({
   project: { name: 'TestApp', description: 'Test application' },
   modules: {
@@ -350,22 +331,7 @@ bootstrapNestApplication({
             if (app) {
               const appService = app.get(AppService);
               console.log(appService.getEnv()); // output: { option: 'value1' }
-              app.setGlobalPrefix(globalPrefix);
             }
-          },
-          postListen: async ({ current }) => {
-            if (isInfrastructureMode()) {
-              /**
-               * When you start the application in infrastructure mode, it should automatically close;
-               * if for some reason it does not close, we forcefully close it after 30 seconds.
-               */
-              setTimeout(() => process.exit(0), 30000);
-            }
-            Logger.log(
-              `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
-                current.staticEnvironments?.port
-              }/${globalPrefix}`
-            );
           },
         },
       }),
@@ -602,7 +568,6 @@ An example of using global storage in a module.
 
 ```typescript
 import {
-  isInfrastructureMode,
   bootstrapNestApplication,
   createNestModule,
   DefaultNestApplicationInitializer,
@@ -640,13 +605,6 @@ bootstrapNestApplication({
               const appReportService = app.get(AppReportService);
 
               console.log(appReportService.getReport()); // # TestApp ...
-            }
-            if (isInfrastructureMode()) {
-              /**
-               * When you start the application in infrastructure mode, it should automatically close;
-               * if for some reason it does not close, we forcefully close it after 30 seconds.
-               */
-              setTimeout(() => process.exit(0), 30000);
             }
           },
         },
@@ -738,7 +696,6 @@ import {
   DefaultNestApplicationListener,
   isInfrastructureMode,
 } from '@nestjs-mod/common';
-import { Logger } from '@nestjs/common';
 
 bootstrapNestApplication({
   modules: {
@@ -748,25 +705,6 @@ bootstrapNestApplication({
         staticEnvironments: { port: 3000 },
         staticConfiguration: {
           mode: isInfrastructureMode() ? 'init' : 'listen',
-          preListen: async ({ app }) => {
-            if (app) {
-              app.setGlobalPrefix('api');
-            }
-          },
-          postListen: async ({ current }) => {
-            if (isInfrastructureMode()) {
-              /**
-               * When you start the application in infrastructure mode, it should automatically close;
-               * if for some reason it does not close, we forcefully close it after 30 seconds.
-               */
-              setTimeout(() => process.exit(0), 30000);
-            }
-            Logger.log(
-              `🚀 Application is running on: http://${current.staticEnvironments?.hostname || 'localhost'}:${
-                current.staticEnvironments?.port
-              }/api`
-            );
-          },
         },
       }),
     ],
@@ -792,6 +730,10 @@ bootstrapNestApplication({
 |`preListen`|Method for additional actions before listening|**optional**|-|-|
 |`postListen`|Method for additional actions after listening|**optional**|-|-|
 |`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|-|
+|`enableShutdownHooks`|Enable shutdown hooks|**optional**|```true```|-|
+|`globalPrefix`|Global prefix|**optional**|```api```|-|
+|`autoCloseInInfrastructureMode`|Automatically closes the application in `infrastructure mode` after 30 seconds if the application does not close itself|**optional**|```true```|-|
+|`logApplicationStart`|Log application start|**optional**|```true```|-|
 
 [Back to Top](#modules)
 
@@ -828,7 +770,6 @@ An example of access to module services with forFeature.
 
 ```typescript
 import {
-  isInfrastructureMode,
   DOT_ENV_FILE,
   DefaultNestApplicationInitializer,
   DefaultNestApplicationListener,
@@ -886,13 +827,6 @@ bootstrapNestApplication({
             if (app) {
               const getEnv = app.get(GetEnv);
               console.log(await getEnv.getEnv()); // output: { TEST_APP_PORT: '2000', TEST_APP_HOSTNAME: 'host' }
-            }
-            if (isInfrastructureMode()) {
-              /**
-               * When you start the application in infrastructure mode, it should automatically close;
-               * if for some reason it does not close, we forcefully close it after 30 seconds.
-               */
-              setTimeout(() => process.exit(0), 30000);
             }
           },
         },

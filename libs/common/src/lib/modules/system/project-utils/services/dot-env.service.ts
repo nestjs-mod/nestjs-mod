@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { config } from 'dotenv';
-import { existsSync } from 'fs';
-import { mkdir, writeFile } from 'fs/promises';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { basename, dirname } from 'path';
 import { EnvModelInfoValidationsPropertyNameFormatters } from '../../../../env-model/types';
 import { defaultContextName } from '../../../../utils/default-context-name';
@@ -27,7 +26,7 @@ export class DotEnvService {
     const modules = Object.entries(this.wrapApplicationOptionsService.modules)
       .map(([, value]) => value)
       .flat()
-      .filter((m) => m.nestModuleMetadata?.moduleCategory)
+      .filter((m) => m.getNestModuleMetadata?.()?.moduleCategory)
       .map((m) => m.moduleSettings);
 
     const contextName = defaultContextName();
@@ -95,35 +94,22 @@ export class DotEnvService {
     return keys;
   }
 
-  async readFile(
-    envFile: string,
-    updateProcessEnv: boolean = true
-  ): Promise<Record<string, string | undefined> | undefined> {
-    return new Promise((resolve) =>
-      process.nextTick(() => {
-        try {
-          const virtualEnv = {};
-          const loadedEnvJson =
-            (config({ path: envFile, processEnv: virtualEnv }).parsed as Record<string, string | undefined>) || {};
+  readFile(envFile: string, updateProcessEnv: boolean = true): Record<string, string | undefined> | undefined {
+    const virtualEnv = {};
+    const loadedEnvJson =
+      (config({ path: envFile, processEnv: virtualEnv }).parsed as Record<string, string | undefined>) || {};
 
-          if (updateProcessEnv) {
-            for (const [key, value] of Object.entries(loadedEnvJson)) {
-              if (process.env[key] === undefined && value !== undefined) {
-                process.env[key] = value;
-              }
-            }
-          }
-          resolve(loadedEnvJson);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-          this.logger.error(err, err.stack);
-          resolve(undefined);
+    if (updateProcessEnv) {
+      for (const [key, value] of Object.entries(loadedEnvJson)) {
+        if (process.env[key] === undefined && value !== undefined) {
+          process.env[key] = value;
         }
-      })
-    );
+      }
+    }
+    return loadedEnvJson;
   }
 
-  async writeFile(envFile: string, data: Record<string, string | undefined>) {
+  writeFile(envFile: string, data: Record<string, string | undefined>) {
     try {
       const envContent = Object.entries(data)
         .map(([key, value]) => `${key}=${value}`)
@@ -133,9 +119,9 @@ export class DotEnvService {
       }
       const fileDir = dirname(envFile);
       if (!existsSync(fileDir)) {
-        await mkdir(fileDir, { recursive: true });
+        mkdirSync(fileDir, { recursive: true });
       }
-      await writeFile(envFile, envContent);
+      writeFileSync(envFile, envContent);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       this.logger.error(err, err.stack);
@@ -143,17 +129,17 @@ export class DotEnvService {
     }
   }
 
-  async read(
+  read(
     updateProcessEnv: boolean = true,
     ignoreCheckNeededKeys: boolean = false
-  ): Promise<Record<string, string | undefined> | undefined> {
+  ): Record<string, string | undefined> | undefined {
     const envFile = this.getEnvFilePath();
     if (!envFile) {
       return;
     }
     try {
       const neededKeys = this.keys();
-      const existsEnvJson = (await this.readFile(envFile, false)) || {};
+      const existsEnvJson = this.readFile(envFile, false) || {};
       const neededEnvs = {
         ...(ignoreCheckNeededKeys ? existsEnvJson : {}),
         ...neededKeys.reduce((all, key) => ({ ...all, [String(key)]: existsEnvJson[key!] || '' }), existsEnvJson),
@@ -173,7 +159,7 @@ export class DotEnvService {
     }
   }
 
-  async write(data: Record<string, string | undefined>, ignoreCheckNeededKeys: boolean = false) {
+  write(data: Record<string, string | undefined>, ignoreCheckNeededKeys: boolean = false) {
     const envFile = this.getEnvFilePath();
     if (!envFile) {
       return;
@@ -181,7 +167,7 @@ export class DotEnvService {
 
     try {
       const neededKeys = this.keys();
-      const existsEnvJson = (await this.readFile(envFile, false)) || {};
+      const existsEnvJson = this.readFile(envFile, false) || {};
       const newEnvJson = {
         ...(ignoreCheckNeededKeys ? data : {}),
         ...neededKeys.reduce(
@@ -189,25 +175,25 @@ export class DotEnvService {
           existsEnvJson
         ),
       };
-      await this.writeFile(envFile, newEnvJson);
+      this.writeFile(envFile, newEnvJson);
 
       const envExampleFile = envFile.replace('.env', '-example.env').replace('/-example.env', '/example.env');
       if (existsSync(envExampleFile)) {
-        const existsExampleEnvJson = (await this.readFile(envExampleFile, false)) || {};
+        const existsExampleEnvJson = this.readFile(envExampleFile, false) || {};
         const newEnvJson = [...neededKeys, ...(ignoreCheckNeededKeys ? Object.keys(data) : [])].reduce(
           (all, key) => ({ ...all, [String(key)]: existsExampleEnvJson?.[key!] || `value_for_${key}` }),
           existsExampleEnvJson
         );
-        await this.writeFile(envExampleFile, newEnvJson);
+        this.writeFile(envExampleFile, newEnvJson);
       } else {
         const newEnvJson = [...neededKeys, ...(ignoreCheckNeededKeys ? Object.keys(data) : [])].reduce(
           (all, key) => ({ ...all, [String(key)]: `value_for_${key}` }),
           {}
         );
-        await this.writeFile(envExampleFile, newEnvJson);
+        this.writeFile(envExampleFile, newEnvJson);
       }
 
-      await this.gitignoreService.addGitIgnoreEntry([basename(envFile)]);
+      this.gitignoreService.addGitIgnoreEntry([basename(envFile)]);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       this.logger.error(err, err.stack);

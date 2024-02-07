@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { readFile, writeFile } from 'fs/promises';
+import { readFileSync, writeFileSync } from 'fs';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
 import { DEFAULT_SCRIPTS_CATEGORY_NAME, SCRIPTS_COMMENTS_KEY_NAME, SCRIPTS_KEY_NAME } from '../project-utils.constants';
 import { BasicPackageJsonType, PackageJsonCategoryType, PackageJsonType } from '../project-utils.types';
@@ -12,30 +12,30 @@ export class PackageJsonService {
     return this.projectUtilsConfiguration.packageJsonFile;
   }
 
-  async read(): Promise<PackageJsonType | undefined> {
+  read(): PackageJsonType | undefined {
     const packageJsonFile = this.getPackageJsonFilePath();
     if (!packageJsonFile) {
       return undefined;
     }
     try {
-      const basicJson = JSON.parse((await readFile(packageJsonFile)).toString());
+      const basicJson = JSON.parse(readFileSync(packageJsonFile).toString());
       return this.toStructure(basicJson);
     } catch (err) {
       return undefined;
     }
   }
 
-  async write(structuredJson: PackageJsonType) {
+  write(structuredJson: PackageJsonType) {
     const packageJsonFile = this.getPackageJsonFilePath();
     if (!packageJsonFile) {
       return;
     }
     try {
-      const basicJson = JSON.parse((await readFile(packageJsonFile)).toString());
+      const basicJson = JSON.parse(readFileSync(packageJsonFile).toString());
       if (basicJson) {
         const content = JSON.stringify(this.toPlain(basicJson, structuredJson), null, 2);
         if (content) {
-          await writeFile(packageJsonFile, content);
+          writeFileSync(packageJsonFile, content);
         }
       }
     } catch (err) {

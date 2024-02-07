@@ -522,6 +522,10 @@ describe('NestJS application: Utils', () => {
     |\`preListen\`|Method for additional actions before listening|**optional**|-|-|
     |\`postListen\`|Method for additional actions after listening|**optional**|-|-|
     |\`defaultLogger\`|Default logger for application|**optional**|ConsoleLogger|ConsoleLogger|
+    |\`enableShutdownHooks\`|Enable shutdown hooks|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|
+    |\`globalPrefix\`|Global prefix|**optional**|\`\`\`api\`\`\`|\`\`\`api\`\`\`|
+    |\`autoCloseInInfrastructureMode\`|Automatically closes the application in \`infrastructure mode\` after 30 seconds if the application does not close itself|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|
+    |\`logApplicationStart\`|Log application start|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|
 
     ## Infrastructure modules
     Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.
