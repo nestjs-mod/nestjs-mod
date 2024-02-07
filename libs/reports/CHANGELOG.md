@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.6.3...reports-v2.7.0) (2024-02-07)
+
+
+### Features
+
+* remove all async work with fs, add enableShutdownHooks, globalPrefix, autoCloseInInfrastructureMode and logApplicationStart inside DefaultNestApplicationListener, add contextName to TLinkOptions, change work with update options for nested modules from root, share feature module when we use forFeature ([0a52d10](https://github.com/nestjs-mod/nestjs-mod/commit/0a52d10b62eaeadcb4c308edbfb49ec7c5b910f3))
+
 ## [2.6.3](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.6.2...reports-v2.6.3) (2024-02-02)
 
 
