@@ -27,6 +27,24 @@ export function updateTsConfigRoot(tree: Tree) {
   }
 }
 
+export function updateEslintRcJsonRoot(tree: Tree) {
+  if (tree.exists('.eslintrc.json')) {
+    updateJson(tree, '.eslintrc.json', (json) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      json['overrides'] = json['overrides'].map((ov: any) => {
+        if (ov.rules['@nx/enforce-module-boundaries'] && !ov.rules['@typescript-eslint/await-thenable']) {
+          ov.rules['@typescript-eslint/await-thenable'] = 'error';
+          ov.parserOptions = {
+            project: ['tsconfig.*?.json'],
+          };
+        }
+        return ov;
+      });
+      return json;
+    });
+  }
+}
+
 export function addScript(tree: Tree, projectName?: string) {
   updateJson(tree, 'package.json', (basicJson) => {
     const packageJsonUtils = new PackageJsonUtils();
