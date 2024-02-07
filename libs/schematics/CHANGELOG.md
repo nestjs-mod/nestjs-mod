@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.2.10...schematics-v2.3.0) (2024-02-07)
+
+
+### Features
+
+* remove all async work with fs, add enableShutdownHooks, globalPrefix, autoCloseInInfrastructureMode and logApplicationStart inside DefaultNestApplicationListener, add contextName to TLinkOptions, change work with update options for nested modules from root, share feature module when we use forFeature ([0a52d10](https://github.com/nestjs-mod/nestjs-mod/commit/0a52d10b62eaeadcb4c308edbfb49ec7c5b910f3))
+
 ## [2.2.10](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.2.9...schematics-v2.2.10) (2024-02-02)
 
 
