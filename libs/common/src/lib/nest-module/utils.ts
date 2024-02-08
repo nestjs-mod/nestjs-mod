@@ -1676,7 +1676,7 @@ export function createNestModule<
       ...globalOptions,
     };
 
-    const nameArr = [];
+    const nameArr: string[] = [];
     if (globalName && globalName !== defaultContextName()) {
       nameArr.push(globalName);
     }
@@ -1737,7 +1737,7 @@ export function createNestModule<
       ...globalOptions,
     };
 
-    const nameArr = [];
+    const nameArr: string[] = [];
     if (globalName && globalName !== defaultContextName()) {
       nameArr.push(globalName);
     }

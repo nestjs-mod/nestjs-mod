@@ -1,7 +1,7 @@
-# example-basic
+# example-fastify
 > Version: 0.0.0
 
-Example basic application
+Example fastify application
 ## Installation
 ```bash
 git clone https://github.com/nestjs-mod/nestjs-mod.git
@@ -13,21 +13,21 @@ npm install
 # running the "generate" nx command in applications and libraries which can be customized at your discretion automatically generating an index.ts file for each library checking the code and trying to fix it
 npm run generate
 
-# running example-basic application source code in watch mode
-npm run serve:dev:example-basic
+# running example-fastify source code in watch mode
+npm run serve:dev:example-fastify
 ```
 ## Running the app in production mode
 ```bash
 # preparing code, building code, creating infrastructure documentation and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)
 npm run manual:prepare
 
-# launching a built example-basic (you must first build it using the build command)
-npm run start:prod:example-basic
+# launching a built example-fastify (you must first build it using the build command)
+npm run start:prod:example-fastify
 ```
 ## Test
 ```bash
-# running tests for example-basic
-npm run test:example-basic
+# running tests for example-fastify
+npm run test:example-fastify
 ```
 ## All scripts
 |Script|Description|
@@ -84,53 +84,36 @@ Static variables of primitive and complex types that are used in the module and 
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`applicationPackageJsonFile`|Application package.json-file|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/apps/example-basic/package.json```|
+|`applicationPackageJsonFile`|Application package.json-file|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/apps/example-fastify/package.json```|
 |`packageJsonFile`|Root package.json-file|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/package.json```|
 |`envFile`|Dot-env file with environment variables|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/.env```|
 
-### DefaultNestApplicationInitializer
-Default NestJS application initializer, no third party utilities required.
+### FastifyNestApplicationInitializer
+Fastify NestJS application initializer.
+
+#### Static configuration
+Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
+
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`wrapFastifyAdapter`|Method for additional actions before listening|**optional**|-|Function|
 
 ## Feature modules
 Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.
 
 ### AppModule
-Main app module
-
-### SampleWithSharedConfig
-#### Shared providers
-`SampleWithSharedConfigService`
-
-#### Shared imports
-`SharedImport1Module`, `SharedImport2Module`
-
-#### Environments: SampleWithSharedConfig
-Variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
-
-| Key    | Description | Sources | Constraints | Default | Value |
-| ------ | ----------- | ------- | ----------- | ------- | ----- |
-|`var1`|-|`obj['var1']`, `process.env['EXAMPLE_BASIC_SAMPLE_WITH_SHARED_CONFIG_VAR_1']`|**isNotEmpty** (var1 should not be empty)|-|```var1value```|
-
-#### Modules that use feature configuration
-##### Feature module name: AppModule
-
-
-| Key    | Description | Constraints | Default | Value |
-| ------ | ----------- | ----------- | ------- | ----- |
-|`featureVar`|-|**isNotEmpty** (featureVar should not be empty)|-|```featureVar41```|
-
 ## Integration modules
 Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
 
-### DefaultNestApplicationListener
-Default NestJS application listener, no third party utilities required.
+### FastifyNestApplicationListener
+Fastify NestJS application listener.
 
 #### Static environments
 Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
 
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
-|`port`|The port on which to run the server.|`obj['port']`, `process.env['EXAMPLE_BASIC_PORT']`|**isNotEmpty** (port should not be empty)|-|```3000```|
+|`port`|The port on which to run the server.|`obj['port']`, `process.env['EXAMPLE_FASTIFY_PORT']`|**isNotEmpty** (port should not be empty)|-|```3000```|
 
 #### Static configuration
 Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
@@ -153,7 +136,7 @@ Static variables of primitive and complex types that are used in the module and 
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/apps/example-basic/INFRASTRUCTURE.MD```|
+|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/apps/example-fastify/INFRASTRUCTURE.MD```|
 |`skipEmptySettings`|Skip empty values of env and config models|**optional**|-|```true```|
 
 

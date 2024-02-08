@@ -16,7 +16,7 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "strictNullChecks": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
@@ -27,6 +27,7 @@
     "esModuleInterop": true,
     "paths": {
       "@nestjs-mod/common": ["libs/common/src/index.ts"],
+      "@nestjs-mod/fastify": ["libs/fastify/src/index.ts"],
       "@nestjs-mod/nestjs-mod": ["libs/cli/src/index.ts"],
       "@nestjs-mod/reports": ["libs/reports/src/index.ts"],
       "@nestjs-mod/schematics": ["libs/schematics/src/index.ts"],

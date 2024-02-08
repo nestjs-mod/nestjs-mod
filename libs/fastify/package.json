@@ -1,0 +1,71 @@
+{
+  "name": "@nestjs-mod/fastify",
+  "description": "Application modules with Fastify adapter for NestJS-mod",
+  "version": "0.0.1",
+  "keywords": [
+    "nestjs",
+    "nestjs-mod",
+    "fastify",
+    "application",
+    "modules",
+    "mod"
+  ],
+  "license": "MIT",
+  "author": "EndyKaufman <admin@site15.ru>",
+  "engines": {
+    "node": ">=14",
+    "npm": ">=6"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/nestjs-mod/nestjs-mod/issues"
+  },
+  "homepage": "https://github.com/nestjs-mod/nestjs-mod",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nestjs-mod/nestjs-mod.git"
+  },
+  "maintainers": [
+    {
+      "name": "EndyKaufman",
+      "email": "admin@site15.ru"
+    }
+  ],
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "class-validator": "*",
+    "@nestjs/common": "*",
+    "@nestjs-mod/common": "*",
+    "@nestjs/core": "*",
+    "@nestjs/platform-fastify": "*"
+  },
+  "peerDependenciesMeta": {
+    "class-validator": {
+      "optional": true
+    },
+    "@nestjs/common": {
+      "optional": true
+    },
+    "@nestjs-mod/common": {
+      "optional": true
+    },
+    "@nestjs/core": {
+      "optional": true
+    },
+    "@nestjs/platform-fastify": {
+      "optional": true
+    }
+  },
+  "dependenciesInfo": {
+    "@nestjs/platform-fastify": {
+      "docs": true
+    }
+  },
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts"
+}

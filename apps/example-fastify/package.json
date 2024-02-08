@@ -1,0 +1,20 @@
+{
+  "name": "example-fastify",
+  "description": "Example fastify application",
+  "scripts": {},
+  "dependencies": {
+    "pm2": ">=5.3.0",
+    "dotenv": ">=16.3.1"
+  },
+  "devScripts": [
+    "generate",
+    "serve:dev:example-fastify"
+  ],
+  "prodScripts": [
+    "manual:prepare",
+    "start:prod:example-fastify"
+  ],
+  "testsScripts": [
+    "test:example-fastify"
+  ]
+}

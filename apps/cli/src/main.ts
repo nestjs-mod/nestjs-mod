@@ -66,6 +66,18 @@ bootstrapNestApplication({
           markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
         },
       }),
+      NestjsModAllReadmeGenerator.forRoot({
+        contextName: 'fastify',
+        staticConfiguration: {
+          telegramGroup: 'https://t.me/nestjs_mod',
+          packageFile: join(__dirname, '..', '..', '..', 'libs/fastify/package.json'),
+          markdownFile: join(__dirname, '..', '..', '..', 'libs/fastify/README.md'),
+          folderWithMarkdownFilesToUse: join(__dirname, '..', '..', '..', 'libs/fastify'),
+          utilsFolders: [join(__dirname, '..', '..', '..', 'libs/fastify/src/lib')],
+          modules: [import('@nestjs-mod/fastify')],
+          markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
+        },
+      }),
     ],
   },
 });

@@ -1,19 +1,15 @@
 Use with manual environments and custom configuration.
 
 ```typescript
-import {
-  bootstrapNestApplication,
-  DefaultNestApplicationInitializer,
-  DefaultNestApplicationListener,
-  isInfrastructureMode,
-} from '@nestjs-mod/common';
+import { bootstrapNestApplication, isInfrastructureMode } from '@nestjs-mod/common';
+import { FastifyNestApplicationInitializer, FastifyNestApplicationListener } from '@nestjs-mod/fastify';
 import { Logger } from '@nestjs/common';
 
 bootstrapNestApplication({
   modules: {
     system: [
-      DefaultNestApplicationInitializer.forRoot(),
-      DefaultNestApplicationListener.forRoot({
+      FastifyNestApplicationInitializer.forRoot(),
+      FastifyNestApplicationListener.forRoot({
         staticEnvironments: { port: 3000 },
         staticConfiguration: {
           mode: isInfrastructureMode() ? 'init' : 'listen',
