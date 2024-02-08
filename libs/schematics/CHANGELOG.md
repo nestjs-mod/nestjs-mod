@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.3.2...schematics-v2.4.0) (2024-02-08)
+
+
+### Features
+
+* add @nestjs-mod/fastify ([9441c63](https://github.com/nestjs-mod/nestjs-mod/commit/9441c6314a3b3d04160cfa7d53eccd5c7f05e79a))
+
 ## [2.3.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.3.1...schematics-v2.3.2) (2024-02-07)
 
 
