@@ -1,7 +1,7 @@
 {
   "name": "nestjs-mod",
   "description": "There is no functionality now, this name is reserved for future command utilities of the NestJS-mod project",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "keywords": [
     "nestjs",
     "nestjs-mod",

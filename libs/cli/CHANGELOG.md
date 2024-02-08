@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.1.0...nestjs-mod-v1.2.0) (2024-02-08)
+
+
+### Features
+
+* add @nestjs-mod/fastify ([9441c63](https://github.com/nestjs-mod/nestjs-mod/commit/9441c6314a3b3d04160cfa7d53eccd5c7f05e79a))
+
 # [1.1.0](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.0.7...nestjs-mod-v1.1.0) (2024-02-07)
 
 
