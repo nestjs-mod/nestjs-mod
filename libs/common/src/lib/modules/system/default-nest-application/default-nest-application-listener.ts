@@ -1,4 +1,4 @@
-import { ConsoleLogger, INestApplication, Logger } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { IsNotEmpty } from 'class-validator';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../../../env-model/decorators';
@@ -51,7 +51,6 @@ class DefaultNestApplicationListenerConfiguration {
 
   @ConfigModelProperty({
     description: 'Default logger for application',
-    default: new ConsoleLogger(),
   })
   defaultLogger?: Logger | null;
 
@@ -124,7 +123,7 @@ export const { DefaultNestApplicationListener } = createNestModule({
                 await app.listen(current.staticEnvironments.port);
               }
             } else {
-              current.staticConfiguration.defaultLogger?.warn('Application listener not started!');
+              (current.staticConfiguration.defaultLogger || new Logger()).warn('Application listener not started!');
             }
           }
 
@@ -148,7 +147,7 @@ export const { DefaultNestApplicationListener } = createNestModule({
           }
 
           if (current.staticConfiguration?.mode === 'listen' && current.staticConfiguration?.logApplicationStart) {
-            (current.staticConfiguration.defaultLogger || Logger).log(
+            (current.staticConfiguration.defaultLogger || new Logger()).log(
               `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
                 current.staticEnvironments?.port
               }/${current.staticConfiguration.globalPrefix || ''}`

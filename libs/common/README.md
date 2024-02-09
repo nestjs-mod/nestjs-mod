@@ -519,12 +519,14 @@ Use with options.
 import { bootstrapNestApplication, InfrastructureMarkdownReportGenerator } from '@nestjs-mod/common';
 import { join } from 'path';
 
+const appFolder = join(__dirname, '..', '..', '..', 'apps', 'example-basic');
+
 bootstrapNestApplication({
   modules: {
     infrastructure: [
       InfrastructureMarkdownReportGenerator.forRoot({
         staticConfiguration: {
-          markdownFile: join(__dirname, '..', '..', '..', 'apps', 'example-basic', 'INFRASTRUCTURE.MD'),
+          markdownFile: join(appFolder, 'INFRASTRUCTURE.MD'),
           skipEmptySettings: true,
         },
       }),
@@ -672,7 +674,7 @@ bootstrapNestApplication({
 |`bodyParser`|Whether to use underlying platform body parser.|**optional**|-|-|
 |`httpsOptions`|Set of configurable HTTPS options|**optional**|-|-|
 |`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|-|
-|`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|-|
+|`defaultLogger`|Default logger for application|**optional**|-|-|
 |`logger`|Specifies the logger to use.  Pass `false` to turn off logging.|**optional**|-|-|
 |`abortOnError`|Whether to abort the process on Error. By default, the process is exited. Pass `false` to override the default behavior. If `false` is passed, Nest will not exit the application and instead will rethrow the exception. @default true|**optional**|-|-|
 |`bufferLogs`|If enabled, logs will be buffered until the "Logger#flush" method is called. @default false|**optional**|-|-|
@@ -749,7 +751,7 @@ bootstrapNestApplication({
 |`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|-|
 |`preListen`|Method for additional actions before listening|**optional**|-|-|
 |`postListen`|Method for additional actions after listening|**optional**|-|-|
-|`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|-|
+|`defaultLogger`|Default logger for application|**optional**|-|-|
 |`enableShutdownHooks`|Enable shutdown hooks|**optional**|```true```|-|
 |`globalPrefix`|Global prefix|**optional**|```api```|-|
 |`autoCloseInInfrastructureMode`|Automatically closes the application in `infrastructure mode` after 30 seconds if the application does not close itself|**optional**|```true```|-|
@@ -768,8 +770,8 @@ Use with options.
 import { DOT_ENV_FILE, PACKAGE_JSON_FILE, ProjectUtils, bootstrapNestApplication } from '@nestjs-mod/common';
 import { join } from 'path';
 
-const appFolder = join(__dirname, '..', '..', '..', 'apps', 'example-basic');
 const rootFolder = join(__dirname, '..', '..', '..');
+const appFolder = join(rootFolder, 'apps', 'example-basic');
 
 bootstrapNestApplication({
   modules: {
@@ -819,8 +821,8 @@ const { AppModule } = createNestModule({
   providers: [GetEnv],
 });
 
-const appFolder = join(__dirname, '..', '..', '..', 'apps', 'example-basic');
 const rootFolder = join(__dirname, '..', '..', '..');
+const appFolder = join(rootFolder, 'apps', 'example-basic');
 
 process.env.TEST_APP_PORT = '2000';
 process.env.TEST_APP_HOSTNAME = 'host';

@@ -8,7 +8,7 @@ Application modules with Fastify adapter for NestJS-mod
 ## Installation
 
 ```bash
-npm i --save @nestjs/platform-fastify @nestjs-mod/fastify
+npm i --save fastify @nestjs/platform-fastify @nestjs-mod/fastify
 ```
 
 
@@ -71,7 +71,7 @@ bootstrapNestApplication({
 |`bodyParser`|Whether to use underlying platform body parser.|**optional**|-|-|
 |`httpsOptions`|Set of configurable HTTPS options|**optional**|-|-|
 |`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|-|
-|`defaultLogger`|Fastify logger for application|**optional**|ConsoleLogger|-|
+|`defaultLogger`|Fastify logger for application|**optional**|-|-|
 |`logger`|Specifies the logger to use.  Pass `false` to turn off logging.|**optional**|-|-|
 |`abortOnError`|Whether to abort the process on Error. By default, the process is exited. Pass `false` to override the default behavior. If `false` is passed, Nest will not exit the application and instead will rethrow the exception. @default true|**optional**|-|-|
 |`bufferLogs`|If enabled, logs will be buffered until the "Logger#flush" method is called. @default false|**optional**|-|-|
@@ -145,7 +145,7 @@ bootstrapNestApplication({
 |`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|-|
 |`preListen`|Method for additional actions before listening|**optional**|-|-|
 |`postListen`|Method for additional actions after listening|**optional**|-|-|
-|`defaultLogger`|Fastify logger for application|**optional**|ConsoleLogger|-|
+|`defaultLogger`|Fastify logger for application|**optional**|-|-|
 |`enableShutdownHooks`|Enable shutdown hooks|**optional**|```true```|-|
 |`globalPrefix`|Global prefix|**optional**|```api```|-|
 |`autoCloseInInfrastructureMode`|Automatically closes the application in `infrastructure mode` after 30 seconds if the application does not close itself|**optional**|```true```|-|

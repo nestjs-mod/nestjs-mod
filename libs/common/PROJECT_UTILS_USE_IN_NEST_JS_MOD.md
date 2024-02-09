@@ -4,8 +4,8 @@ Use with options.
 import { DOT_ENV_FILE, PACKAGE_JSON_FILE, ProjectUtils, bootstrapNestApplication } from '@nestjs-mod/common';
 import { join } from 'path';
 
-const appFolder = join(__dirname, '..', '..', '..', 'apps', 'example-basic');
 const rootFolder = join(__dirname, '..', '..', '..');
+const appFolder = join(rootFolder, 'apps', 'example-basic');
 
 bootstrapNestApplication({
   modules: {
@@ -55,8 +55,8 @@ const { AppModule } = createNestModule({
   providers: [GetEnv],
 });
 
-const appFolder = join(__dirname, '..', '..', '..', 'apps', 'example-basic');
 const rootFolder = join(__dirname, '..', '..', '..');
+const appFolder = join(rootFolder, 'apps', 'example-basic');
 
 process.env.TEST_APP_PORT = '2000';
 process.env.TEST_APP_HOSTNAME = 'host';

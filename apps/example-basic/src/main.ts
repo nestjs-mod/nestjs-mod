@@ -14,14 +14,17 @@ import { join } from 'path';
 import { AppModule } from './app/app.module';
 import { SampleWithSharedConfig } from './app/sample-with-shared-config/sample-with-shared-config.module';
 
+const rootFolder = join(__dirname, '..', '..', '..');
+const appFolder = join(rootFolder, 'apps', 'example-basic');
+
 bootstrapNestApplication({
   modules: {
     system: [
       ProjectUtils.forRoot({
         staticConfiguration: {
-          applicationPackageJsonFile: join(__dirname, '..', '..', '..', 'apps', 'example-basic', PACKAGE_JSON_FILE),
-          packageJsonFile: join(__dirname, '..', '..', '..', PACKAGE_JSON_FILE),
-          envFile: join(__dirname, '..', '..', '..', DOT_ENV_FILE),
+          applicationPackageJsonFile: join(appFolder, PACKAGE_JSON_FILE),
+          packageJsonFile: join(rootFolder, PACKAGE_JSON_FILE),
+          envFile: join(rootFolder, DOT_ENV_FILE),
         },
       }),
       DefaultNestApplicationInitializer.forRoot(),
@@ -52,7 +55,7 @@ bootstrapNestApplication({
     infrastructure: [
       InfrastructureMarkdownReportGenerator.forRoot({
         staticConfiguration: {
-          markdownFile: join(__dirname, '..', '..', '..', 'apps', 'example-basic', 'INFRASTRUCTURE.MD'),
+          markdownFile: join(appFolder, 'INFRASTRUCTURE.MD'),
           skipEmptySettings: true,
         },
       }),

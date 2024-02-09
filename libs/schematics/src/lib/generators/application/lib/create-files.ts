@@ -10,6 +10,10 @@ export function createFiles(tree: Tree, options: NormalizedOptions): void {
     name: options.appProjectName,
     root: options.appProjectRoot,
     pathToRoot: sourceRootArr.map(() => `'..'`).join(', '),
+    directoryToApp: options?.directory
+      ?.split('/')
+      .map((d) => `'${d}'`)
+      .join(', '),
     pathToApp: [...sourceRootArr.map(() => `'..'`), `'${options.directory}'`].join(', '),
     distFile: `'${
       project.targets ? `${project.targets['build'].options.outputPath}/main.js` : `dist/${options.directory}/main.js`

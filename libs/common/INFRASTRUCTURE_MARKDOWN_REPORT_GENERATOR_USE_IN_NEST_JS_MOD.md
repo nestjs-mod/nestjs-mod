@@ -4,12 +4,14 @@ Use with options.
 import { bootstrapNestApplication, InfrastructureMarkdownReportGenerator } from '@nestjs-mod/common';
 import { join } from 'path';
 
+const appFolder = join(__dirname, '..', '..', '..', 'apps', 'example-basic');
+
 bootstrapNestApplication({
   modules: {
     infrastructure: [
       InfrastructureMarkdownReportGenerator.forRoot({
         staticConfiguration: {
-          markdownFile: join(__dirname, '..', '..', '..', 'apps', 'example-basic', 'INFRASTRUCTURE.MD'),
+          markdownFile: join(appFolder, 'INFRASTRUCTURE.MD'),
           skipEmptySettings: true,
         },
       }),

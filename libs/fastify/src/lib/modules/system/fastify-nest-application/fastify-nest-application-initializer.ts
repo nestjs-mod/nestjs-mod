@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ConfigModel,
   ConfigModelProperty,
@@ -6,11 +7,12 @@ import {
   createNestModule,
   isInfrastructureMode,
 } from '@nestjs-mod/common';
-import { ConsoleLogger, LogLevel, Logger, LoggerService, Module, NestApplicationOptions } from '@nestjs/common';
+import { LogLevel, Logger, LoggerService, Module, NestApplicationOptions } from '@nestjs/common';
 import { CorsOptions, CorsOptionsDelegate } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import { FastifyBaseLogger } from 'fastify';
 
 @ConfigModel()
 class FastifyNestApplicationInitializerConfig implements NestApplicationOptions {
@@ -35,7 +37,6 @@ class FastifyNestApplicationInitializerConfig implements NestApplicationOptions 
 
   @ConfigModelProperty({
     description: 'Fastify logger for application',
-    default: new ConsoleLogger(),
   })
   defaultLogger?: Logger | null;
 
@@ -123,8 +124,67 @@ export const { FastifyNestApplicationInitializer } = createNestModule({
     })
     class FastifyNestApp {}
 
+    const nestLogger = new Logger();
+    // todo: review version with basic logic, need add full support
+    const trimData = (data: any) => {
+      const n = { ...data };
+      if (n.res) {
+        delete n.res;
+      }
+      if (n.req) {
+        delete n.req;
+      }
+      return n;
+    };
+    // todo: maybe need rewrite all module
+    const pinoLogger = {
+      info: (msg: string, ...args: any[]) => {
+        if (typeof msg === 'string') {
+          nestLogger.log(msg, ...args);
+        } else {
+          nestLogger.log(trimData(msg), ...args);
+        }
+      },
+      trace: (msg: string, ...args: any[]) => {
+        if (typeof msg === 'string') {
+          nestLogger.verbose(msg, ...args);
+        } else {
+          nestLogger.verbose(trimData(msg), ...args);
+        }
+      },
+      debug: (msg: string, ...args: any[]) => {
+        if (typeof msg === 'string') {
+          nestLogger.debug(msg, ...args);
+        } else {
+          nestLogger.debug(trimData(msg), ...args);
+        }
+      },
+      error: (msg: string, ...args: any[]) => {
+        if (typeof msg === 'string') {
+          nestLogger.error(msg, ...args);
+        } else {
+          nestLogger.error(trimData(msg), ...args);
+        }
+      },
+      fatal: (msg: string, ...args: any[]) => {
+        if (typeof msg === 'string') {
+          nestLogger.fatal(msg, ...args);
+        } else {
+          nestLogger.fatal(trimData(msg), ...args);
+        }
+      },
+      warn: (msg: string, ...args: any[]) => {
+        if (typeof msg === 'string') {
+          nestLogger.warn(msg, ...args);
+        } else {
+          nestLogger.warn(trimData(msg), ...args);
+        }
+      },
+      child: () => pinoLogger,
+    } as unknown as FastifyBaseLogger;
+
     let fastifyAdapter = new FastifyAdapter({
-      logger: true,
+      logger: pinoLogger,
     });
 
     if (current?.staticConfiguration?.wrapFastifyAdapter) {

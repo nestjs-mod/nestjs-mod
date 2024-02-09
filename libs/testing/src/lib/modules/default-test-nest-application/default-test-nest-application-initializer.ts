@@ -5,7 +5,7 @@ import {
   WrapApplicationOptions,
   createNestModule,
 } from '@nestjs-mod/common';
-import { ConsoleLogger, INestApplication, Logger } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 
 @ConfigModel()
 class DefaultTestNestApplicationInitializerConfiguration {
@@ -25,7 +25,6 @@ class DefaultTestNestApplicationInitializerConfiguration {
 
   @ConfigModelProperty({
     description: 'Default logger for test application',
-    default: new ConsoleLogger(),
   })
   defaultLogger?: Logger | null;
 }
@@ -65,7 +64,7 @@ export const { DefaultTestNestApplicationInitializer } = createNestModule({
             }
             return;
           } else {
-            current.staticConfiguration?.defaultLogger?.warn('Test application listener not started!');
+            (current.staticConfiguration?.defaultLogger || new Logger()).warn('Test application listener not started!');
           }
         },
       }).DefaultTestNestApplicationInitializer.forRootAsync(current.asyncModuleOptions)

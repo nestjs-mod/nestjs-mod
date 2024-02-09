@@ -14,21 +14,20 @@ import { ECOSYSTEM_CONFIG_FILE, Pm2 } from '@nestjs-mod/pm2';
 import { join } from 'path';
 import { AppModule } from './app/app.module';
 
+const rootFolder = join(__dirname, <%- pathToRoot %>);
+const appFolder = join(rootFolder, <%- directoryToApp %>);
+
 bootstrapNestApplication({
   modules: {
     system: [
       ProjectUtils.forRoot({
         staticConfiguration: {
-          applicationPackageJsonFile: join(
-            __dirname,
-            <%- pathToApp %>,
-            PACKAGE_JSON_FILE
-          ),
-          packageJsonFile: join(__dirname, <%- pathToRoot %>, PACKAGE_JSON_FILE),
-          envFile: join(__dirname, <%- pathToRoot %>, '.env'),
+          applicationPackageJsonFile: join(appFolder, PACKAGE_JSON_FILE),
+          packageJsonFile: join(rootFolder, PACKAGE_JSON_FILE),
+          envFile: join(rootFolder, '.env'),
         },
       }),
-      DefaultNestApplicationInitializer.forRoot(),
+      DefaultNestApplicationInitializer.forRoot({ staticConfiguration: { bufferLogs: true } }),
       NestjsPinoLoggerModule.forRoot(),
       TerminusHealthCheckModule.forRootAsync({
         configurationFactory: (memoryHealthIndicator: MemoryHealthIndicator) => ({
@@ -51,13 +50,13 @@ bootstrapNestApplication({
     infrastructure: [
       InfrastructureMarkdownReportGenerator.forRoot({
         staticConfiguration: {
-          markdownFile: join(__dirname, <%- pathToApp %>, 'INFRASTRUCTURE.MD'),
+          markdownFile: join(rootFolder, 'INFRASTRUCTURE.MD'),
           skipEmptySettings: true,
         },
       }),
       Pm2.forRoot({
         configuration: {
-          ecosystemConfigFile: join(__dirname, <%- pathToRoot %>, ECOSYSTEM_CONFIG_FILE),
+          ecosystemConfigFile: join(rootFolder, ECOSYSTEM_CONFIG_FILE),
           applicationScriptFile: join(<%- distFile %>),
         },
       }),

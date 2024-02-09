@@ -9,14 +9,17 @@ import { FastifyNestApplicationInitializer, FastifyNestApplicationListener } fro
 import { join } from 'path';
 import { AppModule } from './app/app.module';
 
+const rootFolder = join(__dirname, '..', '..', '..');
+const appFolder = join(rootFolder, 'apps', 'example-fastify');
+
 bootstrapNestApplication({
   modules: {
     system: [
       ProjectUtils.forRoot({
         staticConfiguration: {
-          applicationPackageJsonFile: join(__dirname, '..', '..', '..', 'apps/example-fastify', PACKAGE_JSON_FILE),
-          packageJsonFile: join(__dirname, '..', '..', '..', PACKAGE_JSON_FILE),
-          envFile: join(__dirname, '..', '..', '..', '.env'),
+          applicationPackageJsonFile: join(appFolder, PACKAGE_JSON_FILE),
+          packageJsonFile: join(rootFolder, PACKAGE_JSON_FILE),
+          envFile: join(rootFolder, '.env'),
         },
       }),
       FastifyNestApplicationInitializer.forRoot({
@@ -38,7 +41,7 @@ bootstrapNestApplication({
     infrastructure: [
       InfrastructureMarkdownReportGenerator.forRoot({
         staticConfiguration: {
-          markdownFile: join(__dirname, '..', '..', '..', 'apps/example-fastify', 'INFRASTRUCTURE.MD'),
+          markdownFile: join(appFolder, 'INFRASTRUCTURE.MD'),
           skipEmptySettings: true,
         },
       }),

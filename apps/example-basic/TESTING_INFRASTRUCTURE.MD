@@ -13,7 +13,7 @@ Static variables of primitive and complex types that are used in the module and 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
 |`wrapTestingModuleBuilder`|Method for additional actions with TestingModuleBuilder|**optional**|-|-|
-|`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|ConsoleLogger|
+|`defaultLogger`|Default logger for application|**optional**|-|-|
 
 ## Feature modules
 Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.
@@ -80,7 +80,7 @@ Static variables of primitive and complex types that are used in the module and 
 | ------ | ----------- | ----------- | ------- | ----- |
 |`preInit`|Method for additional actions before init|**optional**|-|-|
 |`postInit`|Method for additional actions after init|**optional**|-|-|
-|`defaultLogger`|Default logger for test application|**optional**|ConsoleLogger|ConsoleLogger|
+|`defaultLogger`|Default logger for test application|**optional**|-|-|
 
 ## Infrastructure modules
 Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.

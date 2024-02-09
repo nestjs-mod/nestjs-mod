@@ -12,6 +12,9 @@ describe('SampleWithSharedConfigController (async)', () => {
   it('should return "Hello World! (var1: var1value)", use static value in forRoot options', async () => {
     const originalNodeEnv = process.env['NODE_ENV'];
     process.env['NODE_ENV'] = 'infrastructure';
+
+    const rootFolder = join(__dirname, '..', '..', '..');
+
     const app = await bootstrapNestApplication({
       project: {
         name: 'TestApplication',
@@ -28,7 +31,7 @@ describe('SampleWithSharedConfigController (async)', () => {
         infrastructure: [
           InfrastructureMarkdownReportGenerator.forRoot({
             staticConfiguration: {
-              markdownFile: join(__dirname, '..', '..', '..', 'TESTING_INFRASTRUCTURE.MD'),
+              markdownFile: join(rootFolder, 'TESTING_INFRASTRUCTURE.MD'),
             },
           }),
         ],

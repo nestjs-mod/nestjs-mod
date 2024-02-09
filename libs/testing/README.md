@@ -76,7 +76,7 @@ bootstrapNestApplication({
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
 |`wrapTestingModuleBuilder`|Method for additional actions with TestingModuleBuilder|**optional**|-|-|
-|`defaultLogger`|Default logger for application|**optional**|ConsoleLogger|-|
+|`defaultLogger`|Default logger for application|**optional**|-|-|
 
 [Back to Top](#modules)
 
@@ -139,7 +139,7 @@ bootstrapNestApplication({
 | ------ | ----------- | ----------- | ------- | ----- |
 |`preInit`|Method for additional actions before init|**optional**|-|-|
 |`postInit`|Method for additional actions after init|**optional**|-|-|
-|`defaultLogger`|Default logger for test application|**optional**|ConsoleLogger|-|
+|`defaultLogger`|Default logger for test application|**optional**|-|-|
 
 [Back to Top](#modules)
 

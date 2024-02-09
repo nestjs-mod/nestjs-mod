@@ -10,6 +10,8 @@ import {
 import { NESTJS_MOD_ALL_README_GENERATOR_FOOTER, NestjsModAllReadmeGenerator } from '@nestjs-mod/reports';
 import { join } from 'path';
 
+const rootFolder = join(__dirname, '..', '..', '..');
+
 bootstrapNestApplication({
   globalEnvironmentsOptions: { skipValidation: isInfrastructureMode() },
   globalConfigurationOptions: { skipValidation: isInfrastructureMode() },
@@ -34,10 +36,10 @@ bootstrapNestApplication({
         contextName: 'common',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          packageFile: join(__dirname, '..', '..', '..', 'libs/common/package.json'),
-          markdownFile: join(__dirname, '..', '..', '..', 'libs/common/README.md'),
-          folderWithMarkdownFilesToUse: join(__dirname, '..', '..', '..', 'libs/common'),
-          utilsFolders: [join(__dirname, '..', '..', '..', 'libs/common/src/lib')],
+          packageFile: join(rootFolder, 'libs/common/package.json'),
+          markdownFile: join(rootFolder, 'libs/common/README.md'),
+          folderWithMarkdownFilesToUse: join(rootFolder, 'libs/common'),
+          utilsFolders: [join(rootFolder, 'libs/common/src/lib')],
           modules: [import('@nestjs-mod/common')],
           markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
         },
@@ -46,10 +48,10 @@ bootstrapNestApplication({
         contextName: 'reports',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          packageFile: join(__dirname, '..', '..', '..', 'libs/reports/package.json'),
-          markdownFile: join(__dirname, '..', '..', '..', 'libs/reports/README.md'),
-          folderWithMarkdownFilesToUse: join(__dirname, '..', '..', '..', 'libs/reports'),
-          utilsFolders: [join(__dirname, '..', '..', '..', 'libs/reports/src/lib')],
+          packageFile: join(rootFolder, 'libs/reports/package.json'),
+          markdownFile: join(rootFolder, 'libs/reports/README.md'),
+          folderWithMarkdownFilesToUse: join(rootFolder, 'libs/reports'),
+          utilsFolders: [join(rootFolder, 'libs/reports/src/lib')],
           modules: [import('@nestjs-mod/reports')],
           markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
         },
@@ -58,10 +60,10 @@ bootstrapNestApplication({
         contextName: 'testing',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          packageFile: join(__dirname, '..', '..', '..', 'libs/testing/package.json'),
-          markdownFile: join(__dirname, '..', '..', '..', 'libs/testing/README.md'),
-          folderWithMarkdownFilesToUse: join(__dirname, '..', '..', '..', 'libs/testing'),
-          utilsFolders: [join(__dirname, '..', '..', '..', 'libs/testing/src/lib')],
+          packageFile: join(rootFolder, 'libs/testing/package.json'),
+          markdownFile: join(rootFolder, 'libs/testing/README.md'),
+          folderWithMarkdownFilesToUse: join(rootFolder, 'libs/testing'),
+          utilsFolders: [join(rootFolder, 'libs/testing/src/lib')],
           modules: [import('@nestjs-mod/testing')],
           markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
         },
@@ -70,10 +72,10 @@ bootstrapNestApplication({
         contextName: 'fastify',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          packageFile: join(__dirname, '..', '..', '..', 'libs/fastify/package.json'),
-          markdownFile: join(__dirname, '..', '..', '..', 'libs/fastify/README.md'),
-          folderWithMarkdownFilesToUse: join(__dirname, '..', '..', '..', 'libs/fastify'),
-          utilsFolders: [join(__dirname, '..', '..', '..', 'libs/fastify/src/lib')],
+          packageFile: join(rootFolder, 'libs/fastify/package.json'),
+          markdownFile: join(rootFolder, 'libs/fastify/README.md'),
+          folderWithMarkdownFilesToUse: join(rootFolder, 'libs/fastify'),
+          utilsFolders: [join(rootFolder, 'libs/fastify/src/lib')],
           modules: [import('@nestjs-mod/fastify')],
           markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
         },

@@ -1,4 +1,4 @@
-import { ConsoleLogger, LogLevel, Logger, LoggerService, Module, NestApplicationOptions } from '@nestjs/common';
+import { LogLevel, Logger, LoggerService, Module, NestApplicationOptions } from '@nestjs/common';
 import { CorsOptions, CorsOptionsDelegate } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { NestFactory } from '@nestjs/core';
@@ -30,7 +30,6 @@ class DefaultNestApplicationInitializerConfig implements NestApplicationOptions 
 
   @ConfigModelProperty({
     description: 'Default logger for application',
-    default: new ConsoleLogger(),
   })
   defaultLogger?: Logger | null;
 

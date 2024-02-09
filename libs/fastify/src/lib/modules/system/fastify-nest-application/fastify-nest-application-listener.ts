@@ -8,7 +8,7 @@ import {
   createNestModule,
   isInfrastructureMode,
 } from '@nestjs-mod/common';
-import { ConsoleLogger, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { IsNotEmpty } from 'class-validator';
 
@@ -58,7 +58,6 @@ class FastifyNestApplicationListenerConfiguration {
 
   @ConfigModelProperty({
     description: 'Fastify logger for application',
-    default: new ConsoleLogger(),
   })
   defaultLogger?: Logger | null;
 
@@ -131,7 +130,7 @@ export const { FastifyNestApplicationListener } = createNestModule({
                 await app.listen(current.staticEnvironments.port, '0.0.0.0');
               }
             } else {
-              current.staticConfiguration.defaultLogger?.warn('Application listener not started!');
+              (current.staticConfiguration.defaultLogger || new Logger()).warn('Application listener not started!');
             }
           }
 
@@ -155,7 +154,7 @@ export const { FastifyNestApplicationListener } = createNestModule({
           }
 
           if (current.staticConfiguration?.mode === 'listen' && current.staticConfiguration?.logApplicationStart) {
-            (current.staticConfiguration.defaultLogger || Logger).log(
+            (current.staticConfiguration.defaultLogger || new Logger()).log(
               `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? '0.0.0.0'}:${
                 current.staticEnvironments?.port
               }/${current.staticConfiguration.globalPrefix || ''}`

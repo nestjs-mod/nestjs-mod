@@ -5,7 +5,7 @@ import {
   createNestModule,
   isInfrastructureMode,
 } from '@nestjs-mod/common';
-import { ConsoleLogger, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
 
 @ConfigModel()
@@ -17,7 +17,6 @@ class DefaultTestNestApplicationCreateConfig {
 
   @ConfigModelProperty({
     description: 'Default logger for application',
-    default: new ConsoleLogger(),
   })
   defaultLogger?: Logger | null;
 }

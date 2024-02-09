@@ -41,7 +41,8 @@
     "@nestjs/common": "*",
     "@nestjs-mod/common": "*",
     "@nestjs/core": "*",
-    "@nestjs/platform-fastify": "*"
+    "@nestjs/platform-fastify": "*",
+    "fastify": "*"
   },
   "peerDependenciesMeta": {
     "class-validator": {
@@ -58,9 +59,15 @@
     },
     "@nestjs/platform-fastify": {
       "optional": true
+    },
+    "fastify": {
+      "optional": true
     }
   },
   "dependenciesInfo": {
+    "fastify": {
+      "docs": true
+    },
     "@nestjs/platform-fastify": {
       "docs": true
     }
