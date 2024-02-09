@@ -1,3 +1,10 @@
+## [2.5.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.5.1...schematics-v2.5.2) (2024-02-09)
+
+
+### Bug Fixes
+
+* update path to INFRASTRUCTURE.MD in schematic [skip integrations, skip contrib] ([d7f47e8](https://github.com/nestjs-mod/nestjs-mod/commit/d7f47e8972b13d71a685786087eef061ba909004))
+
 ## [2.5.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.5.0...schematics-v2.5.1) (2024-02-09)
 
 
