@@ -50,7 +50,7 @@ bootstrapNestApplication({
     infrastructure: [
       InfrastructureMarkdownReportGenerator.forRoot({
         staticConfiguration: {
-          markdownFile: join(rootFolder, 'INFRASTRUCTURE.MD'),
+          markdownFile: join(appFolder, 'INFRASTRUCTURE.MD'),
           skipEmptySettings: true,
         },
       }),
