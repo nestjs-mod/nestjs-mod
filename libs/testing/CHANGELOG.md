@@ -1,3 +1,10 @@
+# [2.9.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.8.0...testing-v2.9.0) (2024-02-09)
+
+
+### Features
+
+* deactivate default ConsoleLogger for all modules, update work with logger for correct use pino logger if it need, add function getRequestFromExecutionContext and Request decorator work with express and fastify ([bcd6635](https://github.com/nestjs-mod/nestjs-mod/commit/bcd6635add07cd5abfc8c246dfd7eea17e726a3a))
+
 # [2.8.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.7.0...testing-v2.8.0) (2024-02-08)
 
 
