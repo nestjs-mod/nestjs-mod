@@ -10,8 +10,8 @@ npm install
 ```
 ## Running the app in watch mode
 ```bash
-# running the "generate" nx command in applications and libraries which can be customized at your discretion automatically generating an index.ts file for each library checking the code and trying to fix it
-npm run generate
+# preparing code, building code, creating infrastructure documentation and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)
+npm run manual:prepare
 
 # running example-fastify source code in watch mode
 npm run serve:dev:example-fastify

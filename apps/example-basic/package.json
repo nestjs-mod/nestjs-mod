@@ -2,7 +2,7 @@
   "name": "example-basic",
   "description": "Example basic application",
   "devScripts": [
-    "generate",
+    "manual:prepare",
     "serve:dev:example-basic"
   ],
   "prodScripts": [

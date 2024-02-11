@@ -7,7 +7,7 @@
     "dotenv": ">=16.3.1"
   },
   "devScripts": [
-    "generate",
+    "manual:prepare",
     "serve:dev:example-fastify"
   ],
   "prodScripts": [

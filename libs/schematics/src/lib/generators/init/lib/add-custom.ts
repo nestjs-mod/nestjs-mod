@@ -370,7 +370,7 @@ export function addAppPackageJsonFile(host: Tree, projectName: string, projectPa
     "dotenv": ">=16.3.1"
   },
   "devScripts": [
-    "generate",
+    "manual:prepare",
     "serve:dev:${projectName}"
   ],
   "prodScripts": [
