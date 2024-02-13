@@ -6,14 +6,13 @@ import {
   NestModuleCategory,
   WrapApplicationOptions,
   createNestModule,
-  isInfrastructureMode,
 } from '@nestjs-mod/common';
 import { Logger } from '@nestjs/common';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { IsNotEmpty } from 'class-validator';
 
 @EnvModel()
-class FastifyNestApplicationListenerEnvironments {
+export class FastifyNestApplicationListenerEnvironments {
   @EnvModelProperty({ description: 'The port on which to run the server.' })
   @IsNotEmpty()
   port!: number;
@@ -26,7 +25,7 @@ class FastifyNestApplicationListenerEnvironments {
 }
 
 @ConfigModel()
-class FastifyNestApplicationListenerConfiguration {
+export class FastifyNestApplicationListenerConfiguration {
   @ConfigModelProperty({
     description:
       'Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application',
@@ -72,13 +71,6 @@ class FastifyNestApplicationListenerConfiguration {
     default: 'api',
   })
   globalPrefix?: string;
-
-  @ConfigModelProperty({
-    description:
-      'Automatically closes the application in `infrastructure mode` after 30 seconds if the application does not close itself',
-    default: true,
-  })
-  autoCloseInInfrastructureMode?: boolean;
 
   @ConfigModelProperty({
     description: 'Log application start',
@@ -143,14 +135,6 @@ export const { FastifyNestApplicationListener } = createNestModule({
               app,
               current,
             } as WrapApplicationOptions<NestFastifyApplication, FastifyNestApplicationListenerConfiguration, FastifyNestApplicationListenerEnvironments>);
-          }
-
-          if (current.staticConfiguration?.autoCloseInInfrastructureMode && isInfrastructureMode()) {
-            /**
-             * When you start the application in infrastructure mode, it should automatically close;
-             * if for some reason it does not close, we forcefully close it after 30 seconds.
-             */
-            setTimeout(() => process.exit(0), 30000);
           }
 
           if (current.staticConfiguration?.mode === 'listen' && current.staticConfiguration?.logApplicationStart) {

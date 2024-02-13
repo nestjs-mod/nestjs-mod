@@ -681,6 +681,7 @@ bootstrapNestApplication({
 |`autoFlushLogs`|If enabled, logs will be automatically flushed and buffer detached when application initialization process either completes or fails. @default true|**optional**|-|-|
 |`preview`|Whether to run application in the preview mode. In the preview mode, providers/controllers are not instantiated & resolved. @default false|**optional**|-|-|
 |`snapshot`|Whether to generate a serialized graph snapshot. @default false|**optional**|-|-|
+|`forceCloseConnections`|Force close open HTTP connections. Useful if restarting your application hangs due to keep-alive connections in the HTTP adapter.|**optional**|```true```|-|
 
 [Back to Top](#modules)
 
@@ -714,13 +715,6 @@ bootstrapNestApplication({
             }
           },
           postListen: async ({ current }) => {
-            if (isInfrastructureMode()) {
-              /**
-               * When you start the application in infrastructure mode, it should automatically close;
-               * if for some reason it does not close, we forcefully close it after 30 seconds.
-               */
-              setTimeout(() => process.exit(0), 30000);
-            }
             Logger.log(
               `🚀 Application is running on: http://${current.staticEnvironments?.hostname || 'localhost'}:${
                 current.staticEnvironments?.port
@@ -754,7 +748,6 @@ bootstrapNestApplication({
 |`defaultLogger`|Default logger for application|**optional**|-|-|
 |`enableShutdownHooks`|Enable shutdown hooks|**optional**|```true```|-|
 |`globalPrefix`|Global prefix|**optional**|```api```|-|
-|`autoCloseInInfrastructureMode`|Automatically closes the application in `infrastructure mode` after 30 seconds if the application does not close itself|**optional**|```true```|-|
 |`logApplicationStart`|Log application start|**optional**|```true```|-|
 
 [Back to Top](#modules)

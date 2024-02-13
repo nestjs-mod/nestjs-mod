@@ -498,6 +498,8 @@ describe('NestJS application: Utils', () => {
     |\`autoFlushLogs\`|If enabled, logs will be automatically flushed and buffer detached when application initialization process either completes or fails. @default true|**optional**|-|-|
     |\`preview\`|Whether to run application in the preview mode. In the preview mode, providers/controllers are not instantiated & resolved. @default false|**optional**|-|-|
     |\`snapshot\`|Whether to generate a serialized graph snapshot. @default false|**optional**|-|-|
+    |\`forceCloseConnections\`|Force close open HTTP connections. Useful if restarting your application hangs due to keep-alive connections in the HTTP adapter.|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|
+
     ## Integration modules
     
     Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
@@ -523,8 +525,7 @@ describe('NestJS application: Utils', () => {
     |\`postListen\`|Method for additional actions after listening|**optional**|-|-|
     |\`defaultLogger\`|Default logger for application|**optional**|-|-|
     |\`enableShutdownHooks\`|Enable shutdown hooks|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|
-    |\`globalPrefix\`|Global prefix|**optional**|\`\`\`api\`\`\`|\`\`\`api\`\`\`|
-    |\`autoCloseInInfrastructureMode\`|Automatically closes the application in \`infrastructure mode\` after 30 seconds if the application does not close itself|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|
+    |\`globalPrefix\`|Global prefix|**optional**|\`\`\`api\`\`\`|\`\`\`api\`\`\`|    
     |\`logApplicationStart\`|Log application start|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|
 
     ## Infrastructure modules

@@ -15,7 +15,7 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { FastifyBaseLogger } from 'fastify';
 
 @ConfigModel()
-class FastifyNestApplicationInitializerConfig implements NestApplicationOptions {
+export class FastifyNestApplicationInitializerConfig implements NestApplicationOptions {
   @ConfigModelProperty({
     description: 'CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)',
   })
@@ -101,6 +101,17 @@ class FastifyNestApplicationInitializerConfig implements NestApplicationOptions 
     description: 'Whether to generate a serialized graph snapshot. @default false',
   })
   snapshot?: boolean;
+
+  /**
+   * Force close open HTTP connections. Useful if restarting your application hangs due to
+   * keep-alive connections in the HTTP adapter.
+   */
+  @ConfigModelProperty({
+    description:
+      'Force close open HTTP connections. Useful if restarting your application hangs due to keep-alive connections in the HTTP adapter.',
+    default: true,
+  })
+  forceCloseConnections?: boolean;
 
   @ConfigModelProperty({
     description: 'Method for additional actions before listening',

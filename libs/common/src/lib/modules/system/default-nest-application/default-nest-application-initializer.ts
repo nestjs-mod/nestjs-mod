@@ -8,7 +8,7 @@ import { createNestModule } from '../../../nest-module/utils';
 import { isInfrastructureMode } from '../../../utils/is-infrastructure';
 
 @ConfigModel()
-class DefaultNestApplicationInitializerConfig implements NestApplicationOptions {
+export class DefaultNestApplicationInitializerConfig implements NestApplicationOptions {
   @ConfigModelProperty({
     description: 'CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)',
     default: {
@@ -102,6 +102,17 @@ class DefaultNestApplicationInitializerConfig implements NestApplicationOptions 
     description: 'Whether to generate a serialized graph snapshot. @default false',
   })
   snapshot?: boolean;
+
+  /**
+   * Force close open HTTP connections. Useful if restarting your application hangs due to
+   * keep-alive connections in the HTTP adapter.
+   */
+  @ConfigModelProperty({
+    description:
+      'Force close open HTTP connections. Useful if restarting your application hangs due to keep-alive connections in the HTTP adapter.',
+    default: true,
+  })
+  forceCloseConnections?: boolean;
 }
 
 export const { DefaultNestApplicationInitializer } = createNestModule({

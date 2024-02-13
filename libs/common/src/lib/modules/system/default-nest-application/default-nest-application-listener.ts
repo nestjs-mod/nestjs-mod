@@ -4,10 +4,9 @@ import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorato
 import { EnvModel, EnvModelProperty } from '../../../env-model/decorators';
 import { NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
-import { isInfrastructureMode } from '../../../utils/is-infrastructure';
 
 @EnvModel()
-class DefaultNestApplicationListenerEnvironments {
+export class DefaultNestApplicationListenerEnvironments {
   @EnvModelProperty({ description: 'The port on which to run the server.' })
   @IsNotEmpty()
   port!: number;
@@ -19,7 +18,7 @@ class DefaultNestApplicationListenerEnvironments {
 }
 
 @ConfigModel()
-class DefaultNestApplicationListenerConfiguration {
+export class DefaultNestApplicationListenerConfiguration {
   @ConfigModelProperty({
     description:
       'Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application',
@@ -65,13 +64,6 @@ class DefaultNestApplicationListenerConfiguration {
     default: 'api',
   })
   globalPrefix?: string;
-
-  @ConfigModelProperty({
-    description:
-      'Automatically closes the application in `infrastructure mode` after 30 seconds if the application does not close itself',
-    default: true,
-  })
-  autoCloseInInfrastructureMode?: boolean;
 
   @ConfigModelProperty({
     description: 'Log application start',
@@ -136,14 +128,6 @@ export const { DefaultNestApplicationListener } = createNestModule({
               app,
               current,
             } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
-          }
-
-          if (current.staticConfiguration?.autoCloseInInfrastructureMode && isInfrastructureMode()) {
-            /**
-             * When you start the application in infrastructure mode, it should automatically close;
-             * if for some reason it does not close, we forcefully close it after 30 seconds.
-             */
-            setTimeout(() => process.exit(0), 30000);
           }
 
           if (current.staticConfiguration?.mode === 'listen' && current.staticConfiguration?.logApplicationStart) {
