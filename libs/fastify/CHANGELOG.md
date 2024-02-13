@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.1.1...fastify-v1.1.2) (2024-02-13)
+
+
+### Bug Fixes
+
+* add forceCloseConnections to DefaultNestApplicationInitializerConfig, remove autoCloseInInfrastructureMode from NestApplicationListenerEnvironments ([90aecc1](https://github.com/nestjs-mod/nestjs-mod/commit/90aecc173f79fa954298fb8e63f83107248fa9d5))
+
 ## [1.1.1](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.1.0...fastify-v1.1.1) (2024-02-13)
 
 
