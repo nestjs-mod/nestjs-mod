@@ -1,3 +1,10 @@
+## [2.9.2](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.9.1...testing-v2.9.2) (2024-02-13)
+
+
+### Bug Fixes
+
+* add forceCloseConnections to DefaultNestApplicationInitializerConfig, remove autoCloseInInfrastructureMode from NestApplicationListenerEnvironments ([90aecc1](https://github.com/nestjs-mod/nestjs-mod/commit/90aecc173f79fa954298fb8e63f83107248fa9d5))
+
 ## [2.9.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.9.0...testing-v2.9.1) (2024-02-13)
 
 
