@@ -9,7 +9,7 @@ import { Logger } from '@nestjs/common';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
 
 @ConfigModel()
-class DefaultTestNestApplicationCreateConfig {
+class DefaultTestNestApplicationCreateConfiguration {
   @ConfigModelProperty({
     description: 'Method for additional actions with TestingModuleBuilder',
   })
@@ -25,7 +25,7 @@ export const { DefaultTestNestApplicationCreate } = createNestModule({
   moduleName: 'DefaultTestNestApplicationCreate',
   moduleDescription: 'Default test NestJS application creator, no third party utilities required.',
   moduleCategory: NestModuleCategory.system,
-  staticConfigurationModel: DefaultTestNestApplicationCreateConfig,
+  staticConfigurationModel: DefaultTestNestApplicationCreateConfiguration,
   // creating test application
   wrapApplication: async ({ modules, current }) => {
     let testingModuleBuilder = Test.createTestingModule({

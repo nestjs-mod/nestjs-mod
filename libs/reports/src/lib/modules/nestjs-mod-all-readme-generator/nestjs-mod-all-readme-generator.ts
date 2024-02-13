@@ -29,7 +29,7 @@ export const NESTJS_MOD_ALL_README_GENERATOR_FOOTER = `
 `;
 
 @ConfigModel()
-class NestjsModAllReadmeGeneratorConfig {
+class NestjsModAllReadmeGeneratorConfiguration {
   @ConfigModelProperty({
     description: 'Folders with utilities',
   })
@@ -80,7 +80,7 @@ class NestjsModAllReadmeGeneratorConfig {
 @Injectable()
 export class NestjsModAllReadmeGeneratorService implements OnModuleInit {
   constructor(
-    private readonly nestjsModAllReadmeGeneratorConfig: NestjsModAllReadmeGeneratorConfig,
+    private readonly nestjsModAllReadmeGeneratorConfig: NestjsModAllReadmeGeneratorConfiguration,
     private readonly dynamicNestModuleMetadataMarkdownReportGenerator: DynamicNestModuleMetadataMarkdownReportGenerator
   ) {}
 
@@ -353,7 +353,7 @@ export const { NestjsModAllReadmeGenerator } = createNestModule({
   moduleName: 'NestjsModAllReadmeGenerator',
   moduleDescription: 'Readme generator for nestjs-mod modules.',
   moduleCategory: NestModuleCategory.infrastructure,
-  staticConfigurationModel: NestjsModAllReadmeGeneratorConfig,
+  staticConfigurationModel: NestjsModAllReadmeGeneratorConfiguration,
   imports: [InfrastructureMarkdownReportGenerator.forFeature({ featureModuleName: 'NestjsModAllReadmeGenerator' })],
   providers: [NestjsModAllReadmeGeneratorService],
 });
