@@ -36,6 +36,18 @@ bootstrapNestApplication({
         contextName: 'common',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
+          packageFile: join(rootFolder, 'libs/microservices/package.json'),
+          markdownFile: join(rootFolder, 'libs/microservices/README.md'),
+          folderWithMarkdownFilesToUse: join(rootFolder, 'libs/microservices'),
+          utilsFolders: [join(rootFolder, 'libs/microservices/src/lib')],
+          modules: [import('@nestjs-mod/microservices')],
+          markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
+        },
+      }),
+      NestjsModAllReadmeGenerator.forRoot({
+        contextName: 'common',
+        staticConfiguration: {
+          telegramGroup: 'https://t.me/nestjs_mod',
           packageFile: join(rootFolder, 'libs/common/package.json'),
           markdownFile: join(rootFolder, 'libs/common/README.md'),
           folderWithMarkdownFilesToUse: join(rootFolder, 'libs/common'),

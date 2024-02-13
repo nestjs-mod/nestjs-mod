@@ -2,10 +2,9 @@
 import {
   ConfigModel,
   ConfigModelProperty,
-  DynamicNestModuleMetadata,
   NestModuleCategory,
+  collectRootNestModules,
   createNestModule,
-  isInfrastructureMode,
 } from '@nestjs-mod/common';
 import { LogLevel, Logger, LoggerService, Module, NestApplicationOptions } from '@nestjs/common';
 import { CorsOptions, CorsOptionsDelegate } from '@nestjs/common/interfaces/external/cors-options.interface';
@@ -127,11 +126,7 @@ export const { FastifyNestApplicationInitializer } = createNestModule({
   // creating application
   wrapApplication: async ({ modules, current }) => {
     @Module({
-      imports: Object.entries(modules)
-        .filter(([category]) => isInfrastructureMode() || category !== NestModuleCategory.infrastructure)
-        .map(([, value]) => value)
-        .flat()
-        .filter((m: DynamicNestModuleMetadata) => !m.getNestModuleMetadata?.()?.moduleDisabled),
+      imports: collectRootNestModules(modules),
     })
     class FastifyNestApp {}
 

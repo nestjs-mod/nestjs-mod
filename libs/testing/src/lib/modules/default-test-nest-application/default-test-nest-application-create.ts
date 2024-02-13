@@ -2,8 +2,8 @@ import {
   ConfigModel,
   ConfigModelProperty,
   NestModuleCategory,
+  collectRootNestModules,
   createNestModule,
-  isInfrastructureMode,
 } from '@nestjs-mod/common';
 import { Logger } from '@nestjs/common';
 import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
@@ -29,10 +29,7 @@ export const { DefaultTestNestApplicationCreate } = createNestModule({
   // creating test application
   wrapApplication: async ({ modules, current }) => {
     let testingModuleBuilder = Test.createTestingModule({
-      imports: Object.entries(modules)
-        .filter(([category]) => isInfrastructureMode() || category !== NestModuleCategory.infrastructure)
-        .map(([, value]) => value)
-        .flat(),
+      imports: collectRootNestModules(modules),
     });
     if (current?.staticConfiguration?.wrapTestingModuleBuilder) {
       const newTestingModuleBuilder = current?.staticConfiguration.wrapTestingModuleBuilder(testingModuleBuilder);

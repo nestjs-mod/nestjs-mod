@@ -3,9 +3,8 @@ import { CorsOptions, CorsOptionsDelegate } from '@nestjs/common/interfaces/exte
 import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { NestFactory } from '@nestjs/core';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
-import { DynamicNestModuleMetadata, NestModuleCategory } from '../../../nest-module/types';
-import { createNestModule } from '../../../nest-module/utils';
-import { isInfrastructureMode } from '../../../utils/is-infrastructure';
+import { NestModuleCategory } from '../../../nest-module/types';
+import { collectRootNestModules, createNestModule } from '../../../nest-module/utils';
 
 @ConfigModel()
 export class DefaultNestApplicationInitializerConfig implements NestApplicationOptions {
@@ -121,16 +120,16 @@ export const { DefaultNestApplicationInitializer } = createNestModule({
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: DefaultNestApplicationInitializerConfig,
   // creating application
-  wrapApplication: async ({ modules, current }) => {
+  wrapApplication: async ({ app, modules, current }) => {
     @Module({
-      imports: Object.entries(modules)
-        .filter(([category]) => isInfrastructureMode() || category !== NestModuleCategory.infrastructure)
-        .map(([, value]) => value)
-        .flat()
-        .filter((m: DynamicNestModuleMetadata) => !m.getNestModuleMetadata?.()?.moduleDisabled),
+      imports: collectRootNestModules(modules),
     })
-    class BasicNestApp {}
-    const app = await NestFactory.create(BasicNestApp, current?.staticConfiguration);
+    class DefaultNestApp {}
+
+    if (app) {
+      throw new Error('The application has already been initialized');
+    }
+    app = await NestFactory.create(DefaultNestApp, current?.staticConfiguration);
     if (current.staticConfiguration?.defaultLogger) {
       app.useLogger(current.staticConfiguration?.defaultLogger);
     }

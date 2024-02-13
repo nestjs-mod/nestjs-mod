@@ -38,11 +38,13 @@ import {
   ImportsWithStaticOptionsResponse,
   InjectableFeatureConfigurationType,
   InjectableFeatureEnvironmentsType,
+  NestModuleCategory,
   NestModuleMetadata,
   ProjectOptions,
   TModuleSettings,
   WrapApplicationOptions,
 } from './types';
+import { isInfrastructureMode } from '../utils/is-infrastructure';
 
 export function getWrapModuleMetadataMethods() {
   const nestModuleMetadataMethods: (keyof Pick<
@@ -1754,4 +1756,12 @@ export function createNestModule<
 
     return { ...both, name: [...new Set(nameArr)].join('_') };
   }
+}
+
+export function collectRootNestModules(modules: Partial<Record<NestModuleCategory, DynamicNestModuleMetadata[]>>) {
+  return Object.entries(modules)
+    .filter(([category]) => isInfrastructureMode() || category !== NestModuleCategory.infrastructure)
+    .map(([, value]) => value)
+    .flat()
+    .filter((m: DynamicNestModuleMetadata) => !m.getNestModuleMetadata?.()?.moduleDisabled);
 }

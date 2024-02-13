@@ -108,6 +108,9 @@ export const { DefaultNestApplicationListener } = createNestModule({
             if (current.staticConfiguration.globalPrefix) {
               app.setGlobalPrefix(current.staticConfiguration.globalPrefix);
             }
+            if ((app.getMicroservices() ?? []).length > 0) {
+              await app.startAllMicroservices();
+            }
             if (current?.staticEnvironments?.port) {
               if (current?.staticEnvironments?.hostname) {
                 await app.listen(current.staticEnvironments.port, current.staticEnvironments.hostname);
@@ -120,6 +123,9 @@ export const { DefaultNestApplicationListener } = createNestModule({
           }
 
           if (app && current.staticConfiguration?.mode === 'init') {
+            if ((app.getMicroservices() ?? []).length > 0) {
+              await app.startAllMicroservices();
+            }
             await app.init();
           }
 
