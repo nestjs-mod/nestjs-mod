@@ -1,3 +1,10 @@
+## [2.9.1](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.9.0...common-v2.9.1) (2024-02-13)
+
+
+### Bug Fixes
+
+* add new scripts categories for use in generate, disable cors by default in DefaultNestApplicationInitializer ([4e8e58b](https://github.com/nestjs-mod/nestjs-mod/commit/4e8e58bb299bd52b0b2a7698705c6f6b2ed07edb))
+
 # [2.9.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.8.0...common-v2.9.0) (2024-02-09)
 
 
