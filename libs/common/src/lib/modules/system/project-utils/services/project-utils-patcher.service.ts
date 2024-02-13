@@ -142,6 +142,30 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
         this.wrapApplicationOptionsService.project.testsScripts =
           applicationPackageJson?.testsScripts ?? packageJson?.testsScripts;
       }
+      if (!this.wrapApplicationOptionsService.project.dockerDevScripts) {
+        this.wrapApplicationOptionsService.project.dockerDevScripts =
+          applicationPackageJson?.dockerDevScripts ?? packageJson?.dockerDevScripts;
+      }
+      if (!this.wrapApplicationOptionsService.project.dockerProdScripts) {
+        this.wrapApplicationOptionsService.project.dockerProdScripts =
+          applicationPackageJson?.dockerProdScripts ?? packageJson?.dockerProdScripts;
+      }
+      if (!this.wrapApplicationOptionsService.project.frontendDevScripts) {
+        this.wrapApplicationOptionsService.project.frontendDevScripts =
+          applicationPackageJson?.frontendDevScripts ?? packageJson?.frontendDevScripts;
+      }
+      if (!this.wrapApplicationOptionsService.project.frontendProdScripts) {
+        this.wrapApplicationOptionsService.project.frontendProdScripts =
+          applicationPackageJson?.frontendProdScripts ?? packageJson?.frontendProdScripts;
+      }
+      if (!this.wrapApplicationOptionsService.project.k8sDevScripts) {
+        this.wrapApplicationOptionsService.project.k8sDevScripts =
+          applicationPackageJson?.k8sDevScripts ?? packageJson?.k8sDevScripts;
+      }
+      if (!this.wrapApplicationOptionsService.project.k8sProdScripts) {
+        this.wrapApplicationOptionsService.project.k8sProdScripts =
+          applicationPackageJson?.k8sProdScripts ?? packageJson?.k8sProdScripts;
+      }
     }
   }
 }

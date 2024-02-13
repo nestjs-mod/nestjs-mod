@@ -11,6 +11,14 @@ import { isInfrastructureMode } from '../../../utils/is-infrastructure';
 class DefaultNestApplicationInitializerConfig implements NestApplicationOptions {
   @ConfigModelProperty({
     description: 'CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)',
+    default: {
+      credentials: true,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      origin: (req: any, callback: (arg0: null, arg1: boolean) => void) => {
+        callback(null, true);
+      },
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    },
   })
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cors?: boolean | CorsOptions | CorsOptionsDelegate<any>;

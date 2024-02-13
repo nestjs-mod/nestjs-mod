@@ -38,3 +38,15 @@ export const NEST_MODULE_CATEGORY_DESCRIPTION: Record<NestModuleCategory, string
   [NestModuleCategory.infrastructure]:
     'Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.',
 };
+
+export const PROJECT_SCRIPTS_DESCRIPTIONS: Record<string, string> = {
+  devScripts: 'Running the app in watch mode',
+  prodScripts: 'Running the app in production mode',
+  dockerDevScripts: 'Running the app in watch mode inside docker',
+  dockerProdScripts: 'Running the app in production mode inside docker',
+  k8sDevScripts: 'Running the app in watch mode inside kubernetes',
+  k8sProdScripts: 'Running the app in production mode inside kubernetes',
+  testsScripts: 'Test',
+  frontendDevScripts: 'Running the frontend app in watch mode',
+  frontendProdScripts: 'Running the frontend app in production mode',
+};

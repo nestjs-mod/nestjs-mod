@@ -14,6 +14,7 @@ import {
   NEST_MODULES_STATIC_ENVIRONMENTS_DESCRIPTION,
   NEST_MODULE_CATEGORY_DESCRIPTION,
   NEST_MODULE_CATEGORY_TITLE,
+  PROJECT_SCRIPTS_DESCRIPTIONS,
 } from '../../../nest-module/constants';
 import {
   DynamicNestModuleMetadata,
@@ -443,10 +444,10 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           const def = this.safeValue(defaultValue);
           const val = JSON.stringify(value);
           if (JSON.stringify(def) === val) {
-            return String(defaultValue);
+            return '```' + String(defaultValue) + '```';
           }
         }
-        return JSON.stringify(value);
+        return '```' + JSON.stringify(value) + '```';
       }
       try {
         if (value.name) {
@@ -458,7 +459,9 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       if (value === undefined || value === 'undefined') {
         return '-';
       }
-      return typeof value.split === 'function' ? '```' + value.split('`').join('\\`') + '```' : '```' + value + '```';
+      return typeof value.split === 'function'
+        ? '```' + value.split('\n').join('').split('`').join('\\`') + '```'
+        : '```' + value + '```';
     } catch (err) {
       return '-';
     }
@@ -524,59 +527,31 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
           );
           const projectName = basename(rep).replace('.git', '');
           lines.push(`## Installation`);
-          lines.push(`\`\`\`bash
-git clone ${rep}
+          lines.push(`\`\`\`bash\ngit clone ${rep}
 cd ${projectName}
 npm install
 \`\`\``);
         }
 
-        if (project?.devScripts) {
-          lines.push(`## Running the app in watch mode`);
-          lines.push(`\`\`\`bash
-${project?.devScripts
-  .map((s) =>
-    [
-      packageJson?.scriptsComments?.[s]?.length ? `# ${lowerCase(packageJson?.scriptsComments?.[s].join(' '))}` : '',
-      `npm run ${s}`,
-    ]
-      .filter(Boolean)
-      .join('\n')
-  )
-  .join('\n\n')}
-\`\`\``);
-        }
-
-        if (project?.prodScripts) {
-          lines.push(`## Running the app in production mode`);
-          lines.push(`\`\`\`bash
-${project?.prodScripts
-  .map((s) =>
-    [
-      packageJson?.scriptsComments?.[s]?.length ? `# ${lowerCase(packageJson?.scriptsComments?.[s].join(' '))}` : '',
-      `npm run ${s}`,
-    ]
-      .filter(Boolean)
-      .join('\n')
-  )
-  .join('\n\n')}
-\`\`\``);
-        }
-
-        if (project?.testsScripts) {
-          lines.push(`## Test`);
-          lines.push(`\`\`\`bash
-${project?.testsScripts
-  .map((s) =>
-    [
-      packageJson?.scriptsComments?.[s]?.length ? `# ${lowerCase(packageJson?.scriptsComments?.[s].join(' '))}` : '',
-      `npm run ${s}`,
-    ]
-      .filter(Boolean)
-      .join('\n')
-  )
-  .join('\n\n')}
-\`\`\``);
+        const projectScripts: Record<string, string[]> = (project ?? {}) as Record<string, string[]>;
+        for (const [category, scripts] of Object.entries(projectScripts)) {
+          if (PROJECT_SCRIPTS_DESCRIPTIONS[category] && Array.isArray(scripts) && scripts.length > 0) {
+            lines.push(`## ${PROJECT_SCRIPTS_DESCRIPTIONS[category]}`);
+            lines.push(
+              `\`\`\`bash\n${scripts
+                .map((s) =>
+                  [
+                    packageJson?.scriptsComments?.[s]?.length
+                      ? `# ${lowerCase(packageJson?.scriptsComments?.[s].join(' '))}`
+                      : '',
+                    `npm run ${s}`,
+                  ]
+                    .filter(Boolean)
+                    .join('\n')
+                )
+                .join('\n\n')}\n\`\`\``
+            );
+          }
         }
       } catch (err) {
         // todo: add checks

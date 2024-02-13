@@ -670,7 +670,7 @@ bootstrapNestApplication({
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`cors`|CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)|**optional**|-|-|
+|`cors`|CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)|**optional**|```{"credentials":true,"methods":"GET,HEAD,PUT,PATCH,POST,DELETE"}```|-|
 |`bodyParser`|Whether to use underlying platform body parser.|**optional**|-|-|
 |`httpsOptions`|Set of configurable HTTPS options|**optional**|-|-|
 |`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|-|

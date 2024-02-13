@@ -144,7 +144,13 @@ export type ProjectOptions = {
   ];
   devScripts?: string[];
   prodScripts?: string[];
+  dockerDevScripts?: string[];
+  dockerProdScripts?: string[];
+  k8sDevScripts?: string[];
+  k8sProdScripts?: string[];
   testsScripts?: string[];
+  frontendDevScripts?: string[];
+  frontendProdScripts?: string[];
 };
 
 export type WrapApplicationOptions<
