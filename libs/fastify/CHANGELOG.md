@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.1.2...fastify-v1.2.0) (2024-02-14)
+
+
+### Bug Fixes
+
+* add support work with microservices, now port options is optional ([012ee0d](https://github.com/nestjs-mod/nestjs-mod/commit/012ee0d385434d784a95317c95e6577387d5f6ea))
+* add support work with microservices, now port options is optional ([5bbad72](https://github.com/nestjs-mod/nestjs-mod/commit/5bbad728624c311c026fa59ea6369ce179109b83))
+
+
+### Features
+
+* add TcpNestMicroservice in @nestjs-mod/microservices ([852d29a](https://github.com/nestjs-mod/nestjs-mod/commit/852d29ad7ebbf9f8c61fc2ee45bd285b7cff84fb))
+
 ## [1.1.2](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.1.1...fastify-v1.1.2) (2024-02-13)
 
 
