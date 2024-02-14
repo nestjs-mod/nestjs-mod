@@ -49,9 +49,10 @@ npm run test:example-basic
 |**tests**|
 |`npm run test`|Running tests across the entire project|
 |`npm run test:example-basic`|Running tests for example-basic|
-|`npm run test:integrations-build`|Run an integration test in which we create a new NestJS-mod application using a schematic and check its operation|
 |`npm run test:example-fastify`|Running tests for example-fastify|
 |`npm run test:example-tcp-microservice`|Running tests for example-tcp-microservice|
+|`npm run test:integrations-build`|Run an integration test in which we create a new NestJS-mod application using a schematic and check its operation|
+|`npm run check-contrib`|Clone the repository https://github.com/nestjs-mod/nestjs-mod-contrib and run the build and tests on versions of the current NestJS repository-mod|
 |**lint**|
 |`npm run lint`|Checking the typescript code for the entire project|
 |`npm run lint:fix`|Checking the typescript code throughout the project and trying to fix everything possible|
@@ -69,7 +70,6 @@ npm run test:example-basic
 |`npm run nx:many`|Alias for running many nx commands (example: `npm run nx:many -- -t=lint`), an exception has been added for the root project, since sometimes an attempt to run an nx command on it can lead to the command freezing|
 |`npm run make-ts-list`|Automatically generating an index.ts file for each library, works only for nx applications created using the `--projectNameAndRootFormat=as-provided` flag|
 |`npm run update:nestjs-mod-example`|Start generating an empty application using the latest versions of the NestJS-mod libraries, published in https://github.com/nestjs-mod/nestjs-mod-example|
-|`npm run check-contrib`|Clone the repository https://github.com/nestjs-mod/nestjs-mod-contrib and run the build and tests on versions of the current NestJS repository-mod|
 |`npm run manual:prepare`|Preparing code, building code, creating infrastructure documentation and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)|
 |`npm run tsc`|Alias for running the tsc version locally, which is in the project (example: `npm run tsc -- --noEmit -p tsconfig.base.json`), in order not to install tsc globally in the operating system|
 |`npm run rucken`|Alias for console tools and scripts for nx and not only use to automate the workflow and speed up the development process (example: `npm run rucken -- make-ts-list`, site: https://www.npmjs.com/package/rucken)|

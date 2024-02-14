@@ -108,14 +108,17 @@
     "test:example-basic": [
       "Running tests for example-basic"
     ],
-    "test:integrations-build": [
-      "Run an integration test in which we create a new NestJS-mod application using a schematic and check its operation"
-    ],
     "test:example-fastify": [
       "Running tests for example-fastify"
     ],
     "test:example-tcp-microservice": [
       "Running tests for example-tcp-microservice"
+    ],
+    "test:integrations-build": [
+      "Run an integration test in which we create a new NestJS-mod application using a schematic and check its operation"
+    ],
+    "check-contrib": [
+      "Clone the repository https://github.com/nestjs-mod/nestjs-mod-contrib and run the build and tests on versions of the current NestJS repository-mod"
     ],
     "lint": [
       "Checking the typescript code for the entire project"
@@ -164,9 +167,6 @@
     ],
     "update:nestjs-mod-example": [
       "Start generating an empty application using the latest versions of the NestJS-mod libraries, published in https://github.com/nestjs-mod/nestjs-mod-example"
-    ],
-    "check-contrib": [
-      "Clone the repository https://github.com/nestjs-mod/nestjs-mod-contrib and run the build and tests on versions of the current NestJS repository-mod"
     ],
     "manual:prepare": [
       "Preparing code, building code, creating infrastructure documentation",
