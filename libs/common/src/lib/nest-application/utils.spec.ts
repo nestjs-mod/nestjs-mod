@@ -512,7 +512,7 @@ describe('NestJS application: Utils', () => {
 
     | Key| Description | Sources | Constraints | Default | Value |
     | ------ | ----------- | ------- | ----------- | ------- | ----- |
-    |\`port\`|The port on which to run the server.|\`obj['port']\`, \`process.env['TEST_APP_PORT']\`|**isNotEmpty** (port should not be empty)|-|\`\`\`3012\`\`\`|
+    |\`port\`|The port on which to run the server.|\`obj['port']\`, \`process.env['TEST_APP_PORT']\`|**optional**|\`\`\`3000\`\`\`|\`\`\`3012\`\`\`|
     |\`hostname\`|Hostname on which to listen for incoming packets.|\`obj['hostname']\`, \`process.env['TEST_APP_HOSTNAME']\`|**optional**|-|-|
 
     #### Static configuration

@@ -1,5 +1,4 @@
 import { INestApplication, Logger } from '@nestjs/common';
-import { IsNotEmpty } from 'class-validator';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../../../env-model/decorators';
 import { NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
@@ -7,9 +6,8 @@ import { createNestModule } from '../../../nest-module/utils';
 
 @EnvModel()
 export class DefaultNestApplicationListenerEnvironments {
-  @EnvModelProperty({ description: 'The port on which to run the server.' })
-  @IsNotEmpty()
-  port!: number;
+  @EnvModelProperty({ description: 'The port on which to run the server.', default: 3000 })
+  port?: number;
 
   @EnvModelProperty({
     description: 'Hostname on which to listen for incoming packets.',
@@ -102,13 +100,13 @@ export const { DefaultNestApplicationListener } = createNestModule({
           }
 
           if (app && current.staticConfiguration?.mode === 'listen') {
-            if (app && current.staticConfiguration?.enableShutdownHooks) {
+            if (current.staticConfiguration?.enableShutdownHooks) {
               app.enableShutdownHooks();
             }
-            if (current.staticConfiguration.globalPrefix) {
+            if (typeof app.setGlobalPrefix === 'function' && current.staticConfiguration.globalPrefix) {
               app.setGlobalPrefix(current.staticConfiguration.globalPrefix);
             }
-            if ((app.getMicroservices() ?? []).length > 0) {
+            if (((typeof app?.getMicroservices === 'function' && app?.getMicroservices()) || []).length > 0) {
               await app.startAllMicroservices();
             }
             if (current?.staticEnvironments?.port) {
@@ -118,12 +116,14 @@ export const { DefaultNestApplicationListener } = createNestModule({
                 await app.listen(current.staticEnvironments.port);
               }
             } else {
-              (current.staticConfiguration.defaultLogger || new Logger()).warn('Application listener not started!');
+              if (typeof app?.getMicroservices === 'function') {
+                (current.staticConfiguration.defaultLogger || new Logger()).warn('Application listener not started!');
+              }
             }
           }
 
           if (app && current.staticConfiguration?.mode === 'init') {
-            if ((app.getMicroservices() ?? []).length > 0) {
+            if (((typeof app?.getMicroservices === 'function' && app?.getMicroservices()) || []).length > 0) {
               await app.startAllMicroservices();
             }
             await app.init();
@@ -137,11 +137,15 @@ export const { DefaultNestApplicationListener } = createNestModule({
           }
 
           if (current.staticConfiguration?.mode === 'listen' && current.staticConfiguration?.logApplicationStart) {
-            (current.staticConfiguration.defaultLogger || new Logger()).log(
-              `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
-                current.staticEnvironments?.port
-              }/${current.staticConfiguration.globalPrefix || ''}`
-            );
+            if (typeof app?.getMicroservices === 'function') {
+              (current.staticConfiguration.defaultLogger || new Logger()).log(
+                `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
+                  current.staticEnvironments?.port
+                }/${current.staticConfiguration.globalPrefix || ''}`
+              );
+            } else {
+              (current.staticConfiguration.defaultLogger || new Logger()).log(`🚀 Microservice is running`);
+            }
           }
         },
       }).DefaultNestApplicationListener.forRootAsync(current.asyncModuleOptions)
