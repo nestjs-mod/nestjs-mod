@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.5.3...schematics-v2.6.0) (2024-02-14)
+
+
+### Features
+
+* add TcpNestMicroservice in @nestjs-mod/microservices ([852d29a](https://github.com/nestjs-mod/nestjs-mod/commit/852d29ad7ebbf9f8c61fc2ee45bd285b7cff84fb))
+
 ## [2.5.3](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.5.2...schematics-v2.5.3) (2024-02-13)
 
 
