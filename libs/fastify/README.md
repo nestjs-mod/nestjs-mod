@@ -17,7 +17,7 @@ npm i --save fastify @nestjs/platform-fastify @nestjs-mod/fastify
 | Link | Category | Description |
 | ---- | -------- | ----------- |
 | [FastifyNestApplicationInitializer](#fastifynestapplicationinitializer) | system | Fastify NestJS application initializer. |
-| [FastifyNestApplicationListener](#fastifynestapplicationlistener) | system | Fastify NestJS application listener. |
+| [FastifyNestApplicationListener](#fastifynestapplicationlistener) | system | Fastify NestJS application listener, no third party utilities required. |
 
 
 ## Modules descriptions
@@ -85,7 +85,7 @@ bootstrapNestApplication({
 
 ---
 ### FastifyNestApplicationListener
-Fastify NestJS application listener.
+Fastify NestJS application listener, no third party utilities required.
 
 #### Use in NestJS-mod
 Use with manual environments and custom configuration.
@@ -128,7 +128,7 @@ bootstrapNestApplication({
 
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
-|`port`|The port on which to run the server.|`obj['port']`, `process.env['PORT']`|**isNotEmpty** (port should not be empty)|-|-|
+|`port`|The port on which to run the server.|`obj['port']`, `process.env['PORT']`|**optional**|```3000```|```3000```|
 |`hostname`|Hostname on which to listen for incoming packets.|`obj['hostname']`, `process.env['HOSTNAME']`|**optional**|```0.0.0.0```|```0.0.0.0```|
 
 #### Static configuration
