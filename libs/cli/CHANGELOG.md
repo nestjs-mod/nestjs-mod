@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.2.0...nestjs-mod-v1.3.0) (2024-02-14)
+
+
+### Features
+
+* add TcpNestMicroservice in @nestjs-mod/microservices ([852d29a](https://github.com/nestjs-mod/nestjs-mod/commit/852d29ad7ebbf9f8c61fc2ee45bd285b7cff84fb))
+
 # [1.2.0](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.1.0...nestjs-mod-v1.2.0) (2024-02-08)
 
 
