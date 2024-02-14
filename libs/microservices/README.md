@@ -1,14 +1,14 @@
 
 # @nestjs-mod/microservices
 
-
+NestJS microservice modules for NestJS-mod
 
 [![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] [![Telegram bot][telegram-image]][telegram-url]
 
 ## Installation
 
 ```bash
-npm i --save @nestjs-mod/microservices
+npm i --save @nestjs/microservices @nestjs-mod/microservices
 ```
 
 
@@ -16,13 +16,13 @@ npm i --save @nestjs-mod/microservices
 
 | Link | Category | Description |
 | ---- | -------- | ----------- |
-| [TcpNestMicroservice](#tcpnestmicroservice) | system | TCP NestJS microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics |
+| [TcpNestMicroservice](#tcpnestmicroservice) | system | TCP NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics |
 
 
 ## Modules descriptions
 
 ### TcpNestMicroservice
-TCP NestJS microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics
+TCP NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics
 
 #### Static environments
 
@@ -37,6 +37,13 @@ TCP NestJS microservice initializer, no third party utilities required @see http
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
+|`defaultLogger`|Default logger for application|**optional**|-|-|
+|`logger`|Specifies the logger to use.  Pass `false` to turn off logging.|**optional**|-|-|
+|`abortOnError`|Whether to abort the process on Error. By default, the process is exited. Pass `false` to override the default behavior. If `false` is passed, Nest will not exit the application and instead will rethrow the exception. @default true|**optional**|-|-|
+|`bufferLogs`|If enabled, logs will be buffered until the "Logger#flush" method is called. @default false|**optional**|-|-|
+|`autoFlushLogs`|If enabled, logs will be automatically flushed and buffer detached when application initialization process either completes or fails. @default true|**optional**|-|-|
+|`preview`|Whether to run application in the preview mode. In the preview mode, providers/controllers are not instantiated & resolved. @default false|**optional**|-|-|
+|`snapshot`|Whether to generate a serialized graph snapshot. @default false|**optional**|-|-|
 |`featureName`|Feature name for generate prefix to environments keys|**optional**|-|-|
 |`retryAttempts`|Retry attempts|**optional**|-|-|
 |`retryDelay`|Retry delay|**optional**|-|-|

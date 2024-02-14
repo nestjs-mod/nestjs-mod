@@ -8,7 +8,8 @@ import {
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
 } from '@nestjs-mod/common';
-import { Module, Type } from '@nestjs/common';
+import { LogLevel, Logger, LoggerService, Module, Type } from '@nestjs/common';
+import { NestMicroserviceOptions } from '@nestjs/common/interfaces/microservices/nest-microservice-options.interface';
 import { NestApplication, NestFactory } from '@nestjs/core';
 import { Deserializer, MicroserviceOptions, Serializer, TcpOptions, TcpSocket, Transport } from '@nestjs/microservices';
 import { ConnectionOptions } from 'tls';
@@ -23,7 +24,78 @@ export class TcpMicroserviceEnvironments implements Pick<Required<TcpOptions>['o
 }
 
 @ConfigModel()
-export class TcpMicroserviceConfiguration implements Omit<Required<TcpOptions>['options'], 'host' | 'port'> {
+export class TcpMicroserviceConfiguration
+  implements Omit<Required<TcpOptions>['options'] & NestMicroserviceOptions, 'host' | 'port'>
+{
+  @ConfigModelProperty({
+    description: 'Default logger for application',
+  })
+  defaultLogger?: Logger | null;
+
+  /**
+   * Specifies the logger to use.  Pass `false` to turn off logging.
+   */
+  @ConfigModelProperty({
+    description: 'Specifies the logger to use.  Pass `false` to turn off logging.',
+  })
+  logger?: LoggerService | LogLevel[] | false;
+
+  /**
+   * Whether to abort the process on Error. By default, the process is exited.
+   * Pass `false` to override the default behavior. If `false` is passed, Nest will not exit
+   * the application and instead will rethrow the exception.
+   * @default true
+   */
+  @ConfigModelProperty({
+    description:
+      'Whether to abort the process on Error. By default, the process is exited. Pass `false` to override the default behavior. If `false` is passed, Nest will not exit the application and instead will rethrow the exception. @default true',
+  })
+  abortOnError?: boolean;
+
+  /**
+   * If enabled, logs will be buffered until the "Logger#flush" method is called.
+   * @default false
+   */
+  @ConfigModelProperty({
+    description: 'If enabled, logs will be buffered until the "Logger#flush" method is called. @default false',
+  })
+  bufferLogs?: boolean;
+
+  /**
+   * If enabled, logs will be automatically flushed and buffer detached when
+   * application initialization process either completes or fails.
+   * @default true
+   */
+  @ConfigModelProperty({
+    description:
+      'If enabled, logs will be automatically flushed and buffer detached when application initialization process either completes or fails. @default true',
+  })
+  autoFlushLogs?: boolean;
+
+  /**
+   * Whether to run application in the preview mode.
+   * In the preview mode, providers/controllers are not instantiated & resolved.
+   *
+   * @default false
+   */
+  @ConfigModelProperty({
+    description:
+      'Whether to run application in the preview mode. In the preview mode, providers/controllers are not instantiated & resolved. @default false',
+  })
+  preview?: boolean;
+
+  /**
+   * Whether to generate a serialized graph snapshot.
+   *
+   * @default false
+   */
+  @ConfigModelProperty({
+    description: 'Whether to generate a serialized graph snapshot. @default false',
+  })
+  snapshot?: boolean;
+
+  // ms
+
   @ConfigModelProperty({
     description: 'Feature name for generate prefix to environments keys',
   })
@@ -63,7 +135,7 @@ export class TcpMicroserviceConfiguration implements Omit<Required<TcpOptions>['
 export const { TcpNestMicroservice } = createNestModule({
   moduleName: 'TcpNestMicroservice',
   moduleDescription:
-    'TCP NestJS microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics',
+    'TCP NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: TcpMicroserviceConfiguration,
   staticEnvironmentsModel: TcpMicroserviceEnvironments,
@@ -95,10 +167,13 @@ export const { TcpNestMicroservice } = createNestModule({
   // creating microservice
   wrapApplication: async ({ app, current, modules }) => {
     if (app) {
-      app.connectMicroservice<MicroserviceOptions>({
-        transport: Transport.TCP,
-        options: { ...current.staticConfiguration, ...current.staticEnvironments },
-      });
+      app.connectMicroservice<MicroserviceOptions>(
+        {
+          transport: Transport.TCP,
+          options: { ...current.staticConfiguration, ...current.staticEnvironments },
+        },
+        { inheritAppConfig: true }
+      );
     } else {
       @Module({
         imports: collectRootNestModules(modules),
