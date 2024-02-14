@@ -37,11 +37,13 @@ npm run test:example-basic
 |`npm run serve:dev:example-basic`|Running example-basic application source code in watch mode|
 |`npm run serve:dev`|Running NestJS application source code in watch mode|
 |`npm run serve:dev:example-fastify`|Running example-fastify source code in watch mode|
+|`npm run serve:dev:example-tcp-microservice`|Running example-tcp-microservice source code in watch mode|
 |**prod infra**|
 |`npm run start`|Launching a built NestJS application (you must first build it using the build command)|
 |`npm run start:prod:example-basic`|Launching a built example-basic (you must first build it using the build command)|
 |`npm run build`|Building a NestJS application|
 |`npm run start:prod:example-fastify`|Launching a built example-fastify (you must first build it using the build command)|
+|`npm run start:prod:example-tcp-microservice`|Launching a built example-tcp-microservice (you must first build it using the build command)|
 |**docs**|
 |`npm run docs:infrastructure`|Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure|
 |**tests**|
@@ -49,6 +51,7 @@ npm run test:example-basic
 |`npm run test:example-basic`|Running tests for example-basic|
 |`npm run test:integrations-build`|Run an integration test in which we create a new NestJS-mod application using a schematic and check its operation|
 |`npm run test:example-fastify`|Running tests for example-fastify|
+|`npm run test:example-tcp-microservice`|Running tests for example-tcp-microservice|
 |**lint**|
 |`npm run lint`|Checking the typescript code for the entire project|
 |`npm run lint:fix`|Checking the typescript code throughout the project and trying to fix everything possible|
@@ -130,7 +133,7 @@ Static variables with primitive types used in the module and can be used at the 
 
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
-|`port`|The port on which to run the server.|`obj['port']`, `process.env['EXAMPLE_BASIC_PORT']`|**isNotEmpty** (port should not be empty)|-|```3000```|
+|`port`|The port on which to run the server.|`obj['port']`, `process.env['EXAMPLE_BASIC_PORT']`|**optional**|```3000```|```3000```|
 
 #### Static configuration
 Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.

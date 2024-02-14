@@ -31,11 +31,13 @@
     "serve:dev:example-basic": "npm run nx -- serve example-basic --host=0.0.0.0",
     "serve:dev": "npm run nx:many -- -t=serve",
     "serve:dev:example-fastify": "npm run nx -- serve example-fastify --host=0.0.0.0",
+    "serve:dev:example-tcp-microservice": "npm run nx -- serve example-tcp-microservice --host=0.0.0.0",
     "_____prod infra_____": "_____prod infra_____",
     "start": "npm run nx:many -- -t=start",
     "start:prod:example-basic": "npm run nx -- start example-basic",
     "build": "npm run generate && npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true",
     "start:prod:example-fastify": "npm run nx -- start example-fastify",
+    "start:prod:example-tcp-microservice": "npm run nx -- start example-tcp-microservice",
     "_____docs_____": "_____docs_____",
     "docs:infrastructure": "export NODE_ENV=infrastructure && npm run nx:many -- -t=start --parallel=1",
     "_____tests_____": "_____tests_____",
@@ -43,10 +45,11 @@
     "test:example-basic": "npm run nx -- test example-basic --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes",
     "test:integrations-build": "bash ./integrations/scripts/build-application.sh",
     "test:example-fastify": "npm run nx -- test example-fastify --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes",
+    "test:example-tcp-microservice": "npm run nx -- test example-tcp-microservice --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes",
     "_____lint_____": "_____lint_____",
     "lint": "npm run tsc:lint && npm run nx:many -- -t=lint",
     "lint:fix": "npm run tsc:lint && npm run nx:many -- -t=lint --fix",
-    "tsc:lint": "tsc --noEmit -p tsconfig.base.json && tsc --noEmit -p ./apps/example-basic/tsconfig.spec.json && tsc --noEmit -p ./apps/example-basic-e2e/tsconfig.json",
+    "tsc:lint": "tsc --noEmit -p tsconfig.base.json && tsc --noEmit -p ./apps/example-basic/tsconfig.spec.json",
     "_____schematics_____": "_____schematics_____",
     "build:schematics": "npm run nx -- build schematics",
     "local:schematics:init": "npm run nx -- g ./dist/libs/schematics:init",
@@ -78,6 +81,9 @@
     "serve:dev:example-fastify": [
       "Running example-fastify source code in watch mode"
     ],
+    "serve:dev:example-tcp-microservice": [
+      "Running example-tcp-microservice source code in watch mode"
+    ],
     "start": [
       "Launching a built NestJS application (you must first build it using the build command)"
     ],
@@ -89,6 +95,9 @@
     ],
     "start:prod:example-fastify": [
       "Launching a built example-fastify (you must first build it using the build command)"
+    ],
+    "start:prod:example-tcp-microservice": [
+      "Launching a built example-tcp-microservice (you must first build it using the build command)"
     ],
     "docs:infrastructure": [
       "Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure"
@@ -104,6 +113,9 @@
     ],
     "test:example-fastify": [
       "Running tests for example-fastify"
+    ],
+    "test:example-tcp-microservice": [
+      "Running tests for example-tcp-microservice"
     ],
     "lint": [
       "Checking the typescript code for the entire project"

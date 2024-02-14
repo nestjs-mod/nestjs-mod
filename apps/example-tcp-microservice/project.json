@@ -1,0 +1,60 @@
+{
+  "name": "example-tcp-microservice",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/example-tcp-microservice/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/example-tcp-microservice",
+        "main": "apps/example-tcp-microservice/src/main.ts",
+        "tsConfig": "apps/example-tcp-microservice/tsconfig.app.json",
+        "assets": ["apps/example-tcp-microservice/src/assets"],
+        "webpackConfig": "apps/example-tcp-microservice/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "example-tcp-microservice:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "example-tcp-microservice:build:development"
+        },
+        "production": {
+          "buildTarget": "example-tcp-microservice:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/example-tcp-microservice/jest.config.ts"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["node dist/apps/example-tcp-microservice/main.js"],
+        "parallel": false
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,7 +1,7 @@
-# example-fastify
+# example-tcp-microservice
 > Version: 0.0.0
 
-Example fastify application
+A collection of utilities for unifying NestJS applications and modules
 ## Installation
 ```bash
 git clone https://github.com/nestjs-mod/nestjs-mod.git
@@ -13,21 +13,21 @@ npm install
 # preparing code, building code, creating infrastructure documentation and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)
 npm run manual:prepare
 
-# running example-fastify source code in watch mode
-npm run serve:dev:example-fastify
+# running example-tcp-microservice source code in watch mode
+npm run serve:dev:example-tcp-microservice
 ```
 ## Running the app in production mode
 ```bash
 # preparing code, building code, creating infrastructure documentation and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)
 npm run manual:prepare
 
-# launching a built example-fastify (you must first build it using the build command)
-npm run start:prod:example-fastify
+# launching a built example-tcp-microservice (you must first build it using the build command)
+npm run start:prod:example-tcp-microservice
 ```
 ## Test
 ```bash
-# running tests for example-fastify
-npm run test:example-fastify
+# running tests for example-tcp-microservice
+npm run test:example-tcp-microservice
 ```
 ## All scripts
 |Script|Description|
@@ -87,19 +87,22 @@ Static variables of primitive and complex types that are used in the module and 
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`applicationPackageJsonFile`|Application package.json-file|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/apps/example-fastify/package.json```|
+|`applicationPackageJsonFile`|Application package.json-file|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/apps/example-tcp-microservice/package.json```|
 |`packageJsonFile`|Root package.json-file|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/package.json```|
 |`envFile`|Dot-env file with environment variables|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/.env```|
 
-### FastifyNestApplicationInitializer
-Fastify NestJS application initializer.
+### DefaultNestApplicationInitializer
+Default NestJS application initializer, no third party utilities required.
 
-#### Static configuration
-Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
+### TcpNestMicroservice
+TCP NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics
 
-| Key    | Description | Constraints | Default | Value |
-| ------ | ----------- | ----------- | ------- | ----- |
-|`wrapFastifyAdapter`|Method for additional actions before listening|**optional**|-|Function|
+#### Static environments
+Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
+
+| Key    | Description | Sources | Constraints | Default | Value |
+| ------ | ----------- | ------- | ----------- | ------- | ----- |
+|`port`|Port|`obj['port']`, `process.env['EXAMPLE_TCP_MICROSERVICE_TCP_PORT']`|**optional**|-|```5001```|
 
 ## Feature modules
 Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.
@@ -108,15 +111,15 @@ Feature modules with business logic of the application. NestJS and NestJS-mod co
 ## Integration modules
 Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
 
-### FastifyNestApplicationListener
-Fastify NestJS application listener, no third party utilities required.
+### DefaultNestApplicationListener
+Default NestJS application listener, no third party utilities required.
 
 #### Static environments
 Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
 
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
-|`port`|The port on which to run the server.|`obj['port']`, `process.env['EXAMPLE_FASTIFY_PORT']`|**optional**|```3000```|```3000```|
+|`port`|The port on which to run the server.|`obj['port']`, `process.env['EXAMPLE_TCP_MICROSERVICE_PORT']`|**optional**|```3000```|```3001```|
 
 #### Static configuration
 Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
@@ -124,6 +127,7 @@ Static variables of primitive and complex types that are used in the module and 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
 |`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|```init```|
+|`postListen`|Method for additional actions after listening|**optional**|-|Function|
 
 ## Infrastructure modules
 Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.
@@ -139,7 +143,7 @@ Static variables of primitive and complex types that are used in the module and 
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/apps/example-fastify/INFRASTRUCTURE.MD```|
+|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/apps/example-tcp-microservice/INFRASTRUCTURE.MD```|
 |`skipEmptySettings`|Skip empty values of env and config models|**optional**|-|```true```|
 
 

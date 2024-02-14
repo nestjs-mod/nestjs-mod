@@ -1,0 +1,19 @@
+{
+  "name": "example-tcp-microservice",
+  "scripts": {},
+  "dependencies": {
+    "pm2": ">=5.3.0",
+    "dotenv": ">=16.3.1"
+  },
+  "devScripts": [
+    "manual:prepare",
+    "serve:dev:example-tcp-microservice"
+  ],
+  "prodScripts": [
+    "manual:prepare",
+    "start:prod:example-tcp-microservice"
+  ],
+  "testsScripts": [
+    "test:example-tcp-microservice"
+  ]
+}
