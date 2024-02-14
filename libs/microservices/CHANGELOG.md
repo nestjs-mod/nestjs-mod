@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.0.0...microservices-v1.1.0) (2024-02-14)
+
+
+### Features
+
+* add support grpc, kafka, mqtt, nats, redis and rmq in @nestjs-mod/microservices ([14271a7](https://github.com/nestjs-mod/nestjs-mod/commit/14271a70419ff51487ec83a658cdefcaf037bb40))
+
 # 1.0.0 (2024-02-14)
 
 
