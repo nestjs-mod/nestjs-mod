@@ -8,6 +8,7 @@ rm -rf ./dist
 rm -rf ./integrations/tmp
 mkdir -p ./integrations/tmp
 cd ./integrations/nestjs-mod-example
+rm -rf ./node_modules
 rm -rf ./apps
 rm -rf ./libs
 rm -rf ./.nx
