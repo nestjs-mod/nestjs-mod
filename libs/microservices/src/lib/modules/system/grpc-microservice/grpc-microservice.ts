@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   ConfigModel,
   ConfigModelProperty,
@@ -8,24 +10,22 @@ import {
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
 } from '@nestjs-mod/common';
-import { LogLevel, Logger, LoggerService, Module, Type } from '@nestjs/common';
+import { LogLevel, Logger, LoggerService, Module } from '@nestjs/common';
 import { NestMicroserviceOptions } from '@nestjs/common/interfaces/microservices/nest-microservice-options.interface';
 import { NestApplication, NestFactory } from '@nestjs/core';
-import { Deserializer, MicroserviceOptions, Serializer, TcpOptions, TcpSocket, Transport } from '@nestjs/microservices';
-import { ConnectionOptions } from 'tls';
+import { GrpcOptions, MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { ChannelOptions } from '@nestjs/microservices/external/grpc-options.interface';
+import { IsNotEmpty } from 'class-validator';
 
 @EnvModel()
-export class TcpMicroserviceEnvironments implements Pick<Required<TcpOptions>['options'], 'host' | 'port'> {
-  @EnvModelProperty({ description: 'Host' })
-  host?: string;
-
-  @EnvModelProperty({ description: 'Port' })
-  port?: number;
+export class GrpcMicroserviceEnvironments implements Pick<Required<GrpcOptions>['options'], 'url'> {
+  @EnvModelProperty({ description: 'Url' })
+  url?: string;
 }
 
 @ConfigModel()
-export class TcpMicroserviceConfiguration
-  implements Omit<Required<TcpOptions>['options'] & NestMicroserviceOptions, 'host' | 'port'>
+export class GrpcMicroserviceConfiguration
+  implements Omit<Required<GrpcOptions>['options'] & NestMicroserviceOptions, 'url'>
 {
   @ConfigModelProperty({
     description: 'Default logger for application',
@@ -102,63 +102,114 @@ export class TcpMicroserviceConfiguration
   // ms
 
   @ConfigModelProperty({
-    description: 'Retry attempts',
+    description: 'Max send message length',
   })
-  retryAttempts?: number;
+  maxSendMessageLength?: number;
 
   @ConfigModelProperty({
-    description: 'Retry delay',
+    description: 'Max receive message length',
   })
-  retryDelay?: number;
+  maxReceiveMessageLength?: number;
 
   @ConfigModelProperty({
-    description: 'Serializer',
+    description: 'Max metadata size',
   })
-  serializer?: Serializer;
+  maxMetadataSize?: number;
 
   @ConfigModelProperty({
-    description: 'TLS options',
+    description: 'Keepalive',
   })
-  tlsOptions?: ConnectionOptions;
+  keepalive?: {
+    keepaliveTimeMs?: number;
+    keepaliveTimeoutMs?: number;
+    keepalivePermitWithoutCalls?: number;
+    http2MaxPingsWithoutData?: number;
+    http2MinTimeBetweenPingsMs?: number;
+    http2MinPingIntervalWithoutDataMs?: number;
+    http2MaxPingStrikes?: number;
+  };
 
   @ConfigModelProperty({
-    description: 'Deserializer',
+    description: 'Channel options',
   })
-  deserializer?: Deserializer;
+  channelOptions?: ChannelOptions;
 
   @ConfigModelProperty({
-    description: 'Socket class',
+    description: 'Credentials',
   })
-  socketClass?: Type<TcpSocket>;
+  credentials?: any;
+
+  @ConfigModelProperty({
+    description: 'Proto path',
+  })
+  protoPath?: string[];
+
+  @ConfigModelProperty({
+    description: 'Package',
+  })
+  @IsNotEmpty()
+  package!: string[];
+
+  @ConfigModelProperty({
+    description: 'Proto Loader',
+  })
+  protoLoader?: string;
+
+  @ConfigModelProperty({
+    description: 'Package definition',
+  })
+  packageDefinition?: any;
+
+  @ConfigModelProperty({
+    description: 'GracefulShutdown',
+  })
+  gracefulShutdown?: boolean;
+
+  @ConfigModelProperty({
+    description: 'Loader',
+  })
+  loader?: {
+    keepCase?: boolean;
+    alternateCommentMode?: boolean;
+    longs?: Function;
+    enums?: Function;
+    bytes?: Function;
+    defaults?: boolean;
+    arrays?: boolean;
+    objects?: boolean;
+    oneofs?: boolean;
+    json?: boolean;
+    includeDirs?: string[];
+  };
 }
 
-export const { TcpNestMicroservice } = createNestModule({
-  moduleName: 'TcpNestMicroservice',
+export const { GrpcNestMicroservice } = createNestModule({
+  moduleName: 'GrpcNestMicroservice',
   moduleDescription:
-    'TCP NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics',
+    'GRPC NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/grpc',
   moduleCategory: NestModuleCategory.system,
-  staticConfigurationModel: TcpMicroserviceConfiguration,
-  staticEnvironmentsModel: TcpMicroserviceEnvironments,
+  staticConfigurationModel: GrpcMicroserviceConfiguration,
+  staticEnvironmentsModel: GrpcMicroserviceEnvironments,
   wrapForRootAsync: (asyncModuleOptions) => {
     if (!asyncModuleOptions) {
       asyncModuleOptions = {};
     }
     if (asyncModuleOptions.staticConfiguration?.featureName) {
       const FomatterClass = getFeatureDotEnvPropertyNameFormatter(
-        `${asyncModuleOptions.staticConfiguration?.featureName}_TCP`
+        `${asyncModuleOptions.staticConfiguration?.featureName}_GRPC`
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
           propertyNameFormatters: [new FomatterClass()],
-          name: `${asyncModuleOptions.staticConfiguration?.featureName}_TCP`,
+          name: `${asyncModuleOptions.staticConfiguration?.featureName}_GRPC`,
         },
       });
     } else {
-      const FomatterClass = getFeatureDotEnvPropertyNameFormatter('TCP');
+      const FomatterClass = getFeatureDotEnvPropertyNameFormatter('GRPC');
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
           propertyNameFormatters: [new FomatterClass()],
-          name: 'TCP',
+          name: 'GRPC',
         },
       });
     }
@@ -169,8 +220,12 @@ export const { TcpNestMicroservice } = createNestModule({
     if (app) {
       app.connectMicroservice<MicroserviceOptions>(
         {
-          transport: Transport.TCP,
-          options: { ...current.staticConfiguration, ...current.staticEnvironments },
+          transport: Transport.GRPC,
+          options: {
+            ...current.staticConfiguration,
+            ...current.staticEnvironments,
+            package: current.staticConfiguration?.package ?? [],
+          },
         },
         { inheritAppConfig: true }
       );
@@ -181,8 +236,12 @@ export const { TcpNestMicroservice } = createNestModule({
       class MicroserviceNestApp {}
 
       app = (await NestFactory.createMicroservice<MicroserviceOptions>(MicroserviceNestApp, {
-        transport: Transport.TCP,
-        options: { ...current.staticConfiguration, ...current.staticEnvironments },
+        transport: Transport.GRPC,
+        options: {
+          ...current.staticConfiguration,
+          ...current.staticEnvironments,
+          package: current.staticConfiguration?.package ?? [],
+        },
       })) as unknown as NestApplication;
     }
     return app;

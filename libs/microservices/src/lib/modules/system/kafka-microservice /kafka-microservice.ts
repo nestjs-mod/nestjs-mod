@@ -8,24 +8,37 @@ import {
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
 } from '@nestjs-mod/common';
-import { LogLevel, Logger, LoggerService, Module, Type } from '@nestjs/common';
+import { LogLevel, Logger, LoggerService, Module } from '@nestjs/common';
 import { NestMicroserviceOptions } from '@nestjs/common/interfaces/microservices/nest-microservice-options.interface';
 import { NestApplication, NestFactory } from '@nestjs/core';
-import { Deserializer, MicroserviceOptions, Serializer, TcpOptions, TcpSocket, Transport } from '@nestjs/microservices';
-import { ConnectionOptions } from 'tls';
+import {
+  Deserializer,
+  KafkaOptions,
+  KafkaParserConfig,
+  MicroserviceOptions,
+  Serializer,
+  Transport,
+} from '@nestjs/microservices';
+import {
+  ConsumerConfig,
+  ConsumerRunConfig,
+  ConsumerSubscribeTopics,
+  KafkaConfig,
+  ProducerConfig,
+  ProducerRecord,
+} from '@nestjs/microservices/external/kafka.interface';
 
 @EnvModel()
-export class TcpMicroserviceEnvironments implements Pick<Required<TcpOptions>['options'], 'host' | 'port'> {
-  @EnvModelProperty({ description: 'Host' })
-  host?: string;
-
-  @EnvModelProperty({ description: 'Port' })
-  port?: number;
+export class KafkaMicroserviceEnvironments {
+  // todo: add transformer
+  // implements Pick<Required<KafkaOptions['options']['client']>, 'brokers'> {
+  @EnvModelProperty({ description: 'Brokers' })
+  brokers?: string;
 }
 
 @ConfigModel()
-export class TcpMicroserviceConfiguration
-  implements Omit<Required<TcpOptions>['options'] & NestMicroserviceOptions, 'host' | 'port'>
+export class KafkaMicroserviceConfiguration
+  implements Omit<Required<KafkaOptions>['options'] & NestMicroserviceOptions, 'host' | 'port'>
 {
   @ConfigModelProperty({
     description: 'Default logger for application',
@@ -102,63 +115,91 @@ export class TcpMicroserviceConfiguration
   // ms
 
   @ConfigModelProperty({
-    description: 'Retry attempts',
-  })
-  retryAttempts?: number;
-
-  @ConfigModelProperty({
-    description: 'Retry delay',
-  })
-  retryDelay?: number;
-
-  @ConfigModelProperty({
     description: 'Serializer',
   })
   serializer?: Serializer;
-
-  @ConfigModelProperty({
-    description: 'TLS options',
-  })
-  tlsOptions?: ConnectionOptions;
 
   @ConfigModelProperty({
     description: 'Deserializer',
   })
   deserializer?: Deserializer;
 
+  /**
+   * Defaults to `"-server"` on server side and `"-client"` on client side.
+   */
   @ConfigModelProperty({
-    description: 'Socket class',
+    description: 'Defaults to `"-server"` on server side and `"-client"` on client side',
   })
-  socketClass?: Type<TcpSocket>;
+  postfixId?: string;
+
+  @ConfigModelProperty({
+    description: 'Client',
+  })
+  client?: KafkaConfig;
+
+  @ConfigModelProperty({
+    description: 'Consumer config',
+  })
+  consumer?: ConsumerConfig;
+
+  @ConfigModelProperty({
+    description: 'Consumer run config',
+  })
+  run?: Omit<ConsumerRunConfig, 'eachBatch' | 'eachMessage'>;
+
+  @ConfigModelProperty({
+    description: 'Subscribe',
+  })
+  subscribe?: Omit<ConsumerSubscribeTopics, 'topics'>;
+
+  @ConfigModelProperty({
+    description: 'Producer config',
+  })
+  producer?: ProducerConfig;
+
+  @ConfigModelProperty({
+    description: 'Send producer record',
+  })
+  send?: Omit<ProducerRecord, 'topic' | 'messages'>;
+
+  @ConfigModelProperty({
+    description: 'Kafka parser config',
+  })
+  parser?: KafkaParserConfig;
+
+  @ConfigModelProperty({
+    description: 'Producer only mode',
+  })
+  producerOnlyMode?: boolean;
 }
 
-export const { TcpNestMicroservice } = createNestModule({
-  moduleName: 'TcpNestMicroservice',
+export const { KafkaNestMicroservice } = createNestModule({
+  moduleName: 'KafkaNestMicroservice',
   moduleDescription:
-    'TCP NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics',
+    'Kafka NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/kafka',
   moduleCategory: NestModuleCategory.system,
-  staticConfigurationModel: TcpMicroserviceConfiguration,
-  staticEnvironmentsModel: TcpMicroserviceEnvironments,
+  staticConfigurationModel: KafkaMicroserviceConfiguration,
+  staticEnvironmentsModel: KafkaMicroserviceEnvironments,
   wrapForRootAsync: (asyncModuleOptions) => {
     if (!asyncModuleOptions) {
       asyncModuleOptions = {};
     }
     if (asyncModuleOptions.staticConfiguration?.featureName) {
       const FomatterClass = getFeatureDotEnvPropertyNameFormatter(
-        `${asyncModuleOptions.staticConfiguration?.featureName}_TCP`
+        `${asyncModuleOptions.staticConfiguration?.featureName}_KAFKA`
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
           propertyNameFormatters: [new FomatterClass()],
-          name: `${asyncModuleOptions.staticConfiguration?.featureName}_TCP`,
+          name: `${asyncModuleOptions.staticConfiguration?.featureName}_KAFKA`,
         },
       });
     } else {
-      const FomatterClass = getFeatureDotEnvPropertyNameFormatter('TCP');
+      const FomatterClass = getFeatureDotEnvPropertyNameFormatter('KAFKA');
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
           propertyNameFormatters: [new FomatterClass()],
-          name: 'TCP',
+          name: 'KAFKA',
         },
       });
     }
@@ -169,8 +210,15 @@ export const { TcpNestMicroservice } = createNestModule({
     if (app) {
       app.connectMicroservice<MicroserviceOptions>(
         {
-          transport: Transport.TCP,
-          options: { ...current.staticConfiguration, ...current.staticEnvironments },
+          transport: Transport.KAFKA,
+          options: {
+            ...current.staticConfiguration,
+            ...current.staticEnvironments,
+            client: {
+              ...current.staticConfiguration?.client,
+              brokers: current.staticEnvironments?.brokers?.split(',') || [],
+            },
+          },
         },
         { inheritAppConfig: true }
       );
@@ -181,8 +229,15 @@ export const { TcpNestMicroservice } = createNestModule({
       class MicroserviceNestApp {}
 
       app = (await NestFactory.createMicroservice<MicroserviceOptions>(MicroserviceNestApp, {
-        transport: Transport.TCP,
-        options: { ...current.staticConfiguration, ...current.staticEnvironments },
+        transport: Transport.KAFKA,
+        options: {
+          ...current.staticConfiguration,
+          ...current.staticEnvironments,
+          client: {
+            ...current.staticConfiguration?.client,
+            brokers: current.staticEnvironments?.brokers?.split(',') || [],
+          },
+        },
       })) as unknown as NestApplication;
     }
     return app;

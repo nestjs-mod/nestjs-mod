@@ -8,24 +8,26 @@ import {
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
 } from '@nestjs-mod/common';
-import { LogLevel, Logger, LoggerService, Module, Type } from '@nestjs/common';
+import { LogLevel, Logger, LoggerService, Module } from '@nestjs/common';
 import { NestMicroserviceOptions } from '@nestjs/common/interfaces/microservices/nest-microservice-options.interface';
 import { NestApplication, NestFactory } from '@nestjs/core';
-import { Deserializer, MicroserviceOptions, Serializer, TcpOptions, TcpSocket, Transport } from '@nestjs/microservices';
-import { ConnectionOptions } from 'tls';
+import { Deserializer, MicroserviceOptions, RmqOptions, Serializer, Transport } from '@nestjs/microservices';
+import {
+  AmqpConnectionManagerSocketOptions,
+  AmqplibQueueOptions,
+} from '@nestjs/microservices/external/rmq-url.interface';
 
 @EnvModel()
-export class TcpMicroserviceEnvironments implements Pick<Required<TcpOptions>['options'], 'host' | 'port'> {
-  @EnvModelProperty({ description: 'Host' })
-  host?: string;
-
-  @EnvModelProperty({ description: 'Port' })
-  port?: number;
+export class RmqMicroserviceEnvironments {
+  // todo: add class transformer and use real type
+  // implements Pick<Required<RmqOptions>['options'], 'urls'> {
+  @EnvModelProperty({ description: 'Urls' })
+  urls?: string;
 }
 
 @ConfigModel()
-export class TcpMicroserviceConfiguration
-  implements Omit<Required<TcpOptions>['options'] & NestMicroserviceOptions, 'host' | 'port'>
+export class RmqMicroserviceConfiguration
+  implements Omit<Required<RmqOptions>['options'] & NestMicroserviceOptions, 'urls'>
 {
   @ConfigModelProperty({
     description: 'Default logger for application',
@@ -102,14 +104,39 @@ export class TcpMicroserviceConfiguration
   // ms
 
   @ConfigModelProperty({
-    description: 'Retry attempts',
+    description: 'Queue',
   })
-  retryAttempts?: number;
+  queue?: string;
 
   @ConfigModelProperty({
-    description: 'Retry delay',
+    description: 'Prefetch count',
   })
-  retryDelay?: number;
+  prefetchCount?: number;
+
+  @ConfigModelProperty({
+    description: 'Is global prefetch count',
+  })
+  isGlobalPrefetchCount?: boolean;
+
+  @ConfigModelProperty({
+    description: 'Queue options',
+  })
+  queueOptions?: AmqplibQueueOptions;
+
+  @ConfigModelProperty({
+    description: 'Socket options',
+  })
+  socketOptions?: AmqpConnectionManagerSocketOptions;
+
+  @ConfigModelProperty({
+    description: 'No ack',
+  })
+  noAck?: boolean;
+
+  @ConfigModelProperty({
+    description: 'Consumer tag',
+  })
+  consumerTag?: string;
 
   @ConfigModelProperty({
     description: 'Serializer',
@@ -117,48 +144,69 @@ export class TcpMicroserviceConfiguration
   serializer?: Serializer;
 
   @ConfigModelProperty({
-    description: 'TLS options',
-  })
-  tlsOptions?: ConnectionOptions;
-
-  @ConfigModelProperty({
     description: 'Deserializer',
   })
   deserializer?: Deserializer;
 
   @ConfigModelProperty({
-    description: 'Socket class',
+    description: 'Reply queue',
   })
-  socketClass?: Type<TcpSocket>;
+  replyQueue?: string;
+
+  @ConfigModelProperty({
+    description: 'Persistent',
+  })
+  persistent?: boolean;
+
+  @ConfigModelProperty({
+    description: 'Headers',
+  })
+  headers?: Record<string, string>;
+
+  @ConfigModelProperty({
+    description: 'No assert',
+  })
+  noAssert?: boolean;
+
+  /**
+   * Maximum number of connection attempts.
+   * Applies only to the consumer configuration.
+   * -1 === infinite
+   * @default -1
+   */
+  @ConfigModelProperty({
+    description: 'Maximum number of connection attempts, applies only to the consumer configuration (-1 - infinite)',
+  })
+  maxConnectionAttempts?: number;
 }
 
-export const { TcpNestMicroservice } = createNestModule({
-  moduleName: 'TcpNestMicroservice',
+export const { RmqNestMicroservice } = createNestModule({
+  moduleName: 'RmqNestMicroservice',
   moduleDescription:
-    'TCP NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics',
+    'RabbitMQ NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/rabbitmq',
   moduleCategory: NestModuleCategory.system,
-  staticConfigurationModel: TcpMicroserviceConfiguration,
-  staticEnvironmentsModel: TcpMicroserviceEnvironments,
+  staticConfigurationModel: RmqMicroserviceConfiguration,
+  staticEnvironmentsModel: RmqMicroserviceEnvironments,
   wrapForRootAsync: (asyncModuleOptions) => {
     if (!asyncModuleOptions) {
       asyncModuleOptions = {};
     }
     if (asyncModuleOptions.staticConfiguration?.featureName) {
       const FomatterClass = getFeatureDotEnvPropertyNameFormatter(
-        `${asyncModuleOptions.staticConfiguration?.featureName}_TCP`
+        `${asyncModuleOptions.staticConfiguration?.featureName}_RMQ`
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
           propertyNameFormatters: [new FomatterClass()],
-          name: `${asyncModuleOptions.staticConfiguration?.featureName}_TCP`,
+          name: `${asyncModuleOptions.staticConfiguration?.featureName}_RMQ`,
         },
       });
     } else {
-      const FomatterClass = getFeatureDotEnvPropertyNameFormatter('TCP');
+      const FomatterClass = getFeatureDotEnvPropertyNameFormatter('RMQ');
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
           propertyNameFormatters: [new FomatterClass()],
-          name: 'TCP',
+          name: 'RMQ',
         },
       });
     }
@@ -169,8 +217,8 @@ export const { TcpNestMicroservice } = createNestModule({
     if (app) {
       app.connectMicroservice<MicroserviceOptions>(
         {
-          transport: Transport.TCP,
-          options: { ...current.staticConfiguration, ...current.staticEnvironments },
+          transport: Transport.RMQ,
+          options: { ...current.staticConfiguration, urls: current.staticEnvironments?.urls?.split(',') ?? [] },
         },
         { inheritAppConfig: true }
       );
@@ -181,8 +229,8 @@ export const { TcpNestMicroservice } = createNestModule({
       class MicroserviceNestApp {}
 
       app = (await NestFactory.createMicroservice<MicroserviceOptions>(MicroserviceNestApp, {
-        transport: Transport.TCP,
-        options: { ...current.staticConfiguration, ...current.staticEnvironments },
+        transport: Transport.RMQ,
+        options: { ...current.staticConfiguration, urls: current.staticEnvironments?.urls?.split(',') ?? [] },
       })) as unknown as NestApplication;
     }
     return app;

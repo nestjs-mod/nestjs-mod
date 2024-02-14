@@ -8,24 +8,21 @@ import {
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
 } from '@nestjs-mod/common';
-import { LogLevel, Logger, LoggerService, Module, Type } from '@nestjs/common';
+import { LogLevel, Logger, LoggerService, Module } from '@nestjs/common';
 import { NestMicroserviceOptions } from '@nestjs/common/interfaces/microservices/nest-microservice-options.interface';
 import { NestApplication, NestFactory } from '@nestjs/core';
-import { Deserializer, MicroserviceOptions, Serializer, TcpOptions, TcpSocket, Transport } from '@nestjs/microservices';
-import { ConnectionOptions } from 'tls';
+import { Deserializer, MicroserviceOptions, MqttOptions, Serializer, Transport } from '@nestjs/microservices';
+import { QoS } from '@nestjs/microservices/external/mqtt-options.interface';
 
 @EnvModel()
-export class TcpMicroserviceEnvironments implements Pick<Required<TcpOptions>['options'], 'host' | 'port'> {
-  @EnvModelProperty({ description: 'Host' })
-  host?: string;
-
-  @EnvModelProperty({ description: 'Port' })
-  port?: number;
+export class MqttMicroserviceEnvironments implements Pick<Required<MqttOptions>['options'], 'url'> {
+  @EnvModelProperty({ description: 'Url' })
+  url?: string;
 }
 
 @ConfigModel()
-export class TcpMicroserviceConfiguration
-  implements Omit<Required<TcpOptions>['options'] & NestMicroserviceOptions, 'host' | 'port'>
+export class MqttMicroserviceConfiguration
+  implements Omit<Required<MqttOptions>['options'] & NestMicroserviceOptions, 'url'>
 {
   @ConfigModelProperty({
     description: 'Default logger for application',
@@ -102,24 +99,9 @@ export class TcpMicroserviceConfiguration
   // ms
 
   @ConfigModelProperty({
-    description: 'Retry attempts',
-  })
-  retryAttempts?: number;
-
-  @ConfigModelProperty({
-    description: 'Retry delay',
-  })
-  retryDelay?: number;
-
-  @ConfigModelProperty({
     description: 'Serializer',
   })
   serializer?: Serializer;
-
-  @ConfigModelProperty({
-    description: 'TLS options',
-  })
-  tlsOptions?: ConnectionOptions;
 
   @ConfigModelProperty({
     description: 'Deserializer',
@@ -127,38 +109,51 @@ export class TcpMicroserviceConfiguration
   deserializer?: Deserializer;
 
   @ConfigModelProperty({
-    description: 'Socket class',
+    description: 'Subscribe options',
   })
-  socketClass?: Type<TcpSocket>;
+  subscribeOptions?: {
+    /**
+     * The QoS
+     */
+    qos: QoS;
+    nl?: boolean;
+    rap?: boolean;
+    rh?: number;
+  };
+
+  @ConfigModelProperty({
+    description: 'User properties',
+  })
+  userProperties?: Record<string, string | string[]>;
 }
 
-export const { TcpNestMicroservice } = createNestModule({
-  moduleName: 'TcpNestMicroservice',
+export const { MqttNestMicroservice } = createNestModule({
+  moduleName: 'MqttNestMicroservice',
   moduleDescription:
-    'TCP NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics',
+    'MQTT NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/mqtt',
   moduleCategory: NestModuleCategory.system,
-  staticConfigurationModel: TcpMicroserviceConfiguration,
-  staticEnvironmentsModel: TcpMicroserviceEnvironments,
+  staticConfigurationModel: MqttMicroserviceConfiguration,
+  staticEnvironmentsModel: MqttMicroserviceEnvironments,
   wrapForRootAsync: (asyncModuleOptions) => {
     if (!asyncModuleOptions) {
       asyncModuleOptions = {};
     }
     if (asyncModuleOptions.staticConfiguration?.featureName) {
       const FomatterClass = getFeatureDotEnvPropertyNameFormatter(
-        `${asyncModuleOptions.staticConfiguration?.featureName}_TCP`
+        `${asyncModuleOptions.staticConfiguration?.featureName}_MQTT`
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
           propertyNameFormatters: [new FomatterClass()],
-          name: `${asyncModuleOptions.staticConfiguration?.featureName}_TCP`,
+          name: `${asyncModuleOptions.staticConfiguration?.featureName}_MQTT`,
         },
       });
     } else {
-      const FomatterClass = getFeatureDotEnvPropertyNameFormatter('TCP');
+      const FomatterClass = getFeatureDotEnvPropertyNameFormatter('MQTT');
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
           propertyNameFormatters: [new FomatterClass()],
-          name: 'TCP',
+          name: 'MQTT',
         },
       });
     }
@@ -169,7 +164,7 @@ export const { TcpNestMicroservice } = createNestModule({
     if (app) {
       app.connectMicroservice<MicroserviceOptions>(
         {
-          transport: Transport.TCP,
+          transport: Transport.MQTT,
           options: { ...current.staticConfiguration, ...current.staticEnvironments },
         },
         { inheritAppConfig: true }
@@ -181,7 +176,7 @@ export const { TcpNestMicroservice } = createNestModule({
       class MicroserviceNestApp {}
 
       app = (await NestFactory.createMicroservice<MicroserviceOptions>(MicroserviceNestApp, {
-        transport: Transport.TCP,
+        transport: Transport.MQTT,
         options: { ...current.staticConfiguration, ...current.staticEnvironments },
       })) as unknown as NestApplication;
     }
