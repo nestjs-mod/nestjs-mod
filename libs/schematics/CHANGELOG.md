@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.6.1...schematics-v2.7.0) (2024-02-14)
+
+
+### Features
+
+* add support grpc, kafka, mqtt, nats, redis and rmq in @nestjs-mod/microservices ([14271a7](https://github.com/nestjs-mod/nestjs-mod/commit/14271a70419ff51487ec83a658cdefcaf037bb40))
+
 ## [2.6.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.6.0...schematics-v2.6.1) (2024-02-14)
 
 
