@@ -1,3 +1,15 @@
+# [2.10.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.9.2...common-v2.10.0) (2024-02-14)
+
+
+### Bug Fixes
+
+* add support work with microservices, now port options is optional ([012ee0d](https://github.com/nestjs-mod/nestjs-mod/commit/012ee0d385434d784a95317c95e6577387d5f6ea))
+
+
+### Features
+
+* add TcpNestMicroservice in @nestjs-mod/microservices ([852d29a](https://github.com/nestjs-mod/nestjs-mod/commit/852d29ad7ebbf9f8c61fc2ee45bd285b7cff84fb))
+
 ## [2.9.2](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.9.1...common-v2.9.2) (2024-02-13)
 
 
