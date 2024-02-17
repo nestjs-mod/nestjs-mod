@@ -92,16 +92,17 @@ Static variables of primitive and complex types that are used in the module and 
 |`envFile`|Dot-env file with environment variables|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/.env```|
 
 ### DefaultNestApplicationInitializer
-Default NestJS application initializer, no third party utilities required.
+Default NestJS application initializer.
 
 ### TcpNestMicroservice
-TCP NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics
+TCP NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/basics
 
 #### Static environments
 Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
 
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
+|`host`|Host|`obj['host']`, `process.env['EXAMPLE_TCP_MICROSERVICE_TCP_HOST']`|**optional**|-|-|
 |`port`|Port|`obj['port']`, `process.env['EXAMPLE_TCP_MICROSERVICE_TCP_PORT']`|**optional**|-|```5001```|
 
 ## Feature modules
@@ -112,7 +113,7 @@ Feature modules with business logic of the application. NestJS and NestJS-mod co
 Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
 
 ### DefaultNestApplicationListener
-Default NestJS application listener, no third party utilities required.
+Default NestJS application listener.
 
 #### Static environments
 Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
@@ -120,13 +121,14 @@ Static variables with primitive types used in the module and can be used at the 
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
 |`port`|The port on which to run the server.|`obj['port']`, `process.env['EXAMPLE_TCP_MICROSERVICE_PORT']`|**optional**|```3000```|```3001```|
+|`hostname`|Hostname on which to listen for incoming packets.|`obj['hostname']`, `process.env['EXAMPLE_TCP_MICROSERVICE_HOSTNAME']`|**optional**|-|-|
 
 #### Static configuration
 Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|```init```|
+|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|```silent```|
 |`postListen`|Method for additional actions after listening|**optional**|-|Function|
 
 ## Infrastructure modules

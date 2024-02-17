@@ -64,8 +64,8 @@ describe('Math over TCP', () => {
   });
 
   afterAll(async () => {
-    client.close();
-    server.close();
+    await client.close();
+    await server.close();
   });
 
   describe('sum', () => {

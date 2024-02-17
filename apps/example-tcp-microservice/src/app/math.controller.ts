@@ -14,10 +14,10 @@ export class MathController {
   handleUserCreatedResult: any[] = [];
 
   @MessagePattern({ cmd: 'sum' })
-  sum(data: number[]): number {
+  sum(@Payload() data: number[]): number {
     this.logger.log({ sum: data });
     this.sumResult.push(data);
-    return (data || []).reduce((a, b) => a + b);
+    return (data || []).reduce((a, b) => a + b, 0);
   }
 
   @MessagePattern('time.us.*')
@@ -29,21 +29,21 @@ export class MathController {
   }
 
   @MessagePattern({ cmd: 'asyncSum' })
-  async asyncSum(data: number[]): Promise<number> {
+  async asyncSum(@Payload() data: number[]): Promise<number> {
     this.logger.log({ asyncSum: data });
     this.asyncSumResult.push(data);
-    return (data || []).reduce((a, b) => a + b);
+    return (data || []).reduce((a, b) => a + b, 0);
   }
 
   @MessagePattern({ cmd: 'observableSum' })
-  observableSum(data: number[]): Observable<number> {
+  observableSum(@Payload() data: number[]): Observable<number> {
     this.logger.log({ observableSum: data });
     this.observableSumResult.push(data);
-    return from([1, 2, 3]).pipe(map((inc) => data.reduce((a, b) => a * inc + b * inc)));
+    return from([1, 2, 3]).pipe(map((inc) => data.reduce((a, b) => a * inc + b * inc, 0)));
   }
 
   @EventPattern('user_created')
-  async handleUserCreated(data: Record<string, unknown>) {
+  async handleUserCreated(@Payload() data: Record<string, unknown>) {
     this.logger.log({ handleUserCreated: data });
     this.handleUserCreatedResult.push(data);
   }

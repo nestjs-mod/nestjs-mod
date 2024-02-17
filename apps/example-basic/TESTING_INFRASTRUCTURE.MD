@@ -5,7 +5,7 @@ Test application
 System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.). Only NestJS-mod compatible modules.
 
 ### DefaultTestNestApplicationCreate
-Default test NestJS application creator, no third party utilities required.
+Default test NestJS application creator.
 
 #### Static configuration
 Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
@@ -71,7 +71,7 @@ Feature variables with primitive types used in the module, the values of which c
 Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
 
 ### DefaultTestNestApplicationInitializer
-Default test NestJS application initializer, no third party utilities required.
+Default test NestJS application initializer.
 
 #### Static configuration
 Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.

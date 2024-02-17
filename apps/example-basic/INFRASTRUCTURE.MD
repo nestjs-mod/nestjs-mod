@@ -92,7 +92,7 @@ Static variables of primitive and complex types that are used in the module and 
 |`envFile`|Dot-env file with environment variables|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/.env```|
 
 ### DefaultNestApplicationInitializer
-Default NestJS application initializer, no third party utilities required.
+Default NestJS application initializer.
 
 ## Feature modules
 Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.
@@ -114,6 +114,20 @@ Variables with primitive types used in the module, the values of which can be ob
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
 |`var1`|-|`obj['var1']`, `process.env['EXAMPLE_BASIC_SAMPLE_WITH_SHARED_CONFIG_VAR_1']`|**isNotEmpty** (var1 should not be empty)|-|```var1value```|
 
+#### Static environments: SampleWithSharedConfig
+Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
+
+| Key    | Description | Sources | Constraints | Default | Value |
+| ------ | ----------- | ------- | ----------- | ------- | ----- |
+|`endpoint`|-|`obj['endpoint']`, `process.env['EXAMPLE_BASIC_SAMPLE_WITH_SHARED_CONFIG_ENDPOINT']`|**optional**|-|-|
+
+#### Feature environments
+Feature variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.
+
+| Key    | Description | Sources | Constraints | Default | Value |
+| ------ | ----------- | ------- | ----------- | ------- | ----- |
+|`envFeatureVar`|-|`obj['envFeatureVar']`, `process.env['FEATURE_MODULE_NAME_ENV_FEATURE_VAR']`|**optional**|-|-|
+
 #### Modules that use feature configuration
 ##### Feature module name: AppModule
 
@@ -122,11 +136,19 @@ Variables with primitive types used in the module, the values of which can be ob
 | ------ | ----------- | ----------- | ------- | ----- |
 |`featureVar`|-|**isNotEmpty** (featureVar should not be empty)|-|```featureVar41```|
 
+#### Modules that use feature environments
+##### Feature module name: AppModule
+
+
+| Key    | Description | Sources | Constraints | Default | Value |
+| ------ | ----------- | ------- | ----------- | ------- | ----- |
+|`envFeatureVar`|-|`obj['envFeatureVar']`, `process.env['APP_MODULE_ENV_FEATURE_VAR']`|**optional**|-|-|
+
 ## Integration modules
 Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
 
 ### DefaultNestApplicationListener
-Default NestJS application listener, no third party utilities required.
+Default NestJS application listener.
 
 #### Static environments
 Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
@@ -134,13 +156,14 @@ Static variables with primitive types used in the module and can be used at the 
 | Key    | Description | Sources | Constraints | Default | Value |
 | ------ | ----------- | ------- | ----------- | ------- | ----- |
 |`port`|The port on which to run the server.|`obj['port']`, `process.env['EXAMPLE_BASIC_PORT']`|**optional**|```3000```|```3000```|
+|`hostname`|Hostname on which to listen for incoming packets.|`obj['hostname']`, `process.env['EXAMPLE_BASIC_HOSTNAME']`|**optional**|-|-|
 
 #### Static configuration
 Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|```init```|
+|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|```silent```|
 
 ## Infrastructure modules
 Infrastructure modules are needed to create configurations that launch various external services (examples: docker-compose file for raising a database, gitlab configuration for deploying an application). Only NestJS-mod compatible modules.
