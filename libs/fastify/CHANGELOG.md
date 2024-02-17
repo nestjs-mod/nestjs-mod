@@ -1,3 +1,11 @@
+# [1.3.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.2.0...fastify-v1.3.0) (2024-02-17)
+
+
+### Features
+
+* add detect headers for rpc request, but it not work :(, add silent mode for disable start microservice ([de57558](https://github.com/nestjs-mod/nestjs-mod/commit/de57558510f37b815060251a63d194329e620cb0))
+* add silent mode in fastify ([27b53bd](https://github.com/nestjs-mod/nestjs-mod/commit/27b53bda2289987a392d3a44b7fc526eabb710a2))
+
 # [1.2.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.1.2...fastify-v1.2.0) (2024-02-14)
 
 
