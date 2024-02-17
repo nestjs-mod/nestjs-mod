@@ -96,6 +96,11 @@ export class MqttMicroserviceConfiguration
   })
   featureName?: string;
 
+  @ConfigModelProperty({
+    description: 'Microservice project name for generate prefix to environments keys (need only for microservice client)',
+  })
+  microserviceProjectName?: string;
+
   // ms
 
   @ConfigModelProperty({
@@ -130,7 +135,7 @@ export class MqttMicroserviceConfiguration
 export const { MqttNestMicroservice } = createNestModule({
   moduleName: 'MqttNestMicroservice',
   moduleDescription:
-    'MQTT NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/mqtt',
+    'MQTT NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/mqtt',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: MqttMicroserviceConfiguration,
   staticEnvironmentsModel: MqttMicroserviceEnvironments,

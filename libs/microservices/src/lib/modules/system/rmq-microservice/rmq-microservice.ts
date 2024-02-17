@@ -1,4 +1,5 @@
 import {
+  ArrayOfStringTransformer,
   ConfigModel,
   ConfigModelProperty,
   EnvModel,
@@ -18,11 +19,12 @@ import {
 } from '@nestjs/microservices/external/rmq-url.interface';
 
 @EnvModel()
-export class RmqMicroserviceEnvironments {
-  // todo: add class transformer and use real type
-  // implements Pick<Required<RmqOptions>['options'], 'urls'> {
-  @EnvModelProperty({ description: 'Urls' })
-  urls?: string;
+export class RmqMicroserviceEnvironments implements Pick<Required<RmqOptions>['options'], 'urls'> {
+  @EnvModelProperty({
+    description: 'Urls',
+    transform: new ArrayOfStringTransformer(),
+  })
+  urls?: string[];
 }
 
 @ConfigModel()
@@ -100,6 +102,12 @@ export class RmqMicroserviceConfiguration
     description: 'Feature name for generate prefix to environments keys',
   })
   featureName?: string;
+
+  @ConfigModelProperty({
+    description:
+      'Microservice project name for generate prefix to environments keys (need only for microservice client)',
+  })
+  microserviceProjectName?: string;
 
   // ms
 
@@ -182,8 +190,7 @@ export class RmqMicroserviceConfiguration
 
 export const { RmqNestMicroservice } = createNestModule({
   moduleName: 'RmqNestMicroservice',
-  moduleDescription:
-    'RabbitMQ NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/rabbitmq',
+  moduleDescription: 'RabbitMQ NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/rabbitmq',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: RmqMicroserviceConfiguration,
   staticEnvironmentsModel: RmqMicroserviceEnvironments,
@@ -218,7 +225,7 @@ export const { RmqNestMicroservice } = createNestModule({
       app.connectMicroservice<MicroserviceOptions>(
         {
           transport: Transport.RMQ,
-          options: { ...current.staticConfiguration, urls: current.staticEnvironments?.urls?.split(',') ?? [] },
+          options: { ...current.staticConfiguration, urls: current.staticEnvironments?.urls ?? [] },
         },
         { inheritAppConfig: true }
       );
@@ -230,7 +237,7 @@ export const { RmqNestMicroservice } = createNestModule({
 
       app = (await NestFactory.createMicroservice<MicroserviceOptions>(MicroserviceNestApp, {
         transport: Transport.RMQ,
-        options: { ...current.staticConfiguration, urls: current.staticEnvironments?.urls?.split(',') ?? [] },
+        options: { ...current.staticConfiguration, urls: current.staticEnvironments?.urls ?? [] },
       })) as unknown as NestApplication;
     }
     return app;

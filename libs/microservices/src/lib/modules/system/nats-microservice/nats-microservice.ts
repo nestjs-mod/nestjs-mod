@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  ArrayOfStringTransformer,
   ConfigModel,
   ConfigModelProperty,
   EnvModel,
@@ -14,19 +15,24 @@ import { NestMicroserviceOptions } from '@nestjs/common/interfaces/microservices
 import { NestApplication, NestFactory } from '@nestjs/core';
 import { Deserializer, MicroserviceOptions, NatsOptions, Serializer, Transport } from '@nestjs/microservices';
 
-@EnvModel() // todo: add  | 'servers'>
-export class NatsMicroserviceEnvironments implements Pick<Required<NatsOptions>['options'], 'name' | 'user' | 'pass'> {
-  @EnvModelProperty({ description: 'Name' })
+@EnvModel()
+export class NatsMicroserviceEnvironments
+  implements Pick<Required<NatsOptions>['options'], 'name' | 'user' | 'pass' | 'servers'>
+{
+  @EnvModelProperty({ description: 'Name', hidden: true })
   name?: string;
 
-  @EnvModelProperty({ description: 'User' })
+  @EnvModelProperty({ description: 'User', hidden: true })
   user?: string;
 
-  @EnvModelProperty({ description: 'Pass' })
+  @EnvModelProperty({ description: 'Pass', hidden: true })
   pass?: string;
 
-  @EnvModelProperty({ description: 'Servers' })
-  servers?: string;
+  @EnvModelProperty({
+    description: 'Servers',
+    transform: new ArrayOfStringTransformer(),
+  })
+  servers?: string[];
 }
 
 @ConfigModel()
@@ -104,6 +110,12 @@ export class NatsMicroserviceConfiguration
     description: 'Feature name for generate prefix to environments keys',
   })
   featureName?: string;
+
+  @ConfigModelProperty({
+    description:
+      'Microservice project name for generate prefix to environments keys (need only for microservice client)',
+  })
+  microserviceProjectName?: string;
 
   // ms
 
@@ -275,8 +287,7 @@ export class NatsMicroserviceConfiguration
 
 export const { NatsNestMicroservice } = createNestModule({
   moduleName: 'NatsNestMicroservice',
-  moduleDescription:
-    'Nats NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/nats',
+  moduleDescription: 'Nats NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/nats',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: NatsMicroserviceConfiguration,
   staticEnvironmentsModel: NatsMicroserviceEnvironments,
@@ -314,7 +325,7 @@ export const { NatsNestMicroservice } = createNestModule({
           options: {
             ...current.staticConfiguration,
             ...current.staticEnvironments,
-            servers: current.staticEnvironments?.servers?.split(','),
+            servers: current.staticEnvironments?.servers,
           },
         },
         { inheritAppConfig: true }
@@ -330,7 +341,7 @@ export const { NatsNestMicroservice } = createNestModule({
         options: {
           ...current.staticConfiguration,
           ...current.staticEnvironments,
-          servers: current.staticEnvironments?.servers?.split(','),
+          servers: current.staticEnvironments?.servers,
         },
       })) as unknown as NestApplication;
     }

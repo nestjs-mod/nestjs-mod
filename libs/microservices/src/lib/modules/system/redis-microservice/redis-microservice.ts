@@ -5,6 +5,7 @@ import {
   EnvModel,
   EnvModelProperty,
   NestModuleCategory,
+  NumberTransformer,
   collectRootNestModules,
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
@@ -17,10 +18,14 @@ import { ConnectionOptions } from 'tls';
 
 @EnvModel()
 export class RedisMicroserviceEnvironments implements Pick<Required<RedisOptions>['options'], 'host' | 'port'> {
-  @EnvModelProperty({ description: 'Host' })
+  @EnvModelProperty({ description: 'Host', hidden: true })
   host?: string;
 
-  @EnvModelProperty({ description: 'Port' })
+  @EnvModelProperty({
+    description: 'Port',
+    default: 6379,
+    transform: new NumberTransformer(),
+  })
   port?: number;
 
   /**
@@ -30,6 +35,7 @@ export class RedisMicroserviceEnvironments implements Pick<Required<RedisOptions
   @EnvModelProperty({
     description:
       'If set, client will send AUTH command with the value of this option as the first argument when connected, this is supported since Redis 6',
+    hidden: true,
   })
   username?: string;
 
@@ -46,7 +52,12 @@ export class RedisMicroserviceEnvironments implements Pick<Required<RedisOptions
    *
    * @default 0
    */
-  @EnvModelProperty({ description: 'Database index to use', default: 0 })
+  @EnvModelProperty({
+    default: 0,
+    description: 'Database index to use',
+    hidden: true,
+    transform: new NumberTransformer(),
+  })
   db?: number;
 }
 
@@ -126,6 +137,12 @@ export class RedisMicroserviceConfiguration
     description: 'Feature name for generate prefix to environments keys',
   })
   featureName?: string;
+
+  @ConfigModelProperty({
+    description:
+      'Microservice project name for generate prefix to environments keys (need only for microservice client)',
+  })
+  microserviceProjectName?: string;
 
   // ms
 
@@ -502,8 +519,7 @@ export class RedisMicroserviceConfiguration
 
 export const { RedisNestMicroservice } = createNestModule({
   moduleName: 'RedisNestMicroservice',
-  moduleDescription:
-    'Redis NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/redis',
+  moduleDescription: 'Redis NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/redis',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: RedisMicroserviceConfiguration,
   staticEnvironmentsModel: RedisMicroserviceEnvironments,

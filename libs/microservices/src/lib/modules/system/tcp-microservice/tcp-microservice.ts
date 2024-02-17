@@ -4,6 +4,7 @@ import {
   EnvModel,
   EnvModelProperty,
   NestModuleCategory,
+  NumberTransformer,
   collectRootNestModules,
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
@@ -16,10 +17,10 @@ import { ConnectionOptions } from 'tls';
 
 @EnvModel()
 export class TcpMicroserviceEnvironments implements Pick<Required<TcpOptions>['options'], 'host' | 'port'> {
-  @EnvModelProperty({ description: 'Host' })
+  @EnvModelProperty({ description: 'Host', hidden: true })
   host?: string;
 
-  @EnvModelProperty({ description: 'Port' })
+  @EnvModelProperty({ description: 'Port', transform: new NumberTransformer() })
   port?: number;
 }
 
@@ -99,6 +100,12 @@ export class TcpMicroserviceConfiguration
   })
   featureName?: string;
 
+  @ConfigModelProperty({
+    description:
+      'Microservice project name for generate prefix to environments keys (need only for microservice client)',
+  })
+  microserviceProjectName?: string;
+
   // ms
 
   @ConfigModelProperty({
@@ -134,8 +141,7 @@ export class TcpMicroserviceConfiguration
 
 export const { TcpNestMicroservice } = createNestModule({
   moduleName: 'TcpNestMicroservice',
-  moduleDescription:
-    'TCP NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/basics',
+  moduleDescription: 'TCP NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/basics',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: TcpMicroserviceConfiguration,
   staticEnvironmentsModel: TcpMicroserviceEnvironments,
@@ -166,11 +172,12 @@ export const { TcpNestMicroservice } = createNestModule({
   },
   // creating microservice
   wrapApplication: async ({ app, current, modules }) => {
+    const options = { ...current.staticConfiguration, ...current.staticEnvironments };
     if (app) {
       app.connectMicroservice<MicroserviceOptions>(
         {
           transport: Transport.TCP,
-          options: { ...current.staticConfiguration, ...current.staticEnvironments },
+          options,
         },
         { inheritAppConfig: true }
       );
@@ -182,9 +189,12 @@ export const { TcpNestMicroservice } = createNestModule({
 
       app = (await NestFactory.createMicroservice<MicroserviceOptions>(MicroserviceNestApp, {
         transport: Transport.TCP,
-        options: { ...current.staticConfiguration, ...current.staticEnvironments },
+        options,
       })) as unknown as NestApplication;
     }
+    // (current.staticConfiguration?.defaultLogger || new Logger()).debug(
+    //   `⚙️  Microservice created with options: ${JSON.stringify(options)}`
+    // );
     return app;
   },
 });

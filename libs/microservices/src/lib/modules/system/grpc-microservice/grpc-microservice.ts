@@ -99,6 +99,11 @@ export class GrpcMicroserviceConfiguration
   })
   featureName?: string;
 
+  @ConfigModelProperty({
+    description: 'Microservice project name for generate prefix to environments keys (need only for microservice client)',
+  })
+  microserviceProjectName?: string;
+
   // ms
 
   @ConfigModelProperty({
@@ -186,7 +191,7 @@ export class GrpcMicroserviceConfiguration
 export const { GrpcNestMicroservice } = createNestModule({
   moduleName: 'GrpcNestMicroservice',
   moduleDescription:
-    'GRPC NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/grpc',
+    'GRPC NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/grpc',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: GrpcMicroserviceConfiguration,
   staticEnvironmentsModel: GrpcMicroserviceEnvironments,

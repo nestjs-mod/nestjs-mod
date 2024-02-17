@@ -1,4 +1,5 @@
 import {
+  ArrayOfStringTransformer,
   ConfigModel,
   ConfigModelProperty,
   EnvModel,
@@ -29,11 +30,14 @@ import {
 } from '@nestjs/microservices/external/kafka.interface';
 
 @EnvModel()
-export class KafkaMicroserviceEnvironments {
-  // todo: add transformer
-  // implements Pick<Required<KafkaOptions['options']['client']>, 'brokers'> {
-  @EnvModelProperty({ description: 'Brokers' })
-  brokers?: string;
+export class KafkaMicroserviceEnvironments
+  implements Pick<Required<Required<KafkaOptions>['options']>['client'], 'brokers'>
+{
+  @EnvModelProperty({
+    description: 'Brokers',
+    transform: new ArrayOfStringTransformer(),
+  })
+  brokers!: string[];
 }
 
 @ConfigModel()
@@ -112,6 +116,12 @@ export class KafkaMicroserviceConfiguration
   })
   featureName?: string;
 
+  @ConfigModelProperty({
+    description:
+      'Microservice project name for generate prefix to environments keys (need only for microservice client)',
+  })
+  microserviceProjectName?: string;
+
   // ms
 
   @ConfigModelProperty({
@@ -175,8 +185,7 @@ export class KafkaMicroserviceConfiguration
 
 export const { KafkaNestMicroservice } = createNestModule({
   moduleName: 'KafkaNestMicroservice',
-  moduleDescription:
-    'Kafka NestJS-mod microservice initializer, no third party utilities required @see https://docs.nestjs.com/microservices/kafka',
+  moduleDescription: 'Kafka NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/kafka',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: KafkaMicroserviceConfiguration,
   staticEnvironmentsModel: KafkaMicroserviceEnvironments,
@@ -216,7 +225,7 @@ export const { KafkaNestMicroservice } = createNestModule({
             ...current.staticEnvironments,
             client: {
               ...current.staticConfiguration?.client,
-              brokers: current.staticEnvironments?.brokers?.split(',') || [],
+              brokers: current.staticEnvironments?.brokers || [],
             },
           },
         },
@@ -235,7 +244,7 @@ export const { KafkaNestMicroservice } = createNestModule({
           ...current.staticEnvironments,
           client: {
             ...current.staticConfiguration?.client,
-            brokers: current.staticEnvironments?.brokers?.split(',') || [],
+            brokers: current.staticEnvironments?.brokers || [],
           },
         },
       })) as unknown as NestApplication;
