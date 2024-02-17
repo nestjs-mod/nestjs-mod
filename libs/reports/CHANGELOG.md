@@ -1,3 +1,15 @@
+# [2.11.0](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.10.0...reports-v2.11.0) (2024-02-17)
+
+
+### Bug Fixes
+
+* update logic for process modules ([b5cc02d](https://github.com/nestjs-mod/nestjs-mod/commit/b5cc02d468274a66d45928e014aea855ce6ed19a))
+
+
+### Features
+
+* add detect headers for rpc request, but it not work :(, add silent mode for disable start microservice ([de57558](https://github.com/nestjs-mod/nestjs-mod/commit/de57558510f37b815060251a63d194329e620cb0))
+
 # [2.10.0](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.9.2...reports-v2.10.0) (2024-02-14)
 
 
