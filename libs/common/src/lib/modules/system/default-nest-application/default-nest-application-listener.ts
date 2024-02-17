@@ -3,14 +3,20 @@ import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorato
 import { EnvModel, EnvModelProperty } from '../../../env-model/decorators';
 import { NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
+import { NumberTransformer } from '../../../env-model/transformers/number.transformer';
 
 @EnvModel()
 export class DefaultNestApplicationListenerEnvironments {
-  @EnvModelProperty({ description: 'The port on which to run the server.', default: 3000 })
+  @EnvModelProperty({
+    description: 'The port on which to run the server.',
+    default: 3000,
+    transform: new NumberTransformer(),
+  })
   port?: number;
 
   @EnvModelProperty({
     description: 'Hostname on which to listen for incoming packets.',
+    hidden: true,
   })
   hostname?: string;
 }
@@ -22,7 +28,7 @@ export class DefaultNestApplicationListenerConfiguration {
       'Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application',
     default: 'listen',
   })
-  mode?: 'init' | 'listen';
+  mode?: 'init' | 'listen' | 'silent';
 
   @ConfigModelProperty({
     description: 'Method for additional actions before listening',
@@ -72,7 +78,7 @@ export class DefaultNestApplicationListenerConfiguration {
 
 export const { DefaultNestApplicationListener } = createNestModule({
   moduleName: 'DefaultNestApplicationListener',
-  moduleDescription: 'Default NestJS application listener, no third party utilities required.',
+  moduleDescription: 'Default NestJS application listener.',
   staticEnvironmentsModel: DefaultNestApplicationListenerEnvironments,
   staticConfigurationModel: DefaultNestApplicationListenerConfiguration,
   globalConfigurationOptions: { skipValidation: true },
@@ -86,7 +92,7 @@ export const { DefaultNestApplicationListener } = createNestModule({
     modules[NestModuleCategory.integrations]!.push(
       createNestModule({
         moduleName: 'DefaultNestApplicationListener',
-        moduleDescription: 'Default NestJS application listener, no third party utilities required.',
+        moduleDescription: 'Default NestJS application listener.',
         staticEnvironmentsModel: DefaultNestApplicationListenerEnvironments,
         staticConfigurationModel: DefaultNestApplicationListenerConfiguration,
         moduleCategory: NestModuleCategory.system,
@@ -122,8 +128,11 @@ export const { DefaultNestApplicationListener } = createNestModule({
             }
           }
 
-          if (app && current.staticConfiguration?.mode === 'init') {
-            if (((typeof app?.getMicroservices === 'function' && app?.getMicroservices()) || []).length > 0) {
+          if (app && (current.staticConfiguration?.mode === 'init' || current.staticConfiguration?.mode === 'silent')) {
+            if (
+              current.staticConfiguration?.mode !== 'silent' &&
+              ((typeof app?.getMicroservices === 'function' && app?.getMicroservices()) || []).length > 0
+            ) {
               await app.startAllMicroservices();
             }
             await app.init();
@@ -144,7 +153,7 @@ export const { DefaultNestApplicationListener } = createNestModule({
                 }/${current.staticConfiguration.globalPrefix || ''}`
               );
             } else {
-              (current.staticConfiguration.defaultLogger || new Logger()).log(`🚀 Microservice is running`);
+              (current.staticConfiguration.defaultLogger || new Logger()).log(`🚀 All microservices is running`);
             }
           }
         },

@@ -116,7 +116,7 @@ export class DefaultNestApplicationInitializerConfig implements NestApplicationO
 
 export const { DefaultNestApplicationInitializer } = createNestModule({
   moduleName: 'DefaultNestApplicationInitializer',
-  moduleDescription: 'Default NestJS application initializer, no third party utilities required.',
+  moduleDescription: 'Default NestJS application initializer.',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: DefaultNestApplicationInitializerConfig,
   // creating application

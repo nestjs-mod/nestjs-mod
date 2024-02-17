@@ -251,11 +251,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
   }) {
     if (
       this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
-      !settingsModelInfo?.modelPropertyOptions.some(
-        (modelPropertyOption) =>
-          settingsModelInfo?.validations[modelPropertyOption.originalName].value !== undefined &&
-          settingsModelInfo?.validations[modelPropertyOption.originalName].value !== modelPropertyOption.default
-      )
+      settingsModelInfo?.modelPropertyOptions.length === 0
     ) {
       return;
     }
@@ -279,42 +275,33 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         [
           '| Key    | Description | Sources | Constraints | Default | Value |',
           '| ------ | ----------- | ------- | ----------- | ------- | ----- |',
-          ...(settingsModelInfo?.modelPropertyOptions
-            .filter(
-              (modelPropertyOption) =>
-                !this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings ||
-                (this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
-                  settingsModelInfo?.validations[modelPropertyOption.originalName].value !== undefined &&
-                  settingsModelInfo?.validations[modelPropertyOption.originalName].value !==
-                    modelPropertyOption.default)
-            )
-            .map((modelPropertyOption) =>
-              [
-                '',
-                // Key
-                `\`${String(modelPropertyOption.originalName)}${
-                  modelPropertyOption.name ? ` (${modelPropertyOption.name})` : ''
-                }\``,
-                // Description
-                modelPropertyOption.description || '-',
-                // Sources
-                settingsModelInfo?.validations[modelPropertyOption.originalName].propertyValueExtractors
-                  .map((propertyValueExtractor) => `\`${propertyValueExtractor.example.example}\``)
-                  .join(', ') || '-',
-                // Constraints
-                Object.entries(settingsModelInfo?.validations[modelPropertyOption.originalName].constraints || {})
-                  .map(([key, value]) => `**${key}** (${value})`)
-                  .join(', ') || '**optional**',
-                // Default
-                this.safeValue(modelPropertyOption.default),
-                // Value
-                this.safeValue(
-                  settingsModelInfo?.validations[modelPropertyOption.originalName].value,
-                  modelPropertyOption.default
-                ),
-                '',
-              ].join('|')
-            ) || []),
+          ...(settingsModelInfo?.modelPropertyOptions.map((modelPropertyOption) =>
+            [
+              '',
+              // Key
+              `\`${String(modelPropertyOption.originalName)}${
+                modelPropertyOption.name ? ` (${modelPropertyOption.name})` : ''
+              }\``,
+              // Description
+              modelPropertyOption.description || '-',
+              // Sources
+              settingsModelInfo?.validations[modelPropertyOption.originalName].propertyValueExtractors
+                .map((propertyValueExtractor) => `\`${propertyValueExtractor.example.example}\``)
+                .join(', ') || '-',
+              // Constraints
+              Object.entries(settingsModelInfo?.validations[modelPropertyOption.originalName].constraints || {})
+                .map(([key, value]) => `**${key}** (${value})`)
+                .join(', ') || '**optional**',
+              // Default
+              this.safeValue(modelPropertyOption.default),
+              // Value
+              this.safeValue(
+                settingsModelInfo?.validations[modelPropertyOption.originalName].value,
+                modelPropertyOption.default
+              ),
+              '',
+            ].join('|')
+          ) || []),
         ].join('\n')
       );
       lines.push('');

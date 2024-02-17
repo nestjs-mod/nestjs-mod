@@ -46,7 +46,7 @@ class GetEnv {
   }
 
   getKeys() {
-    return this.dotEnvService.keys();
+    return this.dotEnvService.keys(true);
   }
 }
 const { AppModule } = createNestModule({
@@ -78,7 +78,7 @@ bootstrapNestApplication({
       DefaultNestApplicationInitializer.forRoot(),
       DefaultNestApplicationListener.forRoot({
         staticConfiguration: {
-          mode: 'init',
+          mode: 'silent',
           postListen: async ({ app }) => {
             if (app) {
               const getEnv = app.get(GetEnv);

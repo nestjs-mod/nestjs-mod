@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Logger, LoggerService } from '@nestjs/common';
 import { ValidatorPackage } from '@nestjs/common/interfaces/external/validator-package.interface';
 import { ValidatorOptions } from 'class-validator';
@@ -18,9 +19,20 @@ export type ConfigModelRootOptions = Omit<ConfigModelOptions, 'originalName'>;
 export type ConfigModelPropertyOptions = {
   description?: string;
   originalName: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   default?: any;
+  transform?: ConfigModelPropertyValueTransformer;
 };
+
+export interface ConfigModelPropertyValueTransformer {
+  name?: string;
+  transform(params: {
+    value: any;
+    options: ConfigModelPropertyOptions;
+    modelRootOptions: ConfigModelOptions;
+    modelOptions: ConfigModelOptions;
+    obj: any;
+  }): any;
+}
 
 export type ConfigModelInfo = {
   modelOptions: ConfigModelRootOptions;

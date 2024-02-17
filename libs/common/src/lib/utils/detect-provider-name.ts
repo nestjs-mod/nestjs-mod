@@ -1,5 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function detectProviderName(provider: any) {
+  if (typeof provider === 'string' || typeof provider === 'symbol') {
+    return String(provider);
+  }
   if ('provide' in provider) {
     try {
       const detected = provider['provide'];

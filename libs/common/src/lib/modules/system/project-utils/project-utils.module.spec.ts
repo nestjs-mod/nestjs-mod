@@ -168,7 +168,7 @@ describe('Project Utils', () => {
       }
 
       getKeys() {
-        return this.dotEnvService.keys();
+        return this.dotEnvService.keys(true);
       }
     }
     const { AppModule } = createNestModule({

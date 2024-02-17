@@ -480,7 +480,7 @@ describe('NestJS application: Utils', () => {
     System modules necessary for the operation of the entire application (examples: launching a NestJS application, launching microservices, etc.). Only NestJS-mod compatible modules.
 
     ### DefaultNestApplicationInitializer
-    Default NestJS application initializer, no third party utilities required.
+    Default NestJS application initializer.
 
     #### Static configuration
     Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
@@ -505,7 +505,7 @@ describe('NestJS application: Utils', () => {
     Integration modules are necessary to organize communication between feature or core modules (example: after creating a user in the UsersModule feature module, you need to send him a letter from the NotificationsModule core module). NestJS and NestJS-mod compatible modules.
 
     ### DefaultNestApplicationListener
-    Default NestJS application listener, no third party utilities required.
+    Default NestJS application listener.
 
     #### Static environments
     Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.

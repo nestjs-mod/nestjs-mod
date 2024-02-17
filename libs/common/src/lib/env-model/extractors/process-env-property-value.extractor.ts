@@ -61,6 +61,15 @@ export class ProcessEnvPropertyValueExtractor implements PropertyValueExtractor 
     if (this.processEnvStorage) {
       return this.processEnvStorage[formattedPropertyName];
     }
-    return process.env[formattedPropertyName];
+    const keys = Object.keys(process.env);
+
+    let value = process.env[formattedPropertyName];
+    if (value) {
+      for (const key of keys) {
+        value = String(value).replace(new RegExp(`%${key}%`, 'ig'), process.env[key] || '');
+      }
+    }
+
+    return value;
   }
 }

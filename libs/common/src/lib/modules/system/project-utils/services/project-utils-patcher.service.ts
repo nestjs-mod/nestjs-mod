@@ -1,4 +1,6 @@
 import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
+import { capitalCase } from 'case-anything';
+import { EnvModelInfoValidationsPropertyNameFormatters } from '../../../../env-model/types';
 import { ProjectOptions } from '../../../../nest-module/types';
 import { isInfrastructureMode } from '../../../../utils/is-infrastructure';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
@@ -10,6 +12,7 @@ import { WrapApplicationOptionsService } from './wrap-application-options.servic
 @Injectable()
 export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
   private logger = new Logger(ProjectUtilsPatcherService.name);
+  private printDotenv = true;
 
   constructor(
     private readonly projectUtilsConfiguration: ProjectUtilsConfiguration,
@@ -24,6 +27,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
     this.updateProject();
     this.updateEnvFile();
     this.updateGlobalConfigurationAndEnvironmentsOptions();
+    this.printDotenvKeys();
   }
 
   private updatePackage() {
@@ -34,6 +38,102 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
     const existsJson = this.packageJsonService.read();
     if (existsJson) {
       this.packageJsonService.write(existsJson);
+    }
+  }
+
+  private printDotenvKeys() {
+    if (!this.printDotenv || !this.projectUtilsConfiguration.allApplicationEnvironments) {
+      return;
+    }
+    this.printDotenv = false;
+    const modules = Object.entries(this.wrapApplicationOptionsService.modules || {})
+      .map(([, value]) => value)
+      .flat()
+      .filter((m) => m.getNestModuleMetadata?.()?.moduleCategory)
+      .map((m) => m.moduleSettings);
+
+    const contextName = 'default';
+
+    const keys = [
+      ...new Set(
+        [
+          ...modules
+            .map((m) =>
+              Object.keys(m?.[contextName]?.staticEnvironments?.validations || {})
+                .map((key) =>
+                  m?.[contextName]?.staticEnvironments?.validations[key]?.propertyNameFormatters
+                    .filter((f: EnvModelInfoValidationsPropertyNameFormatters) => f.name === 'dotenv')
+                    .map((f: EnvModelInfoValidationsPropertyNameFormatters) => ({
+                      [f.value]: {
+                        model: m?.[contextName]?.environments?.modelOptions.name,
+                        ...m?.[contextName]?.staticEnvironments?.modelPropertyOptions.find(
+                          (o) => o.name === f.name || o.originalName === key
+                        ),
+                      },
+                    }))
+                    .flat()
+                )
+                .flat()
+            )
+            .flat(),
+          ...modules
+            .map((m) =>
+              Object.keys(m?.[contextName]?.environments?.validations || {})
+                .map((key) =>
+                  m?.[contextName]?.environments?.validations[key]?.propertyNameFormatters
+                    .filter((f: EnvModelInfoValidationsPropertyNameFormatters) => f.name === 'dotenv')
+                    .map((f: EnvModelInfoValidationsPropertyNameFormatters) => ({
+                      [f.value]: {
+                        model: m?.[contextName]?.environments?.modelOptions.name,
+                        ...m?.[contextName]?.environments?.modelPropertyOptions.find(
+                          (o) => o.name === f.name || o.originalName === key
+                        ),
+                      },
+                    }))
+                    .flat()
+                )
+                .flat()
+            )
+            .flat(),
+          ...modules
+            .map((m) =>
+              Object.entries(m?.[contextName]?.featureModuleEnvironments || {})
+                .map(([, v]) =>
+                  (v || [])
+                    .map((vItem) =>
+                      Object.keys(vItem?.validations || {}).map((key) =>
+                        vItem?.validations[key]?.propertyNameFormatters
+                          .filter((f: EnvModelInfoValidationsPropertyNameFormatters) => f.name === 'dotenv')
+                          .map((f: EnvModelInfoValidationsPropertyNameFormatters) => ({
+                            [f.value]: {
+                              model: vItem.modelOptions.name,
+                              ...vItem?.modelPropertyOptions.find((o) => o.name === key || o.originalName === key),
+                            },
+                          }))
+                          .flat()
+                      )
+                    )
+                    .flat()
+                    .flat()
+                )
+                .flat()
+            )
+            .flat(),
+        ].filter(Boolean)
+      ),
+    ];
+    if (keys.length > 0) {
+      new Logger('All application environments').debug(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        Object.entries(keys.reduce((all: any, cur: any) => ({ ...all, ...cur }), {})).map(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ([key, value]: [string, any]) =>
+            `${key}: ${Object.keys(value || {})
+              .filter((key) => value[key] && key !== 'transform' && key !== 'hidden')
+              .map((key) => `${capitalCase(key)}='${value ? value[key] : ''}'`)
+              .join(', ')}`
+        )
+      );
     }
   }
 

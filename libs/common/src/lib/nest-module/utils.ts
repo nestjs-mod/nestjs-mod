@@ -22,6 +22,7 @@ import { EnvModelOptions, EnvModelRootOptions } from '../env-model/types';
 import { envTransform } from '../env-model/utils';
 import { defaultContextName } from '../utils/default-context-name';
 import { detectProviderName } from '../utils/detect-provider-name';
+import { isInfrastructureMode } from '../utils/is-infrastructure';
 import { nameItClass } from '../utils/name-it-class';
 import { NestModuleError } from './errors';
 import {
@@ -44,7 +45,6 @@ import {
   TModuleSettings,
   WrapApplicationOptions,
 } from './types';
-import { isInfrastructureMode } from '../utils/is-infrastructure';
 
 export function getWrapModuleMetadataMethods() {
   const nestModuleMetadataMethods: (keyof Pick<
@@ -430,7 +430,20 @@ export function createNestModule<
     return { contextName, module: settingsModulesByContextName[contextName] };
   };
 
-  const getSharedModule = (contextName: string) => {
+  let sharedStaticConfiguration: Partial<TStaticConfigurationModel> | undefined;
+  let sharedStaticEnvironments: Partial<TStaticEnvironmentsModel> | undefined;
+
+  const getSharedModule = (
+    contextName: string,
+    staticConfiguration?: Partial<TStaticConfigurationModel>,
+    staticEnvironments?: Partial<TStaticEnvironmentsModel>
+  ) => {
+    if (!sharedStaticConfiguration) {
+      sharedStaticConfiguration = staticConfiguration;
+    }
+    if (!sharedStaticEnvironments) {
+      sharedStaticEnvironments = staticEnvironments;
+    }
     const { module: settingsModule } = getOrCreateSettingsModule(contextName);
 
     const sharedProvidersArr =
@@ -439,8 +452,8 @@ export function createNestModule<
         : (nestModuleMetadata.sharedProviders as any)({
             project: nestModuleMetadata.project,
             contextName,
-            staticConfiguration: moduleSettings[contextName].staticConfiguration,
-            staticEnvironments: moduleSettings[contextName].staticEnvironments,
+            staticConfiguration,
+            staticEnvironments,
             globalConfigurationOptions: getRootConfigurationValidationOptions({
               nestModuleMetadata,
               contextName,
@@ -459,8 +472,8 @@ export function createNestModule<
             project: nestModuleMetadata.project,
             contextName,
             settingsModule,
-            staticConfiguration: moduleSettings[contextName].staticConfiguration,
-            staticEnvironments: moduleSettings[contextName].staticEnvironments,
+            staticConfiguration,
+            staticEnvironments,
             globalConfigurationOptions: getRootConfigurationValidationOptions({
               nestModuleMetadata,
               contextName,
@@ -477,29 +490,31 @@ export function createNestModule<
       .map((sharedService) => {
         try {
           const detectedProviderName = detectProviderName(sharedService);
-          if ('provide' in sharedService) {
-            const providers = [
-              sharedService,
-              {
-                provide: getServiceToken(detectedProviderName, contextName),
-                useExisting: sharedService.provide,
-              },
-            ];
-            exports.push(providers[0].provide);
-            exports.push(getServiceToken(detectedProviderName, contextName));
-            return providers;
-          }
-          if ('name' in sharedService) {
-            const providers = [
-              sharedService,
-              {
-                provide: getServiceToken(detectedProviderName, contextName),
-                useExisting: sharedService,
-              },
-            ];
-            exports.push(sharedService);
-            exports.push(getServiceToken(detectedProviderName, contextName));
-            return providers;
+          if (typeof sharedService !== 'string') {
+            if ('provide' in sharedService) {
+              const providers = [
+                sharedService,
+                {
+                  provide: getServiceToken(detectedProviderName, contextName),
+                  useExisting: sharedService.provide,
+                },
+              ];
+              exports.push(providers[0].provide);
+              exports.push(getServiceToken(detectedProviderName, contextName));
+              return providers;
+            }
+            if ('name' in sharedService) {
+              const providers = [
+                sharedService,
+                {
+                  provide: getServiceToken(detectedProviderName, contextName),
+                  useExisting: sharedService,
+                },
+              ];
+              exports.push(sharedService);
+              exports.push(getServiceToken(detectedProviderName, contextName));
+              return providers;
+            }
           }
           exports.push(sharedService);
           exports.push(getServiceToken(detectedProviderName, contextName));
@@ -520,10 +535,18 @@ export function createNestModule<
     return nameItClass(`${nestModuleMetadata.moduleName}Shared`, SharedModule);
   };
 
-  const getFeatureModule = ({ contextName }: { contextName?: string }) => {
+  const getFeatureModule = ({
+    contextName,
+    staticConfiguration,
+    staticEnvironments,
+  }: {
+    contextName?: string;
+    staticConfiguration?: Partial<TStaticConfigurationModel>;
+    staticEnvironments?: Partial<TStaticEnvironmentsModel>;
+  }) => {
     contextName = defaultContextName(contextName);
     if (!modulesByContextName[contextName]) {
-      modulesByContextName[contextName] = getSharedModule(contextName);
+      modulesByContextName[contextName] = getSharedModule(contextName, staticConfiguration, staticEnvironments);
     }
     if (!moduleSettings[contextName]) {
       moduleSettings[contextName] = {};
@@ -1170,7 +1193,11 @@ export function createNestModule<
 
         // console.log({ n: nestModuleMetadata.moduleName, p: nestModuleMetadata.project });
         const { module: settingsModule } = getOrCreateSettingsModule(contextName);
-        const { module: featureModule, featureConfiguration, featureEnvironments } = getFeatureModule({ contextName });
+        const {
+          module: featureModule,
+          featureConfiguration,
+          featureEnvironments,
+        } = getFeatureModule({ contextName, staticConfiguration, staticEnvironments });
 
         const importsArr =
           !nestModuleMetadata.imports || Array.isArray(nestModuleMetadata.imports)

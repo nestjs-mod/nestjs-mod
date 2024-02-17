@@ -22,8 +22,8 @@ export class DotEnvService {
     return this.projectUtilsConfiguration.envFile;
   }
 
-  keys() {
-    const modules = Object.entries(this.wrapApplicationOptionsService.modules)
+  keys(includeHiddenKeys = false) {
+    const modules = Object.entries(this.wrapApplicationOptionsService.modules || {})
       .map(([, value]) => value)
       .flat()
       .filter((m) => m.getNestModuleMetadata?.()?.moduleCategory)
@@ -44,7 +44,16 @@ export class DotEnvService {
                 )
                 .map((key) =>
                   m?.[contextName]?.staticEnvironments?.validations[key]?.propertyNameFormatters
-                    .filter((f: EnvModelInfoValidationsPropertyNameFormatters) => f.name === 'dotenv')
+                    .filter(
+                      (f: EnvModelInfoValidationsPropertyNameFormatters) =>
+                        (!f.value ||
+                          includeHiddenKeys ||
+                          (!includeHiddenKeys &&
+                            !m?.[contextName]?.staticEnvironments?.modelPropertyOptions.find(
+                              (p) => (p.originalName === key || p.name) && p.hidden
+                            ))) &&
+                        f.name === 'dotenv'
+                    )
                     .map((f: EnvModelInfoValidationsPropertyNameFormatters) => f.value)
                     .flat()
                 )
@@ -60,7 +69,16 @@ export class DotEnvService {
                 )
                 .map((key) =>
                   m?.[contextName]?.environments?.validations[key]?.propertyNameFormatters
-                    .filter((f: EnvModelInfoValidationsPropertyNameFormatters) => f.name === 'dotenv')
+                    .filter(
+                      (f: EnvModelInfoValidationsPropertyNameFormatters) =>
+                        (!f.value ||
+                          includeHiddenKeys ||
+                          (!includeHiddenKeys &&
+                            !m?.[contextName]?.environments?.modelPropertyOptions.find(
+                              (p) => (p.originalName === key || p.name) && p.hidden
+                            ))) &&
+                        f.name === 'dotenv'
+                    )
                     .map((f: EnvModelInfoValidationsPropertyNameFormatters) => f.value)
                     .flat()
                 )
@@ -77,7 +95,16 @@ export class DotEnvService {
                         .filter((key) => !vItem?.validations[key]?.propertyValueExtractors.some((e) => e.demoMode))
                         .map((key) =>
                           vItem?.validations[key]?.propertyNameFormatters
-                            .filter((f: EnvModelInfoValidationsPropertyNameFormatters) => f.name === 'dotenv')
+                            .filter(
+                              (f: EnvModelInfoValidationsPropertyNameFormatters) =>
+                                (!f.value ||
+                                  includeHiddenKeys ||
+                                  (!includeHiddenKeys &&
+                                    !vItem?.modelPropertyOptions.find(
+                                      (p) => (p.originalName === key || p.name) && p.hidden
+                                    ))) &&
+                                f.name === 'dotenv'
+                            )
                             .map((f: EnvModelInfoValidationsPropertyNameFormatters) => f.value)
                             .flat()
                         )

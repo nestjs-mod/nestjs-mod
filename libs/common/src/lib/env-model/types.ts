@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Logger, LoggerService } from '@nestjs/common';
 import { ValidatorPackage } from '@nestjs/common/interfaces/external/validator-package.interface';
 import { ValidatorOptions } from 'class-validator';
@@ -22,9 +23,24 @@ export type EnvModelPropertyOptions = {
   name?: string;
   description?: string;
   originalName: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   default?: any;
+  transform?: EnvModelPropertyValueTransformer;
+  /**
+   * Not use in this module, but use when we generate env files
+   */
+  hidden?: boolean;
 };
+
+export interface EnvModelPropertyValueTransformer {
+  name?: string;
+  transform(params: {
+    value: any;
+    options: EnvModelPropertyOptions;
+    modelRootOptions: EnvModelOptions;
+    modelOptions: EnvModelOptions;
+    obj: any;
+  }): any;
+}
 
 export interface PropertyNameFormatter {
   name: string;

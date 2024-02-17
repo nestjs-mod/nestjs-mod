@@ -35,8 +35,21 @@ export async function configTransform<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const dataWithAllowedFields: any = {};
   for (const propertyOptions of modelPropertyOptions) {
-    dataWithAllowedFields[propertyOptions.originalName] =
-      data?.[propertyOptions.originalName] ?? propertyOptions.default;
+    if (propertyOptions.transform?.transform) {
+      dataWithAllowedFields[propertyOptions.originalName] = data[propertyOptions.originalName]
+        ? propertyOptions.transform.transform({
+            modelRootOptions: rootOptions || {},
+            modelOptions: modelOptions || {},
+            obj: data,
+            options: propertyOptions,
+            value: data[propertyOptions.originalName],
+          })
+        : propertyOptions.default;
+    } else {
+      dataWithAllowedFields[propertyOptions.originalName] =
+        data[propertyOptions.originalName] ?? propertyOptions.default;
+    }
+
     info.validations[propertyOptions.originalName] = {
       constraints: {},
       value: data?.[propertyOptions.originalName],
@@ -70,14 +83,18 @@ export async function configTransform<
       info.validations[validateError.property].constraints = validateError?.constraints || {};
     }
   }
+  const debug = rootOptions?.debug || modelOptions?.debug || process.env['DEBUG'];
+  const logger = rootOptions?.logger || modelOptions?.logger;
 
   if (validateErrors.length > 0) {
-    const debug = rootOptions?.debug || modelOptions?.debug || process.env['DEBUG'];
-    const logger = rootOptions?.logger || modelOptions?.logger;
     if (debug && logger?.debug) {
       logger.debug(info);
     }
     throw new ConfigModelValidationErrors(validateErrors, info);
+  }
+
+  if (process.env['DEBUG'] && logger?.debug) {
+    logger.debug(info);
   }
 
   for (const configPropertyMetadata of modelPropertyOptions) {

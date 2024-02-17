@@ -16,7 +16,7 @@ bootstrapNestApplication({
       DefaultNestApplicationListener.forRoot({
         staticEnvironments: { port: 3000 },
         staticConfiguration: {
-          mode: isInfrastructureMode() ? 'init' : 'listen',
+          mode: isInfrastructureMode() ? 'silent' : 'listen',
           preListen: async ({ app }) => {
             if (app) {
               app.setGlobalPrefix('api');

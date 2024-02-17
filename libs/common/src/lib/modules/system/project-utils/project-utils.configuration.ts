@@ -40,4 +40,10 @@ export class ProjectUtilsConfiguration {
     default: true,
   })
   updateGlobalConfigurationAndEnvironmentsOptions?: boolean;
+
+  @ConfigModelProperty({
+    description: 'All application environments',
+    default: true,
+  })
+  allApplicationEnvironments?: boolean;
 }

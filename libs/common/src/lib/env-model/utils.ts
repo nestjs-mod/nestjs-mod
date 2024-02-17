@@ -95,14 +95,33 @@ export async function envTransform<
       ];
     }
     // console.dir({ f: info.validations, data }, { depth: 20 });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (data as any)[propertyOptions.originalName] =
-      info.validations[propertyOptions.originalName].propertyValueExtractors.find((e) => e.value)?.value ??
+    if (propertyOptions.transform?.transform) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (data as any)[propertyOptions.originalName] ??
-      propertyOptions.default;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    info.validations[propertyOptions.originalName].value = (data as any)[propertyOptions.originalName];
+      const value =
+        info.validations[propertyOptions.originalName].propertyValueExtractors.find((e) => e.value)?.value ??
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (data as any)[propertyOptions.originalName];
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (data as any)[propertyOptions.originalName] = value
+        ? propertyOptions.transform.transform({
+            modelRootOptions: rootOptions || {},
+            modelOptions: modelOptions || {},
+            obj: data,
+            options: propertyOptions,
+            value,
+          })
+        : propertyOptions.default;
+    } else {
+      const value =
+        info.validations[propertyOptions.originalName].propertyValueExtractors.find((e) => e.value)?.value ??
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (data as any)[propertyOptions.originalName];
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (data as any)[propertyOptions.originalName] = value ?? propertyOptions.default;
+    }
+    info.validations[propertyOptions.originalName].value = data[propertyOptions.originalName];
   }
 
   const classValidator = loadValidator(rootOptions?.validatorPackage || modelOptions?.validatorPackage);
@@ -129,14 +148,18 @@ export async function envTransform<
       info.validations[validateError.property].constraints = validateError?.constraints || {};
     }
   }
+  const debug = rootOptions?.debug || modelOptions?.debug || process.env['DEBUG'];
+  const logger = rootOptions?.logger || modelOptions?.logger;
 
   if (validateErrors.length > 0) {
-    const debug = rootOptions?.debug || modelOptions?.debug || process.env['DEBUG'];
-    const logger = rootOptions?.logger || modelOptions?.logger;
     if (debug && logger?.debug) {
       logger.debug(info);
     }
     throw new EnvModelValidationErrors(validateErrors, info);
+  }
+
+  if (process.env['DEBUG'] && logger?.debug) {
+    logger.debug(info);
   }
 
   for (const configPropertyMetadata of modelPropertyOptions) {
