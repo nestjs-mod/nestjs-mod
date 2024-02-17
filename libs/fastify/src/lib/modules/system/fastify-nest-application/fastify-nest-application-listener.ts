@@ -4,6 +4,7 @@ import {
   EnvModel,
   EnvModelProperty,
   NestModuleCategory,
+  NumberTransformer,
   WrapApplicationOptions,
   createNestModule,
 } from '@nestjs-mod/common';
@@ -12,12 +13,17 @@ import { NestFastifyApplication } from '@nestjs/platform-fastify';
 
 @EnvModel()
 export class FastifyNestApplicationListenerEnvironments {
-  @EnvModelProperty({ description: 'The port on which to run the server.', default: 3000 })
+  @EnvModelProperty({
+    description: 'The port on which to run the server.',
+    default: 3000,
+    transform: new NumberTransformer(),
+  })
   port?: number;
 
   @EnvModelProperty({
     description: 'Hostname on which to listen for incoming packets.',
     default: '0.0.0.0',
+    hidden: true,
   })
   hostname?: string;
 }
@@ -29,7 +35,7 @@ export class FastifyNestApplicationListenerConfiguration {
       'Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application',
     default: 'listen',
   })
-  mode?: 'init' | 'listen';
+  mode?: 'init' | 'listen' | 'silent';
 
   @ConfigModelProperty({
     description: 'Method for additional actions before listening',
@@ -79,7 +85,7 @@ export class FastifyNestApplicationListenerConfiguration {
 
 export const { FastifyNestApplicationListener } = createNestModule({
   moduleName: 'FastifyNestApplicationListener',
-  moduleDescription: 'Fastify NestJS application listener, no third party utilities required.',
+  moduleDescription: 'Fastify NestJS application listener.',
   staticEnvironmentsModel: FastifyNestApplicationListenerEnvironments,
   staticConfigurationModel: FastifyNestApplicationListenerConfiguration,
   globalConfigurationOptions: { skipValidation: true },
@@ -93,7 +99,7 @@ export const { FastifyNestApplicationListener } = createNestModule({
     modules[NestModuleCategory.integrations]!.push(
       createNestModule({
         moduleName: 'FastifyNestApplicationListener',
-        moduleDescription: 'Fastify NestJS application listener, no third party utilities required.',
+        moduleDescription: 'Fastify NestJS application listener.',
         staticEnvironmentsModel: FastifyNestApplicationListenerEnvironments,
         staticConfigurationModel: FastifyNestApplicationListenerConfiguration,
         moduleCategory: NestModuleCategory.system,
@@ -129,8 +135,11 @@ export const { FastifyNestApplicationListener } = createNestModule({
             }
           }
 
-          if (app && current.staticConfiguration?.mode === 'init') {
-            if (((typeof app?.getMicroservices === 'function' && app?.getMicroservices()) || []).length > 0) {
+          if (app && (current.staticConfiguration?.mode === 'init' || current.staticConfiguration?.mode === 'silent')) {
+            if (
+              current.staticConfiguration?.mode !== 'silent' &&
+              ((typeof app?.getMicroservices === 'function' && app?.getMicroservices()) || []).length > 0
+            ) {
               await app.startAllMicroservices();
             }
             await app.init();

@@ -17,7 +17,7 @@ npm i --save fastify @nestjs/platform-fastify @nestjs-mod/fastify
 | Link | Category | Description |
 | ---- | -------- | ----------- |
 | [FastifyNestApplicationInitializer](#fastifynestapplicationinitializer) | system | Fastify NestJS application initializer. |
-| [FastifyNestApplicationListener](#fastifynestapplicationlistener) | system | Fastify NestJS application listener, no third party utilities required. |
+| [FastifyNestApplicationListener](#fastifynestapplicationlistener) | system | Fastify NestJS application listener. |
 
 
 ## Modules descriptions
@@ -85,7 +85,7 @@ bootstrapNestApplication({
 
 ---
 ### FastifyNestApplicationListener
-Fastify NestJS application listener, no third party utilities required.
+Fastify NestJS application listener.
 
 #### Use in NestJS-mod
 Use with manual environments and custom configuration.
@@ -102,7 +102,7 @@ bootstrapNestApplication({
       FastifyNestApplicationListener.forRoot({
         staticEnvironments: { port: 3000 },
         staticConfiguration: {
-          mode: isInfrastructureMode() ? 'init' : 'listen',
+          mode: isInfrastructureMode() ? 'silent' : 'listen',
           preListen: async ({ app }) => {
             if (app) {
               app.setGlobalPrefix('api');
