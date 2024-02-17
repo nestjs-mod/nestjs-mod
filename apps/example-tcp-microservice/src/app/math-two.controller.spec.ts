@@ -48,7 +48,7 @@ describe('Math over TCP with two servers', () => {
       },
       modules: {
         system: [
-          TcpNestMicroservice.forRoot({ staticEnvironments: { port: 5002, host: 'localhost' } }),
+          TcpNestMicroservice.forRoot({ staticEnvironments: { port: 5012, host: 'localhost' } }),
           DefaultNestApplicationListener.forRoot(),
         ],
         feature: [AppModule.forRoot()],
@@ -83,7 +83,7 @@ describe('Math over TCP with two servers', () => {
               TcpNestMicroserviceClientModule.forRoot({
                 contextName: 'ms2',
                 staticConfiguration: { microserviceProjectName: 'TestTwoMicroserviceServer2' },
-                staticEnvironments: { port: 5002, host: 'localhost' },
+                staticEnvironments: { port: 5012, host: 'localhost' },
               }),
             ],
             providers: [MathTwoClientService],
@@ -169,21 +169,21 @@ describe('Math over TCP with two servers', () => {
   });
 
   describe('observableSum', () => {
-    it('should return "36"', async () => {
+    it('should return "54"', async () => {
       const mathClientService = client.get<MathTwoClientService>(MathTwoClientService);
       const result = await lastValueFrom(mathClientService.observableSum([1, 2, 3]));
-      expect(result).toEqual(36);
+      expect(result).toEqual(54);
 
-      expect(mathClientService.observableSumResult).toEqual([6, 18, 36]);
+      expect(mathClientService.observableSumResult).toEqual([6, 22, 54]);
       expect(mathController1.observableSumResult).toEqual([[1, 2, 3]]);
       expect(mathController2.observableSumResult).toEqual([]);
     });
-    it('should return "36" on server 2', async () => {
+    it('should return "54" on server 2', async () => {
       const mathClientService = client.get<MathTwoClientService>(MathTwoClientService);
       const result = await lastValueFrom(mathClientService.observableSum2([1, 2, 3]));
-      expect(result).toEqual(36);
+      expect(result).toEqual(54);
 
-      expect(mathClientService.observableSumResult).toEqual([6, 18, 36, 6, 18, 36]);
+      expect(mathClientService.observableSumResult).toEqual([6, 22, 54, 6, 22, 54]);
       expect(mathController1.observableSumResult).toEqual([[1, 2, 3]]);
       expect(mathController2.observableSumResult).toEqual([[1, 2, 3]]);
     });
