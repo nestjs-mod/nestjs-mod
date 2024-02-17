@@ -289,7 +289,7 @@ ${
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const modules: any[] = [];
-      for (const asyncModule of Object.entries(tempPreparedModules.modules)
+      for (const asyncModule of Object.entries(tempPreparedModules.modules || {})
         .map(([, m]) => m)
         .flat() || []) {
         await asyncModule;
