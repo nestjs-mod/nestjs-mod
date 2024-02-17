@@ -1,3 +1,10 @@
+# [2.11.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.10.0...testing-v2.11.0) (2024-02-17)
+
+
+### Features
+
+* add detect headers for rpc request, but it not work :(, add silent mode for disable start microservice ([de57558](https://github.com/nestjs-mod/nestjs-mod/commit/de57558510f37b815060251a63d194329e620cb0))
+
 # [2.10.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.9.2...testing-v2.10.0) (2024-02-14)
 
 
