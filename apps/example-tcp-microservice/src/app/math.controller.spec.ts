@@ -105,12 +105,12 @@ describe('Math over TCP', () => {
   });
 
   describe('observableSum', () => {
-    it('should return "36"', async () => {
+    it('should return "54"', async () => {
       const mathClientService = client.get<MathClientService>(MathClientService);
       const result = await lastValueFrom(mathClientService.observableSum([1, 2, 3]));
-      expect(result).toEqual(36);
+      expect(result).toEqual(54);
 
-      expect(mathClientService.observableSumResult).toEqual([6, 18, 36]);
+      expect(mathClientService.observableSumResult).toEqual([6, 22, 54]);
       expect(mathController.observableSumResult).toEqual([[1, 2, 3]]);
     });
   });
