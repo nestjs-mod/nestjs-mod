@@ -43,7 +43,7 @@ export const { DefaultTestNestApplicationInitializer } = createNestModule({
     modules[NestModuleCategory.integrations].push(
       createNestModule({
         moduleName: 'DefaultTestNestApplicationInitializer',
-        moduleDescription: 'Default test NestJS application initializer, no third party utilities required.',
+        moduleDescription: 'Default test NestJS application initializer.',
         moduleCategory: NestModuleCategory.system,
         staticConfigurationModel: DefaultTestNestApplicationInitializerConfiguration,
         // we use postWrapApplication because we need to launch it after enabling all modules

@@ -16,14 +16,14 @@ npm i --save-dev @nestjs/testing @nestjs-mod/testing
 
 | Link | Category | Description |
 | ---- | -------- | ----------- |
-| [DefaultTestNestApplicationCreate](#defaulttestnestapplicationcreate) | system | Default test NestJS application creator, no third party utilities required. |
-| [DefaultTestNestApplicationInitializer](#defaulttestnestapplicationinitializer) | system | Default test NestJS application initializer, no third party utilities required. |
+| [DefaultTestNestApplicationCreate](#defaulttestnestapplicationcreate) | system | Default test NestJS application creator. |
+| [DefaultTestNestApplicationInitializer](#defaulttestnestapplicationinitializer) | system | Default test NestJS application initializer. |
 
 
 ## Modules descriptions
 
 ### DefaultTestNestApplicationCreate
-Default test NestJS application creator, no third party utilities required.
+Default test NestJS application creator.
 
 #### Use in NestJS-mod
 Use without options.
@@ -82,7 +82,7 @@ bootstrapNestApplication({
 
 ---
 ### DefaultTestNestApplicationInitializer
-Default test NestJS application initializer, no third party utilities required.
+Default test NestJS application initializer.
 
 #### Use in NestJS-mod
 Use without options.

@@ -23,7 +23,7 @@ class DefaultTestNestApplicationCreateConfiguration {
 
 export const { DefaultTestNestApplicationCreate } = createNestModule({
   moduleName: 'DefaultTestNestApplicationCreate',
-  moduleDescription: 'Default test NestJS application creator, no third party utilities required.',
+  moduleDescription: 'Default test NestJS application creator.',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: DefaultTestNestApplicationCreateConfiguration,
   // creating test application
