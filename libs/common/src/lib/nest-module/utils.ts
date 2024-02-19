@@ -39,6 +39,10 @@ import {
   ImportsWithStaticOptionsResponse,
   InjectableFeatureConfigurationType,
   InjectableFeatureEnvironmentsType,
+  InternalForFeatureAsyncMethodOptions,
+  InternalForFeatureMethodOptions,
+  InternalForRootAsyncMethodOptions,
+  InternalForRootMethodOptions,
   NestModuleCategory,
   NestModuleMetadata,
   ProjectOptions,
@@ -659,7 +663,14 @@ export function createNestModule<
   @Module({})
   class InternalNestModule {
     static [forFeatureAsyncMethodName](
-      asyncModuleOptions: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>
+      asyncModuleOptions: InternalForFeatureAsyncMethodOptions<
+        TConfigurationModel,
+        TStaticConfigurationModel,
+        TEnvironmentsModel,
+        TStaticEnvironmentsModel,
+        TFeatureConfigurationModel,
+        TFeatureEnvironmentsModel
+      >
     ): DynamicNestModuleMetadata<
       TConfigurationModel,
       TStaticConfigurationModel,
@@ -904,7 +915,7 @@ export function createNestModule<
     }
 
     static [forFeatureMethodName](
-      moduleOptions?: ForFeatureMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>
+      moduleOptions?: InternalForFeatureMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>
     ): Promise<TDynamicModule> {
       return (this as any)[forFeatureAsyncMethodName]({
         ...moduleOptions,
@@ -912,7 +923,7 @@ export function createNestModule<
     }
 
     static [forRootMethodName](
-      moduleOptions?: ForRootMethodOptions<
+      moduleOptions?: InternalForRootMethodOptions<
         TStaticConfigurationModel,
         TConfigurationModel,
         TEnvironmentsModel,
@@ -944,17 +955,11 @@ export function createNestModule<
     }
 
     static [forRootAsyncMethodName](
-      asyncModuleOptions?: ForRootAsyncMethodOptions<
+      asyncModuleOptions?: InternalForRootAsyncMethodOptions<
         TStaticConfigurationModel,
         TConfigurationModel,
         TEnvironmentsModel,
-        TStaticEnvironmentsModel,
-        ForRootMethodOptions<
-          TStaticConfigurationModel,
-          TConfigurationModel,
-          TEnvironmentsModel,
-          TStaticEnvironmentsModel
-        >
+        TStaticEnvironmentsModel
       >
     ): DynamicNestModuleMetadata<
       TConfigurationModel,
@@ -1622,7 +1627,14 @@ export function createNestModule<
     Record<
       `${TForFeatureAsyncMethodName}`,
       (
-        asyncOptions?: ForFeatureAsyncMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>
+        asyncOptions?: ForFeatureAsyncMethodOptions<
+          TConfigurationModel,
+          TStaticConfigurationModel,
+          TEnvironmentsModel,
+          TStaticEnvironmentsModel,
+          TFeatureConfigurationModel,
+          TFeatureEnvironmentsModel
+        >
       ) => Promise<TDynamicModule>
     > &
       Record<
@@ -1649,13 +1661,7 @@ export function createNestModule<
             TStaticConfigurationModel,
             TConfigurationModel,
             TEnvironmentsModel,
-            TStaticEnvironmentsModel,
-            ForRootMethodOptions<
-              TStaticConfigurationModel,
-              TConfigurationModel,
-              TEnvironmentsModel,
-              TStaticEnvironmentsModel
-            >
+            TStaticEnvironmentsModel
           >
         ) => Promise<TDynamicModule>
       >
@@ -1687,12 +1693,11 @@ export function createNestModule<
       TNestApplication,
       TModuleName
     >;
-    asyncModuleOptions?: ForRootAsyncMethodOptions<
+    asyncModuleOptions?: InternalForRootAsyncMethodOptions<
       TStaticConfigurationModel,
       TConfigurationModel,
       TEnvironmentsModel,
-      TStaticEnvironmentsModel,
-      ForRootMethodOptions<TStaticConfigurationModel, TConfigurationModel, TEnvironmentsModel, TStaticEnvironmentsModel>
+      TStaticEnvironmentsModel
     >;
     contextName: string;
   }): ConfigModelRootOptions | undefined {
@@ -1749,12 +1754,11 @@ export function createNestModule<
       TNestApplication,
       TModuleName
     >;
-    asyncModuleOptions?: ForRootAsyncMethodOptions<
+    asyncModuleOptions?: InternalForRootAsyncMethodOptions<
       TStaticConfigurationModel,
       TConfigurationModel,
       TEnvironmentsModel,
-      TStaticEnvironmentsModel,
-      ForRootMethodOptions<TStaticConfigurationModel, TConfigurationModel, TEnvironmentsModel, TStaticEnvironmentsModel>
+      TStaticEnvironmentsModel
     >;
     contextName: string;
   }): EnvModelRootOptions | undefined {

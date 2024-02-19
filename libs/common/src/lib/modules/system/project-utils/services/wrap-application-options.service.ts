@@ -4,8 +4,7 @@ import { ConfigModelOptions } from '../../../../config-model/types';
 import { EnvModelOptions } from '../../../../env-model/types';
 import {
   DynamicNestModuleMetadata,
-  ForRootAsyncMethodOptions,
-  ForRootMethodOptions,
+  InternalForRootAsyncMethodOptions,
   NestModuleCategory,
   ProjectOptions,
   WrapApplicationOptions,
@@ -32,12 +31,11 @@ export class WrapApplicationOptionsService<
   current!: {
     category: NestModuleCategory;
     index: number;
-    asyncModuleOptions: ForRootAsyncMethodOptions<
+    asyncModuleOptions: InternalForRootAsyncMethodOptions<
       TStaticConfigurationModel,
       TConfigurationModel,
       TEnvironmentsModel,
-      TStaticEnvironmentsModel,
-      ForRootMethodOptions<TStaticConfigurationModel, TConfigurationModel, TEnvironmentsModel, TStaticEnvironmentsModel>
+      TStaticEnvironmentsModel
     >;
     staticConfiguration?: Partial<TStaticConfigurationModel>;
     staticEnvironments?: Partial<TStaticEnvironmentsModel>;

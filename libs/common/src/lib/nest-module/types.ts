@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Abstract, DynamicModule, INestApplication, Logger, LoggerService, Provider, Type } from '@nestjs/common';
 import { Observable } from 'rxjs';
@@ -159,18 +160,11 @@ export type WrapApplicationOptions<
   TStaticEnvironmentsModel = any,
   TConfigurationModel = any,
   TEnvironmentsModel = any,
-  TForRootMethodOptions = ForRootMethodOptions<
+  TForRootAsyncMethodOptions = InternalForRootAsyncMethodOptions<
     TStaticConfigurationModel,
     TConfigurationModel,
     TEnvironmentsModel,
     TStaticEnvironmentsModel
-  >,
-  TForRootAsyncMethodOptions = ForRootAsyncMethodOptions<
-    TStaticConfigurationModel,
-    TConfigurationModel,
-    TEnvironmentsModel,
-    TStaticEnvironmentsModel,
-    TForRootMethodOptions
   >
 > = {
   app?: TNestApplication;
@@ -217,20 +211,26 @@ export interface NestModuleMetadata<
   TExportsWithStaticOptions = (linkOptions: TLinkOptions) => ExportsWithStaticOptionsResponse[],
   TNestApplication = INestApplication,
   TModuleName extends string = string,
-  TForRootMethodOptions = ForRootMethodOptions<
+  TForRootMethodOptions = InternalForRootMethodOptions<
     TStaticConfigurationModel,
     TConfigurationModel,
     TEnvironmentsModel,
     TStaticEnvironmentsModel
   >,
-  TForRootAsyncMethodOptions = ForRootAsyncMethodOptions<
+  TForRootAsyncMethodOptions = InternalForRootAsyncMethodOptions<
     TStaticConfigurationModel,
     TConfigurationModel,
     TEnvironmentsModel,
-    TStaticEnvironmentsModel,
-    TForRootMethodOptions
+    TStaticEnvironmentsModel
   >,
-  TForFeatureAsyncMethodOptions = ForFeatureAsyncMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>
+  TForFeatureAsyncMethodOptions = InternalForFeatureAsyncMethodOptions<
+    TConfigurationModel,
+    TStaticConfigurationModel,
+    TEnvironmentsModel,
+    TStaticEnvironmentsModel,
+    TFeatureConfigurationModel,
+    TFeatureEnvironmentsModel
+  >
 > {
   project?: ProjectOptions;
   moduleDisabled?: boolean;
@@ -288,7 +288,6 @@ export interface NestModuleMetadata<
       TStaticEnvironmentsModel,
       TConfigurationModel,
       TEnvironmentsModel,
-      TForRootMethodOptions,
       TForRootAsyncMethodOptions
     >
   ) => Promise<void>;
@@ -299,7 +298,6 @@ export interface NestModuleMetadata<
       TStaticEnvironmentsModel,
       TConfigurationModel,
       TEnvironmentsModel,
-      TForRootMethodOptions,
       TForRootAsyncMethodOptions
     >
   ) => Promise<TNestApplication | void>;
@@ -310,7 +308,6 @@ export interface NestModuleMetadata<
       TStaticEnvironmentsModel,
       TConfigurationModel,
       TEnvironmentsModel,
-      TForRootMethodOptions,
       TForRootAsyncMethodOptions
     >
   ) => Promise<void>;
@@ -340,12 +337,13 @@ export type CommonNestModuleMetadata = Partial<
     >
 >;
 
-export type ForRootMethodOptions<
+export type InternalForRootMethodOptions<
   TStaticConfigurationModel,
   TConfigurationModel,
   TEnvironmentsModel,
   TStaticEnvironmentsModel
-> = { contextName?: string } & {
+> = {
+  contextName?: string;
   environmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
   configurationOptions?: Omit<ConfigModelOptions, 'originalName'>;
   configuration?: TConfigurationModel;
@@ -354,12 +352,44 @@ export type ForRootMethodOptions<
   staticEnvironments?: Partial<TStaticEnvironmentsModel>;
 };
 
-export type ForRootAsyncMethodOptions<
+// public types, todo: try change original type to this
+export type ForRootMethodOptions<
   TStaticConfigurationModel,
   TConfigurationModel,
   TEnvironmentsModel,
-  TStaticEnvironmentsModel,
-  TForRootMethodOptions
+  TStaticEnvironmentsModel
+> =
+  | { contextName?: string }
+  | (TStaticConfigurationModel extends never
+      ? {}
+      : {
+          staticConfiguration?: TStaticConfigurationModel;
+          configurationOptions?: Omit<ConfigModelOptions, 'originalName'>;
+        })
+  | (TConfigurationModel extends never
+      ? {}
+      : {
+          configuration?: TConfigurationModel;
+          configurationOptions?: Omit<ConfigModelOptions, 'originalName'>;
+        })
+  | (TStaticEnvironmentsModel extends never
+      ? {}
+      : {
+          staticEnvironments?: Partial<TStaticEnvironmentsModel>;
+          environmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
+        })
+  | (TEnvironmentsModel extends never
+      ? {}
+      : {
+          environments?: Partial<TEnvironmentsModel>;
+          environmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
+        });
+
+export type InternalForRootAsyncMethodOptions<
+  TStaticConfigurationModel,
+  TConfigurationModel,
+  TEnvironmentsModel,
+  TStaticEnvironmentsModel
 > = {
   configurationExisting?: any;
   configurationClass?: Type<TConfigurationModel>;
@@ -370,9 +400,36 @@ export type ForRootAsyncMethodOptions<
   NestModuleMetadata<TConfigurationModel, TStaticConfigurationModel, TEnvironmentsModel, TStaticEnvironmentsModel>,
   'imports'
 > &
-  ({ contextName?: string } & TForRootMethodOptions);
+  InternalForRootMethodOptions<
+    TStaticConfigurationModel,
+    TConfigurationModel,
+    TEnvironmentsModel,
+    TStaticEnvironmentsModel
+  >;
 
-export type ForFeatureMethodOptions<TFeatureConfigurationModel = any, TFeatureEnvironmentsModel = any> = {
+// public types, todo: try change original type to this
+export type ForRootAsyncMethodOptions<
+  TStaticConfigurationModel,
+  TConfigurationModel,
+  TEnvironmentsModel,
+  TStaticEnvironmentsModel
+> =
+  | (TConfigurationModel extends never
+      ? {}
+      : {
+          configurationExisting?: any;
+          configurationClass?: Type<TConfigurationModel>;
+          configurationFactory?: (...args: any[]) => Promise<TConfigurationModel> | TConfigurationModel;
+          configurationStream?: (...args: any[]) => Observable<TConfigurationModel>;
+          inject?: any[];
+        })
+  | Pick<
+      NestModuleMetadata<TConfigurationModel, TStaticConfigurationModel, TEnvironmentsModel, TStaticEnvironmentsModel>,
+      'imports'
+    >
+  | ForRootMethodOptions<TStaticConfigurationModel, TConfigurationModel, TEnvironmentsModel, TStaticEnvironmentsModel>;
+
+export type InternalForFeatureMethodOptions<TFeatureConfigurationModel = any, TFeatureEnvironmentsModel = any> = {
   featureModuleName: string;
   contextName?: string;
 } & {
@@ -382,7 +439,26 @@ export type ForFeatureMethodOptions<TFeatureConfigurationModel = any, TFeatureEn
   featureEnvironmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
 };
 
-export type ForFeatureAsyncMethodOptions<
+// public types, todo: try change original type to this
+export type ForFeatureMethodOptions<TFeatureConfigurationModel = never, TFeatureEnvironmentsModel = never> =
+  | {
+      featureModuleName: string;
+      contextName?: string;
+    }
+  | (TFeatureConfigurationModel extends never
+      ? never
+      : {
+          featureConfiguration?: TFeatureConfigurationModel;
+          featureConfigurationOptions?: Omit<EnvModelOptions, 'originalName'>;
+        })
+  | (TFeatureEnvironmentsModel extends never
+      ? never
+      : {
+          featureEnvironments?: TFeatureEnvironmentsModel;
+          featureEnvironmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
+        });
+
+export type InternalForFeatureAsyncMethodOptions<
   TConfigurationModel = never,
   TStaticConfigurationModel = never,
   TEnvironmentsModel = never,
@@ -407,7 +483,37 @@ export type ForFeatureAsyncMethodOptions<
   >,
   'imports'
 > &
-  ({ contextName?: string } & ForFeatureMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>);
+  InternalForFeatureMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>;
+
+// public types, todo: try change original type to this
+export type ForFeatureAsyncMethodOptions<
+  TConfigurationModel = never,
+  TStaticConfigurationModel = never,
+  TEnvironmentsModel = never,
+  TStaticEnvironmentsModel = never,
+  TFeatureConfigurationModel = never,
+  TFeatureEnvironmentsModel = never
+> =
+  | {
+      // todo: need add later
+      // featureConfigurationExisting?: any;
+      // featureConfigurationClass?: Type<TFeatureConfigurationModel>;
+      // featureConfigurationStream?: (...args: any[]) => Observable<TFeatureConfigurationModel>;
+      // featureConfigurationFactory?: (...args: any[]) => Promise<TFeatureConfigurationModel> | TFeatureConfigurationModel;
+      // inject?: any[];
+    }
+  | Pick<
+      NestModuleMetadata<
+        TConfigurationModel,
+        TStaticConfigurationModel,
+        TEnvironmentsModel,
+        TStaticEnvironmentsModel,
+        TFeatureConfigurationModel,
+        TFeatureEnvironmentsModel
+      >,
+      'imports'
+    >
+  | ForFeatureMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>;
 
 export type TModuleSettings = {
   environments?: EnvModelInfo;
