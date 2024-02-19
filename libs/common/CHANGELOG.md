@@ -1,3 +1,10 @@
+## [2.11.1](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.11.0...common-v2.11.1) (2024-02-19)
+
+
+### Bug Fixes
+
+* add correct options types when we call forRoot, forRootAsync, forFeature, forFeatureAsync ([270f7ff](https://github.com/nestjs-mod/nestjs-mod/commit/270f7fff408b8ac10560c4f4fa69e07ccac3aba4))
+
 # [2.11.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.10.0...common-v2.11.0) (2024-02-17)
 
 
