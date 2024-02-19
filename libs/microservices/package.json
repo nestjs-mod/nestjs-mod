@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/microservices",
   "description": "NestJS microservice modules for NestJS-mod",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "keywords": [
     "nestjs",
     "nestjs-mod",
