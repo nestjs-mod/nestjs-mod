@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.3.0...fastify-v1.3.1) (2024-02-19)
+
+
+### Bug Fixes
+
+* add correct options types when we call forRoot, forRootAsync, forFeature, forFeatureAsync ([270f7ff](https://github.com/nestjs-mod/nestjs-mod/commit/270f7fff408b8ac10560c4f4fa69e07ccac3aba4))
+
 # [1.3.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.2.0...fastify-v1.3.0) (2024-02-17)
 
 
