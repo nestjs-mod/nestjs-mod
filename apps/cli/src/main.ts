@@ -92,6 +92,18 @@ bootstrapNestApplication({
           markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
         },
       }),
+      NestjsModAllReadmeGenerator.forRoot({
+        contextName: 'misc',
+        staticConfiguration: {
+          telegramGroup: 'https://t.me/nestjs_mod',
+          packageFile: join(rootFolder, 'libs/misc/package.json'),
+          markdownFile: join(rootFolder, 'libs/misc/README.md'),
+          folderWithMarkdownFilesToUse: join(rootFolder, 'libs/misc'),
+          utilsFolders: [join(rootFolder, 'libs/misc/src/lib')],
+          modules: [import('@nestjs-mod/misc')],
+          markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
+        },
+      }),
     ],
   },
 });
