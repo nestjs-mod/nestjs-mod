@@ -28,7 +28,7 @@ export function stringToDate(
 
 export function dateToString<T>(
   value: Date | undefined | null,
-  defValue: T,
+  defValue?: T,
   addNowTime?: boolean
 ): string | T {
   const now = new Date();
@@ -37,7 +37,7 @@ export function dateToString<T>(
   const second = now.getSeconds();
   const msecond = now.getMilliseconds();
   if (!value) {
-    return defValue;
+    return defValue as T;
   }
   if (addNowTime) {
     return new Date(
@@ -53,7 +53,7 @@ export function dateToString<T>(
 }
 
 export function dateToDateString(value: Date | undefined | null,
-  defValue: string): string | null {
+  defValue?: string): string | null {
   const d = dateToString(value, defValue);
   if (d) {
     return d.substring(0, 10)
