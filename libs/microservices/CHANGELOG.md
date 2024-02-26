@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.2.1...microservices-v1.2.2) (2024-02-26)
+
+
+### Bug Fixes
+
+* update helpers and add depricate title ([a81c61b](https://github.com/nestjs-mod/nestjs-mod/commit/a81c61b1af979080988cbc02a0b02d8e7973bc5c))
+
 ## [1.2.1](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.2.0...microservices-v1.2.1) (2024-02-19)
 
 
