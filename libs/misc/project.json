@@ -1,0 +1,42 @@
+{
+  "name": "misc",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/misc/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/misc",
+        "tsConfig": "libs/misc/tsconfig.lib.json",
+        "packageJson": "libs/misc/package.json",
+        "main": "libs/misc/src/index.ts",
+        "assets": ["libs/misc/*.md"]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs misc {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/misc/jest.config.ts"
+      }
+    },
+    "semantic-release": {
+      "executor": "@theunderscorer/nx-semantic-release:semantic-release",
+      "options": {
+        "buildTarget": "${PROJECT_NAME}:build",
+        "outputPath": "dist/libs/misc"
+      }
+    }
+  },
+  "tags": []
+}
