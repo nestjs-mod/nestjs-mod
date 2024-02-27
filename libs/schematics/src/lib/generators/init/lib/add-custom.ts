@@ -210,14 +210,14 @@ export function addScript(tree: Tree, projectName?: string) {
         'update:nestjs-mod-versions': {
           commands: ['npx -y npm-check-updates @nestjs-mod/* nestjs-mod -u'],
           comments: [
-            'Preparing code, building code, creating infrastructure documentation',
-            'and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)',
+            'Updating NestJS-mod libraries',
           ],
         },
         rucken: {
           commands: ['rucken'],
           comments: [
-            'Updating NestJS-mod libraries',
+            'Alias for console tools and scripts for nx and not only use to automate the workflow and',
+            'speed up the development process (example: `npm run rucken -- make-ts-list`, site: https://www.npmjs.com/package/rucken)',
           ],
         },
       },
