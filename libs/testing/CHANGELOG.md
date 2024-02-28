@@ -1,3 +1,10 @@
+## [2.12.2](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.12.1...testing-v2.12.2) (2024-02-28)
+
+
+### Bug Fixes
+
+* add support correct order on write env key values ([6302eb1](https://github.com/nestjs-mod/nestjs-mod/commit/6302eb122c25be5d7f18cc6b4cefc8c3c82dab53))
+
 ## [2.12.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.12.0...testing-v2.12.1) (2024-02-28)
 
 
