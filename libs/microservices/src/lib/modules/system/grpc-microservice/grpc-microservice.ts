@@ -6,6 +6,7 @@ import {
   EnvModel,
   EnvModelProperty,
   NestModuleCategory,
+  StringTransformer,
   collectRootNestModules,
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
@@ -19,7 +20,7 @@ import { IsNotEmpty } from 'class-validator';
 
 @EnvModel()
 export class GrpcMicroserviceEnvironments implements Pick<Required<GrpcOptions>['options'], 'url'> {
-  @EnvModelProperty({ description: 'Url' })
+  @EnvModelProperty({ description: 'Url', transform: new StringTransformer() })
   url?: string;
 }
 
@@ -100,7 +101,8 @@ export class GrpcMicroserviceConfiguration
   featureName?: string;
 
   @ConfigModelProperty({
-    description: 'Microservice project name for generate prefix to environments keys (need only for microservice client)',
+    description:
+      'Microservice project name for generate prefix to environments keys (need only for microservice client)',
   })
   microserviceProjectName?: string;
 
@@ -190,8 +192,7 @@ export class GrpcMicroserviceConfiguration
 
 export const { GrpcNestMicroservice } = createNestModule({
   moduleName: 'GrpcNestMicroservice',
-  moduleDescription:
-    'GRPC NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/grpc',
+  moduleDescription: 'GRPC NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/grpc',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: GrpcMicroserviceConfiguration,
   staticEnvironmentsModel: GrpcMicroserviceEnvironments,

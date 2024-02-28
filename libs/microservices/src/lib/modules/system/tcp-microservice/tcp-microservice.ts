@@ -5,6 +5,7 @@ import {
   EnvModelProperty,
   NestModuleCategory,
   NumberTransformer,
+  StringTransformer,
   collectRootNestModules,
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
@@ -17,7 +18,7 @@ import { ConnectionOptions } from 'tls';
 
 @EnvModel()
 export class TcpMicroserviceEnvironments implements Pick<Required<TcpOptions>['options'], 'host' | 'port'> {
-  @EnvModelProperty({ description: 'Host', hidden: true })
+  @EnvModelProperty({ description: 'Host', hidden: true, transform: new StringTransformer() })
   host?: string;
 
   @EnvModelProperty({ description: 'Port', transform: new NumberTransformer() })

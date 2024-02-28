@@ -6,6 +6,7 @@ import {
   EnvModelProperty,
   NestModuleCategory,
   NumberTransformer,
+  StringTransformer,
   collectRootNestModules,
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
@@ -18,7 +19,7 @@ import { ConnectionOptions } from 'tls';
 
 @EnvModel()
 export class RedisMicroserviceEnvironments implements Pick<Required<RedisOptions>['options'], 'host' | 'port'> {
-  @EnvModelProperty({ description: 'Host', hidden: true })
+  @EnvModelProperty({ description: 'Host', hidden: true, transform: new StringTransformer() })
   host?: string;
 
   @EnvModelProperty({
@@ -36,6 +37,7 @@ export class RedisMicroserviceEnvironments implements Pick<Required<RedisOptions
     description:
       'If set, client will send AUTH command with the value of this option as the first argument when connected, this is supported since Redis 6',
     hidden: true,
+    transform: new StringTransformer(),
   })
   username?: string;
 
@@ -44,6 +46,7 @@ export class RedisMicroserviceEnvironments implements Pick<Required<RedisOptions
    */
   @EnvModelProperty({
     description: 'If set, client will send AUTH command with the value of this option when connected',
+    transform: new StringTransformer(),
   })
   password?: string;
 

@@ -5,6 +5,7 @@ import {
   EnvModelProperty,
   NestModuleCategory,
   NumberTransformer,
+  StringTransformer,
   WrapApplicationOptions,
   createNestModule,
   isInfrastructureMode,
@@ -25,6 +26,7 @@ export class FastifyNestApplicationListenerEnvironments {
     description: 'Hostname on which to listen for incoming packets.',
     default: '0.0.0.0',
     hidden: true,
+    transform: new StringTransformer(),
   })
   hostname?: string;
 }

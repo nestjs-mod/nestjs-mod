@@ -4,6 +4,7 @@ import {
   EnvModel,
   EnvModelProperty,
   NestModuleCategory,
+  StringTransformer,
   collectRootNestModules,
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
@@ -16,7 +17,7 @@ import { QoS } from '@nestjs/microservices/external/mqtt-options.interface';
 
 @EnvModel()
 export class MqttMicroserviceEnvironments implements Pick<Required<MqttOptions>['options'], 'url'> {
-  @EnvModelProperty({ description: 'Url' })
+  @EnvModelProperty({ description: 'Url', transform: new StringTransformer() })
   url?: string;
 }
 
@@ -97,7 +98,8 @@ export class MqttMicroserviceConfiguration
   featureName?: string;
 
   @ConfigModelProperty({
-    description: 'Microservice project name for generate prefix to environments keys (need only for microservice client)',
+    description:
+      'Microservice project name for generate prefix to environments keys (need only for microservice client)',
   })
   microserviceProjectName?: string;
 
@@ -134,8 +136,7 @@ export class MqttMicroserviceConfiguration
 
 export const { MqttNestMicroservice } = createNestModule({
   moduleName: 'MqttNestMicroservice',
-  moduleDescription:
-    'MQTT NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/mqtt',
+  moduleDescription: 'MQTT NestJS-mod microservice initializer @see https://docs.nestjs.com/microservices/mqtt',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: MqttMicroserviceConfiguration,
   staticEnvironmentsModel: MqttMicroserviceEnvironments,

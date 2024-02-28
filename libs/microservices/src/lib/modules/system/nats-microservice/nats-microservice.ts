@@ -6,6 +6,7 @@ import {
   EnvModel,
   EnvModelProperty,
   NestModuleCategory,
+  StringTransformer,
   collectRootNestModules,
   createNestModule,
   getFeatureDotEnvPropertyNameFormatter,
@@ -19,13 +20,13 @@ import { Deserializer, MicroserviceOptions, NatsOptions, Serializer, Transport }
 export class NatsMicroserviceEnvironments
   implements Pick<Required<NatsOptions>['options'], 'name' | 'user' | 'pass' | 'servers'>
 {
-  @EnvModelProperty({ description: 'Name', hidden: true })
+  @EnvModelProperty({ description: 'Name', hidden: true, transform: new StringTransformer() })
   name?: string;
 
-  @EnvModelProperty({ description: 'User', hidden: true })
+  @EnvModelProperty({ description: 'User', hidden: true, transform: new StringTransformer() })
   user?: string;
 
-  @EnvModelProperty({ description: 'Pass', hidden: true })
+  @EnvModelProperty({ description: 'Pass', hidden: true, transform: new StringTransformer() })
   pass?: string;
 
   @EnvModelProperty({

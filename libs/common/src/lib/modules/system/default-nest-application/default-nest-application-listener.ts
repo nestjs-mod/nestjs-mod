@@ -5,6 +5,7 @@ import { NumberTransformer } from '../../../env-model/transformers/number.transf
 import { NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
 import { isInfrastructureMode } from '../../../utils/is-infrastructure';
+import { StringTransformer } from '../../../env-model/transformers/string.transformer';
 
 @EnvModel()
 export class DefaultNestApplicationListenerEnvironments {
@@ -18,6 +19,7 @@ export class DefaultNestApplicationListenerEnvironments {
   @EnvModelProperty({
     description: 'Hostname on which to listen for incoming packets.',
     hidden: true,
+    transform: new StringTransformer(),
   })
   hostname?: string;
 }
