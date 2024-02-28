@@ -1,3 +1,10 @@
+## [2.12.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.12.0...testing-v2.12.1) (2024-02-28)
+
+
+### Bug Fixes
+
+* update logic for getEnvironmentsFromFilesCheckSum, ignore filepath from calculate checksum ([7eef191](https://github.com/nestjs-mod/nestjs-mod/commit/7eef19146c4f824c0efe181ff671d9cffcdf34e9))
+
 # [2.12.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.11.2...testing-v2.12.0) (2024-02-28)
 
 
