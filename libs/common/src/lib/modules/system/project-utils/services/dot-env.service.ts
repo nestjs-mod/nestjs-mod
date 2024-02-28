@@ -138,9 +138,27 @@ export class DotEnvService {
     return loadedEnvJson;
   }
 
-  writeFile(envFile: string, data: Record<string, string | undefined>) {
+  async writeFile(envFile: string, data: Record<string, string | undefined>) {
+    const newData = JSON.parse(JSON.stringify(data)) as Record<string, string | undefined>;
+    const checksumEnvs = await this.getEnvironmentsFromFilesCheckSum();
+    const checksumKeys = Object.keys(checksumEnvs.processed);
+    if (checksumKeys.length > 0) {
+      for (const key of checksumKeys) {
+        delete newData[key];
+      }
+      delete newData['# file checksums'];
+      newData['# file checksums'] = '';
+      for (const key of checksumKeys) {
+        delete newData[key];
+        newData[key] = checksumEnvs.processed[key].sha256;
+      }
+      if (this.projectUtilsConfiguration.debugFilesCheckSumToEnvironments) {
+        writeFileSync(envFile + '.checksum.json', JSON.stringify(checksumEnvs.processed, null, 4));
+      }
+    }
+
     try {
-      const envContent = Object.entries(data)
+      const envContent = Object.entries(newData)
         .map(([key, value]) => {
           if (key.trim().startsWith('#')) {
             return `${key}${value ? value : ''}`;
@@ -246,23 +264,7 @@ export class DotEnvService {
           existsEnvJson
         ),
       };
-      const checksumEnvs = await this.getEnvironmentsFromFilesCheckSum();
-      const checksumKeys = Object.keys(checksumEnvs.processed);
-      if (checksumKeys.length > 0) {
-        for (const key of checksumKeys) {
-          delete newEnvJson[key];
-        }
-        delete newEnvJson['# file checksums'];
-        newEnvJson['# file checksums'] = '';
-        for (const key of checksumKeys) {
-          delete newEnvJson[key];
-          newEnvJson[key] = checksumEnvs.processed[key].sha256;
-        }
-        if (this.projectUtilsConfiguration.debugFilesCheckSumToEnvironments) {
-          writeFileSync(envFile + '.checksum.json', JSON.stringify(checksumEnvs.processed, null, 4));
-        }
-      }
-      this.writeFile(envFile, newEnvJson);
+      await this.writeFile(envFile, newEnvJson);
 
       const envExampleFile = envFile.replace('.env', '-example.env').replace('/-example.env', '/example.env');
       if (existsSync(envExampleFile)) {
@@ -274,36 +276,14 @@ export class DotEnvService {
           }),
           existsExampleEnvJson
         );
-        if (checksumKeys.length > 0) {
-          for (const key of checksumKeys) {
-            delete newEnvJson[key];
-          }
-          delete newEnvJson['# file checksums'];
-          newEnvJson['# file checksums'] = '';
-          for (const key of checksumKeys) {
-            delete newEnvJson[key];
-            newEnvJson[key] = checksumEnvs.processed[key].sha256;
-          }
-        }
-        this.writeFile(envExampleFile, newEnvJson);
+        await this.writeFile(envExampleFile, newEnvJson);
       } else {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newEnvJson: any = [...neededKeys, ...(ignoreCheckNeededKeys ? Object.keys(data) : [])].reduce(
           (all, key) => ({ ...all, [String(key)]: key?.trim().startsWith('#') ? '' : `value_for_${key}` }),
           {}
         );
-        if (checksumKeys.length > 0) {
-          for (const key of checksumKeys) {
-            delete newEnvJson[key];
-          }
-          delete newEnvJson['# file checksums'];
-          newEnvJson['# file checksums'] = '';
-          for (const key of checksumKeys) {
-            delete newEnvJson[key];
-            newEnvJson[key] = checksumEnvs.processed[key].sha256;
-          }
-        }
-        this.writeFile(envExampleFile, newEnvJson);
+        await this.writeFile(envExampleFile, newEnvJson);
       }
 
       this.gitignoreService.addGitIgnoreEntry([basename(envFile)]);

@@ -23,11 +23,16 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
   ) {}
 
   async onApplicationBootstrap() {
+    this.patchModules();
+
     this.updatePackage();
-    this.updateProject();
     await this.updateEnvFile();
-    this.updateGlobalConfigurationAndEnvironmentsOptions();
     this.printDotenvKeys();
+  }
+
+  patchModules() {
+    this.updateProject();
+    this.updateGlobalConfigurationAndEnvironmentsOptions();
   }
 
   private updatePackage() {
