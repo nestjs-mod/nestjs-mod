@@ -273,11 +273,11 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         }`
       );
       const description = settingsModelInfo.modelOptions.description || settingsModelInfoDescription || '';
-      if (description !== undefined && this.infrastructureMarkdownReportGeneratorConfiguration.style === 'full') {
+      if (description !== undefined && this.infrastructureMarkdownReportGeneratorConfiguration.style !== 'pretty') {
         lines.push(`${description}`);
       }
       lines.push('');
-      if (this.infrastructureMarkdownReportGeneratorConfiguration.style === 'full') {
+      if (this.infrastructureMarkdownReportGeneratorConfiguration.style !== 'pretty') {
         lines.push(
           [
             '| Key    | Description | Sources | Constraints | Default | Value |',
@@ -382,12 +382,12 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         }`
       );
       const description = settingsModelInfo.modelOptions.description || settingsModelInfoDescription || '';
-      if (description !== undefined && this.infrastructureMarkdownReportGeneratorConfiguration.style === 'full') {
+      if (description !== undefined && this.infrastructureMarkdownReportGeneratorConfiguration.style !== 'pretty') {
         lines.push(`${description}`);
       }
       lines.push('');
 
-      if (this.infrastructureMarkdownReportGeneratorConfiguration.style === 'full') {
+      if (this.infrastructureMarkdownReportGeneratorConfiguration.style !== 'pretty') {
         lines.push(
           [
             '| Key    | Description | Constraints | Default | Value |',
@@ -620,7 +620,7 @@ npm install
       }
 
       const categories = Object.keys(packageJson?.scripts || {});
-      if (categories.length > 0 && this.infrastructureMarkdownReportGeneratorConfiguration.style === 'full') {
+      if (categories.length > 0 && this.infrastructureMarkdownReportGeneratorConfiguration.style !== 'pretty') {
         lines.push('## All scripts');
         lines.push(`|Script|Description|`);
         lines.push(`|---|---|`);
@@ -640,7 +640,7 @@ npm install
           lines.push(`## ${NEST_MODULE_CATEGORY_TITLE[category]}`);
           if (
             NEST_MODULE_CATEGORY_DESCRIPTION[category] &&
-            this.infrastructureMarkdownReportGeneratorConfiguration.style === 'full'
+            this.infrastructureMarkdownReportGeneratorConfiguration.style !== 'pretty'
           ) {
             lines.push(NEST_MODULE_CATEGORY_DESCRIPTION[category]);
           }
@@ -650,7 +650,7 @@ npm install
           lines.push(this.dynamicNestModuleMetadataMarkdownReportGenerator.getReport(nestModule));
         }
       }
-      if (project?.maintainers && this.infrastructureMarkdownReportGeneratorConfiguration.style === 'full') {
+      if (project?.maintainers && this.infrastructureMarkdownReportGeneratorConfiguration.style !== 'pretty') {
         lines.push('');
         lines.push('## Maintainers');
         for (const m of project.maintainers) {
@@ -662,7 +662,7 @@ npm install
         }
       }
 
-      if (project?.license && this.infrastructureMarkdownReportGeneratorConfiguration.style === 'full') {
+      if (project?.license && this.infrastructureMarkdownReportGeneratorConfiguration.style !== 'pretty') {
         lines.push('');
         lines.push('## License');
         lines.push(`[${project?.license}](LICENSE)`);
