@@ -189,7 +189,9 @@ export class DotEnvService {
       });
       processed[name] = {
         fileList: filesContent.map((fileContent) => fileContent.filePath).sort(),
-        sha256: createHash('sha256').update(JSON.stringify(filesContent)).digest('hex'),
+        sha256: createHash('sha256')
+          .update(JSON.stringify(filesContent.map((c) => c.fileContent)))
+          .digest('hex'),
       };
     }
     if (this.projectUtilsConfiguration.prepareProcessedFilesCheckSumToEnvironments) {
