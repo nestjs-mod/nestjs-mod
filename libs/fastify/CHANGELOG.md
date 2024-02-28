@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.0...fastify-v1.4.1) (2024-02-28)
+
+
+### Bug Fixes
+
+* update logic for getEnvironmentsFromFilesCheckSum, ignore filepath from calculate checksum ([7eef191](https://github.com/nestjs-mod/nestjs-mod/commit/7eef19146c4f824c0efe181ff671d9cffcdf34e9))
+
 # [1.4.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.3.2...fastify-v1.4.0) (2024-02-28)
 
 
