@@ -1,9 +1,10 @@
 import { INestApplication, Logger } from '@nestjs/common';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
 import { EnvModel, EnvModelProperty } from '../../../env-model/decorators';
+import { NumberTransformer } from '../../../env-model/transformers/number.transformer';
 import { NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
-import { NumberTransformer } from '../../../env-model/transformers/number.transformer';
+import { isInfrastructureMode } from '../../../utils/is-infrastructure';
 
 @EnvModel()
 export class DefaultNestApplicationListenerEnvironments {
@@ -68,6 +69,13 @@ export class DefaultNestApplicationListenerConfiguration {
     default: 'api',
   })
   globalPrefix?: string;
+
+  @ConfigModelProperty({
+    description:
+      'Timeout seconds for automatically closes the application in `infrastructure mode` if the application does not close itself (zero - disable)',
+    transform: new NumberTransformer(),
+  })
+  autoCloseTimeoutInInfrastructureMode?: number;
 
   @ConfigModelProperty({
     description: 'Log application start',
@@ -155,6 +163,14 @@ export const { DefaultNestApplicationListener } = createNestModule({
             } else {
               (current.staticConfiguration.defaultLogger || new Logger()).log(`🚀 All microservices is running`);
             }
+          }
+
+          if (current.staticConfiguration?.autoCloseTimeoutInInfrastructureMode && isInfrastructureMode()) {
+            /**
+             * When you start the application in infrastructure mode, it should automatically close;
+             * if for some reason it does not close, we forcefully close it after XX seconds.
+             */
+            setTimeout(() => process.exit(0), current.staticConfiguration?.autoCloseTimeoutInInfrastructureMode * 1000);
           }
         },
       }).DefaultNestApplicationListener.forRootAsync(current.asyncModuleOptions)

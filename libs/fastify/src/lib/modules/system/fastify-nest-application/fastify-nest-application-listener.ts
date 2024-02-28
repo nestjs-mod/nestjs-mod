@@ -7,6 +7,7 @@ import {
   NumberTransformer,
   WrapApplicationOptions,
   createNestModule,
+  isInfrastructureMode,
 } from '@nestjs-mod/common';
 import { Logger } from '@nestjs/common';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -75,6 +76,13 @@ export class FastifyNestApplicationListenerConfiguration {
     default: 'api',
   })
   globalPrefix?: string;
+
+  @ConfigModelProperty({
+    description:
+      'Timeout seconds for automatically closes the application in `infrastructure mode` if the application does not close itself (zero - disable)',
+    transform: new NumberTransformer(),
+  })
+  autoCloseTimeoutInInfrastructureMode?: number;
 
   @ConfigModelProperty({
     description: 'Log application start',
@@ -162,6 +170,14 @@ export const { FastifyNestApplicationListener } = createNestModule({
             } else {
               (current.staticConfiguration.defaultLogger || new Logger()).log(`🚀 Microservice is running`);
             }
+          }
+
+          if (current.staticConfiguration?.autoCloseTimeoutInInfrastructureMode && isInfrastructureMode()) {
+            /**
+             * When you start the application in infrastructure mode, it should automatically close;
+             * if for some reason it does not close, we forcefully close it after 30 seconds.
+             */
+            setTimeout(() => process.exit(0), current.staticConfiguration?.autoCloseTimeoutInInfrastructureMode);
           }
         },
       }).FastifyNestApplicationListener.forRootAsync(current.asyncModuleOptions)
