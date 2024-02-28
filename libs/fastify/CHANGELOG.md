@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.2...fastify-v1.4.3) (2024-02-28)
+
+
+### Bug Fixes
+
+* add write checksum info for any dotenv file ([21a3bc0](https://github.com/nestjs-mod/nestjs-mod/commit/21a3bc07badd0cc8ca1c96cd2b4ee93ac85928f7))
+
 ## [1.4.2](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.1...fastify-v1.4.2) (2024-02-28)
 
 
