@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { basename } from 'path';
 import { bootstrapNestApplication } from '../../../nest-application/utils';
 import { createNestModule } from '../../../nest-module/utils';
 import {
@@ -68,7 +69,46 @@ describe('Project Utils', () => {
       project: { name: 'TestApp', description: 'Test application' },
       modules: {
         system: [
-          ProjectUtils.forRoot({ staticConfiguration: { applicationPackageJsonFile: `${__filename}-package.json` } }),
+          ProjectUtils.forRoot({
+            staticConfiguration: {
+              applicationPackageJsonFile: `${__filename}-package.json`,
+              envFile: `${__filename}-2-test.env`,
+              updateEnvFile: true,
+              // todo: add tests
+              debugFilesCheckSumToEnvironments: true,
+              // todo: add tests
+              filesCheckSumToEnvironments: {
+                VERSION: {
+                  folders: [__dirname],
+                  glob: `**/*${basename(`${__filename}-package.json`)}`,
+                  prepare: (content: string) => {
+                    const json = JSON.parse(content);
+                    return JSON.stringify(
+                      process.env['VERSION'] ||
+                        json['version'] ||
+                        new Date().toISOString().split(':').join('_').split('.').join('-')
+                    );
+                  },
+                },
+                BASE_VERSION: {
+                  folders: [__dirname],
+                  glob: `**/*${basename(`${__filename}-package.json`)}`,
+                  prepare: (content: string) => {
+                    const json = JSON.parse(content);
+                    return JSON.stringify({
+                      devDependencies: json['devDependencies'] || {},
+                      dependencies: json['dependencies'] || {},
+                    });
+                  },
+                },
+              },
+              // todo: add tests
+              prepareProcessedFilesCheckSumToEnvironments: (p) => {
+                console.log(p);
+                return p;
+              },
+            },
+          }),
           DefaultNestApplicationInitializer.forRoot(),
           DefaultNestApplicationListener.forRoot({ staticConfiguration: { mode: 'init' } }),
         ],
@@ -246,6 +286,12 @@ describe('Project Utils', () => {
       name: 'test-app',
       description: 'Description for test-app',
       version: '1.0.0',
+      devDependencies: {
+        '@commitlint/cli': '^17.0.0',
+      },
+      dependencies: {
+        '@fastify/cookie': '^9.3.1',
+      },
     });
     expect(getPackageJson.getPackageJson()).toEqual({
       name: 'second-test-app',

@@ -526,6 +526,7 @@ describe('NestJS application: Utils', () => {
     |\`defaultLogger\`|Default logger for application|**optional**|-|-|
     |\`enableShutdownHooks\`|Enable shutdown hooks|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|
     |\`globalPrefix\`|Global prefix|**optional**|\`\`\`api\`\`\`|\`\`\`api\`\`\`|    
+    |\`autoCloseTimeoutInInfrastructureMode\`|Timeout seconds for automatically closes the application in \`infrastructure mode\` if the application does not close itself (zero - disable)|**optional**|-|-|
     |\`logApplicationStart\`|Log application start|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|
 
     ## Infrastructure modules
@@ -551,6 +552,7 @@ describe('NestJS application: Utils', () => {
     | ------ | ----------- | ----------- | ------- | ----- |
     |\`markdownFile\`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|-|
     |\`skipEmptySettings\`|Skip empty values of env and config models|**optional**|-|-|
+    |\`style\`|Report generation style|**optional**|\`\`\`full\`\`\`|\`\`\`full\`\`\`|
 
 `
           .split('  ')

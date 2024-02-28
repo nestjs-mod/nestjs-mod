@@ -1,7 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { createHash } from 'crypto';
 import { config } from 'dotenv';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { basename, dirname } from 'path';
+import fg from 'fast-glob';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { basename, dirname, join } from 'path';
 import { EnvModelInfoValidationsPropertyNameFormatters } from '../../../../env-model/types';
 import { defaultContextName } from '../../../../utils/default-context-name';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
@@ -139,7 +141,21 @@ export class DotEnvService {
   writeFile(envFile: string, data: Record<string, string | undefined>) {
     try {
       const envContent = Object.entries(data)
-        .map(([key, value]) => `${key}=${value}`)
+        .map(([key, value]) => {
+          if (key.trim().startsWith('#')) {
+            return `${key}${value ? value : ''}`;
+          }
+          if (value !== undefined && value !== null && !isNaN(+value)) {
+            return `${key}=${value}`;
+          }
+          if (value && (value.includes('*') || value.includes('!') || value.includes('$') || value.includes(' '))) {
+            if (value.includes("'")) {
+              return `${key}='${value.split("'").join("\\'")}'`;
+            }
+            return `${key}='${value}'`;
+          }
+          return `${key}=${value}`;
+        })
         .join('\n');
       if (!envFile) {
         return;
@@ -154,6 +170,32 @@ export class DotEnvService {
       this.logger.error(err, err.stack);
       return;
     }
+  }
+
+  async getEnvironmentsFromFilesCheckSum() {
+    const processed: Record<string, { fileList: string[]; sha256: string }> = {};
+    for (const [name, rule] of Object.entries(this.projectUtilsConfiguration.filesCheckSumToEnvironments || {})) {
+      const folders = rule.folders.map((folder) => join(folder, rule.glob));
+
+      const fileList = await fg(folders, { dot: true });
+      const filesContent = fileList.map((filePath) => {
+        const fileContent = rule.prepare
+          ? rule.prepare(readFileSync(filePath).toString())
+          : readFileSync(filePath).toString();
+        return {
+          filePath,
+          fileContent: fileContent.split(' ').join('').split('\n').join().split('\r').join().split('\t').join(),
+        };
+      });
+      processed[name] = {
+        fileList: filesContent.map((fileContent) => fileContent.filePath).sort(),
+        sha256: createHash('sha256').update(JSON.stringify(filesContent)).digest('hex'),
+      };
+    }
+    if (this.projectUtilsConfiguration.prepareProcessedFilesCheckSumToEnvironments) {
+      return { processed: this.projectUtilsConfiguration.prepareProcessedFilesCheckSumToEnvironments(processed) };
+    }
+    return { processed };
   }
 
   read(
@@ -186,7 +228,7 @@ export class DotEnvService {
     }
   }
 
-  write(data: Record<string, string | undefined>, ignoreCheckNeededKeys: boolean = false) {
+  async write(data: Record<string, string | undefined>, ignoreCheckNeededKeys: boolean = false) {
     const envFile = this.getEnvFilePath();
     if (!envFile) {
       return;
@@ -202,19 +244,45 @@ export class DotEnvService {
           existsEnvJson
         ),
       };
+      const checksumEnvs = await this.getEnvironmentsFromFilesCheckSum();
+      const checksumKeys = Object.keys(checksumEnvs.processed);
+      if (checksumKeys.length > 0) {
+        for (const key of checksumKeys) {
+          delete newEnvJson[key];
+        }
+        newEnvJson['# file checksums'] = '';
+        for (const key of checksumKeys) {
+          newEnvJson[key] = checksumEnvs.processed[key].sha256;
+        }
+        if (this.projectUtilsConfiguration.debugFilesCheckSumToEnvironments) {
+          writeFileSync(envFile + '.checksum.json', JSON.stringify(checksumEnvs.processed, null, 4));
+        }
+      }
       this.writeFile(envFile, newEnvJson);
 
       const envExampleFile = envFile.replace('.env', '-example.env').replace('/-example.env', '/example.env');
       if (existsSync(envExampleFile)) {
         const existsExampleEnvJson = this.readFile(envExampleFile, false) || {};
         const newEnvJson = [...neededKeys, ...(ignoreCheckNeededKeys ? Object.keys(data) : [])].reduce(
-          (all, key) => ({ ...all, [String(key)]: existsExampleEnvJson?.[key!] || `value_for_${key}` }),
+          (all, key) => ({
+            ...all,
+            [String(key)]: existsExampleEnvJson?.[key!] || (key?.trim().startsWith('#') ? '' : `value_for_${key}`),
+          }),
           existsExampleEnvJson
         );
+        if (checksumKeys.length > 0) {
+          for (const key of checksumKeys) {
+            delete newEnvJson[key];
+          }
+          newEnvJson['# file checksums'] = '';
+          for (const key of checksumKeys) {
+            newEnvJson[key] = checksumEnvs.processed[key].sha256;
+          }
+        }
         this.writeFile(envExampleFile, newEnvJson);
       } else {
         const newEnvJson = [...neededKeys, ...(ignoreCheckNeededKeys ? Object.keys(data) : [])].reduce(
-          (all, key) => ({ ...all, [String(key)]: `value_for_${key}` }),
+          (all, key) => ({ ...all, [String(key)]: key?.trim().startsWith('#') ? '' : `value_for_${key}` }),
           {}
         );
         this.writeFile(envExampleFile, newEnvJson);

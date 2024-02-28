@@ -22,10 +22,10 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
     private readonly packageJsonService: PackageJsonService
   ) {}
 
-  onApplicationBootstrap() {
+  async onApplicationBootstrap() {
     this.updatePackage();
     this.updateProject();
-    this.updateEnvFile();
+    await this.updateEnvFile();
     this.updateGlobalConfigurationAndEnvironmentsOptions();
     this.printDotenvKeys();
   }
@@ -137,13 +137,13 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
     }
   }
 
-  private updateEnvFile() {
+  private async updateEnvFile() {
     if (!this.dotEnvService && this.projectUtilsConfiguration.updateEnvFile) {
       this.logger.warn(`dotEnvService not set, updating not work`);
       return;
     }
     const existsEnvJson = this.dotEnvService.read() || {};
-    this.dotEnvService.write(existsEnvJson);
+    await this.dotEnvService.write(existsEnvJson);
   }
 
   private updateGlobalConfigurationAndEnvironmentsOptions() {

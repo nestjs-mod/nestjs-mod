@@ -46,4 +46,38 @@ export class ProjectUtilsConfiguration {
     default: true,
   })
   allApplicationEnvironments?: boolean;
+
+  @ConfigModelProperty({
+    description: 'Create environments key with checksum in value of some files',
+  })
+  filesCheckSumToEnvironments?: Record<
+    string,
+    {
+      /**
+       * Folders for search files
+       */
+      folders: string[];
+      /**
+       * Glob pattern for search files
+       */
+      glob: string;
+      /**
+       * Prepare files before calculate checksum of file
+       */
+      prepare?: (content: string) => string;
+    }
+  >;
+
+  @ConfigModelProperty({
+    description: 'Some logic for prepare processed files checksums',
+  })
+  prepareProcessedFilesCheckSumToEnvironments?: (
+    processed: Record<string, { fileList: string[]; sha256: string }>
+  ) => Record<string, { fileList: string[]; sha256: string }>;
+
+  @ConfigModelProperty({
+    description: 'Create json file with options and files used for create environments key with checksum',
+    default: true,
+  })
+  debugFilesCheckSumToEnvironments?: boolean;
 }
