@@ -84,9 +84,7 @@ describe('Project Utils', () => {
                   prepare: (content: string) => {
                     const json = JSON.parse(content);
                     return JSON.stringify(
-                      process.env['VERSION'] ||
-                        json['version'] ||
-                        new Date().toISOString().split(':').join('_').split('.').join('-')
+                      json['version'] || new Date().toISOString().split(':').join('_').split('.').join('-')
                     );
                   },
                 },

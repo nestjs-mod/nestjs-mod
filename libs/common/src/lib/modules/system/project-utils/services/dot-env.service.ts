@@ -252,6 +252,7 @@ export class DotEnvService {
         for (const key of checksumKeys) {
           delete newEnvJson[key];
         }
+        delete newEnvJson['# file checksums'];
         newEnvJson['# file checksums'] = '';
         for (const key of checksumKeys) {
           newEnvJson[key] = checksumEnvs.processed[key].sha256;
@@ -276,6 +277,7 @@ export class DotEnvService {
           for (const key of checksumKeys) {
             delete newEnvJson[key];
           }
+          delete newEnvJson['# file checksums'];
           newEnvJson['# file checksums'] = '';
           for (const key of checksumKeys) {
             newEnvJson[key] = checksumEnvs.processed[key].sha256;
