@@ -98,3 +98,4 @@ Static variables of primitive and complex types that are used in the module and 
 | ------ | ----------- | ----------- | ------- | ----- |
 |`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|```/home/endy/Projects/nestjs-mod/nestjs-mod/apps/example-basic/TESTING_INFRASTRUCTURE.MD```|
 |`skipEmptySettings`|Skip empty values of env and config models|**optional**|-|-|
+|`style`|Report generation style|**optional**|```full```|```full```|

@@ -142,6 +142,7 @@ bootstrapNestApplication({
 |`defaultLogger`|Fastify logger for application|**optional**|-|-|
 |`enableShutdownHooks`|Enable shutdown hooks|**optional**|```true```|-|
 |`globalPrefix`|Global prefix|**optional**|```api```|-|
+|`autoCloseTimeoutInInfrastructureMode`|Timeout seconds for automatically closes the application in `infrastructure mode` if the application does not close itself (zero - disable)|**optional**|-|-|
 |`logApplicationStart`|Log application start|**optional**|```true```|-|
 
 [Back to Top](#modules)
