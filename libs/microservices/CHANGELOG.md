@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.3.0...microservices-v1.3.1) (2024-02-28)
+
+
+### Bug Fixes
+
+* update logic for getEnvironmentsFromFilesCheckSum, ignore filepath from calculate checksum ([7eef191](https://github.com/nestjs-mod/nestjs-mod/commit/7eef19146c4f824c0efe181ff671d9cffcdf34e9))
+
 # [1.3.0](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.2.2...microservices-v1.3.0) (2024-02-28)
 
 
