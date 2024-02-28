@@ -1,3 +1,17 @@
+# [1.3.0](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.2.2...microservices-v1.3.0) (2024-02-28)
+
+
+### Bug Fixes
+
+* add autoCloseTimeoutInInfrastructureMode options to app listeners ([0a4a371](https://github.com/nestjs-mod/nestjs-mod/commit/0a4a371febf43148d47f933637465391264fe89a))
+* add boolean and string transformers for env model properties ([7654d9f](https://github.com/nestjs-mod/nestjs-mod/commit/7654d9f4d646ee70e992e92b34532787e430e9d7))
+* add pretty style mode when we generate reports, now we exclude all descriptions text and columns with default values ([ae5ec0b](https://github.com/nestjs-mod/nestjs-mod/commit/ae5ec0bba803183dc3f6fb1d981170f98af8313c))
+
+
+### Features
+
+* add options to project-utils for add checksum of some files in env file (example: https://github.com/nestjs-mod/nestjs-mod/blob/master/libs/common/src/lib/modules/system/project-utils/project-utils.module.spec.ts-2-test.env) ([54825b7](https://github.com/nestjs-mod/nestjs-mod/commit/54825b75cce1efd527f199ea5f65ce5ee64714ba))
+
 ## [1.2.2](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.2.1...microservices-v1.2.2) (2024-02-26)
 
 
