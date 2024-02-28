@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.1...fastify-v1.4.2) (2024-02-28)
+
+
+### Bug Fixes
+
+* add support correct order on write env key values ([6302eb1](https://github.com/nestjs-mod/nestjs-mod/commit/6302eb122c25be5d7f18cc6b4cefc8c3c82dab53))
+
 ## [1.4.1](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.0...fastify-v1.4.1) (2024-02-28)
 
 
