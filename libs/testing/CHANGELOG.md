@@ -1,3 +1,10 @@
+## [2.12.4](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.12.3...testing-v2.12.4) (2024-03-01)
+
+
+### Bug Fixes
+
+* add support multi glob to filesCheckSumToEnvironments option in ProjectUtilsConfiguration ([b91dd1a](https://github.com/nestjs-mod/nestjs-mod/commit/b91dd1ab639972050c89a89aa2ed55b79532ff80))
+
 ## [2.12.3](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.12.2...testing-v2.12.3) (2024-02-28)
 
 
