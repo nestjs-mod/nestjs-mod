@@ -58,9 +58,9 @@ export class ProjectUtilsConfiguration {
        */
       folders: string[];
       /**
-       * Glob pattern for search files
+       * Glob patterns for search files
        */
-      glob: string;
+      glob: string | string[];
       /**
        * Prepare files before calculate checksum of file
        */

@@ -193,22 +193,27 @@ export class DotEnvService {
   async getEnvironmentsFromFilesCheckSum() {
     const processed: Record<string, { fileList: string[]; sha256: string }> = {};
     for (const [name, rule] of Object.entries(this.projectUtilsConfiguration.filesCheckSumToEnvironments || {})) {
-      const folders = rule.folders.map((folder) => join(folder, rule.glob));
+      const globs = rule.glob;
+      const folders = !Array.isArray(globs)
+        ? rule.folders.map((folder) => join(folder, globs))
+        : globs.map((glob) => rule.folders.map((folder) => join(folder, glob))).flat();
 
       const fileList = await fg(folders, { dot: true });
-      const filesContent = fileList.map((filePath) => {
-        const fileContent = rule.prepare
-          ? rule.prepare(readFileSync(filePath).toString())
-          : readFileSync(filePath).toString();
-        return {
-          filePath,
-          fileContent: fileContent.split(' ').join('').split('\n').join().split('\r').join().split('\t').join(),
-        };
-      });
+      const files = fileList
+        .map((filePath) => {
+          const fileContent = rule.prepare
+            ? rule.prepare(readFileSync(filePath).toString())
+            : readFileSync(filePath).toString();
+          return {
+            filePath,
+            fileContent,
+          };
+        })
+        .sort((a, b) => a.filePath.localeCompare(b.filePath));
       processed[name] = {
-        fileList: filesContent.map((fileContent) => fileContent.filePath).sort(),
+        fileList: files.map((fileContent) => fileContent.filePath),
         sha256: createHash('sha256')
-          .update(JSON.stringify(filesContent.map((c) => c.fileContent)))
+          .update(JSON.stringify(files.map((fileContent) => fileContent.fileContent)))
           .digest('hex'),
       };
     }
