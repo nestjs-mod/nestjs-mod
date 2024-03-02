@@ -1,3 +1,10 @@
+## [1.4.5](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.4...fastify-v1.4.5) (2024-03-02)
+
+
+### Bug Fixes
+
+* add filePath as second argument to prepare function in getEnvironmentsFromFilesCheckSum ([6f371eb](https://github.com/nestjs-mod/nestjs-mod/commit/6f371eb08e90e4e0fc9e80f191c706d5a381f0f7))
+
 ## [1.4.4](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.3...fastify-v1.4.4) (2024-03-01)
 
 
