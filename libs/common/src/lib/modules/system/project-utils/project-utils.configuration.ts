@@ -64,7 +64,7 @@ export class ProjectUtilsConfiguration {
       /**
        * Prepare files before calculate checksum of file
        */
-      prepare?: (content: string) => string;
+      prepare?: (content: string, filePath?: string) => string;
     }
   >;
 

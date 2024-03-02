@@ -202,7 +202,7 @@ export class DotEnvService {
       const files = fileList
         .map((filePath) => {
           const fileContent = rule.prepare
-            ? rule.prepare(readFileSync(filePath).toString())
+            ? rule.prepare(readFileSync(filePath).toString(), filePath)
             : readFileSync(filePath).toString();
           return {
             filePath,
