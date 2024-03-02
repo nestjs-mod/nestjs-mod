@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/common",
   "description": "A collection of utilities for unifying NestJS applications and modules",
-  "version": "2.12.4",
+  "version": "2.12.5",
   "keywords": [
     "nestjs",
     "nestjs-mod",
