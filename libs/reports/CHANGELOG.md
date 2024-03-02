@@ -1,3 +1,10 @@
+## [2.12.5](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.12.4...reports-v2.12.5) (2024-03-02)
+
+
+### Bug Fixes
+
+* add filePath as second argument to prepare function in getEnvironmentsFromFilesCheckSum ([6f371eb](https://github.com/nestjs-mod/nestjs-mod/commit/6f371eb08e90e4e0fc9e80f191c706d5a381f0f7))
+
 ## [2.12.4](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.12.3...reports-v2.12.4) (2024-03-01)
 
 
