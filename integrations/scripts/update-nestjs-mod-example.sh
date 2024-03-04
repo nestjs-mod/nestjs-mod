@@ -2,7 +2,7 @@
 set -e
 export NX_SKIP_NX_CACHE=true
 
-npm run nx -- reset
+./node_modules/.bin/nx reset
 
 rm -rf ./dist
 rm -rf ./integrations/tmp
@@ -34,7 +34,7 @@ npm run manual:prepare
 kill -9 $(lsof -t -i:$APP_NAME_PORT) | echo "Killed"
 node ./dist/apps/app-name/main.js &
 (
-    sleep 5 && npm run nx -- e2e app-name-e2e
+    sleep 5 && ./node_modules/.bin/nx e2e app-name-e2e
 )
 sleep 5
 kill -9 $(lsof -t -i:$APP_NAME_PORT) | echo "Killed"

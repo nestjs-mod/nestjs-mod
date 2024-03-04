@@ -2,7 +2,7 @@
 set -e
 export NX_SKIP_NX_CACHE=true
 
-npm run nx -- reset
+./node_modules/.bin/nx reset
 
 log=$(git show --summary)
 
@@ -12,7 +12,7 @@ rm -rf ./dist
 rm -rf ./integrations/nestjs-mod-contrib
 git clone https://github.com/nestjs-mod/nestjs-mod-contrib.git ./integrations/nestjs-mod-contrib
 
-npm run nx -- run-many --target=build --all
+./node_modules/.bin/nx run-many --target=build --all
 
 rm -rf ./integrations/nestjs-mod-contrib/tmp/lib/schematics
 mkdir -p ./integrations/nestjs-mod-contrib/tmp/lib/schematics
@@ -48,5 +48,5 @@ npm install --save-dev --no-cache ../../integrations/nestjs-mod-contrib/tmp/lib/
 npm install --save-dev --no-cache ../../integrations/nestjs-mod-contrib/tmp/lib/testing/nestjs-mod-testing-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/nestjs-mod-contrib/tmp/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
 
-npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true && npm run docs:infrastructure && npm run test
+./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run tsc:lint && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=build --skip-nx-cache=true && npm run docs:infrastructure && npm run test
 fi

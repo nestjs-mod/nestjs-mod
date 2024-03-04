@@ -2,7 +2,7 @@
 set -e
 export NX_SKIP_NX_CACHE=true
 
-npm run nx -- reset
+./node_modules/.bin/nx reset
 
 log=$(git show --summary)
 
@@ -11,7 +11,7 @@ then
 rm -rf ./dist
 rm -rf ./integrations/app
 
-npm run nx -- run-many --target=build --all
+./node_modules/.bin/nx run-many --target=build --all
 rm -rf ./integrations/app
 
 cd ./integrations
@@ -39,7 +39,7 @@ cp -Rf ./dist/libs/testing/* ./integrations/app/tmp/lib/testing
 cd ./integrations/app
 git init
 npm install --save-dev @nx/nest@17.2.8
-npm run nx -- g @nx/nest:application --directory=apps/server --name=server --projectNameAndRootFormat=as-provided --strict=true
+./node_modules/.bin/nx g @nx/nest:application --directory=apps/server --name=server --projectNameAndRootFormat=as-provided --strict=true
 cd ../../
 
 npx --yes replace-json-property ./integrations/app/tmp/lib/common/package.json version 0.0.0
@@ -59,19 +59,19 @@ npm install --save-dev --no-cache ../../integrations/app/tmp/lib/common/nestjs-m
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/reports/nestjs-mod-reports-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/testing/nestjs-mod-testing-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
-npm run nx -- g @nestjs-mod/schematics:application --directory=apps/server-mod --name=server-mod --projectNameAndRootFormat=as-provided --strict=true
-npm run nx -- g @nestjs-mod/schematics:library feature --buildable --publishable --directory=libs/feature --simpleName=true --projectNameAndRootFormat=as-provided --strict=true
+./node_modules/.bin/nx g @nestjs-mod/schematics:application --directory=apps/server-mod --name=server-mod --projectNameAndRootFormat=as-provided --strict=true
+./node_modules/.bin/nx g @nestjs-mod/schematics:library feature --buildable --publishable --directory=libs/feature --simpleName=true --projectNameAndRootFormat=as-provided --strict=true
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/common/nestjs-mod-common-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/reports/nestjs-mod-reports-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/testing/nestjs-mod-testing-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
-npm run nx:many -- -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run tsc:lint && npm run nx:many -- -t=build --skip-nx-cache=true && npm run docs:infrastructure && npm run test
+./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run tsc:lint && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=build --skip-nx-cache=true && npm run docs:infrastructure && npm run test
 
-npm run nx -- build server
+./node_modules/.bin/nx build server
 kill -9 $(lsof -t -i:3000) | echo "Killed"
 node ./dist/apps/server/main.js &
 (
-    sleep 5 && npm run nx -- e2e server-e2e
+    sleep 5 && ./node_modules/.bin/nx e2e server-e2e
 )
 sleep 5
 kill -9 $(lsof -t -i:3000) | echo "Killed"
@@ -79,11 +79,11 @@ kill -9 $(lsof -t -i:3000) | echo "Killed"
 sleep 5
 
 . ./.env
-npm run nx -- build server-mod
+./node_modules/.bin/nx build server-mod
 kill -9 $(lsof -t -i:$SERVER_MOD_PORT) | echo "Killed"
 node ./dist/apps/server-mod/main.js &
 (
-    sleep 5 && npm run nx -- e2e server-mod-e2e
+    sleep 5 && ./node_modules/.bin/nx e2e server-mod-e2e
 )
 sleep 5
 kill -9 $(lsof -t -i:$SERVER_MOD_PORT) | echo "Killed"
