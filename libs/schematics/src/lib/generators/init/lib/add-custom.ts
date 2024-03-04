@@ -54,11 +54,11 @@ export function addScript(tree: Tree, projectName?: string) {
       'prod infra',
       {
         start: {
-          commands: [`npm run nx:many -- -t=start`],
+          commands: [`./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=start`],
           comments: ['Launching a built NestJS application (you must first build it using the build command)'],
         },
         build: {
-          commands: ['npm run generate', 'npm run tsc:lint', 'npm run nx:many -- -t=build --skip-nx-cache=true'],
+          commands: ['npm run generate', 'npm run tsc:lint', './node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=build --skip-nx-cache=true'],
           comments: ['Building a NestJS application'],
         },
       },
@@ -69,7 +69,7 @@ export function addScript(tree: Tree, projectName?: string) {
         'prod infra',
         {
           [`start:prod:${projectName}`]: {
-            commands: [`npm run nx -- start ${projectName}`],
+            commands: [`./node_modules/.bin/nx start ${projectName}`],
             comments: [`Launching a built ${projectName} (you must first build it using the build command)`],
           },
         },
@@ -80,7 +80,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'docs',
       {
         'docs:infrastructure': {
-          commands: ['export NODE_ENV=infrastructure && npm run nx:many -- -t=start --parallel=1'],
+          commands: ['export NODE_ENV=infrastructure && ./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=start --parallel=1'],
           comments: [
             'Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure',
           ],
@@ -92,7 +92,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'dev infra',
       {
         'serve:dev': {
-          commands: ['npm run nx:many -- -t=serve'],
+          commands: ['./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=serve'],
           comments: ['Running NestJS application source code in watch mode'],
         },
       },
@@ -103,7 +103,7 @@ export function addScript(tree: Tree, projectName?: string) {
         'dev infra',
         {
           [`serve:dev:${projectName}`]: {
-            commands: [`npm run nx -- serve ${projectName} --host=0.0.0.0`],
+            commands: [`./node_modules/.bin/nx serve ${projectName} --host=0.0.0.0`],
             comments: [`Running ${projectName} source code in watch mode`],
           },
         },
@@ -114,15 +114,15 @@ export function addScript(tree: Tree, projectName?: string) {
       'lint',
       {
         lint: {
-          commands: ['npm run tsc:lint', 'npm run nx:many -- -t=lint'],
+          commands: ['npm run tsc:lint', './node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=lint'],
           comments: ['Checking the typescript code for the entire project'],
         },
         'lint:fix': {
-          commands: ['npm run tsc:lint', 'npm run nx:many -- -t=lint --fix'],
+          commands: ['npm run tsc:lint', './node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=lint --fix'],
           comments: ['Checking the typescript code throughout the project and trying to fix everything possible'],
         },
         'tsc:lint': {
-          commands: ['npm run tsc -- --noEmit -p tsconfig.base.json'],
+          commands: ['./node_modules/.bin/tsc --noEmit -p tsconfig.base.json'],
           comments: ['Checking typescript code in libraries'],
         },
       },
@@ -133,7 +133,7 @@ export function addScript(tree: Tree, projectName?: string) {
       {
         test: {
           commands: [
-            'npm run nx:many -- -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes',
+            './node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes',
           ],
           comments: ['Running tests across the entire project'],
         },
@@ -146,7 +146,7 @@ export function addScript(tree: Tree, projectName?: string) {
         {
           [`test:${projectName}`]: {
             commands: [
-              `npm run nx -- test ${projectName} --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes`,
+              `./node_modules/.bin/nx test ${projectName} --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes`,
             ],
             comments: [`Running tests for ${projectName}`],
           },
@@ -159,7 +159,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'utils',
       {
         generate: {
-          commands: ['npm run nx:many -- -t=generate --skip-nx-cache=true', 'npm run make-ts-list', 'npm run lint:fix'],
+          commands: ['./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=generate --skip-nx-cache=true', 'npm run make-ts-list', 'npm run lint:fix'],
           comments: [
             'Running the "generate" nx command in applications and libraries which can be customized at your discretion',
             'automatically generating an index.ts file for each library',
@@ -176,21 +176,13 @@ export function addScript(tree: Tree, projectName?: string) {
         nx: {
           commands: ['nx'],
           comments: [
-            'Alias for running the nx version locally, which is in the project (example: `npm run nx -- dep-graph`),',
+            'Alias for running the nx version locally, which is in the project (example: `./node_modules/.bin/nx dep-graph`),',
             'in order not to install nx globally in the operating system',
           ],
         },
         'dep-graph': {
-          commands: ['npm run nx -- dep-graph'],
+          commands: ['./node_modules/.bin/nx dep-graph'],
           comments: ['Generating dependency diagrams for nx applications and libraries'],
-        },
-        'nx:many': {
-          commands: [`npm run nx -- run-many --exclude=${basicJson.name} --all`],
-          comments: [
-            'Alias for running many nx commands (example: `npm run nx:many -- -t=lint`),',
-            'an exception has been added for the root project,',
-            'since sometimes an attempt to run an nx command on it can lead to the command freezing',
-          ],
         },
         'make-ts-list': {
           commands: [`./node_modules/.bin/rucken make-ts-list`],
