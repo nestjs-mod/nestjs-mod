@@ -1,3 +1,10 @@
+## [1.4.6](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.5...fastify-v1.4.6) (2024-03-04)
+
+
+### Bug Fixes
+
+* add check exists searchCommand in current commands before add ([603f1bc](https://github.com/nestjs-mod/nestjs-mod/commit/603f1bcd340fdaa7845f07f3c0103270d8c62207))
+
 ## [1.4.5](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.4...fastify-v1.4.5) (2024-03-02)
 
 
