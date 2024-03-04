@@ -58,7 +58,7 @@ export function addScript(tree: Tree, projectName?: string) {
           comments: ['Launching a built NestJS application (you must first build it using the build command)'],
         },
         build: {
-          commands: ['npm run generate', 'npm run tsc:lint', './node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=build --skip-nx-cache=true'],
+          commands: ['npm run generate', 'npm run tsc:lint', `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=build --skip-nx-cache=true`],
           comments: ['Building a NestJS application'],
         },
       },
@@ -80,7 +80,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'docs',
       {
         'docs:infrastructure': {
-          commands: ['export NODE_ENV=infrastructure && ./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=start --parallel=1'],
+          commands: [`export NODE_ENV=infrastructure && ./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=start --parallel=1`],
           comments: [
             'Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure',
           ],
@@ -92,7 +92,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'dev infra',
       {
         'serve:dev': {
-          commands: ['./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=serve'],
+          commands: [`./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=serve`],
           comments: ['Running NestJS application source code in watch mode'],
         },
       },
@@ -114,11 +114,11 @@ export function addScript(tree: Tree, projectName?: string) {
       'lint',
       {
         lint: {
-          commands: ['npm run tsc:lint', './node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=lint'],
+          commands: ['npm run tsc:lint', `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=lint`],
           comments: ['Checking the typescript code for the entire project'],
         },
         'lint:fix': {
-          commands: ['npm run tsc:lint', './node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=lint --fix'],
+          commands: ['npm run tsc:lint', `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=lint --fix`],
           comments: ['Checking the typescript code throughout the project and trying to fix everything possible'],
         },
         'tsc:lint': {
@@ -133,7 +133,7 @@ export function addScript(tree: Tree, projectName?: string) {
       {
         test: {
           commands: [
-            './node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes',
+            `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes`,
           ],
           comments: ['Running tests across the entire project'],
         },
@@ -159,7 +159,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'utils',
       {
         generate: {
-          commands: ['./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=generate --skip-nx-cache=true', 'npm run make-ts-list', 'npm run lint:fix'],
+          commands: [`./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=generate --skip-nx-cache=true`, 'npm run make-ts-list', 'npm run lint:fix'],
           comments: [
             'Running the "generate" nx command in applications and libraries which can be customized at your discretion',
             'automatically generating an index.ts file for each library',
