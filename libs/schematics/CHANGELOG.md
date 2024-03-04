@@ -1,3 +1,10 @@
+## [2.7.11](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.7.10...schematics-v2.7.11) (2024-03-04)
+
+
+### Bug Fixes
+
+* update addScript with incorrect logic [skip integrations, skip contrib] ([6ce4c7c](https://github.com/nestjs-mod/nestjs-mod/commit/6ce4c7c75b78de4fafc23163ca1eafbf558ade34))
+
 ## [2.7.10](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.7.9...schematics-v2.7.10) (2024-03-04)
 
 
