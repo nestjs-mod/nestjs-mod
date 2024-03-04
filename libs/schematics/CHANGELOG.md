@@ -1,3 +1,10 @@
+## [2.7.9](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.7.8...schematics-v2.7.9) (2024-03-04)
+
+
+### Bug Fixes
+
+* removed all "--" as it caused a side effect and prevented the command from completing correctly ([d40ad83](https://github.com/nestjs-mod/nestjs-mod/commit/d40ad83d3f34b1a49815793895beb0ba3998e0e6))
+
 ## [2.7.8](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.7.7...schematics-v2.7.8) (2024-03-01)
 
 
