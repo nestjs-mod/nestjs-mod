@@ -1,3 +1,10 @@
+## [2.12.6](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.12.5...testing-v2.12.6) (2024-03-04)
+
+
+### Bug Fixes
+
+* add check exists searchCommand in current commands before add ([603f1bc](https://github.com/nestjs-mod/nestjs-mod/commit/603f1bcd340fdaa7845f07f3c0103270d8c62207))
+
 ## [2.12.5](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.12.4...testing-v2.12.5) (2024-03-02)
 
 
