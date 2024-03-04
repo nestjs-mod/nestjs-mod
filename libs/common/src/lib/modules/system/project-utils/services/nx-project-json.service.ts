@@ -28,7 +28,20 @@ export class NxProjectJsonService {
     return undefined;
   }
 
-  addRunCommands(lines: string[], targetName = GENERATE_TARGET_NAME) {
+  addRunCommands(
+    /**
+     * Command lines for append
+     */
+    lines: string[],
+    /**
+     * Name of the target where you need to add it; if it does not exist, it will be created automatically
+     */
+    targetName = GENERATE_TARGET_NAME,
+    /**
+     * A line to check whether to add, by default it searches for each command to add
+     */
+    searchCommand?: string
+  ) {
     const projectJson = this.read() || {};
     if (!projectJson?.targets) {
       projectJson.targets = {};
@@ -48,9 +61,15 @@ export class NxProjectJsonService {
     if (!projectJson.targets[targetName].options!['commands']) {
       projectJson.targets[targetName].options!['commands'] = [];
     }
-    for (const line of lines) {
-      if (!(projectJson.targets[targetName].options!['commands'] as string[])!.some((c) => c === line)) {
-        (projectJson.targets[targetName].options!['commands'] as string[]).push(line);
+    if (
+      !searchCommand ||
+      (searchCommand &&
+        !(projectJson.targets[targetName].options!['commands'] as string[])!.some((c) => c.includes(searchCommand)))
+    ) {
+      for (const line of lines) {
+        if (!(projectJson.targets[targetName].options!['commands'] as string[])!.some((c) => c === line)) {
+          (projectJson.targets[targetName].options!['commands'] as string[]).push(line);
+        }
       }
     }
     if (!projectJson.targets[targetName].options!['parallel']) {
