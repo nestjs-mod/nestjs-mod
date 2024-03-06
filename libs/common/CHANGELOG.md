@@ -1,3 +1,10 @@
+## [2.12.7](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.12.6...common-v2.12.7) (2024-03-06)
+
+
+### Bug Fixes
+
+* show function name if default value of config property is function ([b887920](https://github.com/nestjs-mod/nestjs-mod/commit/b887920522aec1163eb362ee99fc123d199aa8ad))
+
 ## [2.12.6](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.12.5...common-v2.12.6) (2024-03-04)
 
 
