@@ -1,3 +1,10 @@
+## [1.4.7](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.6...fastify-v1.4.7) (2024-03-06)
+
+
+### Bug Fixes
+
+* show function name if default value of config property is function ([b887920](https://github.com/nestjs-mod/nestjs-mod/commit/b887920522aec1163eb362ee99fc123d199aa8ad))
+
 ## [1.4.6](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.5...fastify-v1.4.6) (2024-03-04)
 
 
