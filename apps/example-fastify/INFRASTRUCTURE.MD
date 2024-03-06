@@ -99,7 +99,7 @@ Static variables of primitive and complex types that are used in the module and 
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`wrapFastifyAdapter`|Method for additional actions before listening|**optional**|-|Function|
+|`wrapFastifyAdapter`|Method for additional actions before listening|**optional**|-|```wrapFastifyAdapter```|
 
 ## Feature modules
 Feature modules with business logic of the application. NestJS and NestJS-mod compatible modules.
