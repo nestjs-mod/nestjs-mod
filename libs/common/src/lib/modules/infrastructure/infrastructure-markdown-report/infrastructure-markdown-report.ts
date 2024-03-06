@@ -478,7 +478,11 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       }
       if (typeof value === 'function') {
         if (!/^class\s/.test(Function.prototype.toString.call(value))) {
-          return 'Function';
+          try {
+            return value.name ? '```' + value.name + '```' : 'Function';
+          } catch (err) {
+            return 'Function';
+          }
         } else {
           try {
             const n = Function.prototype.toString.call(value).split('class')[1].split('{')[0].trim();
