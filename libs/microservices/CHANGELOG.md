@@ -1,3 +1,10 @@
+## [1.3.7](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.3.6...microservices-v1.3.7) (2024-03-06)
+
+
+### Bug Fixes
+
+* show function name if default value of config property is function ([b887920](https://github.com/nestjs-mod/nestjs-mod/commit/b887920522aec1163eb362ee99fc123d199aa8ad))
+
 ## [1.3.6](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.3.5...microservices-v1.3.6) (2024-03-04)
 
 
