@@ -1,3 +1,10 @@
+## [1.4.8](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.7...fastify-v1.4.8) (2024-03-07)
+
+
+### Bug Fixes
+
+* remove apply default value for env if it not exists (replace "value_for_XXX" to empty string '') ([4093fbd](https://github.com/nestjs-mod/nestjs-mod/commit/4093fbda49372b30b51800e48dfdeceeccff0151))
+
 ## [1.4.7](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.6...fastify-v1.4.7) (2024-03-06)
 
 
