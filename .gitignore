@@ -44,4 +44,3 @@ Thumbs.db
 /integrations/app
 /integrations/lib
 /integrations/nestjs-mod-contrib
-.env
