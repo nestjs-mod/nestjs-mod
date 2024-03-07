@@ -1,3 +1,10 @@
+## [1.3.8](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.3.7...microservices-v1.3.8) (2024-03-07)
+
+
+### Bug Fixes
+
+* remove apply default value for env if it not exists (replace "value_for_XXX" to empty string '') ([4093fbd](https://github.com/nestjs-mod/nestjs-mod/commit/4093fbda49372b30b51800e48dfdeceeccff0151))
+
 ## [1.3.7](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.3.6...microservices-v1.3.7) (2024-03-06)
 
 
