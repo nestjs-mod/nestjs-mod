@@ -1,3 +1,10 @@
+## [2.12.8](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.12.7...reports-v2.12.8) (2024-03-07)
+
+
+### Bug Fixes
+
+* remove apply default value for env if it not exists (replace "value_for_XXX" to empty string '') ([4093fbd](https://github.com/nestjs-mod/nestjs-mod/commit/4093fbda49372b30b51800e48dfdeceeccff0151))
+
 ## [2.12.7](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.12.6...reports-v2.12.7) (2024-03-06)
 
 
