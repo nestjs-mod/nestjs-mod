@@ -277,7 +277,7 @@ export class DotEnvService {
         const newEnvJson = [...neededKeys, ...(ignoreCheckNeededKeys ? Object.keys(data) : [])].reduce(
           (all, key) => ({
             ...all,
-            [String(key)]: existsExampleEnvJson?.[key!] || (key?.trim().startsWith('#') ? '' : `value_for_${key}`),
+            [String(key)]: existsExampleEnvJson?.[key!] || (key?.trim().startsWith('#') ? '' : ''),
           }),
           existsExampleEnvJson
         );
@@ -285,7 +285,7 @@ export class DotEnvService {
       } else {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newEnvJson: any = [...neededKeys, ...(ignoreCheckNeededKeys ? Object.keys(data) : [])].reduce(
-          (all, key) => ({ ...all, [String(key)]: key?.trim().startsWith('#') ? '' : `value_for_${key}` }),
+          (all, key) => ({ ...all, [String(key)]: key?.trim().startsWith('#') ? '' : '' }),
           {}
         );
         await this.writeFile(envExampleFile, newEnvJson);
