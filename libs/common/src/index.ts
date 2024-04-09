@@ -47,3 +47,4 @@ export * from './lib/utils/is-production';
 export * from './lib/utils/load-package';
 export * from './lib/utils/name-it-class';
 export * from './lib/utils/node-defaults';
+export * from './lib/utils/prepare-headers';

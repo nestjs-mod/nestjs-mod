@@ -1,4 +1,5 @@
 import { ExecutionContext, createParamDecorator } from '@nestjs/common';
+import { prepareHeaders } from './prepare-headers';
 
 export function getRequestFromExecutionContext(ctx: ExecutionContext) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,8 +52,14 @@ export function getRequestFromExecutionContext(ctx: ExecutionContext) {
   } catch (err) {
     req = ctx;
   }
-
-  return req?.connection?.parser?.incoming || req?.req?.extra?.request || req?.req || req;
+  if (req.headers) {
+    req.headers = prepareHeaders(req.headers);
+  }
+  const result = req?.connection?.parser?.incoming || req?.req?.extra?.request || req?.req || req;
+  if (result.headers) {
+    result.headers = prepareHeaders(result.headers);
+  }
+  return result;
 }
 
 export const Request = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
