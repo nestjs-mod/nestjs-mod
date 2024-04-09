@@ -1,3 +1,10 @@
+## [2.12.9](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.12.8...testing-v2.12.9) (2024-04-09)
+
+
+### Bug Fixes
+
+* add prepareHeaders function for convert header names to lower case ([e613f72](https://github.com/nestjs-mod/nestjs-mod/commit/e613f72492c4a1d6586ee362ae13e1a950a465b3))
+
 ## [2.12.8](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.12.7...testing-v2.12.8) (2024-03-07)
 
 
