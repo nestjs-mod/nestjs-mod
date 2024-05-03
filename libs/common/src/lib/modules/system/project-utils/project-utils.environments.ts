@@ -8,6 +8,7 @@ export class ProjectUtilsEnvironments {
     description: 'Update env-file',
     default: true,
     transform: new BooleanTransformer(),
+    hidden: true,
   })
   updateEnvFile?: boolean;
 
@@ -15,6 +16,7 @@ export class ProjectUtilsEnvironments {
     description: 'Update project properties',
     default: true,
     transform: new BooleanTransformer(),
+    hidden: true,
   })
   updateProjectOptions?: boolean;
 
@@ -22,6 +24,7 @@ export class ProjectUtilsEnvironments {
     description: 'Update configuration and environments options',
     default: true,
     transform: new BooleanTransformer(),
+    hidden: true,
   })
   updateGlobalConfigAndEnvsOptions?: boolean;
 
@@ -29,6 +32,7 @@ export class ProjectUtilsEnvironments {
     description: 'Print all application environments',
     default: true,
     transform: new BooleanTransformer(),
+    hidden: true,
   })
   printAllApplicationEnvs?: boolean;
 
@@ -36,6 +40,7 @@ export class ProjectUtilsEnvironments {
     description: 'Create json file with options and files used for create environments key with checksum',
     default: true,
     transform: new BooleanTransformer(),
+    hidden: true,
   })
   saveFilesWithCheckSum?: boolean;
 }
