@@ -179,11 +179,6 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
 
   private getNewGlobalConfiguration() {
     return {
-      ...(this.wrapApplicationOptionsService.globalConfigurationOptions?.debug === undefined
-        ? {
-            debug: true,
-          }
-        : {}),
       ...(this.wrapApplicationOptionsService.globalConfigurationOptions?.skipValidation === undefined
         ? {
             skipValidation: isInfrastructureMode(),
@@ -194,11 +189,6 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
 
   private getNewGlobalEnvironments() {
     return {
-      ...(this.wrapApplicationOptionsService.globalEnvironmentsOptions?.debug === undefined
-        ? {
-            debug: true,
-          }
-        : {}),
       ...(this.wrapApplicationOptionsService.globalEnvironmentsOptions?.skipValidation === undefined
         ? {
             skipValidation: isInfrastructureMode(),

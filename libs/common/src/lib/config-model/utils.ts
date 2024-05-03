@@ -87,8 +87,8 @@ export async function configTransform<
   const logger = rootOptions?.logger || modelOptions?.logger;
 
   if (validateErrors.length > 0) {
-    if (logger?.debug) {
-      logger.debug({
+    if (logger?.error) {
+      logger.error({
         ...info,
         validations: Object.fromEntries(
           Object.entries(info.validations).filter(([key, value]) => {
