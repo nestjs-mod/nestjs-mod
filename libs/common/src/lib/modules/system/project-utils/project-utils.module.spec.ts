@@ -14,15 +14,12 @@ import { DotEnvService } from './services/dot-env.service';
 import { PackageJsonService } from './services/package-json.service';
 
 describe('Project Utils', () => {
-  let originalNodeEnv: string | undefined;
-
   beforeAll(() => {
-    originalNodeEnv = process.env['NODE_ENV'];
-    process.env['NODE_ENV'] = 'infrastructure';
+    process.env['NESTJS_MODE'] = 'infrastructure';
   });
 
   afterAll(() => {
-    process.env['NODE_ENV'] = originalNodeEnv;
+    process.env['NESTJS_MODE'] = undefined;
   });
 
   it('should return report with application name from settings and source key with prefix for env', async () => {

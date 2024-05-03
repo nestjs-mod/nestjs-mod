@@ -80,7 +80,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'docs',
       {
         'docs:infrastructure': {
-          commands: [`export NODE_ENV=infrastructure && ./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=start --parallel=1`],
+          commands: [`export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=start --parallel=1`],
           comments: [
             'Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure',
           ],

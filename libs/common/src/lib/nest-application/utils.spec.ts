@@ -433,8 +433,7 @@ describe('NestJS application: Utils', () => {
   });
   describe('NestJS application get markdown of infrastructure', () => {
     it('should return markdown of infrastructure', async () => {
-      const originalNodeEnv = process.env['NODE_ENV'];
-      process.env['NODE_ENV'] = 'infrastructure';
+      process.env['NESTJS_MODE'] = 'infrastructure';
       // App1Module
 
       @Injectable()
@@ -563,7 +562,7 @@ describe('NestJS application: Utils', () => {
 
       await app.close();
 
-      process.env['NODE_ENV'] = originalNodeEnv;
+      process.env['NESTJS_MODE'] = undefined;
     });
   });
 });

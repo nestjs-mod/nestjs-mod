@@ -1,3 +1,3 @@
 export function isInfrastructureMode() {
-  return process.env['NODE_ENV'] === 'infrastructure';
+  return process.env['NESTJS_MODE'] === 'infrastructure' || process.env['NODE_ENV'] === 'infrastructure';
 }

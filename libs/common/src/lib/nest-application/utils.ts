@@ -113,6 +113,10 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
       }
     }
   }
+
+  if (!isInfrastructureMode()) {
+    delete modules[NestModuleCategory.infrastructure];
+  }
   return { modules, app };
 }
 

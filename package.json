@@ -39,7 +39,7 @@
     "start:prod:example-fastify": "./node_modules/.bin/nx start example-fastify",
     "start:prod:example-tcp-microservice": "./node_modules/.bin/nx start example-tcp-microservice",
     "_____docs_____": "_____docs_____",
-    "docs:infrastructure": "export NODE_ENV=infrastructure && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=start --parallel=1",
+    "docs:infrastructure": "export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=start --parallel=1",
     "_____tests_____": "_____tests_____",
     "test": "./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes",
     "test:example-basic": "./node_modules/.bin/nx test example-basic --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes",
