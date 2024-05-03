@@ -2,6 +2,7 @@ import { NestModuleCategory } from '../../../nest-module/types';
 import { createNestModule } from '../../../nest-module/utils';
 import { ProjectUtilsConfiguration } from './project-utils.configuration';
 import { PROJECT_UTILS_MODULE_NAME } from './project-utils.constants';
+import { ProjectUtilsEnvironments } from './project-utils.environments';
 import { ApplicationPackageJsonService } from './services/application-package-json.service';
 import { DotEnvService } from './services/dot-env.service';
 import { GitignoreService } from './services/gitignore-file';
@@ -13,7 +14,7 @@ import { WrapApplicationOptionsService } from './services/wrap-application-optio
 const wrapApplicationOptionsService = new WrapApplicationOptionsService();
 const packageJsonService = new PackageJsonService({});
 const gitignoreService = new GitignoreService(packageJsonService);
-const dotEnvService = new DotEnvService(wrapApplicationOptionsService, {}, gitignoreService);
+const dotEnvService = new DotEnvService(wrapApplicationOptionsService, {}, {}, gitignoreService);
 const applicationPackageJsonService = new ApplicationPackageJsonService({});
 const nxProjectJsonService = new NxProjectJsonService(
   {},
@@ -30,6 +31,7 @@ export const { ProjectUtils } = createNestModule({
     'Utilities for setting global application parameters, such as project name, description, and settings validation parameters.',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: ProjectUtilsConfiguration,
+  staticEnvironmentsModel: ProjectUtilsEnvironments,
   sharedProviders: [
     { provide: WrapApplicationOptionsService, useValue: wrapApplicationOptionsService },
     { provide: DotEnvService, useValue: dotEnvService },
@@ -79,6 +81,7 @@ export const { ProjectUtils } = createNestModule({
       const tempDotEnvService = new DotEnvService(
         wrapApplicationOptionsService,
         wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
+        wrapApplicationOptionsService.current.staticEnvironments as ProjectUtilsEnvironments,
         tempGitignoreService
       );
       tempDotEnvService.read();
@@ -99,6 +102,7 @@ export const { ProjectUtils } = createNestModule({
       // ProjectUtilsPatcherService
       projectUtilsPatcherService = new ProjectUtilsPatcherService(
         wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
+        wrapApplicationOptionsService.current.staticEnvironments as ProjectUtilsEnvironments,
         new ApplicationPackageJsonService(
           wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
         ),

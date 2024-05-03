@@ -26,6 +26,7 @@ import {
 import { createNestModule } from '../../../nest-module/utils';
 import { ProjectUtils } from '../../system/project-utils/project-utils.module';
 import { PackageJsonService } from '../../system/project-utils/services/package-json.service';
+import { isInfrastructureMode } from '../../../utils/is-infrastructure';
 
 @ConfigModel()
 export class InfrastructureMarkdownReportGeneratorConfiguration {
@@ -302,10 +303,12 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                 // Default
                 this.safeValue(modelPropertyOption.default),
                 // Value
-                this.safeValue(
-                  settingsModelInfo?.validations[modelPropertyOption.originalName].value,
-                  modelPropertyOption.default
-                ),
+                modelPropertyOption.hideValueFromOutputs
+                  ? '**hidden**'
+                  : this.safeValue(
+                      settingsModelInfo?.validations[modelPropertyOption.originalName].value,
+                      modelPropertyOption.default
+                    ),
                 '',
               ].join('|')
             ) || []),
@@ -332,10 +335,12 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                   .map(([key, value]) => `**${key}** (${value})`)
                   .join(', ') || '**optional**',
                 // Value
-                this.safeValue(
-                  settingsModelInfo?.validations[modelPropertyOption.originalName].value,
-                  modelPropertyOption.default
-                ),
+                modelPropertyOption.hideValueFromOutputs
+                  ? '**hidden**'
+                  : this.safeValue(
+                      settingsModelInfo?.validations[modelPropertyOption.originalName].value,
+                      modelPropertyOption.default
+                    ),
                 '',
               ].join('|')
             ) || []),
@@ -415,10 +420,12 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                   // Default
                   this.safeValue(modelPropertyOption.default),
                   // Value
-                  this.safeValue(
-                    settingsModelInfo?.validations[modelPropertyOption.originalName].value,
-                    modelPropertyOption.default
-                  ),
+                  modelPropertyOption.hideValueFromOutputs
+                    ? '**hidden**'
+                    : this.safeValue(
+                        settingsModelInfo?.validations[modelPropertyOption.originalName].value,
+                        modelPropertyOption.default
+                      ),
                   '',
                 ].join('|')
               ) || []),
@@ -557,16 +564,18 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
     ) {}
 
     onApplicationBootstrap() {
-      this.infrastructureMarkdownReportStorage.report = this.getReport();
-      if (this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile) {
-        const fileDir = dirname(this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile);
-        if (!existsSync(fileDir)) {
-          mkdirSync(fileDir, { recursive: true });
+      if (isInfrastructureMode()) {
+        this.infrastructureMarkdownReportStorage.report = this.getReport();
+        if (this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile) {
+          const fileDir = dirname(this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile);
+          if (!existsSync(fileDir)) {
+            mkdirSync(fileDir, { recursive: true });
+          }
+          writeFileSync(
+            this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile,
+            this.infrastructureMarkdownReportStorage.report
+          );
         }
-        writeFileSync(
-          this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile,
-          this.infrastructureMarkdownReportStorage.report
-        );
       }
     }
 

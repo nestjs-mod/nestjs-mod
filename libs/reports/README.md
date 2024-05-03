@@ -66,7 +66,7 @@ bootstrapNestApplication({
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
 |`utilsFolders`|Folders with utilities|**isNotEmpty** (utilsFolders should not be empty)|-|-|
-|`modules`|NodeJS modules with NestJS-mod modules|**isNotEmpty** (modules should not be empty)|-|-|
+|`modules`|NodeJS modules with NestJS-mod modules|**isNotEmpty** (modules should not be empty)|-|**hidden**|
 |`packageFile`|Name of the package.json file with information|**isNotEmpty** (packageFile should not be empty)|-|-|
 |`markdownFile`|Name of the markdown file in which to save|**isNotEmpty** (markdownFile should not be empty)|-|-|
 |`folderWithMarkdownFilesToUse`|A folder of markdown files with instructions for using modules in NestJS and NestJS-mod applications (example of file names: /libs/reports/NESTJS_MOD_ALL_README_GENERATOR_USE_IN_NEST_JS.md, /libs/reports/NESTJS_MOD_ALL_README_GENERATOR_USE_IN_NEST_JS_MOD.md)|**optional**|-|-|

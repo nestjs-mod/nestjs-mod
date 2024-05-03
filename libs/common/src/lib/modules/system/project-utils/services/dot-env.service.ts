@@ -9,6 +9,7 @@ import { defaultContextName } from '../../../../utils/default-context-name';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
 import { GitignoreService } from './gitignore-file';
 import { WrapApplicationOptionsService } from './wrap-application-options.service';
+import { ProjectUtilsEnvironments } from '../project-utils.environments';
 
 @Injectable()
 export class DotEnvService {
@@ -17,6 +18,7 @@ export class DotEnvService {
   constructor(
     private readonly wrapApplicationOptionsService: WrapApplicationOptionsService,
     private readonly projectUtilsConfiguration: ProjectUtilsConfiguration,
+    private readonly projectUtilsEnvironments: ProjectUtilsEnvironments,
     private readonly gitignoreService: GitignoreService
   ) {}
 
@@ -152,7 +154,7 @@ export class DotEnvService {
         delete newData[key];
         newData[key] = checksumEnvs.processed[key].sha256;
       }
-      if (this.projectUtilsConfiguration.debugFilesCheckSumToEnvironments) {
+      if (this.projectUtilsEnvironments.saveFilesWithCheckSum) {
         writeFileSync(envFile + '.checksum.json', JSON.stringify(checksumEnvs.processed, null, 4));
       }
     }

@@ -8,6 +8,7 @@ import { ApplicationPackageJsonService } from './application-package-json.servic
 import { DotEnvService } from './dot-env.service';
 import { PackageJsonService } from './package-json.service';
 import { WrapApplicationOptionsService } from './wrap-application-options.service';
+import { ProjectUtilsEnvironments } from '../project-utils.environments';
 
 @Injectable()
 export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
@@ -16,6 +17,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
 
   constructor(
     private readonly projectUtilsConfiguration: ProjectUtilsConfiguration,
+    private readonly projectUtilsEnvironments: ProjectUtilsEnvironments,
     private readonly applicationPackageJsonService: ApplicationPackageJsonService,
     private readonly wrapApplicationOptionsService: WrapApplicationOptionsService,
     private readonly dotEnvService: DotEnvService,
@@ -36,18 +38,20 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
   }
 
   private updatePackage() {
-    if (!this.packageJsonService) {
-      this.logger.warn(`packageJsonService not set, updating not work`);
-      return;
-    }
-    const existsJson = this.packageJsonService.read();
-    if (existsJson) {
-      this.packageJsonService.write(existsJson);
+    if (isInfrastructureMode()) {
+      if (!this.packageJsonService) {
+        this.logger.warn(`packageJsonService not set, updating not work`);
+        return;
+      }
+      const existsJson = this.packageJsonService.read();
+      if (existsJson) {
+        this.packageJsonService.write(existsJson);
+      }
     }
   }
 
   private printDotenvKeys() {
-    if (!this.printDotenv || !this.projectUtilsConfiguration.allApplicationEnvironments) {
+    if (!this.printDotenv || !this.projectUtilsEnvironments.printAllApplicationEnvs) {
       return;
     }
     this.printDotenv = false;
@@ -72,7 +76,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
                       [f.value]: {
                         model: m?.[contextName]?.environments?.modelOptions.name,
                         ...m?.[contextName]?.staticEnvironments?.modelPropertyOptions.find(
-                          (o) => o.name === f.name || o.originalName === key
+                          (o) => (o.name === f.name || o.originalName === key) && o.hideValueFromOutputs
                         ),
                       },
                     }))
@@ -91,7 +95,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
                       [f.value]: {
                         model: m?.[contextName]?.environments?.modelOptions.name,
                         ...m?.[contextName]?.environments?.modelPropertyOptions.find(
-                          (o) => o.name === f.name || o.originalName === key
+                          (o) => (o.name === f.name || o.originalName === key) && o.hideValueFromOutputs
                         ),
                       },
                     }))
@@ -112,7 +116,9 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
                           .map((f: EnvModelInfoValidationsPropertyNameFormatters) => ({
                             [f.value]: {
                               model: vItem.modelOptions.name,
-                              ...vItem?.modelPropertyOptions.find((o) => o.name === key || o.originalName === key),
+                              ...vItem?.modelPropertyOptions.find(
+                                (o) => (o.name === key || o.originalName === key) && o.hideValueFromOutputs
+                              ),
                             },
                           }))
                           .flat()
@@ -143,7 +149,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
   }
 
   private async updateEnvFile() {
-    if (!this.dotEnvService && this.projectUtilsConfiguration.updateEnvFile) {
+    if (!this.dotEnvService && this.projectUtilsEnvironments.updateEnvFile) {
       this.logger.warn(`dotEnvService not set, updating not work`);
       return;
     }
@@ -158,7 +164,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
       );
       return;
     }
-    if (this.projectUtilsConfiguration.updateGlobalConfigurationAndEnvironmentsOptions) {
+    if (this.projectUtilsEnvironments.updateGlobalConfigAndEnvsOptions) {
       if (!this.wrapApplicationOptionsService.globalConfigurationOptions) {
         this.wrapApplicationOptionsService.globalConfigurationOptions = {};
       }
@@ -208,7 +214,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
       );
       return;
     }
-    if (this.projectUtilsConfiguration.updateProjectOptions) {
+    if (this.projectUtilsEnvironments.updateProjectOptions) {
       const packageJson = this.packageJsonService.read();
       const applicationPackageJson = this.applicationPackageJsonService.read();
       if (!this.wrapApplicationOptionsService.project) {

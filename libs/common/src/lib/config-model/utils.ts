@@ -88,13 +88,13 @@ export async function configTransform<
 
   if (validateErrors.length > 0) {
     if (debug && logger?.debug) {
-      logger.debug(info);
+      logger.debug({ ...info, modelPropertyOptions: info.modelPropertyOptions.filter((o) => !o.hideValueFromOutputs) });
     }
     throw new ConfigModelValidationErrors(validateErrors, info);
   }
 
   if (process.env['DEBUG'] && logger?.debug) {
-    logger.debug(info);
+    logger.debug({ ...info, modelPropertyOptions: info.modelPropertyOptions.filter((o) => !o.hideValueFromOutputs) });
   }
 
   for (const configPropertyMetadata of modelPropertyOptions) {

@@ -22,6 +22,7 @@ export * from './lib/modules/system/default-nest-application/default-nest-applic
 export * from './lib/modules/system/project-utils/project-utils.configuration';
 export * from './lib/modules/system/project-utils/project-utils.constants';
 export * from './lib/modules/system/project-utils/project-utils.decorators';
+export * from './lib/modules/system/project-utils/project-utils.environments';
 export * from './lib/modules/system/project-utils/project-utils.module';
 export * from './lib/modules/system/project-utils/project-utils.types';
 export * from './lib/modules/system/project-utils/services/application-package-json.service';

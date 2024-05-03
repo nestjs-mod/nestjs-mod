@@ -67,12 +67,14 @@ describe('Project Utils', () => {
       modules: {
         system: [
           ProjectUtils.forRoot({
+            staticEnvironments: {
+              updateEnvFile: true,
+              // todo: add tests
+              saveFilesWithCheckSum: true,
+            },
             staticConfiguration: {
               applicationPackageJsonFile: `${__filename}-package.json`,
               envFile: `${__filename}-2-test.env`,
-              updateEnvFile: true,
-              // todo: add tests
-              debugFilesCheckSumToEnvironments: true,
               // todo: add tests
               filesCheckSumToEnvironments: {
                 VERSION: {
@@ -232,7 +234,15 @@ describe('Project Utils', () => {
     const getEnv = app.get(GetEnv);
 
     expect(getEnv.getEnv()).toMatchObject({ TEST_APP_PORT: '2000', TEST_APP_HOSTNAME: 'host' });
-    expect(getEnv.getKeys()).toEqual(['TEST_APP_PORT', 'TEST_APP_HOSTNAME']);
+    expect(getEnv.getKeys()).toEqual([
+      'TEST_APP_UPDATE_ENV_FILE',
+      'TEST_APP_UPDATE_PROJECT_OPTIONS',
+      'TEST_APP_UPDATE_GLOBAL_CONFIG_AND_ENVS_OPTIONS',
+      'TEST_APP_PRINT_ALL_APPLICATION_ENVS',
+      'TEST_APP_SAVE_FILES_WITH_CHECK_SUM',
+      'TEST_APP_PORT',
+      'TEST_APP_HOSTNAME',
+    ]);
   });
 
   it('should return data from package.json-file', async () => {

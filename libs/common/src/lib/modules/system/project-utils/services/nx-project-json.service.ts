@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
+import { isInfrastructureMode } from '../../../../utils/is-infrastructure';
 import { ProjectUtilsConfiguration } from '../project-utils.configuration';
 import { GENERATE_TARGET_NAME, PROJECT_JSON_FILE } from '../project-utils.constants';
 import { JSONSchemaForNxProjects } from '../project-utils.types';
@@ -124,14 +125,16 @@ export class NxProjectJsonService {
   }
 
   write(data: JSONSchemaForNxProjects) {
-    const nxProjectJsonFile = this.getNxProjectJsonFilePath();
-    if (!nxProjectJsonFile) {
-      return;
+    if (isInfrastructureMode()) {
+      const nxProjectJsonFile = this.getNxProjectJsonFilePath();
+      if (!nxProjectJsonFile) {
+        return;
+      }
+      const fileDir = dirname(nxProjectJsonFile);
+      if (!existsSync(fileDir)) {
+        mkdirSync(fileDir, { recursive: true });
+      }
+      this.writeFile(nxProjectJsonFile, data);
     }
-    const fileDir = dirname(nxProjectJsonFile);
-    if (!existsSync(fileDir)) {
-      mkdirSync(fileDir, { recursive: true });
-    }
-    this.writeFile(nxProjectJsonFile, data);
   }
 }

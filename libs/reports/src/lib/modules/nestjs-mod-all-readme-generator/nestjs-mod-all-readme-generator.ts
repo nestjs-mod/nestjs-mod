@@ -8,6 +8,7 @@ import {
   NestModuleCategory,
   bootstrapNestApplicationWithOptions,
   createNestModule,
+  isInfrastructureMode,
 } from '@nestjs-mod/common';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { constantCase, kebabCase } from 'case-anything';
@@ -38,6 +39,7 @@ class NestjsModAllReadmeGeneratorConfiguration {
 
   @ConfigModelProperty({
     description: 'NodeJS modules with NestJS-mod modules',
+    hideValueFromOutputs: true
   })
   @IsNotEmpty()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -85,93 +87,94 @@ export class NestjsModAllReadmeGeneratorService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    const utilsListInfo = await this.getUtilsListInfo();
-    const moduleListInfo = await this.getModuleListInfo();
-    const packageJsonInfo = this.getPackageJsonInfo();
+    if (isInfrastructureMode()) {
+      const utilsListInfo = await this.getUtilsListInfo();
+      const moduleListInfo = await this.getModuleListInfo();
+      const packageJsonInfo = this.getPackageJsonInfo();
 
-    let deps = [
-      ...Object.entries(packageJsonInfo?.dependenciesInfo || {})
+      let deps = [
+        ...Object.entries(packageJsonInfo?.dependenciesInfo || {})
+          .filter(([, info]) => info.docs)
+          .map(([name]) => name),
+      ].filter(Boolean);
+      const devDeps = Object.entries(packageJsonInfo?.devDependenciesInfo || {})
         .filter(([, info]) => info.docs)
-        .map(([name]) => name),
-    ].filter(Boolean);
-    const devDeps = Object.entries(packageJsonInfo?.devDependenciesInfo || {})
-      .filter(([, info]) => info.docs)
-      .map(([name]) => name)
-      .filter(Boolean);
+        .map(([name]) => name)
+        .filter(Boolean);
 
-    if (packageJsonInfo && !deps.includes(packageJsonInfo?.name) && !devDeps.includes(packageJsonInfo?.name)) {
-      deps = [...deps, packageJsonInfo?.name];
-    }
-    const utilitiesHeader =
-      utilsListInfo.length > 0
-        ? `
+      if (packageJsonInfo && !deps.includes(packageJsonInfo?.name) && !devDeps.includes(packageJsonInfo?.name)) {
+        deps = [...deps, packageJsonInfo?.name];
+      }
+      const utilitiesHeader =
+        utilsListInfo.length > 0
+          ? `
 ## Utilities
 
 | Link | Description |
 | ---- | ----------- |
 ${utilsListInfo.map((u) => `| ${u.link} | ${u.description?.split('\n')[0]} |`).join('\n')}
 `
-        : '';
+          : '';
 
-    const utilitiesBody =
-      utilsListInfo.length > 0
-        ? `\n## Utilities descriptions\n\n${utilsListInfo
-            .map((u) => `${u.body}\n[Back to Top](#utilities)`)
-            .join('\n\n---\n')}`
-        : '';
+      const utilitiesBody =
+        utilsListInfo.length > 0
+          ? `\n## Utilities descriptions\n\n${utilsListInfo
+              .map((u) => `${u.body}\n[Back to Top](#utilities)`)
+              .join('\n\n---\n')}`
+          : '';
 
-    const modulesHeader =
-      moduleListInfo.length > 0
-        ? `
+      const modulesHeader =
+        moduleListInfo.length > 0
+          ? `
 ## Modules
 
 | Link | Category | Description |
 | ---- | -------- | ----------- |
 ${moduleListInfo.map((m) => `| ${m.link} | ${m.category} | ${m.description?.split('\n')[0]} |`).join('\n')}
 `
-        : '';
+          : '';
 
-    const modulesBody =
-      moduleListInfo.length > 0
-        ? `\n## Modules descriptions\n\n${moduleListInfo
-            .map((m) => `${m.body}\n[Back to Top](#modules)`)
-            .join('\n\n---\n')}`
-        : '';
+      const modulesBody =
+        moduleListInfo.length > 0
+          ? `\n## Modules descriptions\n\n${moduleListInfo
+              .map((m) => `${m.body}\n[Back to Top](#modules)`)
+              .join('\n\n---\n')}`
+          : '';
 
-    if (!this.nestjsModAllReadmeGeneratorConfig.markdownFile) {
-      return;
-    }
-
-    if (!packageJsonInfo) {
-      const readmeContent = [
-        this.nestjsModAllReadmeGeneratorConfig.markdownHeader,
-        utilitiesHeader,
-        modulesHeader,
-        utilitiesBody,
-        modulesBody,
-        this.nestjsModAllReadmeGeneratorConfig.markdownFooter,
-      ]
-        .filter(Boolean)
-        .join('\n');
       if (!this.nestjsModAllReadmeGeneratorConfig.markdownFile) {
         return;
       }
-      const fileDir = dirname(this.nestjsModAllReadmeGeneratorConfig.markdownFile);
-      if (!existsSync(fileDir)) {
-        mkdirSync(fileDir, { recursive: true });
-      }
-      writeFileSync(this.nestjsModAllReadmeGeneratorConfig.markdownFile, readmeContent);
-      return;
-    }
 
-    const readmeContent = `
+      if (!packageJsonInfo) {
+        const readmeContent = [
+          this.nestjsModAllReadmeGeneratorConfig.markdownHeader,
+          utilitiesHeader,
+          modulesHeader,
+          utilitiesBody,
+          modulesBody,
+          this.nestjsModAllReadmeGeneratorConfig.markdownFooter,
+        ]
+          .filter(Boolean)
+          .join('\n');
+        if (!this.nestjsModAllReadmeGeneratorConfig.markdownFile) {
+          return;
+        }
+        const fileDir = dirname(this.nestjsModAllReadmeGeneratorConfig.markdownFile);
+        if (!existsSync(fileDir)) {
+          mkdirSync(fileDir, { recursive: true });
+        }
+        writeFileSync(this.nestjsModAllReadmeGeneratorConfig.markdownFile, readmeContent);
+        return;
+      }
+
+      const readmeContent = `
 # ${packageJsonInfo.name}
 
 ${packageJsonInfo.description ? packageJsonInfo.description : ''}
 
 [![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] ${
-      this.nestjsModAllReadmeGeneratorConfig.telegramGroup ? `[![Telegram bot][telegram-image]][telegram-url]` : ''
-    }
+        this.nestjsModAllReadmeGeneratorConfig.telegramGroup ? `[![Telegram bot][telegram-image]][telegram-url]` : ''
+      }
 
 ## Installation
 
@@ -214,14 +217,15 @@ ${
 [downloads-image]: https://badgen.net/npm/dm/${packageJsonInfo.name}
 [downloads-url]: https://npmjs.org/package/${packageJsonInfo.name}
 `;
-    if (!this.nestjsModAllReadmeGeneratorConfig.markdownFile) {
-      return;
+      if (!this.nestjsModAllReadmeGeneratorConfig.markdownFile) {
+        return;
+      }
+      const fileDir = dirname(this.nestjsModAllReadmeGeneratorConfig.markdownFile);
+      if (!existsSync(fileDir)) {
+        mkdirSync(fileDir, { recursive: true });
+      }
+      writeFileSync(this.nestjsModAllReadmeGeneratorConfig.markdownFile, readmeContent);
     }
-    const fileDir = dirname(this.nestjsModAllReadmeGeneratorConfig.markdownFile);
-    if (!existsSync(fileDir)) {
-      mkdirSync(fileDir, { recursive: true });
-    }
-    writeFileSync(this.nestjsModAllReadmeGeneratorConfig.markdownFile, readmeContent);
   }
 
   private getPackageJsonInfo() {

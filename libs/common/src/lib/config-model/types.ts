@@ -21,6 +21,10 @@ export type ConfigModelPropertyOptions = {
   originalName: string;
   default?: any;
   transform?: ConfigModelPropertyValueTransformer;
+  /**
+   * When we pass a large object in an option, during debugging it clogs the output; to prevent this from happening, you can exclude this object from the output
+   */
+  hideValueFromOutputs?: boolean;
 };
 
 export interface ConfigModelPropertyValueTransformer {
