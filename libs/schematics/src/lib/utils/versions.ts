@@ -5,13 +5,13 @@ export const reflectMetadataVersion = '^0.1.13';
 export const tsLibVersion = '^2.3.0';
 
 export const nestJsModDeps = {
-  '@nestjs-mod/common': '2.12.10',
-  '@nestjs-mod/reports': '2.12.10',
+  '@nestjs-mod/common': '2.13.0',
+  '@nestjs-mod/reports': '2.13.0',
   '@nestjs-mod/terminus': '1.12.0',
   '@nestjs-mod/pino': '1.13.0',
   '@nestjs-mod/pm2': '1.11.0'
 };
 export const nestJsModDevDeps = {
-  '@nestjs-mod/testing': '2.12.10',
-  '@nestjs-mod/schematics': '2.7.16'
+  '@nestjs-mod/testing': '2.13.0',
+  '@nestjs-mod/schematics': '2.8.0'
 };
