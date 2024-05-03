@@ -1,3 +1,11 @@
+## [2.13.1](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.13.0...reports-v2.13.1) (2024-05-03)
+
+
+### Bug Fixes
+
+* always show debug info if we catch validations errors in env and config models, and show only invalid properties [skip integrations, skip contrib] ([06a263c](https://github.com/nestjs-mod/nestjs-mod/commit/06a263cf524a38e27a00b6c3ad6b7842ace80480))
+* hide all ProjectUtilsEnvironments keys from env file generator logics ([7f832c3](https://github.com/nestjs-mod/nestjs-mod/commit/7f832c38158e171cea44626055d4b2d4bc859881))
+
 # [2.13.0](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.12.10...reports-v2.13.0) (2024-05-03)
 
 
