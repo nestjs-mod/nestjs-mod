@@ -152,14 +152,33 @@ export async function envTransform<
   const logger = rootOptions?.logger || modelOptions?.logger;
 
   if (validateErrors.length > 0) {
-    if (debug && logger?.debug) {
-      logger.debug({ ...info, modelPropertyOptions: info.modelPropertyOptions.filter((o) => !o.hideValueFromOutputs) });
+    if (logger?.debug) {
+      logger.debug({
+        ...info,
+        validations: Object.fromEntries(
+          Object.entries(info.validations).filter(([key, value]) => {
+            return (
+              Object.keys(value.constraints || {}).length &&
+              !info.modelPropertyOptions.some((o) => o.hideValueFromOutputs && o.originalName === key)
+            );
+          })
+        ),
+        modelPropertyOptions: info.modelPropertyOptions.filter((o) => !o.hideValueFromOutputs),
+      });
     }
     throw new EnvModelValidationErrors(validateErrors, info);
   }
 
-  if (process.env['DEBUG'] && logger?.debug) {
-    logger.debug({ ...info, modelPropertyOptions: info.modelPropertyOptions.filter((o) => !o.hideValueFromOutputs) });
+  if (debug && logger?.debug) {
+    logger.debug({
+      ...info,
+      validations: Object.fromEntries(
+        Object.entries(info.validations).filter(([key]) => {
+          return !info.modelPropertyOptions.some((o) => o.hideValueFromOutputs && o.originalName === key);
+        })
+      ),
+      modelPropertyOptions: info.modelPropertyOptions.filter((o) => !o.hideValueFromOutputs),
+    });
   }
 
   for (const configPropertyMetadata of modelPropertyOptions) {
