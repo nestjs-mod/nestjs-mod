@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.5.1...fastify-v1.5.2) (2024-05-03)
+
+
+### Bug Fixes
+
+* change log type on validation errors from debug to error, disable set debug=true when we use ProjectUtilsPatcherService [skip integrations, skip contrib] ([fbf901a](https://github.com/nestjs-mod/nestjs-mod/commit/fbf901a869fcc60bc90ea254a8075a116dfe7034))
+
 ## [1.5.1](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.5.0...fastify-v1.5.1) (2024-05-03)
 
 
