@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.4.2...microservices-v1.4.3) (2024-05-03)
+
+
+### Bug Fixes
+
+* exclude correct properties from validation errors [skip integrations, skip contrib] ([57ecb85](https://github.com/nestjs-mod/nestjs-mod/commit/57ecb8598984f6ef6d4e65251612fbf206b103d1))
+
 ## [1.4.2](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.4.1...microservices-v1.4.2) (2024-05-03)
 
 
