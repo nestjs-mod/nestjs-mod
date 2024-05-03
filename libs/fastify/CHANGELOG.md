@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.10...fastify-v1.5.0) (2024-05-03)
+
+
+### Features
+
+* disable write any files from nestjs-mod libs if we not in infrastructure mode, add options to env and config models - hideValueFromOutputs, add ProjectUtilsEnvironments and move in some options from ProjectUtilsConfiguration [skip contrib] ([c1ff732](https://github.com/nestjs-mod/nestjs-mod/commit/c1ff7323f47b68e1bd5dd4e48ace8af91b9cd052))
+
 ## [1.4.10](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.9...fastify-v1.4.10) (2024-05-03)
 
 
