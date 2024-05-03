@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.3.10...microservices-v1.4.0) (2024-05-03)
+
+
+### Features
+
+* disable write any files from nestjs-mod libs if we not in infrastructure mode, add options to env and config models - hideValueFromOutputs, add ProjectUtilsEnvironments and move in some options from ProjectUtilsConfiguration [skip contrib] ([c1ff732](https://github.com/nestjs-mod/nestjs-mod/commit/c1ff7323f47b68e1bd5dd4e48ace8af91b9cd052))
+
 ## [1.3.10](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.3.9...microservices-v1.3.10) (2024-05-03)
 
 
