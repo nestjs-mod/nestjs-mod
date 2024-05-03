@@ -1,3 +1,10 @@
+## [1.4.10](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.9...fastify-v1.4.10) (2024-05-03)
+
+
+### Bug Fixes
+
+* full exclude infrastructure section if we run application without NESTJS_MODE=infrastructure ([298f03a](https://github.com/nestjs-mod/nestjs-mod/commit/298f03ae73601b2af4a44c2050df799652472e87))
+
 ## [1.4.9](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.4.8...fastify-v1.4.9) (2024-04-09)
 
 
