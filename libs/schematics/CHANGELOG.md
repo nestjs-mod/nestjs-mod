@@ -1,3 +1,10 @@
+## [2.8.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.8.1...schematics-v2.8.2) (2024-05-03)
+
+
+### Bug Fixes
+
+* update libs @nestjs-mod/common@2.13.2 versions [skip integrations, skip contrib] ([887166b](https://github.com/nestjs-mod/nestjs-mod/commit/887166befaa30f3bb51c17a19d3318a981b85288))
+
 ## [2.8.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.8.0...schematics-v2.8.1) (2024-05-03)
 
 
