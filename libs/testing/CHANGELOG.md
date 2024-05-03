@@ -1,3 +1,10 @@
+## [2.13.3](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.13.2...testing-v2.13.3) (2024-05-03)
+
+
+### Bug Fixes
+
+* exclude correct properties from validation errors [skip integrations, skip contrib] ([57ecb85](https://github.com/nestjs-mod/nestjs-mod/commit/57ecb8598984f6ef6d4e65251612fbf206b103d1))
+
 ## [2.13.2](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.13.1...testing-v2.13.2) (2024-05-03)
 
 
