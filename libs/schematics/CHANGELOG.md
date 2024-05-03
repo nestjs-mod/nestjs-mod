@@ -1,3 +1,10 @@
+## [2.7.16](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.7.15...schematics-v2.7.16) (2024-05-03)
+
+
+### Bug Fixes
+
+* full exclude infrastructure section if we run application without NESTJS_MODE=infrastructure ([298f03a](https://github.com/nestjs-mod/nestjs-mod/commit/298f03ae73601b2af4a44c2050df799652472e87))
+
 ## [2.7.15](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.7.14...schematics-v2.7.15) (2024-04-09)
 
 
