@@ -38,12 +38,12 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
   }
 
   private updatePackage() {
+    if (!this.packageJsonService) {
+      this.logger.warn(`packageJsonService not set, updating not work`);
+      return;
+    }
+    const existsJson = this.packageJsonService.read();
     if (isInfrastructureMode()) {
-      if (!this.packageJsonService) {
-        this.logger.warn(`packageJsonService not set, updating not work`);
-        return;
-      }
-      const existsJson = this.packageJsonService.read();
       if (existsJson) {
         this.packageJsonService.write(existsJson);
       }
@@ -149,12 +149,14 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
   }
 
   private async updateEnvFile() {
-    if (!this.dotEnvService && this.projectUtilsEnvironments.updateEnvFile) {
+    if (!this.dotEnvService) {
       this.logger.warn(`dotEnvService not set, updating not work`);
       return;
     }
     const existsEnvJson = this.dotEnvService.read() || {};
-    await this.dotEnvService.write(existsEnvJson);
+    if (this.projectUtilsEnvironments.updateEnvFile) {
+      await this.dotEnvService.write(existsEnvJson);
+    }
   }
 
   private updateGlobalConfigurationAndEnvironmentsOptions() {

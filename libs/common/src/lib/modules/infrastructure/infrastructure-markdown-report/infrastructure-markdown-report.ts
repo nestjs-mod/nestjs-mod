@@ -564,8 +564,8 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
     ) {}
 
     onApplicationBootstrap() {
+      this.infrastructureMarkdownReportStorage.report = this.getReport();
       if (isInfrastructureMode()) {
-        this.infrastructureMarkdownReportStorage.report = this.getReport();
         if (this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile) {
           const fileDir = dirname(this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile);
           if (!existsSync(fileDir)) {
