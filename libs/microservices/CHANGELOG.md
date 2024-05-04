@@ -1,3 +1,10 @@
+## [1.4.4](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.4.3...microservices-v1.4.4) (2024-05-04)
+
+
+### Bug Fixes
+
+* remove ProjectUtilsEnvironments ([f873c48](https://github.com/nestjs-mod/nestjs-mod/commit/f873c4851dbb5d1a9d8248d116438142a5d1eafc))
+
 ## [1.4.3](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.4.2...microservices-v1.4.3) (2024-05-03)
 
 
