@@ -22,7 +22,7 @@ bootstrapNestApplication({
   modules: {
     system: [
       ProjectUtils.forRoot({
-        staticEnvironments: { updateProjectOptions: false },
+        staticConfiguration: { updateProjectOptions: false },
       }),
       DefaultNestApplicationInitializer.forRoot(),
       DefaultNestApplicationListener.forRoot({

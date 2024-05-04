@@ -8,7 +8,6 @@ import { ApplicationPackageJsonService } from './application-package-json.servic
 import { DotEnvService } from './dot-env.service';
 import { PackageJsonService } from './package-json.service';
 import { WrapApplicationOptionsService } from './wrap-application-options.service';
-import { ProjectUtilsEnvironments } from '../project-utils.environments';
 
 @Injectable()
 export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
@@ -17,7 +16,6 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
 
   constructor(
     private readonly projectUtilsConfiguration: ProjectUtilsConfiguration,
-    private readonly projectUtilsEnvironments: ProjectUtilsEnvironments,
     private readonly applicationPackageJsonService: ApplicationPackageJsonService,
     private readonly wrapApplicationOptionsService: WrapApplicationOptionsService,
     private readonly dotEnvService: DotEnvService,
@@ -51,7 +49,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
   }
 
   private printDotenvKeys() {
-    if (!this.printDotenv || !this.projectUtilsEnvironments.printAllApplicationEnvs) {
+    if (!this.printDotenv || !this.projectUtilsConfiguration.printAllApplicationEnvs) {
       return;
     }
     this.printDotenv = false;
@@ -76,7 +74,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
                       [f.value]: {
                         model: m?.[contextName]?.environments?.modelOptions.name,
                         ...m?.[contextName]?.staticEnvironments?.modelPropertyOptions.find(
-                          (o) => (o.name === f.name || o.originalName === key) && o.hideValueFromOutputs
+                          (o) => (o.name === f.name || o.originalName === key) && !o.hideValueFromOutputs
                         ),
                       },
                     }))
@@ -117,7 +115,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
                             [f.value]: {
                               model: vItem.modelOptions.name,
                               ...vItem?.modelPropertyOptions.find(
-                                (o) => (o.name === key || o.originalName === key) && o.hideValueFromOutputs
+                                (o) => (o.name === key || o.originalName === key) && !o.hideValueFromOutputs
                               ),
                             },
                           }))
@@ -134,9 +132,10 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
       ),
     ];
     if (keys.length > 0) {
+      const all = keys.reduce((all, cur) => ({ ...all, ...cur }), {});
       new Logger('All application environments').debug(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        Object.entries(keys.reduce((all: any, cur: any) => ({ ...all, ...cur }), {})).map(
+        Object.entries(all || {}).map(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ([key, value]: [string, any]) =>
             `${key}: ${Object.keys(value || {})
@@ -154,7 +153,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
       return;
     }
     const existsEnvJson = this.dotEnvService.read() || {};
-    if (this.projectUtilsEnvironments.updateEnvFile) {
+    if (this.projectUtilsConfiguration.updateEnvFile) {
       await this.dotEnvService.write(existsEnvJson);
     }
   }
@@ -166,7 +165,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
       );
       return;
     }
-    if (this.projectUtilsEnvironments.updateGlobalConfigAndEnvsOptions) {
+    if (this.projectUtilsConfiguration.updateGlobalConfigAndEnvsOptions) {
       if (!this.wrapApplicationOptionsService.globalConfigurationOptions) {
         this.wrapApplicationOptionsService.globalConfigurationOptions = {};
       }
@@ -206,7 +205,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
       );
       return;
     }
-    if (this.projectUtilsEnvironments.updateProjectOptions) {
+    if (this.projectUtilsConfiguration.updateProjectOptions) {
       const packageJson = this.packageJsonService.read();
       const applicationPackageJson = this.applicationPackageJsonService.read();
       if (!this.wrapApplicationOptionsService.project) {

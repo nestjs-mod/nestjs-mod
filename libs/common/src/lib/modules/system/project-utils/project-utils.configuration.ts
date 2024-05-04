@@ -50,4 +50,35 @@ export class ProjectUtilsConfiguration {
   prepareProcessedFilesCheckSumToEnvironments?: (
     processed: Record<string, { fileList: string[]; sha256: string }>
   ) => Record<string, { fileList: string[]; sha256: string }>;
+
+  // todo: try move to env config later
+  @ConfigModelProperty({
+    description: 'Update env-file',
+    default: true,
+  })
+  updateEnvFile?: boolean;
+
+  @ConfigModelProperty({
+    description: 'Update project properties',
+    default: true,
+  })
+  updateProjectOptions?: boolean;
+
+  @ConfigModelProperty({
+    description: 'Update configuration and environments options',
+    default: true,
+  })
+  updateGlobalConfigAndEnvsOptions?: boolean;
+
+  @ConfigModelProperty({
+    description: 'Print all application environments',
+    default: true,
+  })
+  printAllApplicationEnvs?: boolean;
+
+  @ConfigModelProperty({
+    description: 'Create json file with options and files used for create environments key with checksum',
+    default: true,
+  })
+  saveFilesWithCheckSum?: boolean;
 }
