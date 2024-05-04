@@ -1,3 +1,10 @@
+## [2.13.4](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.13.3...reports-v2.13.4) (2024-05-04)
+
+
+### Bug Fixes
+
+* remove ProjectUtilsEnvironments ([f873c48](https://github.com/nestjs-mod/nestjs-mod/commit/f873c4851dbb5d1a9d8248d116438142a5d1eafc))
+
 ## [2.13.3](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.13.2...reports-v2.13.3) (2024-05-03)
 
 
