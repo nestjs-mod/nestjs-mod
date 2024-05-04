@@ -82,17 +82,6 @@ Utilities for setting global application parameters, such as project name, descr
 #### Shared providers
 `WrapApplicationOptionsService`, `DotEnvService`, `PackageJsonService`, `ApplicationPackageJsonService`, `GitignoreService`, `NxProjectJsonService`, `ProjectUtilsPatcherService`
 
-#### Static environments
-Static variables with primitive types used in the module and can be used at the time of generating module metadata (import, controllers), the values of which can be obtained from various sources, such as: process.env or consul key value.
-
-| Key    | Description | Sources | Constraints | Default | Value |
-| ------ | ----------- | ------- | ----------- | ------- | ----- |
-|`updateEnvFile`|Update env-file|`obj['updateEnvFile']`, `process.env['UPDATE_ENV_FILE']`|**optional**|```true```|```true```|
-|`updateProjectOptions`|Update project properties|`obj['updateProjectOptions']`, `process.env['UPDATE_PROJECT_OPTIONS']`|**optional**|```true```|```true```|
-|`updateGlobalConfigAndEnvsOptions`|Update configuration and environments options|`obj['updateGlobalConfigAndEnvsOptions']`, `process.env['UPDATE_GLOBAL_CONFIG_AND_ENVS_OPTIONS']`|**optional**|```true```|```true```|
-|`printAllApplicationEnvs`|Print all application environments|`obj['printAllApplicationEnvs']`, `process.env['PRINT_ALL_APPLICATION_ENVS']`|**optional**|```true```|```true```|
-|`saveFilesWithCheckSum`|Create json file with options and files used for create environments key with checksum|`obj['saveFilesWithCheckSum']`, `process.env['SAVE_FILES_WITH_CHECK_SUM']`|**optional**|```true```|```true```|
-
 #### Static configuration
 Static variables of primitive and complex types that are used in the module and can be used at the time of generating module metadata (import, controllers); values for them must be passed when connecting the module to the application.
 
