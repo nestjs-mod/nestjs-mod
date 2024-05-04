@@ -1,3 +1,10 @@
+## [1.5.4](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.5.3...fastify-v1.5.4) (2024-05-04)
+
+
+### Bug Fixes
+
+* remove ProjectUtilsEnvironments ([f873c48](https://github.com/nestjs-mod/nestjs-mod/commit/f873c4851dbb5d1a9d8248d116438142a5d1eafc))
+
 ## [1.5.3](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.5.2...fastify-v1.5.3) (2024-05-03)
 
 
