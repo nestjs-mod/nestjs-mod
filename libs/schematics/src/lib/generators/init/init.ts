@@ -22,7 +22,9 @@ export async function initGenerator(tree: Tree, options: InitGeneratorOptions): 
   addNxIgnoreEntry(tree);
   createFilesInit(tree);
 
-  let installPackagesTask: GeneratorCallback = () => {};
+  let installPackagesTask: GeneratorCallback = () => {
+    // null
+  };
   if (!options.skipPackageJson) {
     installPackagesTask = addDependencies(tree);
   }

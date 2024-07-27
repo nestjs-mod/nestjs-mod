@@ -123,7 +123,7 @@ export class DotEnvService {
     return keys;
   }
 
-  readFile(envFile: string, updateProcessEnv: boolean = true): Record<string, string | undefined> | undefined {
+  readFile(envFile: string, updateProcessEnv = true): Record<string, string | undefined> | undefined {
     const virtualEnv = {};
     const loadedEnvJson =
       (config({ path: envFile, processEnv: virtualEnv }).parsed as Record<string, string | undefined>) || {};
@@ -224,8 +224,8 @@ export class DotEnvService {
   }
 
   read(
-    updateProcessEnv: boolean = true,
-    ignoreCheckNeededKeys: boolean = false
+    updateProcessEnv = true,
+    ignoreCheckNeededKeys = false
   ): Record<string, string | undefined> | undefined {
     const envFile = this.getEnvFilePath();
     if (!envFile) {
@@ -253,7 +253,7 @@ export class DotEnvService {
     }
   }
 
-  async write(data: Record<string, string | undefined>, ignoreCheckNeededKeys: boolean = false) {
+  async write(data: Record<string, string | undefined>, ignoreCheckNeededKeys = false) {
     const envFile = this.getEnvFilePath();
     if (!envFile) {
       return;
