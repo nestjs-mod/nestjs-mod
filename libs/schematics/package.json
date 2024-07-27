@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/schematics",
   "description": "The Nx Plugin for NestJS that contains executors and generators for allowing your workspace to create NestJS-mod applications",
-  "version": "2.8.4",
+  "version": "2.9.0",
   "keywords": [
     "nestjs",
     "nestjs-mod",
@@ -41,7 +41,8 @@
     "@nx/devkit": "19.5.3",
     "@nx/node": "19.5.3",
     "case-anything": "^2.1.13",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "@nrwl/devkit": "19.5.3"
   },
   "type": "commonjs",
   "main": "./src/index.js",
