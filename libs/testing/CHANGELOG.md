@@ -1,3 +1,11 @@
+# [2.14.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.13.4...testing-v2.14.0) (2024-07-27)
+
+
+### Features
+
+* npm run nx -- update && npx nx migrate --run-migrations ([f551f8a](https://github.com/nestjs-mod/nestjs-mod/commit/f551f8abe1f8cce299a5ced4d02f77a4ab2a6923))
+* npm run update:lib-versions && npm run manual:prepare ([f73daec](https://github.com/nestjs-mod/nestjs-mod/commit/f73daec02869108296d5c2d6a26defefa31ef9ea))
+
 ## [2.13.4](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.13.3...testing-v2.13.4) (2024-05-04)
 
 
