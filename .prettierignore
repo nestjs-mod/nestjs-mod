@@ -4,3 +4,4 @@
 .nx/cache
 dist
 integrations
+/.nx/workspace-data

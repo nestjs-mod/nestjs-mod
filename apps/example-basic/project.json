@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/example-basic/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
@@ -38,8 +39,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "executor": "@nx/eslint:lint"
     },
     "test": {
       "executor": "@nx/jest:jest",
@@ -51,12 +51,9 @@
     "start": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "node dist/apps/example-basic/main.js"
-        ],
+        "commands": ["node dist/apps/example-basic/main.js"],
         "parallel": false
       }
     }
-  },
-  "tags": []
+  }
 }
