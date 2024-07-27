@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.3.0...nestjs-mod-v1.4.0) (2024-07-27)
+
+
+### Features
+
+* npm run nx -- update && npx nx migrate --run-migrations ([f551f8a](https://github.com/nestjs-mod/nestjs-mod/commit/f551f8abe1f8cce299a5ced4d02f77a4ab2a6923))
+* npm run update:lib-versions && npm run manual:prepare ([f73daec](https://github.com/nestjs-mod/nestjs-mod/commit/f73daec02869108296d5c2d6a26defefa31ef9ea))
+
 # [1.3.0](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.2.0...nestjs-mod-v1.3.0) (2024-02-14)
 
 
