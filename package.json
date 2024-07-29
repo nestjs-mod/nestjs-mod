@@ -169,7 +169,9 @@
     "update:nestjs-mod-example": [
       "Start generating an empty application using the latest versions of the NestJS-mod libraries, published in https://github.com/nestjs-mod/nestjs-mod-example"
     ],
-    "update:lib-versions": [],
+    "update:lib-versions": [
+      "Script for update main libs used in project"
+    ],
     "manual:prepare": [
       "Preparing code, building code, creating infrastructure documentation",
       "and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)"

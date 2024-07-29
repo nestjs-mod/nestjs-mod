@@ -43,5 +43,6 @@
     ],
     "sharedGlobals": []
   },
-  "useInferencePlugins": false
+  "useInferencePlugins": false,
+  "nxCloudAccessToken": "NDAwZWYyZTctNjg4OC00YTEyLThjODQtNmNlMmY2OGVjZWIwfHJlYWQtd3JpdGU="
 }

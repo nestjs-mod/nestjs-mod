@@ -3,7 +3,7 @@ import { addDependenciesToPackageJson } from '@nx/devkit';
 import { nestJsModDeps, nestJsModDevDeps, nestJsSchematicsVersion } from '../../../utils/versions';
 
 export function addDependencies(tree: Tree): GeneratorCallback {
-  const nestJsModSchematicsVersion = '2.9.1';
+  const nestJsModSchematicsVersion = '2.9.2';
   return addDependenciesToPackageJson(
     tree,
     {
@@ -16,6 +16,8 @@ export function addDependencies(tree: Tree): GeneratorCallback {
       'pino-pretty': '^11.2.2',
       pm2: '^5.3.0',
       dotenv: '>=16.3.1',
+      // https://github.com/webpack-contrib/mini-css-extract-plugin/issues/875
+      ajv: '^8.17.1',
     },
     {
       ...nestJsModDevDeps,

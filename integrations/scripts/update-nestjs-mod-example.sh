@@ -17,7 +17,7 @@ rm -rf ./tsconfig.base.json
 cd ../..
 
 cd ./integrations/tmp
-npx --yes create-nx-workspace@17.2.8 --name=project-name --preset=empty --interactive=false --nx-cloud=false
+npx --yes create-nx-workspace@19.5.3 --name=project-name --preset=apps --interactive=false --ci=skip
 rm -rf .git
 cd ../..
 yes | cp -rf ./integrations/tmp/project-name/* ./integrations/nestjs-mod-example/

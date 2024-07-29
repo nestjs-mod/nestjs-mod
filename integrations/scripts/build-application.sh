@@ -15,7 +15,7 @@ rm -rf ./integrations/app
 rm -rf ./integrations/app
 
 cd ./integrations
-npx --yes create-nx-workspace@17.2.8 --name=app --preset=empty --interactive=false --nx-cloud=false
+npx --yes create-nx-workspace@19.5.3 --name=app --preset=apps --interactive=false --ci=skip
 cd ../
 
 yes | cp -R ./integrations/default/package.json ./integrations/app/package.json
@@ -38,7 +38,7 @@ cp -Rf ./dist/libs/testing/* ./integrations/app/tmp/lib/testing
 
 cd ./integrations/app
 git init
-npm install --save-dev @nx/nest@17.2.8
+npm install --save-dev @nx/nest@19.5.3
 ./node_modules/.bin/nx g @nx/nest:application --directory=apps/server --name=server --projectNameAndRootFormat=as-provided --strict=true
 cd ../../
 

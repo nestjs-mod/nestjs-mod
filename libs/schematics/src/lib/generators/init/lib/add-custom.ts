@@ -272,6 +272,7 @@ Thumbs.db
 .clinic
 
 .nx/cache
+.nx/workspace-data
 *.env
 `;
   if (host.exists('.gitignore')) {
@@ -330,6 +331,7 @@ Thumbs.db
 .clinic
 
 .nx/cache
+.nx/workspace-data
 *.env
 `;
   if (host.exists('.nxignore')) {
