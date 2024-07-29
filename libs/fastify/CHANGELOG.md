@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.6.0...fastify-v1.6.1) (2024-07-29)
+
+
+### Bug Fixes
+
+* update all readme files, update schematic for correct create new nx project with version 19.5.3 [skip integrations, skip contrib] ([a5c73e8](https://github.com/nestjs-mod/nestjs-mod/commit/a5c73e83473592cee25cb12d89ed523fb0a6b7ed))
+
 # [1.6.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.5.4...fastify-v1.6.0) (2024-07-27)
 
 
