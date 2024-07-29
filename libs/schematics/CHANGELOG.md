@@ -1,3 +1,10 @@
+## [2.9.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.9.1...schematics-v2.9.2) (2024-07-29)
+
+
+### Bug Fixes
+
+* update all readme files, update schematic for correct create new nx project with version 19.5.3 [skip integrations, skip contrib] ([a5c73e8](https://github.com/nestjs-mod/nestjs-mod/commit/a5c73e83473592cee25cb12d89ed523fb0a6b7ed))
+
 ## [2.9.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.9.0...schematics-v2.9.1) (2024-07-29)
 
 
