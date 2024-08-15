@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.6.1...fastify-v1.6.2) (2024-08-15)
+
+
+### Bug Fixes
+
+* update readmes ([0e02eb3](https://github.com/nestjs-mod/nestjs-mod/commit/0e02eb3235f036566cece2e4960ee2c4458ed545))
+
 ## [1.6.1](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.6.0...fastify-v1.6.1) (2024-07-29)
 
 
