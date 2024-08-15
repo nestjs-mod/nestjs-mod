@@ -7,11 +7,11 @@ export const tsLibVersion = '^2.3.0';
 export const nestJsModDeps = {
   '@nestjs-mod/common': '2.14.2',
   '@nestjs-mod/reports': '2.14.2',
-  '@nestjs-mod/terminus': '1.13.1',
-  '@nestjs-mod/pino': '1.14.1',
-  '@nestjs-mod/pm2': '1.12.1'
+  '@nestjs-mod/terminus': '1.13.2',
+  '@nestjs-mod/pino': '1.14.2',
+  '@nestjs-mod/pm2': '1.12.2'
 };
 export const nestJsModDevDeps = {
   '@nestjs-mod/testing': '2.14.2',
-  '@nestjs-mod/schematics': '2.9.3'
+  '@nestjs-mod/schematics': '2.9.4'
 };
