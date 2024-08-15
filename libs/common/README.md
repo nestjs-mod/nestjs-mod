@@ -2,7 +2,7 @@
 
 A collection of utilities for unifying NestJS applications and modules
 
-[![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] [![Telegram bot][telegram-image]][telegram-url]
+[![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] [![Telegram][telegram-image]][telegram-url] [![Discord][discord-image]][discord-url]
 
 ## Installation
 
@@ -25,8 +25,8 @@ npm i --save @nestjs-mod/common
 | ------------------------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | [InfrastructureMarkdownReportGenerator](#infrastructuremarkdownreportgenerator) | infrastructure | Infrastructure markdown report generator.                                                                                   |
 | [InfrastructureMarkdownReportStorage](#infrastructuremarkdownreportstorage)     | infrastructure | Infrastructure markdown report storage                                                                                      |
-| [DefaultNestApplicationInitializer](#defaultnestapplicationinitializer)         | system         | Default NestJS application initializer.                                                  |
-| [DefaultNestApplicationListener](#defaultnestapplicationlistener)               | system         | Default NestJS application listener.                                                     |
+| [DefaultNestApplicationInitializer](#defaultnestapplicationinitializer)         | system         | Default NestJS application initializer.                                                                                     |
+| [DefaultNestApplicationListener](#defaultnestapplicationlistener)               | system         | Default NestJS application listener.                                                                                        |
 | [ProjectUtils](#projectutils)                                                   | system         | Utilities for setting global application parameters, such as project name, description, and settings validation parameters. |
 
 ## Utilities descriptions
@@ -887,6 +887,7 @@ When launched in the infrastructure documentation generation mode, the module cr
 - https://github.com/nestjs-mod/nestjs-mod/blob/master/apps/example-basic/INFRASTRUCTURE.MD - A simple example of infrastructure documentation.
 - https://github.com/nestjs-mod/nestjs-mod-contrib/blob/master/apps/example-prisma/INFRASTRUCTURE.MD - An extended example of infrastructure documentation with a docker-compose file and a data base.
 - https://dev.to/endykaufman/collection-of-nestjs-mod-utilities-for-unifying-applications-and-modules-on-nestjs-5256 - Article about the project NestJS-mod
+
 * https://habr.com/ru/articles/788916 - Коллекция утилит NestJS-mod для унификации приложений и модулей на NestJS
 
 ## License
@@ -897,5 +898,7 @@ MIT
 [npm-url]: https://npmjs.org/package/@nestjs-mod/common
 [telegram-image]: https://img.shields.io/badge/group-telegram-blue.svg?maxAge=2592000
 [telegram-url]: https://t.me/nestjs_mod
+[discord-image]: https://img.shields.io/badge/discord-online-brightgreen.svg
+[discord-url]: https://discord.gg/meY7UXaG
 [downloads-image]: https://badgen.net/npm/dm/@nestjs-mod/common
 [downloads-url]: https://npmjs.org/package/@nestjs-mod/common

@@ -3,7 +3,7 @@
 
 Modules and utilities for generating reports on infrastructure and features
 
-[![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] [![Telegram bot][telegram-image]][telegram-url]
+[![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] [![Telegram][telegram-image]][telegram-url] [![Discord][discord-image]][discord-url]
 
 ## Installation
 
@@ -41,6 +41,7 @@ bootstrapNestApplication({
         contextName: 'common',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
+          discord:'https://discord.gg/meY7UXaG',
           packageFile: join(libFolder, 'package.json'),
           markdownFile: join(libFolder, 'README.md'),
           folderWithMarkdownFilesToUse: libFolder,
@@ -95,5 +96,7 @@ MIT
 [npm-url]: https://npmjs.org/package/@nestjs-mod/reports
 [telegram-image]: https://img.shields.io/badge/group-telegram-blue.svg?maxAge=2592000
 [telegram-url]: https://t.me/nestjs_mod
+[discord-image]: https://img.shields.io/badge/discord-online-brightgreen.svg
+[discord-url]: https://discord.gg/meY7UXaG
 [downloads-image]: https://badgen.net/npm/dm/@nestjs-mod/reports
 [downloads-url]: https://npmjs.org/package/@nestjs-mod/reports

@@ -105,9 +105,6 @@ bootstrapNestApplication({
 You can generate a report for all modules and their configurations.
 
 ```bash
-# Build all applications and library
-npm run build
-
 # Generate markdown report
 npm run docs:infrastructure
 ```
