@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.1.1...misc-v1.1.2) (2024-08-15)
+
+
+### Bug Fixes
+
+* update readmes ([0e02eb3](https://github.com/nestjs-mod/nestjs-mod/commit/0e02eb3235f036566cece2e4960ee2c4458ed545))
+
 ## [1.1.1](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.1.0...misc-v1.1.1) (2024-07-29)
 
 
