@@ -124,7 +124,7 @@ After which the file `INFRASTRUCTURE.MD` appear in the application folder `apps/
 
 ## Questions
 
-For questions and support please use the official [Telegram group](https://t.me/nestjs_mod). The issue list of this repo is **exclusively** for bug reports and feature requests.
+For questions and support please use the official [Telegram group](https://t.me/nestjs_mod) or [Discord](https://discord.gg/meY7UXaG). The issue list of this repo is **exclusively** for bug reports and feature requests.
 
 ## Stay in touch
 
