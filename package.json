@@ -19,6 +19,11 @@
     "type": "git",
     "url": "git+https://github.com/nestjs-mod/nestjs-mod.git"
   },
+  "fork-ts-checker": {
+    "typescript": {
+      "memoryLimit": 8000
+    }
+  },
   "maintainers": [
     {
       "name": "EndyKaufman",
@@ -39,7 +44,7 @@
     "start:prod:example-fastify": "./node_modules/.bin/nx start example-fastify",
     "start:prod:example-tcp-microservice": "./node_modules/.bin/nx start example-tcp-microservice",
     "_____docs_____": "_____docs_____",
-    "docs:infrastructure": "export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=serve --parallel=1 --watch=false",
+    "docs:infrastructure": "export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=serve --parallel=1 -- --watch=false --inspect=false",
     "_____tests_____": "_____tests_____",
     "test": "./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes",
     "test:example-basic": "./node_modules/.bin/nx test example-basic --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes",
