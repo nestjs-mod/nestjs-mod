@@ -1,3 +1,10 @@
+## [2.9.4](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.9.3...schematics-v2.9.4) (2024-08-15)
+
+
+### Bug Fixes
+
+* update commands for docs:infrastructure to "export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --all -t=serve --parallel=1 -- --watch=false --inspect=false" [skip integrations, skip contrib] ([29fe113](https://github.com/nestjs-mod/nestjs-mod/commit/29fe113e02ba3c07db3d4bd48a95f77fce32bd0d))
+
 ## [2.9.3](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.9.2...schematics-v2.9.3) (2024-08-15)
 
 
