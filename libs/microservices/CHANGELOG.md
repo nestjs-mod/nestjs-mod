@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.5.1...microservices-v1.5.2) (2024-08-15)
+
+
+### Bug Fixes
+
+* update readmes ([0e02eb3](https://github.com/nestjs-mod/nestjs-mod/commit/0e02eb3235f036566cece2e4960ee2c4458ed545))
+
 ## [1.5.1](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.5.0...microservices-v1.5.1) (2024-07-29)
 
 
