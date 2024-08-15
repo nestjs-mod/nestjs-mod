@@ -1,3 +1,12 @@
+## [2.9.3](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.9.2...schematics-v2.9.3) (2024-08-15)
+
+
+### Bug Fixes
+
+* add link to discord in docs, change "start" to "serve --watch=false" docs:infrastructure command for make docs without renuld application ([92fedad](https://github.com/nestjs-mod/nestjs-mod/commit/92fedadcbe52b3cf013c9bd349e8d7e73985376d))
+* update all readme files [skip integrations, skip contrib] ([00d3f42](https://github.com/nestjs-mod/nestjs-mod/commit/00d3f429d22956fc457d176b51b5b79bdd87a703))
+* update readmes ([0e02eb3](https://github.com/nestjs-mod/nestjs-mod/commit/0e02eb3235f036566cece2e4960ee2c4458ed545))
+
 ## [2.9.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.9.1...schematics-v2.9.2) (2024-07-29)
 
 
