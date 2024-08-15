@@ -74,6 +74,7 @@ bootstrapNestApplication({
 |`markdownHeader`|Custom header markdown string|**optional**|-|-|
 |`markdownFooter`|Custom footer markdown string|**optional**|-|-|
 |`telegramGroup`|Telegram group|**optional**|-|-|
+|`discord`|Discord|**optional**|-|-|
 
 [Back to Top](#modules)
 

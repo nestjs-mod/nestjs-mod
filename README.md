@@ -132,4 +132,4 @@ For questions and support please use the official [Telegram group](https://t.me/
 
 ## License
 
-[MIT licensed](LICENSE).
+MIT
