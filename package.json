@@ -39,7 +39,7 @@
     "start:prod:example-fastify": "./node_modules/.bin/nx start example-fastify",
     "start:prod:example-tcp-microservice": "./node_modules/.bin/nx start example-tcp-microservice",
     "_____docs_____": "_____docs_____",
-    "docs:infrastructure": "export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=start --parallel=1",
+    "docs:infrastructure": "export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=serve --parallel=1 --watch=false",
     "_____tests_____": "_____tests_____",
     "test": "./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=test --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes",
     "test:example-basic": "./node_modules/.bin/nx test example-basic --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes",
@@ -65,7 +65,7 @@
     "make-ts-list": "./node_modules/.bin/rucken make-ts-list",
     "update:nestjs-mod-example": "bash ./integrations/scripts/update-nestjs-mod-example.sh",
     "update:lib-versions": "npx -y npm-check-updates @nestjs/* @theunderscorer/* rucken -u && npm i",
-    "manual:prepare": "npm run schematics-version-bump && yes | cp -rf ./README.md ./libs/schematics && yes | cp -rf ./README.md ./libs/schematics/src/lib/generators/init/files && npm run generate && npm run build && npm run docs:infrastructure && npm run test",
+    "manual:prepare": "npm run schematics-version-bump && yes | cp -rf ./README.md ./libs/schematics && yes | cp -rf ./README.md ./libs/schematics/src/lib/generators/init/files && npm run generate && npm run docs:infrastructure && npm run test",
     "tsc": "tsc",
     "rucken": "rucken"
   },

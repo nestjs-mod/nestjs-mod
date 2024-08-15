@@ -78,6 +78,11 @@ class NestjsModAllReadmeGeneratorConfiguration {
     description: 'Telegram group',
   })
   telegramGroup?: string;
+
+  @ConfigModelProperty({
+    description: 'Discord',
+  })
+  discord?: string;
 }
 
 @Injectable()
@@ -175,7 +180,9 @@ ${moduleListInfo.map((m) => `| ${m.link} | ${m.category} | ${m.description?.spli
 ${packageJsonInfo.description ? packageJsonInfo.description : ''}
 
 [![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] ${
-      this.nestjsModAllReadmeGeneratorConfig.telegramGroup ? `[![Telegram bot][telegram-image]][telegram-url]` : ''
+      this.nestjsModAllReadmeGeneratorConfig.telegramGroup ? `[![Telegram][telegram-image]][telegram-url]` : ''
+    } ${
+      this.nestjsModAllReadmeGeneratorConfig.discord ? `[![Discord][discord-image]][discord-url]` : ''
     }
 
 ## Installation
@@ -214,6 +221,16 @@ ${
 ${
   this.nestjsModAllReadmeGeneratorConfig.telegramGroup
     ? `[telegram-url]: ${this.nestjsModAllReadmeGeneratorConfig.telegramGroup}`
+    : ''
+}
+${
+  this.nestjsModAllReadmeGeneratorConfig.discord
+    ? `[discord-image]: https://img.shields.io/badge/discord-online-brightgreen.svg`
+    : ''
+}
+${
+  this.nestjsModAllReadmeGeneratorConfig.discord
+    ? `[discord-url]: ${this.nestjsModAllReadmeGeneratorConfig.discord}`
     : ''
 }
 [downloads-image]: https://badgen.net/npm/dm/${packageJsonInfo.name}

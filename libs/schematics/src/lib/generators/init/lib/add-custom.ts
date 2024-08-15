@@ -80,7 +80,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'docs',
       {
         'docs:infrastructure': {
-          commands: [`export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=start --parallel=1`],
+          commands: [`export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=serve --parallel=1 --watch=false`],
           comments: [
             'Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure',
           ],
@@ -193,7 +193,7 @@ export function addScript(tree: Tree, projectName?: string) {
         },
         // "prepare": "npx -y husky install",
         'manual:prepare': {
-          commands: ['npm run generate', 'npm run build', 'npm run docs:infrastructure', 'npm run test'],
+          commands: ['npm run generate', 'npm run docs:infrastructure', 'npm run test'],
           comments: [
             'Preparing code, building code, creating infrastructure documentation',
             'and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)',
@@ -398,6 +398,7 @@ export function addRuckenFile(host: Tree) {
   "makeTsList": {
     "indexFileName": "index",
     "excludes": [
+      "test-setup.ts",
       "*node_modules*",
       "*public_api.ts*",
       "*.spec*",
