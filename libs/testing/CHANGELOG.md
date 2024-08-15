@@ -1,3 +1,11 @@
+## [2.14.2](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.14.1...testing-v2.14.2) (2024-08-15)
+
+
+### Bug Fixes
+
+* update all readme files [skip integrations, skip contrib] ([00d3f42](https://github.com/nestjs-mod/nestjs-mod/commit/00d3f429d22956fc457d176b51b5b79bdd87a703))
+* update readmes ([0e02eb3](https://github.com/nestjs-mod/nestjs-mod/commit/0e02eb3235f036566cece2e4960ee2c4458ed545))
+
 ## [2.14.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.14.0...testing-v2.14.1) (2024-07-29)
 
 
