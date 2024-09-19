@@ -1,3 +1,10 @@
+## [2.10.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.10.0...schematics-v2.10.1) (2024-09-19)
+
+
+### Bug Fixes
+
+* remove local set options  --skip-nx-cache=true ([efc71f5](https://github.com/nestjs-mod/nestjs-mod/commit/efc71f5dfa1d9330b17f99ae6a926f57b788abe7))
+
 # [2.10.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.9.5...schematics-v2.10.0) (2024-09-19)
 
 
