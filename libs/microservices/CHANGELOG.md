@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.5.2...microservices-v1.6.0) (2024-09-19)
+
+
+### Features
+
+* update to nx@19.5.3 and nestjs@10.4.3 ([4979173](https://github.com/nestjs-mod/nestjs-mod/commit/4979173af1f53a277ae28ee64fb7379446bc0242))
+
 ## [1.5.2](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.5.1...microservices-v1.5.2) (2024-08-15)
 
 
