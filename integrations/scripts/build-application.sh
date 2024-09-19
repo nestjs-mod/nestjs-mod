@@ -2,9 +2,8 @@
 set -e
 export NX_SKIP_NX_CACHE=true
 
-log=$GIT_LOG || $(git show --summary)
+log=$(git show --summary)
 
-echo $log
 if [[ ${log} != *"skip integrations"* ]];
 then
 rm -rf ./dist
