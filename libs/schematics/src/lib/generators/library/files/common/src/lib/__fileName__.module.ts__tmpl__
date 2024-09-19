@@ -4,9 +4,10 @@ import { <%= className %>Controller } from './<%= fileName %>.controller';<% } %
 import { <%= className %>Service } from './<%= fileName %>.service';<% } %>
 import { <%= className %>Configuration } from './<%= fileName %>.configuration';
 import { <%= className %>Environments } from './<%= fileName %>.environments';
+import { <%= constantName %>_MODULE } from './<%= fileName %>.constants';
 
 export const { <%= className %>Module } = createNestModule({
-  	moduleName: '<%= className %>Module',
+  	moduleName: <%= constantName %>_MODULE,
   	moduleCategory: NestModuleCategory.<%- category %>,
   	configurationModel: <%= className %>Configuration,
   	environmentsModel: <%= className %>Environments,

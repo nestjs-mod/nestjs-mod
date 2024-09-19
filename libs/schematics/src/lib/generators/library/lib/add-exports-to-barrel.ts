@@ -29,4 +29,5 @@ export function addExportsToBarrelFile(tree: Tree, options: NormalizedOptions): 
   }
   sourceFile = addGlobal(tree, sourceFile, indexPath, `export * from './lib/${options.fileName}.configuration';`);
   sourceFile = addGlobal(tree, sourceFile, indexPath, `export * from './lib/${options.fileName}.environments';`);
+  sourceFile = addGlobal(tree, sourceFile, indexPath, `export * from './lib/${options.fileName}.constants';`);
 }

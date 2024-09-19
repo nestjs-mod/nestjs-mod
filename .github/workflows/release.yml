@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: npm
-          node-version: 18
+          node-version: 20
       - run: npm ci
       - run: npm run generate
       - run: npm run build
@@ -30,7 +30,7 @@ jobs:
       - run: npm run test
       - run: npm run test:integrations-build
       - run: npm run check-contrib
-      - run: npx nx run-many --target=semantic-release --all --parallel=1
+      - run: npx nx run-many --target=semantic-release --all --parallel=false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

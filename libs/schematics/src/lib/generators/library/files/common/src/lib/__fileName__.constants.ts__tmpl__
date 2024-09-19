@@ -1,0 +1,2 @@
+export const <%= constantName %>_FEATURE = '<%= fileName %>';
+export const <%= constantName %>_MODULE = '<%= className %>Module';
