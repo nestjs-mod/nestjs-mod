@@ -1,3 +1,15 @@
+# [1.5.0](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.4.0...nestjs-mod-v1.5.0) (2024-09-19)
+
+
+### Bug Fixes
+
+* update all readme files, update schematic for correct create new nx project with version 19.5.3 [skip integrations, skip contrib] ([a5c73e8](https://github.com/nestjs-mod/nestjs-mod/commit/a5c73e83473592cee25cb12d89ed523fb0a6b7ed))
+
+
+### Features
+
+* update to nx@19.5.3 and nestjs@10.4.3 ([4979173](https://github.com/nestjs-mod/nestjs-mod/commit/4979173af1f53a277ae28ee64fb7379446bc0242))
+
 # [1.4.0](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.3.0...nestjs-mod-v1.4.0) (2024-07-27)
 
 
