@@ -124,11 +124,15 @@
     "test:integrations-build": [
       "Run an integration test in which we create a new NestJS-mod application using a schematic and check its operation"
     ],
-    "test:integrations-build:local": [],
+    "test:integrations-build:local": [
+      "Run an integration test in which we create a new NestJS-mod application using a schematic and check its operation"
+    ],
     "check-contrib": [
       "Clone the repository https://github.com/nestjs-mod/nestjs-mod-contrib and run the build and tests on versions of the current NestJS repository-mod"
     ],
-    "check-contrib:local": [],
+    "check-contrib:local": [
+      "Clone the repository https://github.com/nestjs-mod/nestjs-mod-contrib and run the build and tests on versions of the current NestJS repository-mod"
+    ],
     "lint": [
       "Checking the typescript code for the entire project"
     ],
