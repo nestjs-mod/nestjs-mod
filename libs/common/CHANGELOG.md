@@ -1,3 +1,10 @@
+# [2.15.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.14.2...common-v2.15.0) (2024-09-19)
+
+
+### Features
+
+* update to nx@19.5.3 and nestjs@10.4.3 ([4979173](https://github.com/nestjs-mod/nestjs-mod/commit/4979173af1f53a277ae28ee64fb7379446bc0242))
+
 ## [2.14.2](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.14.1...common-v2.14.2) (2024-08-15)
 
 
