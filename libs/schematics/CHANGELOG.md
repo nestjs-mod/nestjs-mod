@@ -1,3 +1,10 @@
+# [2.10.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.9.5...schematics-v2.10.0) (2024-09-19)
+
+
+### Features
+
+* update to nx@19.5.3 and nestjs@10.4.3 ([4979173](https://github.com/nestjs-mod/nestjs-mod/commit/4979173af1f53a277ae28ee64fb7379446bc0242))
+
 ## [2.9.5](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.9.4...schematics-v2.9.5) (2024-08-15)
 
 
