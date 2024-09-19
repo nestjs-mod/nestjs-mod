@@ -2,8 +2,6 @@
 set -e
 export NX_SKIP_NX_CACHE=true
 
-./node_modules/.bin/nx reset
-
 log=$GIT_LOG || $(git show --summary)
 
 echo $log
@@ -12,7 +10,7 @@ then
 rm -rf ./dist
 rm -rf ./integrations/app
 
-./node_modules/.bin/nx run-many --target=build --all
+./node_modules/.bin/nx run-many --target=build --all --parallel=false
 rm -rf ./integrations/app
 
 cd ./integrations
@@ -66,7 +64,7 @@ npm install --save-dev --no-cache ../../integrations/app/tmp/lib/common/nestjs-m
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/reports/nestjs-mod-reports-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/testing/nestjs-mod-testing-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
-./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=generate --skip-nx-cache=true && npm run make-ts-list && npm run tsc:lint && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=build --parallel=false --skip-nx-cache=true
+./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=generate && npm run make-ts-list && npm run tsc:lint && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=build --parallel=false
 # original nestjs application not stopped https://github.com/nrwl/nx/issues/27579
 npm run docs:infrastructure > /dev/null 2>&1 &
 sleep 60 && kill -9 $(lsof -t -i:3000) | echo "Killed"

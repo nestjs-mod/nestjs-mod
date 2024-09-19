@@ -58,7 +58,7 @@ export function addScript(tree: Tree, projectName?: string) {
           comments: ['Launching a built NestJS application (you must first build it using the build command)'],
         },
         build: {
-          commands: ['npm run generate', 'npm run tsc:lint', `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=build --parallel=false --skip-nx-cache=true`],
+          commands: ['npm run generate', 'npm run tsc:lint', `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=build --parallel=false`],
           comments: ['Building a NestJS application'],
         },
       },
@@ -133,7 +133,7 @@ export function addScript(tree: Tree, projectName?: string) {
       {
         test: {
           commands: [
-            `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=test --parallel=false --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes`,
+            `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=test --parallel=false --passWithNoTests --output-style=stream-without-prefixes`,
           ],
           comments: ['Running tests across the entire project'],
         },
@@ -146,7 +146,7 @@ export function addScript(tree: Tree, projectName?: string) {
         {
           [`test:${projectName}`]: {
             commands: [
-              `./node_modules/.bin/nx test ${projectName} --parallel=false --skip-nx-cache=true --passWithNoTests --output-style=stream-without-prefixes`,
+              `./node_modules/.bin/nx test ${projectName} --parallel=false --passWithNoTests --output-style=stream-without-prefixes`,
             ],
             comments: [`Running tests for ${projectName}`],
           },
@@ -159,7 +159,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'utils',
       {
         generate: {
-          commands: [`./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=generate --parallel=false --skip-nx-cache=true`, 'npm run make-ts-list', 'npm run lint:fix'],
+          commands: [`./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=generate --parallel=false`, 'npm run make-ts-list', 'npm run lint:fix'],
           comments: [
             'Running the "generate" nx command in applications and libraries which can be customized at your discretion',
             'automatically generating an index.ts file for each library',
