@@ -41,9 +41,10 @@ export class NxProjectJsonService {
     /**
      * A line to check whether to add, by default it searches for each command to add
      */
-    searchCommand?: string
+    searchCommand?: string,
+    customNxProjectJsonFile?: string
   ) {
-    const projectJson = this.read() || {};
+    const projectJson = this.read(customNxProjectJsonFile) || {};
     if (!projectJson?.targets) {
       projectJson.targets = {};
     }
@@ -90,7 +91,7 @@ export class NxProjectJsonService {
     if (!projectJson.targets[targetName].options!['color']) {
       projectJson.targets[targetName].options!['color'] = true;
     }
-    this.write(projectJson);
+    this.write(projectJson, customNxProjectJsonFile);
   }
 
   readFile(nxProjectJsonFile: string): JSONSchemaForNxProjects | undefined {
@@ -116,16 +117,16 @@ export class NxProjectJsonService {
     }
   }
 
-  read(): JSONSchemaForNxProjects | undefined {
-    const nxProjectJsonFile = this.getNxProjectJsonFilePath();
+  read(customNxProjectJsonFile?: string): JSONSchemaForNxProjects | undefined {
+    const nxProjectJsonFile = customNxProjectJsonFile || this.getNxProjectJsonFilePath();
     if (!nxProjectJsonFile) {
       return undefined;
     }
     return this.readFile(nxProjectJsonFile);
   }
 
-  write(data: JSONSchemaForNxProjects) {
-    const nxProjectJsonFile = this.getNxProjectJsonFilePath();
+  write(data: JSONSchemaForNxProjects, customNxProjectJsonFile?: string) {
+    const nxProjectJsonFile = customNxProjectJsonFile || this.getNxProjectJsonFilePath();
     if (!nxProjectJsonFile) {
       return;
     }
