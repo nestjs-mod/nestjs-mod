@@ -1,3 +1,10 @@
+# [2.16.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.15.0...common-v2.16.0) (2024-09-22)
+
+
+### Features
+
+* add support custom nx project file ([f9f6e41](https://github.com/nestjs-mod/nestjs-mod/commit/f9f6e410f43dde56f28c45e3d4d3d9a74934af28))
+
 # [2.15.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.14.2...common-v2.15.0) (2024-09-19)
 
 
