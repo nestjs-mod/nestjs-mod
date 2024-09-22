@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.7.0...fastify-v1.8.0) (2024-09-22)
+
+
+### Features
+
+* add support custom nx project file ([f9f6e41](https://github.com/nestjs-mod/nestjs-mod/commit/f9f6e410f43dde56f28c45e3d4d3d9a74934af28))
+
 # [1.7.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.6.2...fastify-v1.7.0) (2024-09-19)
 
 
