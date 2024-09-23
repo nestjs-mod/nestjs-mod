@@ -1,3 +1,10 @@
+# [2.11.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.10.1...schematics-v2.11.0) (2024-09-23)
+
+
+### Features
+
+* add folder name with path to source of library ([d0eb52c](https://github.com/nestjs-mod/nestjs-mod/commit/d0eb52c6cf194c59f848cff82923fb3b235352f3))
+
 ## [2.10.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.10.0...schematics-v2.10.1) (2024-09-19)
 
 
