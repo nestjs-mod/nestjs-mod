@@ -64,7 +64,7 @@ export class ProcessEnvPropertyValueExtractor implements PropertyValueExtractor 
     const keys = Object.keys(process.env);
 
     let value = process.env[formattedPropertyName];
-    if (value) {
+    if (value !== undefined) {
       for (const key of keys) {
         value = String(value).replace(new RegExp(`%${key}%`, 'ig'), process.env[key] || '');
       }

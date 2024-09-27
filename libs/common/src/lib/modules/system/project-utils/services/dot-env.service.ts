@@ -48,7 +48,7 @@ export class DotEnvService {
                   m?.[contextName]?.staticEnvironments?.validations[key]?.propertyNameFormatters
                     .filter(
                       (f: EnvModelInfoValidationsPropertyNameFormatters) =>
-                        (!f.value ||
+                        (f.value === undefined ||
                           includeHiddenKeys ||
                           (!includeHiddenKeys &&
                             !m?.[contextName]?.staticEnvironments?.modelPropertyOptions.find(
@@ -73,7 +73,7 @@ export class DotEnvService {
                   m?.[contextName]?.environments?.validations[key]?.propertyNameFormatters
                     .filter(
                       (f: EnvModelInfoValidationsPropertyNameFormatters) =>
-                        (!f.value ||
+                        (f.value === undefined ||
                           includeHiddenKeys ||
                           (!includeHiddenKeys &&
                             !m?.[contextName]?.environments?.modelPropertyOptions.find(
@@ -99,7 +99,7 @@ export class DotEnvService {
                           vItem?.validations[key]?.propertyNameFormatters
                             .filter(
                               (f: EnvModelInfoValidationsPropertyNameFormatters) =>
-                                (!f.value ||
+                                (f.value === undefined ||
                                   includeHiddenKeys ||
                                   (!includeHiddenKeys &&
                                     !vItem?.modelPropertyOptions.find(
@@ -223,10 +223,7 @@ export class DotEnvService {
     return { processed };
   }
 
-  read(
-    updateProcessEnv = true,
-    ignoreCheckNeededKeys = false
-  ): Record<string, string | undefined> | undefined {
+  read(updateProcessEnv = true, ignoreCheckNeededKeys = false): Record<string, string | undefined> | undefined {
     const envFile = this.getEnvFilePath();
     if (!envFile) {
       return;

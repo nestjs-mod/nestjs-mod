@@ -19,15 +19,18 @@ export function getFeatureDotEnvPropertyNameFormatter(
       modelOptions: EnvModelOptions;
       propertyOptions: EnvModelPropertyOptions;
     }) {
-      const modelRootOptionsName = (rootOptions ?? modelRootOptions)?.name?.trim().split(' ').join('_');
-      const modelOptionsName = (options ?? modelOptions)?.name?.trim().split(' ').join('_');
+      const modelRootOptionsName = (rootOptions !== undefined ? rootOptions : modelRootOptions)?.name
+        ?.trim()
+        .split(' ')
+        .join('_');
+      const modelOptionsName = (options !== undefined ? options : modelOptions)?.name?.trim().split(' ').join('_');
       const modelFeatureName = featureName?.trim().split(' ').join('_');
 
       const prepareFullname = [
         defaultContextName() !== modelRootOptionsName && modelRootOptionsName ? modelRootOptionsName : null,
         !modelRootOptionsName?.endsWith(modelFeatureName) ? modelFeatureName : '',
         defaultContextName() !== modelOptionsName && modelOptionsName ? modelOptionsName : null,
-        String(propertyOptions.name ?? propertyOptions.originalName),
+        String(propertyOptions.name !== undefined ? propertyOptions.name : propertyOptions.originalName),
       ]
         .filter(Boolean)
         .map((v: string | null) => {

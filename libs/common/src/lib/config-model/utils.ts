@@ -14,10 +14,10 @@ export async function configTransform<
   TData extends Record<string, any> = Record<string, any>,
   TModel extends Type = Type
 >({ model, data, rootOptions }: { model: TModel; data: Partial<TData>; rootOptions?: ConfigModelRootOptions }) {
-  if (!rootOptions) {
+  if (rootOptions === undefined) {
     rootOptions = {};
   }
-  if (!rootOptions.logger) {
+  if (rootOptions.logger === undefined) {
     rootOptions.logger = new ConsoleLogger('configTransform');
   }
   const loadValidator = (validatorPackage?: ValidatorPackage): ValidatorPackage => {
@@ -36,18 +36,19 @@ export async function configTransform<
   const dataWithAllowedFields: any = {};
   for (const propertyOptions of modelPropertyOptions) {
     if (propertyOptions.transform?.transform) {
-      dataWithAllowedFields[propertyOptions.originalName] = data[propertyOptions.originalName]
-        ? propertyOptions.transform.transform({
-            modelRootOptions: rootOptions || {},
-            modelOptions: modelOptions || {},
-            obj: data,
-            options: propertyOptions,
-            value: data[propertyOptions.originalName],
-          })
-        : propertyOptions.default;
+      dataWithAllowedFields[propertyOptions.originalName] =
+        data[propertyOptions.originalName] !== undefined
+          ? propertyOptions.transform.transform({
+              modelRootOptions: rootOptions || {},
+              modelOptions: modelOptions || {},
+              obj: data,
+              options: propertyOptions,
+              value: data[propertyOptions.originalName],
+            })
+          : propertyOptions.default;
     } else {
       dataWithAllowedFields[propertyOptions.originalName] =
-        data[propertyOptions.originalName] ?? propertyOptions.default;
+        data[propertyOptions.originalName] !== undefined ? data[propertyOptions.originalName] : propertyOptions.default;
     }
 
     info.validations[propertyOptions.originalName] = {
@@ -100,7 +101,7 @@ export async function configTransform<
         ...info,
         validations,
         modelPropertyOptions: info.modelPropertyOptions.filter(
-          (o) => !o.hideValueFromOutputs && validations[o.originalName]
+          (o) => o.hideValueFromOutputs !== true && validations[o.originalName]
         ),
       });
     }
@@ -115,7 +116,7 @@ export async function configTransform<
           return !info.modelPropertyOptions.some((o) => o.hideValueFromOutputs && o.originalName === key);
         })
       ),
-      modelPropertyOptions: info.modelPropertyOptions.filter((o) => !o.hideValueFromOutputs),
+      modelPropertyOptions: info.modelPropertyOptions.filter((o) => o.hideValueFromOutputs !== true),
     });
   }
 

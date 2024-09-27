@@ -74,7 +74,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
                       [f.value]: {
                         model: m?.[contextName]?.environments?.modelOptions.name,
                         ...m?.[contextName]?.staticEnvironments?.modelPropertyOptions.find(
-                          (o) => (o.name === f.name || o.originalName === key) && !o.hideValueFromOutputs
+                          (o) => (o.name === f.name || o.originalName === key) && o.hideValueFromOutputs !== true
                         ),
                       },
                     }))
@@ -115,7 +115,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
                             [f.value]: {
                               model: vItem.modelOptions.name,
                               ...vItem?.modelPropertyOptions.find(
-                                (o) => (o.name === key || o.originalName === key) && !o.hideValueFromOutputs
+                                (o) => (o.name === key || o.originalName === key) && o.hideValueFromOutputs !== true
                               ),
                             },
                           }))

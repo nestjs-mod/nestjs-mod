@@ -10,10 +10,10 @@ export async function envTransform<
   TData extends Record<string, any>,
   TModel extends Type = Type
 >({ model, data, rootOptions }: { model: TModel; data: Partial<TData>; rootOptions?: EnvModelRootOptions }) {
-  if (!rootOptions) {
+  if (rootOptions === undefined) {
     rootOptions = {};
   }
-  if (!rootOptions.logger) {
+  if (rootOptions.logger === undefined) {
     rootOptions.logger = new ConsoleLogger('envTransform');
   }
   const loadValidator = (validatorPackage?: ValidatorPackage): ValidatorPackage => {
@@ -76,7 +76,7 @@ export async function envTransform<
         return result;
       });
 
-      if (!info.validations[propertyOptions.originalName]) {
+      if (info.validations[propertyOptions.originalName] === undefined) {
         info.validations[propertyOptions.originalName] = {
           constraints: {},
           value: undefined,
@@ -96,30 +96,39 @@ export async function envTransform<
     }
     // console.dir({ f: info.validations, data }, { depth: 20 });
     if (propertyOptions.transform?.transform) {
+      const extractedValue = info.validations[propertyOptions.originalName].propertyValueExtractors.find(
+        (e) => e.value
+      )?.value;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const value =
-        info.validations[propertyOptions.originalName].propertyValueExtractors.find((e) => e.value)?.value ??
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (data as any)[propertyOptions.originalName];
+        extractedValue !== undefined
+          ? extractedValue
+          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (data as any)[propertyOptions.originalName];
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (data as any)[propertyOptions.originalName] = value
-        ? propertyOptions.transform.transform({
-            modelRootOptions: rootOptions || {},
-            modelOptions: modelOptions || {},
-            obj: data,
-            options: propertyOptions,
-            value,
-          })
-        : propertyOptions.default;
+      (data as any)[propertyOptions.originalName] =
+        value !== undefined
+          ? propertyOptions.transform.transform({
+              modelRootOptions: rootOptions || {},
+              modelOptions: modelOptions || {},
+              obj: data,
+              options: propertyOptions,
+              value,
+            })
+          : propertyOptions.default;
     } else {
+      const extractedValue = info.validations[propertyOptions.originalName].propertyValueExtractors.find(
+        (e) => e.value
+      )?.value;
       const value =
-        info.validations[propertyOptions.originalName].propertyValueExtractors.find((e) => e.value)?.value ??
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (data as any)[propertyOptions.originalName];
+        extractedValue !== undefined
+          ? extractedValue
+          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (data as any)[propertyOptions.originalName];
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (data as any)[propertyOptions.originalName] = value ?? propertyOptions.default;
+      (data as any)[propertyOptions.originalName] = value !== undefined ? value : propertyOptions.default;
     }
     info.validations[propertyOptions.originalName].value = data[propertyOptions.originalName];
   }
@@ -165,7 +174,7 @@ export async function envTransform<
         ...info,
         validations,
         modelPropertyOptions: info.modelPropertyOptions.filter(
-          (o) => !o.hideValueFromOutputs && validations[o.originalName]
+          (o) => o.hideValueFromOutputs !== true && validations[o.originalName]
         ),
       });
     }
@@ -180,7 +189,7 @@ export async function envTransform<
           return !info.modelPropertyOptions.some((o) => o.hideValueFromOutputs && o.originalName === key);
         })
       ),
-      modelPropertyOptions: info.modelPropertyOptions.filter((o) => !o.hideValueFromOutputs),
+      modelPropertyOptions: info.modelPropertyOptions.filter((o) => o.hideValueFromOutputs !== true),
     });
   }
 
