@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.8.0...fastify-v1.8.1) (2024-09-27)
+
+
+### Bug Fixes
+
+* update for correct with false value in env config ([7cfbb42](https://github.com/nestjs-mod/nestjs-mod/commit/7cfbb42563b75af66115416315fc3cfc74afca67))
+
 # [1.8.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.7.0...fastify-v1.8.0) (2024-09-22)
 
 
