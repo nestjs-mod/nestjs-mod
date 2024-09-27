@@ -135,7 +135,16 @@ export async function envTransform<
 
   const classValidator = loadValidator(rootOptions?.validatorPackage || modelOptions?.validatorPackage);
 
-  const optionsInstance = Object.assign(new model(), data);
+  let emptyOptionsInstance: any;
+  let optionsInstance: any;
+  try {
+    emptyOptionsInstance = new model();
+    optionsInstance = Object.assign(new model(), data);
+  } catch (err) {
+    emptyOptionsInstance = {};
+    optionsInstance = {};
+  }
+
   const validateErrors =
     rootOptions?.skipValidation || modelOptions?.skipValidation
       ? []
@@ -148,7 +157,7 @@ export async function envTransform<
   // collect constraints
   const validateErrorsForInfo = (
     await classValidator.validate(
-      new model(),
+      emptyOptionsInstance,
       rootOptions?.validatorOptions || modelOptions?.validatorOptions || ENV_MODEL_CLASS_VALIDATOR_OPTIONS
     )
   ).filter((validateError) => validateError.property);

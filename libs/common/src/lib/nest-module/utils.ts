@@ -185,6 +185,9 @@ export function getNestModuleDecorators({ moduleName }: { moduleName: string }) 
 
 ///////////////////////////
 
+// todo: fast bad hotfix for correct work staticEnvironmentsModel without staticConfigurationModel
+class DummyClass {}
+
 export function createNestModule<
   TStaticConfigurationModel = never,
   TConfigurationModel = never,
@@ -240,6 +243,11 @@ export function createNestModule<
     TModuleName
   >
 ) {
+  // todo: fast bad hotfix for correct work staticEnvironmentsModel without staticConfigurationModel
+  if (nestModuleMetadata.staticEnvironmentsModel && !nestModuleMetadata.staticConfigurationModel) {
+    nestModuleMetadata.staticConfigurationModel = DummyClass as any;
+  }
+
   if (!nestModuleMetadata.logger) {
     nestModuleMetadata.logger = new ConsoleLogger('createNestModule');
   }
@@ -1370,12 +1378,20 @@ export function createNestModule<
                   {
                     provide: getStaticEnvironmentsLoaderToken(contextName),
                     useFactory: async (emptyStaticEnvironments: TStaticEnvironmentsModel) => {
-                      if (staticEnvironments && staticEnvironments?.constructor !== Object) {
-                        Object.setPrototypeOf(emptyStaticEnvironments, staticEnvironments);
-                        Object.assign(emptyStaticEnvironments as any, staticEnvironments);
-                      } else {
-                        Object.assign(emptyStaticEnvironments as any, staticEnvironments);
+                      if (moduleSettings[contextName] === undefined) {
+                        moduleSettings[contextName] = {};
                       }
+                      const obj = await envTransform({
+                        model: nestModuleMetadata.staticEnvironmentsModel!,
+                        rootOptions: getRootEnvironmentsValidationOptions({
+                          nestModuleMetadata,
+                          asyncModuleOptions,
+                          contextName,
+                        }),
+                        data: asyncModuleOptions?.staticEnvironments || {},
+                      });
+                      moduleSettings[contextName].staticEnvironments = obj.info;
+                      Object.assign(emptyStaticEnvironments as any, obj.data);
                     },
                     inject: [nestModuleMetadata.staticEnvironmentsModel],
                   },

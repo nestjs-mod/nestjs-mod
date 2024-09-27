@@ -59,7 +59,15 @@ export async function configTransform<
 
   const classValidator = loadValidator(rootOptions?.validatorPackage || modelOptions?.validatorPackage);
 
-  const optionsInstance = Object.assign(new model(), dataWithAllowedFields);
+  let emptyOptionsInstance: any;
+  let optionsInstance: any;
+  try {
+    emptyOptionsInstance = new model();
+    optionsInstance = Object.assign(new model(), dataWithAllowedFields);
+  } catch (err) {
+    emptyOptionsInstance = {};
+    optionsInstance = {};
+  }
 
   const validateErrors =
     rootOptions?.skipValidation || modelOptions?.skipValidation
@@ -74,7 +82,7 @@ export async function configTransform<
   // collect constraints
   const validateErrorsForInfo = (
     await classValidator.validate(
-      new model(),
+      emptyOptionsInstance,
       rootOptions?.validatorOptions || modelOptions?.validatorOptions || CONFIG_MODEL_CLASS_VALIDATOR_OPTIONS
     )
   ).filter((validateError) => validateError.property);
