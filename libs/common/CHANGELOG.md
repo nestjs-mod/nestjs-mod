@@ -1,3 +1,10 @@
+## [2.16.2](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.16.1...common-v2.16.2) (2024-09-27)
+
+
+### Bug Fixes
+
+* update for correct work staticEnvironmentsModel without staticConfigurationModel ([64c29e9](https://github.com/nestjs-mod/nestjs-mod/commit/64c29e9ca2e0631ac8947a8185fbb84e1f12e04b))
+
 ## [2.16.1](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.16.0...common-v2.16.1) (2024-09-27)
 
 
