@@ -700,6 +700,16 @@ export function createNestModule<
       TExportsWithStaticOptions,
       TNestApplication
     > {
+      if (!asyncModuleOptions) {
+        asyncModuleOptions = {} as unknown as InternalForFeatureAsyncMethodOptions<
+          TConfigurationModel,
+          TStaticConfigurationModel,
+          TEnvironmentsModel,
+          TStaticEnvironmentsModel,
+          TFeatureConfigurationModel,
+          TFeatureEnvironmentsModel
+        >;
+      }
       if (nestModuleMetadata.wrapForFeatureAsync) {
         const { asyncModuleOptions: newAsyncModuleOptions, module: wrapForFeatureAsyncModule } =
           nestModuleMetadata.wrapForFeatureAsync(asyncModuleOptions);
@@ -927,7 +937,7 @@ export function createNestModule<
       moduleOptions?: InternalForFeatureMethodOptions<TFeatureConfigurationModel, TFeatureEnvironmentsModel>
     ): Promise<TDynamicModule> {
       return (this as any)[forFeatureAsyncMethodName]({
-        ...moduleOptions,
+        ...(moduleOptions || {}),
       });
     }
 
@@ -959,7 +969,7 @@ export function createNestModule<
       TNestApplication
     > {
       return (this as any)[forRootAsyncMethodName]({
-        ...moduleOptions,
+        ...(moduleOptions || {}),
       });
     }
 
@@ -990,6 +1000,9 @@ export function createNestModule<
       TExportsWithStaticOptions,
       TNestApplication
     > {
+      if (!asyncModuleOptions) {
+        asyncModuleOptions = {};
+      }
       if (nestModuleMetadata.wrapForRootAsync) {
         const { asyncModuleOptions: newAsyncModuleOptions, module: wrapForRootAsync } =
           nestModuleMetadata.wrapForRootAsync(asyncModuleOptions);
