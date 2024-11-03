@@ -3,7 +3,7 @@ import { addDependenciesToPackageJson } from '@nx/devkit';
 import { nestJsModDeps, nestJsModDevDeps, nestJsSchematicsVersion } from '../../../utils/versions';
 
 export function addDependencies(tree: Tree): GeneratorCallback {
-  const nestJsModSchematicsVersion = '2.11.1';
+  const nestJsModSchematicsVersion = '2.11.2';
   return addDependenciesToPackageJson(
     tree,
     {

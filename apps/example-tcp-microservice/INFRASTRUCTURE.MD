@@ -47,14 +47,15 @@ npm run test:example-tcp-microservice
 |**docs**|
 |`npm run docs:infrastructure`|Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure|
 |**tests**|
+|`npm run test:no-cache`||
 |`npm run test`|Running tests across the entire project|
 |`npm run test:example-basic`|Running tests for example-basic|
 |`npm run test:example-fastify`|Running tests for example-fastify|
 |`npm run test:example-tcp-microservice`|Running tests for example-tcp-microservice|
 |`npm run test:integrations-build`|Run an integration test in which we create a new NestJS-mod application using a schematic and check its operation|
-|`npm run test:integrations-build:local`||
+|`npm run test:integrations-build:local`|Run an integration test in which we create a new NestJS-mod application using a schematic and check its operation|
 |`npm run check-contrib`|Clone the repository https://github.com/nestjs-mod/nestjs-mod-contrib and run the build and tests on versions of the current NestJS repository-mod|
-|`npm run check-contrib:local`||
+|`npm run check-contrib:local`|Clone the repository https://github.com/nestjs-mod/nestjs-mod-contrib and run the build and tests on versions of the current NestJS repository-mod|
 |**lint**|
 |`npm run lint`|Checking the typescript code for the entire project|
 |`npm run lint:fix`|Checking the typescript code throughout the project and trying to fix everything possible|

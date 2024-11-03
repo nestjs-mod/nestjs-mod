@@ -110,6 +110,7 @@
     "docs:infrastructure": [
       "Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure"
     ],
+    "test:no-cache": [],
     "test": [
       "Running tests across the entire project"
     ],
