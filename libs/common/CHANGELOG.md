@@ -1,3 +1,10 @@
+## [2.16.3](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.16.2...common-v2.16.3) (2024-11-03)
+
+
+### Bug Fixes
+
+* add default empty object value to asyncModuleOptions in forXXXAsync ([6378228](https://github.com/nestjs-mod/nestjs-mod/commit/6378228c56ac127ae01d2dae501d64af95a03362))
+
 ## [2.16.2](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.16.1...common-v2.16.2) (2024-09-27)
 
 
