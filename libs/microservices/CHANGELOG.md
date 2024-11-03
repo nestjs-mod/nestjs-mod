@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.7.2...microservices-v1.7.3) (2024-11-03)
+
+
+### Bug Fixes
+
+* add default empty object value to asyncModuleOptions in forXXXAsync ([6378228](https://github.com/nestjs-mod/nestjs-mod/commit/6378228c56ac127ae01d2dae501d64af95a03362))
+
 ## [1.7.2](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.7.1...microservices-v1.7.2) (2024-09-27)
 
 
