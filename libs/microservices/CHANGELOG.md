@@ -1,3 +1,10 @@
+## [1.7.4](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.7.3...microservices-v1.7.4) (2024-12-09)
+
+
+### Bug Fixes
+
+* add support work with WS in getRequestFromExecutionContext ([245344f](https://github.com/nestjs-mod/nestjs-mod/commit/245344fa084062d2ffdd60d7ac82fa62790801e1))
+
 ## [1.7.3](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.7.2...microservices-v1.7.3) (2024-11-03)
 
 
