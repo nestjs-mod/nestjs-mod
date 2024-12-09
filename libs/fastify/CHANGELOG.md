@@ -1,3 +1,10 @@
+## [1.8.4](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.8.3...fastify-v1.8.4) (2024-12-09)
+
+
+### Bug Fixes
+
+* add support work with WS in getRequestFromExecutionContext ([245344f](https://github.com/nestjs-mod/nestjs-mod/commit/245344fa084062d2ffdd60d7ac82fa62790801e1))
+
 ## [1.8.3](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.8.2...fastify-v1.8.3) (2024-11-03)
 
 
