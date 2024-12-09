@@ -1,3 +1,10 @@
+## [2.16.4](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.16.3...testing-v2.16.4) (2024-12-09)
+
+
+### Bug Fixes
+
+* add support work with WS in getRequestFromExecutionContext ([245344f](https://github.com/nestjs-mod/nestjs-mod/commit/245344fa084062d2ffdd60d7ac82fa62790801e1))
+
 ## [2.16.3](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.16.2...testing-v2.16.3) (2024-11-03)
 
 
