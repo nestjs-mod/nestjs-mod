@@ -1,3 +1,10 @@
+# [2.12.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.11.2...schematics-v2.12.0) (2024-12-30)
+
+
+### Features
+
+* update versions of nx libraries to version 20.3.0 and fix all errors after it [skip integrations, skip contrib] ([9011173](https://github.com/nestjs-mod/nestjs-mod/commit/9011173fa6eafecc4ce580956bef6fac4613fa1a))
+
 ## [2.11.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.11.1...schematics-v2.11.2) (2024-11-03)
 
 
