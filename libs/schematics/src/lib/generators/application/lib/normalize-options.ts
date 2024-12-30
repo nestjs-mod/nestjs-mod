@@ -1,26 +1,27 @@
-import { Tree } from '@nx/devkit';
-import { determineProjectNameAndRootOptions } from '@nx/devkit/src/generators/project-name-and-root-utils';
+import { Tree, readNxJson } from '@nx/devkit';
+import {
+  determineProjectNameAndRootOptions,
+  ensureProjectName,
+} from '@nx/devkit/src/generators/project-name-and-root-utils';
 import { Linter } from '@nx/eslint';
 import type { Schema as NodeApplicationGeneratorOptions } from '@nx/node/src/generators/application/schema';
 import type { ApplicationGeneratorOptions, NormalizedOptions } from '../schema';
 
-export async function normalizeOptions(tree: Tree, options: ApplicationGeneratorOptions): Promise<NormalizedOptions> {
-  const {
-    projectName: appProjectName,
-    projectRoot: appProjectRoot,
-    projectNameAndRootFormat,
-  } = await determineProjectNameAndRootOptions(tree, {
+export async function normalizeOptionsApp(tree: Tree, options: ApplicationGeneratorOptions): Promise<NormalizedOptions> {
+  await ensureProjectName(tree, options, 'application');
+  const { projectName: appProjectName, projectRoot: appProjectRoot } = await determineProjectNameAndRootOptions(tree, {
     name: options.name,
     projectType: 'application',
     directory: options.directory,
-    projectNameAndRootFormat: options.projectNameAndRootFormat,
     rootProject: options.rootProject,
-    callingGenerator: '@nestjs-mod/schematics:application',
   });
   options.rootProject = appProjectRoot === '.';
-  options.projectNameAndRootFormat = projectNameAndRootFormat;
+
+  const nxJson = readNxJson(tree);
+  const addPlugin = process.env['NX_ADD_PLUGINS'] !== 'false' && nxJson?.useInferencePlugins !== false;
 
   return {
+    addPlugin,
     ...options,
     strict: options.strict ?? false,
     appProjectName,
@@ -36,7 +37,6 @@ export function toNodeApplicationGeneratorOptions(options: NormalizedOptions): N
     name: options.name,
     directory: options.directory,
     frontendProject: options.frontendProject,
-    projectNameAndRootFormat: options.projectNameAndRootFormat,
     linter: options.linter,
     skipFormat: true,
     skipPackageJson: options.skipPackageJson,
@@ -48,5 +48,6 @@ export function toNodeApplicationGeneratorOptions(options: NormalizedOptions): N
     rootProject: options.rootProject,
     bundler: 'webpack', // Some features require webpack plugins such as TS transformers
     isNest: true,
+    addPlugin: options.addPlugin,
   };
 }

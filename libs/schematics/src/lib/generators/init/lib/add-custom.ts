@@ -1,5 +1,5 @@
-import type { Tree } from '@nrwl/devkit';
-import { updateJson } from '@nrwl/devkit';
+import type { Tree } from '@nx/devkit';
+import { updateJson } from '@nx/devkit';
 import { constantCase } from 'case-anything';
 import { join } from 'path';
 import getPorts from './get-port.utils';
@@ -54,11 +54,11 @@ export function addScript(tree: Tree, projectName?: string) {
       'prod infra',
       {
         start: {
-          commands: [`./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=start`],
+          commands: [`./node_modules/.bin/nx run-many --all -t=start`],
           comments: ['Launching a built NestJS application (you must first build it using the build command)'],
         },
         build: {
-          commands: ['npm run generate', 'npm run tsc:lint', `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=build --parallel=false`],
+          commands: ['npm run generate', 'npm run tsc:lint', `./node_modules/.bin/nx run-many --all -t=build --parallel=false`],
           comments: ['Building a NestJS application'],
         },
       },
@@ -80,7 +80,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'docs',
       {
         'docs:infrastructure': {
-          commands: [`export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=serve --parallel=false --watch=false --inspect=false`],
+          commands: [`export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --all -t=serve --parallel=false --watch=false --inspect=false`],
           comments: [
             'Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure',
           ],
@@ -92,7 +92,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'dev infra',
       {
         'serve:dev': {
-          commands: [`./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=serve`],
+          commands: [`./node_modules/.bin/nx run-many --all -t=serve`],
           comments: ['Running NestJS application source code in watch mode'],
         },
       },
@@ -114,11 +114,11 @@ export function addScript(tree: Tree, projectName?: string) {
       'lint',
       {
         lint: {
-          commands: ['npm run tsc:lint', `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=lint --parallel=false`],
+          commands: ['npm run tsc:lint', `./node_modules/.bin/nx run-many --all -t=lint --parallel=false`],
           comments: ['Checking the typescript code for the entire project'],
         },
         'lint:fix': {
-          commands: ['npm run tsc:lint', `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=lint --fix --parallel=false`],
+          commands: ['npm run tsc:lint', `./node_modules/.bin/nx run-many --all -t=lint --fix --parallel=false`],
           comments: ['Checking the typescript code throughout the project and trying to fix everything possible'],
         },
         'tsc:lint': {
@@ -133,7 +133,7 @@ export function addScript(tree: Tree, projectName?: string) {
       {
         test: {
           commands: [
-            `./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=test --parallel=false --passWithNoTests --output-style=stream-without-prefixes`,
+            `./node_modules/.bin/nx run-many --all -t=test --parallel=false --passWithNoTests --output-style=stream-without-prefixes`,
           ],
           comments: ['Running tests across the entire project'],
         },
@@ -159,7 +159,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'utils',
       {
         generate: {
-          commands: [`./node_modules/.bin/nx run-many --exclude=${basicJson.name} --all -t=generate --parallel=false`, 'npm run make-ts-list', 'npm run lint:fix'],
+          commands: [`./node_modules/.bin/nx run-many --all -t=generate --parallel=false`, 'npm run make-ts-list', 'npm run lint:fix'],
           comments: [
             'Running the "generate" nx command in applications and libraries which can be customized at your discretion',
             'automatically generating an index.ts file for each library',
@@ -187,8 +187,7 @@ export function addScript(tree: Tree, projectName?: string) {
         'make-ts-list': {
           commands: [`./node_modules/.bin/rucken make-ts-list`],
           comments: [
-            'Automatically generating an index.ts file for each library,',
-            'works only for nx applications created using the `--projectNameAndRootFormat=as-provided` flag',
+            'Automatically generating an index.ts file for each library,'
           ],
         },
         // "prepare": "npx -y husky install",

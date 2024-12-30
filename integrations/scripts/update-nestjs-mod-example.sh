@@ -17,15 +17,15 @@ rm -rf ./tsconfig.base.json
 cd ../..
 
 cd ./integrations/tmp
-npx --yes create-nx-workspace@19.5.3 --name=project-name --preset=apps --interactive=false --ci=skip
+npx --yes create-nx-workspace@20.3.0 --name=project-name --preset=apps --interactive=false --ci=skip
 rm -rf .git
 cd ../..
 yes | cp -rf ./integrations/tmp/project-name/* ./integrations/nestjs-mod-example/
 
 cd ./integrations/nestjs-mod-example
 npm install --save-dev @nestjs-mod/schematics@latest
-./node_modules/.bin/nx g @nestjs-mod/schematics:application --directory=apps/app-name --name=app-name --projectNameAndRootFormat=as-provided --strict=true
-./node_modules/.bin/nx g @nestjs-mod/schematics:library feature-name --buildable --publishable --directory=libs/feature-name --simpleName=true --projectNameAndRootFormat=as-provided --strict=true
+./node_modules/.bin/nx g @nestjs-mod/schematics:application --linter=eslint --unitTestRunner=jest --directory=apps/app-name --name=app-name --strict=true
+./node_modules/.bin/nx g @nestjs-mod/schematics:library --linter=eslint --unitTestRunner=jest --buildable --publishable --directory=libs/feature-name --simpleName=true --strict=true
 npm run manual:prepare
 # todo: fix it later
 npm run manual:prepare

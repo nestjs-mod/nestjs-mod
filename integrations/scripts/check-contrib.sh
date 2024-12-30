@@ -47,5 +47,5 @@ if [[ ${log} != *"skip contrib"* ]]; then
     npm install --save-dev --no-cache ../../integrations/nestjs-mod-contrib/tmp/lib/testing/nestjs-mod-testing-0.0.0.tgz
     npm install --save-dev --no-cache ../../integrations/nestjs-mod-contrib/tmp/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
 
-    ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=generate --parallel=false && npm run make-ts-list && npm run tsc:lint && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=build --parallel=false && npm run docs:infrastructure && npm run test
+    ./node_modules/.bin/nx run-many -t=generate --parallel=false && npm run make-ts-list && npm run tsc:lint && ./node_modules/.bin/nx run-many -t=build --parallel=false && npm run docs:infrastructure && npm run test
 fi

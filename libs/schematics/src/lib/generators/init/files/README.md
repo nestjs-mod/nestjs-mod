@@ -28,7 +28,7 @@ Commands for create empty NestJS-mod application
 
 ```bash
 # Create empty nx project
-npx --yes create-nx-workspace@19.5.3 --name=project-name --preset=apps --interactive=false --ci=skip
+npx --yes create-nx-workspace@20.3.0 --name=project-name --preset=apps --interactive=false --ci=skip
 
 # Go to created project
 cd project-name
@@ -37,7 +37,7 @@ cd project-name
 npm install --save-dev @nestjs-mod/schematics@latest
 
 # Create NestJS-mod application
-./node_modules/.bin/nx g @nestjs-mod/schematics:application --directory=apps/app-name --name=app-name --projectNameAndRootFormat=as-provided --strict=true
+./node_modules/.bin/nx g @nestjs-mod/schematics:application --linter=eslint --unitTestRunner=jest --directory=apps/app-name --name=app-name --strict=true
 ```
 
 Start created application
@@ -64,7 +64,7 @@ Commands for create empty NestJS-mod library
 
 ```bash
 # Create NestJS-mod library
-./node_modules/.bin/nx g @nestjs-mod/schematics:library feature-name --buildable --publishable --directory=libs/feature-name --simpleName=true --projectNameAndRootFormat=as-provided --strict=true
+./node_modules/.bin/nx g @nestjs-mod/schematics:library --linter=eslint --unitTestRunner=jest --buildable --publishable --directory=libs/feature-name --simpleName=true --strict=true
 ```
 
 Add created library to `apps/app-name/src/main.ts`

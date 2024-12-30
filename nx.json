@@ -44,5 +44,5 @@
     "sharedGlobals": []
   },
   "useInferencePlugins": false,
-  "nxCloudAccessToken": "NDAwZWYyZTctNjg4OC00YTEyLThjODQtNmNlMmY2OGVjZWIwfHJlYWQtd3JpdGU="
+  "useLegacyCache": true
 }

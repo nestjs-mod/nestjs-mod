@@ -13,7 +13,7 @@ rm -rf ./integrations/app
 rm -rf ./integrations/app
 
 cd ./integrations
-npx --yes create-nx-workspace@19.5.3 --name=app --preset=apps --interactive=false --ci=skip
+npx --yes create-nx-workspace@20.3.0 --name=app --preset=apps --interactive=false --ci=skip
 cd ../
 
 yes | cp -R ./integrations/default/package.json ./integrations/app/package.json
@@ -36,8 +36,8 @@ cp -Rf ./dist/libs/testing/* ./integrations/app/tmp/lib/testing
 
 cd ./integrations/app
 git init
-npm install --save-dev @nx/nest@19.5.3
-./node_modules/.bin/nx g @nx/nest:application --directory=apps/server --name=server --projectNameAndRootFormat=as-provided --strict=true
+npm install --save-dev @nx/nest@20.3.0
+./node_modules/.bin/nx g @nx/nest:application --linter=eslint --unitTestRunner=jest --directory=apps/server --name=server --strict=true
 cd ../../
 
 npx --yes replace-json-property ./integrations/app/tmp/lib/common/package.json version 0.0.0
@@ -57,13 +57,17 @@ npm install --save-dev --no-cache ../../integrations/app/tmp/lib/common/nestjs-m
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/reports/nestjs-mod-reports-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/testing/nestjs-mod-testing-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
-./node_modules/.bin/nx g @nestjs-mod/schematics:application --directory=apps/server-mod --name=server-mod --projectNameAndRootFormat=as-provided --strict=true
-./node_modules/.bin/nx g @nestjs-mod/schematics:library feature --buildable --publishable --directory=libs/feature --simpleName=true --projectNameAndRootFormat=as-provided --strict=true
+./node_modules/.bin/nx g @nestjs-mod/schematics:application --linter=eslint --unitTestRunner=jest --directory=apps/server-mod --name=server-mod --strict=true
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/common/nestjs-mod-common-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/reports/nestjs-mod-reports-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/testing/nestjs-mod-testing-0.0.0.tgz
 npm install --save-dev --no-cache ../../integrations/app/tmp/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
-./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=generate && npm run make-ts-list && npm run tsc:lint && ./node_modules/.bin/nx run-many --exclude=@nestjs-mod/source -t=build --parallel=false
+./node_modules/.bin/nx g @nestjs-mod/schematics:library --linter=eslint --unitTestRunner=jest --buildable --publishable --directory=libs/feature --simpleName=true --strict=true
+npm install --save-dev --no-cache ../../integrations/app/tmp/lib/common/nestjs-mod-common-0.0.0.tgz
+npm install --save-dev --no-cache ../../integrations/app/tmp/lib/reports/nestjs-mod-reports-0.0.0.tgz
+npm install --save-dev --no-cache ../../integrations/app/tmp/lib/testing/nestjs-mod-testing-0.0.0.tgz
+npm install --save-dev --no-cache ../../integrations/app/tmp/lib/schematics/nestjs-mod-schematics-0.0.0.tgz
+./node_modules/.bin/nx run-many -t=generate && npm run make-ts-list && npm run tsc:lint && ./node_modules/.bin/nx run-many -t=build --parallel=false
 # original nestjs application not stopped https://github.com/nrwl/nx/issues/27579
 npm run docs:infrastructure > /dev/null 2>&1 &
 sleep 60 && kill -9 $(lsof -t -i:3000) | echo "Killed"

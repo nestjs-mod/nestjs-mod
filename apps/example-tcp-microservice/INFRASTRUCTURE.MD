@@ -70,7 +70,7 @@ npm run test:example-tcp-microservice
 |`npm run generate`|Running the "generate" nx command in applications and libraries which can be customized at your discretion automatically generating an index.ts file for each library checking the code and trying to fix it|
 |`npm run nx`|Alias for running the nx version locally, which is in the project (example: `npm run nx -- dep-graph`), in order not to install nx globally in the operating system|
 |`npm run dep-graph`|Generating dependency diagrams for nx applications and libraries|
-|`npm run make-ts-list`|Automatically generating an index.ts file for each library, works only for nx applications created using the `--projectNameAndRootFormat=as-provided` flag|
+|`npm run make-ts-list`|Automatically generating an index.ts file for each library,|
 |`npm run update:nestjs-mod-example`|Start generating an empty application using the latest versions of the NestJS-mod libraries, published in https://github.com/nestjs-mod/nestjs-mod-example|
 |`npm run update:lib-versions`|Script for update main libs used in project|
 |`npm run manual:prepare`|Preparing code, building code, creating infrastructure documentation and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)|

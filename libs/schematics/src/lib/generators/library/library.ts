@@ -12,7 +12,6 @@ import type { LibraryGeneratorOptions } from './schema';
 
 export async function libraryGenerator(tree: Tree, rawOptions: LibraryGeneratorOptions): Promise<GeneratorCallback> {
   return await libraryGeneratorInternal(tree, {
-    projectNameAndRootFormat: 'derived',
     ...rawOptions,
   });
 }

@@ -7,7 +7,7 @@ import { addAppPackageJsonFile, addEnvFile, addScript } from '../init/lib/add-cu
 import { addProject } from './lib/add-project';
 import { createFiles } from './lib/create-files';
 import { ensureDependencies } from './lib/ensure-dependencies';
-import { normalizeOptions, toNodeApplicationGeneratorOptions } from './lib/normalize-options';
+import { normalizeOptionsApp, toNodeApplicationGeneratorOptions } from './lib/normalize-options';
 import { updateTsConfig } from './lib/update-tsconfig';
 import type { ApplicationGeneratorOptions } from './schema';
 
@@ -16,7 +16,6 @@ export async function applicationGenerator(
   rawOptions: ApplicationGeneratorOptions
 ): Promise<GeneratorCallback> {
   return await applicationGeneratorInternal(tree, {
-    projectNameAndRootFormat: 'derived',
     ...rawOptions,
   });
 }
@@ -25,7 +24,7 @@ export async function applicationGeneratorInternal(
   tree: Tree,
   rawOptions: ApplicationGeneratorOptions
 ): Promise<GeneratorCallback> {
-  const options = await normalizeOptions(tree, rawOptions);
+  const options = await normalizeOptionsApp(tree, rawOptions);
 
   const tasks: GeneratorCallback[] = [];
   const initTask = await initGenerator(tree, {
@@ -36,9 +35,9 @@ export async function applicationGeneratorInternal(
   const nodeApplicationTask = await nodeApplicationGenerator(tree, toNodeApplicationGeneratorOptions(options));
   tasks.push(nodeApplicationTask);
   createFiles(tree, options);
-  await addEnvFile(tree, rawOptions.name);
+  await addEnvFile(tree, rawOptions.name || '');
   addScript(tree, rawOptions.name);
-  addAppPackageJsonFile(tree, rawOptions.name, options.directory!);
+  addAppPackageJsonFile(tree, rawOptions.name || '', options.directory!);
   updateTsConfig(tree, options);
   addProject(tree, options);
 
