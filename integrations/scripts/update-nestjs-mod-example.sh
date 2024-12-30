@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 export NX_SKIP_NX_CACHE=true
+export NX_DAEMON=false
 
 ./node_modules/.bin/nx reset
 
@@ -24,8 +25,11 @@ yes | cp -rf ./integrations/tmp/project-name/* ./integrations/nestjs-mod-example
 
 cd ./integrations/nestjs-mod-example
 npm install --save-dev @nestjs-mod/schematics@latest
+rm -rf ./.nx
 ./node_modules/.bin/nx g @nestjs-mod/schematics:application --linter=eslint --unitTestRunner=jest --directory=apps/app-name --name=app-name --strict=true
+rm -rf ./.nx
 ./node_modules/.bin/nx g @nestjs-mod/schematics:library --linter=eslint --unitTestRunner=jest --buildable --publishable --directory=libs/feature-name --simpleName=true --strict=true
+rm -rf ./.nx
 npm run manual:prepare
 # todo: fix it later
 npm run manual:prepare
