@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.8.4...fastify-v1.9.0) (2024-12-30)
+
+
+### Features
+
+* update versions of nx libraries to version 20.3.0 and fix all errors after it [skip integrations, skip contrib] ([9011173](https://github.com/nestjs-mod/nestjs-mod/commit/9011173fa6eafecc4ce580956bef6fac4613fa1a))
+
 ## [1.8.4](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.8.3...fastify-v1.8.4) (2024-12-09)
 
 
