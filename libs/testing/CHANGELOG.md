@@ -1,3 +1,10 @@
+# [2.17.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.16.4...testing-v2.17.0) (2024-12-30)
+
+
+### Features
+
+* update versions of nx libraries to version 20.3.0 and fix all errors after it [skip integrations, skip contrib] ([9011173](https://github.com/nestjs-mod/nestjs-mod/commit/9011173fa6eafecc4ce580956bef6fac4613fa1a))
+
 ## [2.16.4](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.16.3...testing-v2.16.4) (2024-12-09)
 
 
