@@ -1,7 +1,7 @@
 {
   "name": "nestjs-mod",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/cli/src",
+  "sourceRoot": "libs/nestjs-mod/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -9,11 +9,11 @@
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/cli",
-        "tsConfig": "libs/cli/tsconfig.lib.json",
-        "packageJson": "libs/cli/package.json",
-        "main": "libs/cli/src/index.ts",
-        "assets": ["libs/cli/*.md"]
+        "outputPath": "dist/libs/nestjs-mod",
+        "tsConfig": "libs/nestjs-mod/tsconfig.lib.json",
+        "packageJson": "libs/nestjs-mod/package.json",
+        "main": "libs/nestjs-mod/src/index.ts",
+        "assets": ["libs/nestjs-mod/*.md"]
       }
     },
     "publish": {
@@ -27,7 +27,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/cli/jest.config.ts"
+        "jestConfig": "libs/nestjs-mod/jest.config.ts"
       }
     },
     "semantic-release": {
