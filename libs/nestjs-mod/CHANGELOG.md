@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.6.2...nestjs-mod-v1.6.3) (2025-01-06)
+
+
+### Bug Fixes
+
+* append main.ts as entrypoint for application ([7ba20b5](https://github.com/nestjs-mod/nestjs-mod/commit/7ba20b59490c2989c10d216d50cb2f3d751b1f03))
+
 ## [1.6.2](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.6.1...nestjs-mod-v1.6.2) (2025-01-06)
 
 
