@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.6.3...nestjs-mod-v1.6.4) (2025-01-06)
+
+
+### Bug Fixes
+
+* add index.js with "#!/usr/bin/env node" ([8c366ba](https://github.com/nestjs-mod/nestjs-mod/commit/8c366baf41352bffdae25bcb7fb6b4dc761290e9))
+
 ## [1.6.3](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.6.2...nestjs-mod-v1.6.3) (2025-01-06)
 
 
