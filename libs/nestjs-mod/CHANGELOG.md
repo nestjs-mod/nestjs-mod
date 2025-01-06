@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.6.1...nestjs-mod-v1.6.2) (2025-01-06)
+
+
+### Bug Fixes
+
+* rename nx library from cli to nestjs-mod ([30333eb](https://github.com/nestjs-mod/nestjs-mod/commit/30333eb21a491cb66996af11b3740aa25675b2da))
+
 ## [1.6.1](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.6.0...nestjs-mod-v1.6.1) (2025-01-06)
 
 
