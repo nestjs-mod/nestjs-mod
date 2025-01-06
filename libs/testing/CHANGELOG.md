@@ -1,3 +1,11 @@
+## [2.17.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.17.0...testing-v2.17.1) (2025-01-06)
+
+
+### Bug Fixes
+
+* add empty command for migrator ([357397a](https://github.com/nestjs-mod/nestjs-mod/commit/357397a2ecdd74fcbc1cb2de8a6cd554ff1e368b))
+* rename nx library from cli to nestjs-mod ([30333eb](https://github.com/nestjs-mod/nestjs-mod/commit/30333eb21a491cb66996af11b3740aa25675b2da))
+
 # [2.17.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.16.4...testing-v2.17.0) (2024-12-30)
 
 
