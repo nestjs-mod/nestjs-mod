@@ -41,7 +41,7 @@
     "_____docs_____": "_____docs_____",
     "docs:infrastructure": "export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many -t=serve --parallel=false --watch=false --inspect=false",
     "_____tests_____": "_____tests_____",
-    "nestjs-mod": "./node_modules/.bin/nx build nestjs-mod && node dist/libs/nestjs-mod/src/index.js",
+    "nestjs-mod": "export NX_SKIP_NX_CACHE=true && ./node_modules/.bin/nx build nestjs-mod && node dist/libs/nestjs-mod/index.js",
     "test:no-cache": "export NX_SKIP_NX_CACHE=true && npm run test",
     "test": "./node_modules/.bin/nx run-many -t=test --parallel=false --passWithNoTests --output-style=stream-without-prefixes",
     "test:example-basic": "./node_modules/.bin/nx test example-basic --passWithNoTests --output-style=stream-without-prefixes",
