@@ -30,7 +30,7 @@
       "@nestjs-mod/fastify": ["libs/fastify/src/index.ts"],
       "@nestjs-mod/microservices": ["libs/microservices/src/index.ts"],
       "@nestjs-mod/misc": ["libs/misc/src/index.ts"],
-      "@nestjs-mod/nestjs-mod": ["libs/cli/src/index.ts"],
+      "@nestjs-mod/nestjs-mod": ["libs/nestjs-mod/src/index.ts"],
       "@nestjs-mod/reports": ["libs/reports/src/index.ts"],
       "@nestjs-mod/schematics": ["libs/schematics/src/index.ts"],
       "@nestjs-mod/testing": ["libs/testing/src/index.ts"]
