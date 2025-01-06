@@ -1,5 +1,16 @@
-function main() {
-    console.error('There is no functionality now, this name is reserved for future command utilities of the NestJS-mod project.')
-}
+import { Command } from 'commander';
+import { migrator } from './commands/migrator';
+import { version } from './commands/version';
+import { getPackageJson } from './utils/get-package-json';
 
-main();
+const program = new Command();
+const packageJson = getPackageJson();
+
+migrator(program);
+version(program, packageJson);
+
+program.parse(process.argv);
+
+if (!program.args.length) {
+  program.help();
+}
