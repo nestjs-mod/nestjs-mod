@@ -1,7 +1,7 @@
 {
   "name": "nestjs-mod",
   "description": "There is no functionality now, this name is reserved for future command utilities of the NestJS-mod project",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "bin": {
     "nestjs-mod": "./src/index.js"
   },
@@ -35,7 +35,8 @@
     }
   ],
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "commander": "^13.0.0"
   },
   "type": "commonjs",
   "main": "./src/index.js",

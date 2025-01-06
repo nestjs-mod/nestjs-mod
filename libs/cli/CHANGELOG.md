@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.6.0...nestjs-mod-v1.6.1) (2025-01-06)
+
+
+### Bug Fixes
+
+* add empty command for migrator ([357397a](https://github.com/nestjs-mod/nestjs-mod/commit/357397a2ecdd74fcbc1cb2de8a6cd554ff1e368b))
+
 # [1.6.0](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.5.0...nestjs-mod-v1.6.0) (2024-12-30)
 
 
