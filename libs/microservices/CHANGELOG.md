@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.8.1...microservices-v1.8.2) (2025-01-11)
+
+
+### Bug Fixes
+
+* disable check full mathc of commands before append then to project targets ([19b28eb](https://github.com/nestjs-mod/nestjs-mod/commit/19b28eb16e6cd08997d2f9e78b94e5ea510ad56a))
+
 ## [1.8.1](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.8.0...microservices-v1.8.1) (2025-01-06)
 
 
