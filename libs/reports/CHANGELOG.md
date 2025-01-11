@@ -1,3 +1,10 @@
+## [2.17.2](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.17.1...reports-v2.17.2) (2025-01-11)
+
+
+### Bug Fixes
+
+* disable check full mathc of commands before append then to project targets ([19b28eb](https://github.com/nestjs-mod/nestjs-mod/commit/19b28eb16e6cd08997d2f9e78b94e5ea510ad56a))
+
 ## [2.17.1](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.17.0...reports-v2.17.1) (2025-01-06)
 
 
