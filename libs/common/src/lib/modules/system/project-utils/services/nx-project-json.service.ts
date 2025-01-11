@@ -63,15 +63,9 @@ export class NxProjectJsonService {
     if (!projectJson.targets[targetName].options!['commands']) {
       projectJson.targets[targetName].options!['commands'] = [];
     }
-    if (
-      !searchCommand ||
-      (searchCommand &&
-        !(projectJson.targets[targetName].options!['commands'] as string[])!.some((c) => c.includes(searchCommand)))
-    ) {
+    if ((projectJson.targets[targetName].options?.['commands'] as string[])?.length === 0) {
       for (const line of lines) {
-        if (!(projectJson.targets[targetName].options!['commands'] as string[])!.some((c) => c === line)) {
-          (projectJson.targets[targetName].options!['commands'] as string[]).push(line);
-        }
+        (projectJson.targets[targetName].options!['commands'] as string[]).push(line);
       }
     }
     if (!projectJson.targets[targetName].options!['parallel']) {
