@@ -1,3 +1,10 @@
+## [2.17.3](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.17.2...common-v2.17.3) (2025-01-22)
+
+
+### Bug Fixes
+
+* lock version of case-anything ([6603cc0](https://github.com/nestjs-mod/nestjs-mod/commit/6603cc0b793ecbd24d751d2a2dc809daab737841))
+
 ## [2.17.2](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.17.1...common-v2.17.2) (2025-01-11)
 
 
