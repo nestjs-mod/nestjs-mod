@@ -1,13 +1,13 @@
 {
   "devDependencies": {
-    "@nestjs-mod/testing": "2.17.0",
-    "@nestjs-mod/schematics": "2.12.0"
+    "@nestjs-mod/testing": "2.17.3",
+    "@nestjs-mod/schematics": "2.12.2"
   },
   "dependencies": {
-    "@nestjs-mod/common": "2.17.0",
-    "@nestjs-mod/reports": "2.17.0",
-    "@nestjs-mod/terminus": "1.13.4",
-    "@nestjs-mod/pino": "1.14.4",
-    "@nestjs-mod/pm2": "1.12.4"
+    "@nestjs-mod/common": "2.17.3",
+    "@nestjs-mod/reports": "2.17.3",
+    "@nestjs-mod/terminus": "1.14.0",
+    "@nestjs-mod/pino": "1.15.0",
+    "@nestjs-mod/pm2": "1.13.0"
   }
 }
