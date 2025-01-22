@@ -1,3 +1,11 @@
+## [2.12.3](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.2...schematics-v2.12.3) (2025-01-22)
+
+
+### Bug Fixes
+
+* lock version of case-anything ([c3c444e](https://github.com/nestjs-mod/nestjs-mod/commit/c3c444e2fe85f333665bdf5d7c5d934fee27aa8a))
+* lock version of case-anything [skip contrib, skip integrations] ([9539521](https://github.com/nestjs-mod/nestjs-mod/commit/95395210389d72c947e27fa89c0fd986b6e441fb))
+
 ## [2.12.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.1...schematics-v2.12.2) (2025-01-06)
 
 
