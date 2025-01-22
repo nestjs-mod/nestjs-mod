@@ -1,3 +1,10 @@
+## [1.9.3](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.9.2...fastify-v1.9.3) (2025-01-22)
+
+
+### Bug Fixes
+
+* lock version of case-anything ([6603cc0](https://github.com/nestjs-mod/nestjs-mod/commit/6603cc0b793ecbd24d751d2a2dc809daab737841))
+
 ## [1.9.2](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.9.1...fastify-v1.9.2) (2025-01-11)
 
 
