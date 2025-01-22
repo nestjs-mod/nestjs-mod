@@ -47,6 +47,7 @@ npm run test:example-tcp-microservice
 |**docs**|
 |`npm run docs:infrastructure`|Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure|
 |**tests**|
+|`npm run nestjs-mod`||
 |`npm run test:no-cache`||
 |`npm run test`|Running tests across the entire project|
 |`npm run test:example-basic`|Running tests for example-basic|

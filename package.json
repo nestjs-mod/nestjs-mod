@@ -106,6 +106,7 @@
     "docs:infrastructure": [
       "Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure"
     ],
+    "nestjs-mod": [],
     "test:no-cache": [],
     "test": [
       "Running tests across the entire project"
