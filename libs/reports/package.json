@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/reports",
   "description": "Modules and utilities for generating reports on infrastructure and features",
-  "version": "2.17.2",
+  "version": "2.17.3",
   "keywords": [
     "nestjs",
     "nestjs-mod",
@@ -34,7 +34,7 @@
   ],
   "dependencies": {
     "tslib": "^2.3.0",
-    "markdown-it": "14.0.0",
+    "markdown-it": "^14.0.0",
     "fast-glob": "3.3.2",
     "case-anything": "2.1.13"
   },
