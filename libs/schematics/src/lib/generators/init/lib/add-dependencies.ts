@@ -3,7 +3,7 @@ import { addDependenciesToPackageJson } from '@nx/devkit';
 import { nestJsModDeps, nestJsModDevDeps, nestJsSchematicsVersion } from '../../../utils/versions';
 
 export function addDependencies(tree: Tree): GeneratorCallback {
-  const nestJsModSchematicsVersion = '2.12.4';
+  const nestJsModSchematicsVersion = '2.12.5';
   return addDependenciesToPackageJson(
     tree,
     {
@@ -26,7 +26,6 @@ export function addDependencies(tree: Tree): GeneratorCallback {
       '@commitlint/config-conventional': '^17.0.0',
       '@theunderscorer/nx-semantic-release': '^2.12.0',
       '@nestjs/schematics': nestJsSchematicsVersion,
-      rucken: '^4.12.0',
       prettier: '^2.6.2',
       'lint-staged': '^15.2.0',
     }
