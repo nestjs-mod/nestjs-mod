@@ -1,3 +1,10 @@
+## [2.17.4](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.17.3...reports-v2.17.4) (2025-01-27)
+
+
+### Bug Fixes
+
+* changed default output of validation errors to simple view ([642713c](https://github.com/nestjs-mod/nestjs-mod/commit/642713caa14f9598a35487e14c160215b82f61ba))
+
 ## [2.17.3](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.17.2...reports-v2.17.3) (2025-01-22)
 
 
