@@ -1,3 +1,10 @@
+## [2.12.5](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.4...schematics-v2.12.5) (2025-01-27)
+
+
+### Bug Fixes
+
+* update rucken version [skip contrib, skip integrations] ([aca5f38](https://github.com/nestjs-mod/nestjs-mod/commit/aca5f386b774051392b5597d657e23c04aad52db))
+
 ## [2.12.4](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.3...schematics-v2.12.4) (2025-01-27)
 
 
