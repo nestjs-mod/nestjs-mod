@@ -170,6 +170,7 @@ export async function envTransform<
   const logger = rootOptions?.logger || modelOptions?.logger;
 
   if (validateErrors.length > 0) {
+    const error = new EnvModelValidationErrors(validateErrors, info);
     if (logger?.error) {
       const validations = Object.fromEntries(
         Object.entries(info.validations).filter(([key, value]) => {
@@ -179,15 +180,19 @@ export async function envTransform<
           );
         })
       );
-      logger.error({
-        ...info,
-        validations,
-        modelPropertyOptions: info.modelPropertyOptions.filter(
-          (o) => o.hideValueFromOutputs !== true && validations[o.originalName]
-        ),
-      });
+      logger.error(
+        !debug
+          ? error.message
+          : {
+              ...info,
+              validations,
+              modelPropertyOptions: info.modelPropertyOptions.filter(
+                (o) => o.hideValueFromOutputs !== true && validations[o.originalName]
+              ),
+            }
+      );
     }
-    throw new EnvModelValidationErrors(validateErrors, info);
+    throw error;
   }
 
   if (debug && logger?.debug) {

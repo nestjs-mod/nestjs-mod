@@ -96,6 +96,7 @@ export async function configTransform<
   const logger = rootOptions?.logger || modelOptions?.logger;
 
   if (validateErrors.length > 0) {
+    const error = new ConfigModelValidationErrors(validateErrors, info);
     if (logger?.error) {
       const validations = Object.fromEntries(
         Object.entries(info.validations).filter(([key, value]) => {
@@ -105,15 +106,19 @@ export async function configTransform<
           );
         })
       );
-      logger.error({
-        ...info,
-        validations,
-        modelPropertyOptions: info.modelPropertyOptions.filter(
-          (o) => o.hideValueFromOutputs !== true && validations[o.originalName]
-        ),
-      });
+      logger.error(
+        !debug
+          ? error.message
+          : {
+              ...info,
+              validations,
+              modelPropertyOptions: info.modelPropertyOptions.filter(
+                (o) => o.hideValueFromOutputs !== true && validations[o.originalName]
+              ),
+            }
+      );
     }
-    throw new ConfigModelValidationErrors(validateErrors, info);
+    throw error;
   }
 
   if (debug && logger?.debug) {

@@ -45,6 +45,49 @@ describe('Env model: Utils', () => {
     ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'option should not be empty');
   });
 
+  it('should return error message if option of env not set', async () => {
+    try {
+      @EnvModel()
+      class AppEnv {
+        @EnvModelProperty()
+        @IsNotEmpty()
+        option!: string;
+      }
+
+      @Module({ providers: [AppEnv] })
+      class AppModule {
+        static forRoot(env: Partial<AppEnv>): DynamicModule {
+          return {
+            module: AppModule,
+            providers: [
+              {
+                provide: `${AppEnv.name}_loader`,
+                useFactory: async (emptyAppEnv: AppEnv) => {
+                  if (env.constructor !== Object) {
+                    Object.setPrototypeOf(emptyAppEnv, env);
+                  }
+                  const obj = await envTransform({
+                    model: AppEnv,
+                    data: env,
+                  });
+                  Object.assign(emptyAppEnv, obj.data);
+                },
+                inject: [AppEnv],
+              },
+            ],
+          };
+        }
+      }
+
+      await Test.createTestingModule({
+        imports: [AppModule.forRoot({})],
+      }).compile();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      expect(err.message).toEqual(`obj['option'],process.env['OPTION']-isNotEmpty`);
+    }
+  });
+
   it('should return model info in error if option of env not set', async () => {
     @EnvModel({ name: 'model name', description: 'model description' })
     class AppEnv {

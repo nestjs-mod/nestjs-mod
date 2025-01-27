@@ -6,7 +6,14 @@ export class EnvModelValidationErrors extends Error {
   info: EnvModelInfo;
 
   constructor(errors: ValidationError[], info: EnvModelInfo, message?: string) {
-    super(message);
+    super(
+      message ||
+        Object.values(info.validations)
+          .map(
+            (v) => `${v.propertyValueExtractors.map((e) => e.example.example)}-${Object.keys(v.constraints).join(',')}`
+          )
+          .join('\n')
+    );
     this.errors = errors;
     this.info = info;
   }
