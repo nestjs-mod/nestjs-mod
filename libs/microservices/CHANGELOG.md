@@ -1,3 +1,10 @@
+## [1.8.4](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.8.3...microservices-v1.8.4) (2025-01-27)
+
+
+### Bug Fixes
+
+* changed default output of validation errors to simple view ([642713c](https://github.com/nestjs-mod/nestjs-mod/commit/642713caa14f9598a35487e14c160215b82f61ba))
+
 ## [1.8.3](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.8.2...microservices-v1.8.3) (2025-01-22)
 
 
