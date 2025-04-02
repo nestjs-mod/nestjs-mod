@@ -180,6 +180,26 @@ export class PackageJsonService {
     const categories = Object.keys(structuredJson[SCRIPTS_KEY_NAME] || {});
     basicJson[SCRIPTS_KEY_NAME] = {};
     basicJson[SCRIPTS_COMMENTS_KEY_NAME] = {};
+
+    const structuredJsonKeys = Object.key(structuredJson);
+
+    for (const structuredJsonKey of structuredJsonKeys) {
+      if (![SCRIPTS_KEY_NAME, SCRIPTS_COMMENTS_KEY_NAME].includes(structuredJsonKey)) {
+        try {
+          if (typeof structuredJson[structuredJsonKey] === 'object') {
+            basicJson[structuredJsonKey] = {
+              ...(basicJson[structuredJsonKey] || {}),
+              ...(structuredJson[structuredJsonKey] || {}),
+            };
+          } else {
+            basicJson[structuredJsonKey] = structuredJson[structuredJsonKey];
+          }
+        } catch (err) {
+          //
+        }
+      }
+    }
+
     for (const category of categories) {
       const categoryName = `_____${category}_____`;
       if (!basicJson[SCRIPTS_KEY_NAME][categoryName]) {
