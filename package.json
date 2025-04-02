@@ -62,7 +62,7 @@
     "local:schematics:app": "./node_modules/.bin/nx g ./dist/libs/schematics:app",
     "schematics-version-bump": "cd ./integrations/schematics-version-bump/ && npx -y npm-check-updates -u && node ./schematics-version-bump.js && cd ../..",
     "_____utils_____": "_____utils_____",
-    "generate": "./node_modules/.bin/nx run-many -t=generate --parallel=false && npm run make-ts-list && npm run lint:fix",
+    "generate": "./node_modules/.bin/nx run-many -t=generate --parallel=false && npm run make-ts-list",
     "nx": "nx",
     "dep-graph": "./node_modules/.bin/nx dep-graph",
     "make-ts-list": "./node_modules/.bin/rucken make-ts-list",
@@ -223,13 +223,12 @@
     "nx": "20.3.0",
     "prettier": "^2.6.2",
     "react-refresh": "^0.10.0",
-    "rucken": "^4.15.0",
+    "rucken": "^4.16.0",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "typescript": "5.6.3",
-    "url-loader": "^4.1.1",
-    "verdaccio": "^5.0.4"
+    "url-loader": "^4.1.1"
   },
   "dependencies": {
     "@fastify/cookie": "^9.3.1",

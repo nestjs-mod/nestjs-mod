@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "rucken": "^4.15.0",
+    "rucken": "^4.16.0",
     "@nestjs-mod/testing": "2.17.4",
     "@nestjs-mod/schematics": "2.12.4"
   },
