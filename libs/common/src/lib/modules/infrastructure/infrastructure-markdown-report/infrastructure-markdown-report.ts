@@ -666,11 +666,14 @@ npm install
       if (project?.maintainers && this.infrastructureMarkdownReportGeneratorConfiguration.style !== 'pretty') {
         lines.push('');
         lines.push('## Maintainers');
-        for (const m of project.maintainers) {
-          if (typeof m === 'string') {
-            lines.push(`- ${m}`);
-          } else {
-            lines.push(`- [${m.name}](${m.email})`);
+
+        if (Array.isArray(project.maintainers)) {
+          for (const m of project.maintainers) {
+            if (typeof m === 'string') {
+              lines.push(`- ${m}`);
+            } else {
+              lines.push(`- [${m.name}](${m.email})`);
+            }
           }
         }
       }

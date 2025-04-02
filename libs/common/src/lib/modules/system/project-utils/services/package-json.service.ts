@@ -181,18 +181,24 @@ export class PackageJsonService {
     basicJson[SCRIPTS_KEY_NAME] = {};
     basicJson[SCRIPTS_COMMENTS_KEY_NAME] = {};
 
-    const structuredJsonKeys = Object.key(structuredJson);
+    const structuredJsonKeys = Object.keys(structuredJson);
 
     for (const structuredJsonKey of structuredJsonKeys) {
       if (![SCRIPTS_KEY_NAME, SCRIPTS_COMMENTS_KEY_NAME].includes(structuredJsonKey)) {
+        // todo: remove any
         try {
-          if (typeof structuredJson[structuredJsonKey] === 'object') {
-            basicJson[structuredJsonKey] = {
-              ...(basicJson[structuredJsonKey] || {}),
-              ...(structuredJson[structuredJsonKey] || {}),
+          const untypedStructuredJson = structuredJson as any;
+          if (
+            typeof untypedStructuredJson[structuredJsonKey] === 'object' &&
+            !Array.isArray(untypedStructuredJson[structuredJsonKey])
+          ) {
+            (basicJson as any)[structuredJsonKey] = {
+              ...((basicJson as any)[structuredJsonKey] || {}),
+              ...(untypedStructuredJson[structuredJsonKey] || {}),
             };
           } else {
-            basicJson[structuredJsonKey] = structuredJson[structuredJsonKey];
+            // todo: remove any
+            (basicJson as any)[structuredJsonKey] = untypedStructuredJson[structuredJsonKey];
           }
         } catch (err) {
           //
