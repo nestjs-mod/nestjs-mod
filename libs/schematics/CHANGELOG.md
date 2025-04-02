@@ -1,3 +1,10 @@
+## [2.12.6](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.5...schematics-v2.12.6) (2025-04-02)
+
+
+### Bug Fixes
+
+* remove run slow lint:fix command from generate command, bump version of nestjs-mod/common to 2.17.5 [skip contrib, skip integrations] ([5254ab0](https://github.com/nestjs-mod/nestjs-mod/commit/5254ab0497b5477669b5a8cf2775712c37d7ea14))
+
 ## [2.12.5](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.4...schematics-v2.12.5) (2025-01-27)
 
 
