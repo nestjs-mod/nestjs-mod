@@ -159,7 +159,7 @@ export function addScript(tree: Tree, projectName?: string) {
       'utils',
       {
         generate: {
-          commands: [`./node_modules/.bin/nx run-many --all -t=generate --parallel=false`, 'npm run make-ts-list', 'npm run lint:fix'],
+          commands: [`./node_modules/.bin/nx run-many --all -t=generate --parallel=false`, 'npm run make-ts-list'],
           comments: [
             'Running the "generate" nx command in applications and libraries which can be customized at your discretion',
             'automatically generating an index.ts file for each library',
