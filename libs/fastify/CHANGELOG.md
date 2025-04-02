@@ -1,3 +1,11 @@
+## [1.9.5](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.9.4...fastify-v1.9.5) (2025-04-02)
+
+
+### Bug Fixes
+
+* update logic for write new data to package.json ([105ae7a](https://github.com/nestjs-mod/nestjs-mod/commit/105ae7ad964eba85bf3aca2e505416f836215450))
+* update logic for write new data to package.json, as example now we can rewrite devDependencies ([5e89cb0](https://github.com/nestjs-mod/nestjs-mod/commit/5e89cb081b697e7e80f815f545c2ee7c37659423))
+
 ## [1.9.4](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.9.3...fastify-v1.9.4) (2025-01-27)
 
 
