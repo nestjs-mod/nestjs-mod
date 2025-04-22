@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: npm
-          node-version: 20
+          node-version: 23
       - run: npm ci
       - run: npm run generate
       - run: npm run build
