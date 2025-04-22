@@ -115,25 +115,28 @@ export const { DefaultNestApplicationListener } = createNestModule({
             } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
           }
 
-          if (app && current.staticConfiguration?.mode === 'listen') {
-            if (current.staticConfiguration?.enableShutdownHooks) {
-              app.enableShutdownHooks();
-            }
+          if (app && current.staticConfiguration) {
             if (typeof app.setGlobalPrefix === 'function' && current.staticConfiguration.globalPrefix) {
               app.setGlobalPrefix(current.staticConfiguration.globalPrefix);
             }
-            if (((typeof app?.getMicroservices === 'function' && app?.getMicroservices()) || []).length > 0) {
-              await app.startAllMicroservices();
-            }
-            if (current?.staticEnvironments?.port) {
-              if (current?.staticEnvironments?.hostname) {
-                await app.listen(current.staticEnvironments.port, current.staticEnvironments.hostname);
-              } else {
-                await app.listen(current.staticEnvironments.port);
+
+            if (current.staticConfiguration?.mode === 'listen') {
+              if (current.staticConfiguration?.enableShutdownHooks) {
+                app.enableShutdownHooks();
               }
-            } else {
-              if (typeof app?.getMicroservices === 'function') {
-                (current.staticConfiguration.defaultLogger || new Logger()).warn('Application listener not started!');
+              if (((typeof app?.getMicroservices === 'function' && app?.getMicroservices()) || []).length > 0) {
+                await app.startAllMicroservices();
+              }
+              if (current?.staticEnvironments?.port) {
+                if (current?.staticEnvironments?.hostname) {
+                  await app.listen(current.staticEnvironments.port, current.staticEnvironments.hostname);
+                } else {
+                  await app.listen(current.staticEnvironments.port);
+                }
+              } else {
+                if (typeof app?.getMicroservices === 'function') {
+                  (current.staticConfiguration.defaultLogger || new Logger()).warn('Application listener not started!');
+                }
               }
             }
           }
