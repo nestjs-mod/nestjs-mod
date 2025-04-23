@@ -62,7 +62,7 @@ export class DefaultNestApplicationListenerConfiguration {
 
   @ConfigModelProperty({
     description: 'Enable shutdown hooks',
-    default: true,
+    default: false,
   })
   enableShutdownHooks?: boolean;
 
