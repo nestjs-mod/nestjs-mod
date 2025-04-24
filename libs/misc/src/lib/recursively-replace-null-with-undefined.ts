@@ -17,9 +17,7 @@ export type RecursivelyReplaceNullWithUndefined<T> = T extends null
  * this is the only workaround to prevent `null`s going into the codebase,
  * if it's connected to a Apollo server/client.
  */
-export function replaceNullsWithUndefineds<T>(
-  obj: T
-): RecursivelyReplaceNullWithUndefined<T> {
+export function replaceNullsWithUndefineds<T>(obj: T): RecursivelyReplaceNullWithUndefined<T> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const newObj: any = {};
   Object.keys(obj as object).forEach((k) => {
@@ -35,3 +33,25 @@ export function replaceNullsWithUndefineds<T>(
   });
   return newObj;
 }
+
+export type UndefinedProps<T extends object> = {
+  [K in keyof T as undefined extends T[K] ? K : never]?: T[K];
+};
+
+/**
+    type A = { a: null };
+
+    const a: A = {}; // not valid
+    const a1: A = { a: null }; // valid
+
+    type B = RecursivelyReplaceNullWithUndefined<A>;
+
+    const b: B = {}; // not valid
+    const b2: B = { a: undefined }; // valid
+
+    type C = MakeOptional<RecursivelyReplaceNullWithUndefined<A>>;
+
+    const c: C = {}; // valid
+    const c2: C = { a: undefined }; // valid
+ */
+export type MakeOptional<T extends object> = UndefinedProps<T> & Omit<T, keyof UndefinedProps<T>>;

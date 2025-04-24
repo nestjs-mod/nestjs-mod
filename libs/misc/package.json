@@ -33,7 +33,9 @@
     }
   ],
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "lodash.reduce":"4.6.0",
+    "lodash.map":"4.6.0"
   },
   "type": "commonjs",
   "main": "./src/index.js",
