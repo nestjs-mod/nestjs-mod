@@ -194,6 +194,7 @@
   "devDependencies": {
     "@types/lodash.reduce": "4.6.9",
     "@types/lodash.map": "4.6.13",
+    "@types/lodash.isequal": "4.5.8",
     "@commitlint/cli": "^17.0.0",
     "@commitlint/config-conventional": "^17.0.0",
     "@nestjs/schematics": "^10.2.3",
@@ -252,7 +253,8 @@
     "rxjs": "^7.8.0",
     "tslib": "^2.3.0",
     "lodash.reduce": "4.6.0",
-    "lodash.map": "4.6.0"
+    "lodash.map": "4.6.0",
+    "lodash.isequal": "4.5.0"
   },
   "nx": {
     "includedScripts": []
