@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-prototype-builtins */
+import isEqual from 'lodash.isequal';
 import map from 'lodash.map';
 import reduce from 'lodash.reduce';
-import { isDeepStrictEqual } from 'node:util';
 
 /**
  * 
@@ -69,7 +69,7 @@ export const compare = function (a: any, b: any) {
     a,
     function (result: any, value, key) {
       if (b.hasOwnProperty(key)) {
-        if (isDeepStrictEqual(value, b[key])) {
+        if (isEqual(value, b[key])) {
           return result;
         } else {
           if (typeof a[key] != typeof {} || typeof b[key] != typeof {}) {
