@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.4.0...misc-v1.4.1) (2025-04-24)
+
+
+### Bug Fixes
+
+* change node isDeepStrictEqual to lodash isequal ([c4dd950](https://github.com/nestjs-mod/nestjs-mod/commit/c4dd950a5ac979d03b17d3d6d82f9cd29050749d))
+
 # [1.4.0](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.3.2...misc-v1.4.0) (2025-04-24)
 
 
