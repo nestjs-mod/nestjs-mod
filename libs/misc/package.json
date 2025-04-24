@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/misc",
   "description": "Functions and helpers used in NestJS mod modules.",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "keywords": [
     "nestjs",
     "nestjs-mod",
