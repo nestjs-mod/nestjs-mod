@@ -523,7 +523,7 @@ describe('NestJS application: Utils', () => {
     |\`preListen\`|Method for additional actions before listening|**optional**|-|-|
     |\`postListen\`|Method for additional actions after listening|**optional**|-|-|
     |\`defaultLogger\`|Default logger for application|**optional**|-|-|
-    |\`enableShutdownHooks\`|Enable shutdown hooks|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|
+    |\`enableShutdownHooks\`|Enable shutdown hooks|**optional**|\`\`\`false\`\`\`|\`\`\`false\`\`\`|
     |\`globalPrefix\`|Global prefix|**optional**|\`\`\`api\`\`\`|\`\`\`api\`\`\`|    
     |\`autoCloseTimeoutInInfrastructureMode\`|Timeout seconds for automatically closes the application in \`infrastructure mode\` if the application does not close itself (zero - disable)|**optional**|-|-|
     |\`logApplicationStart\`|Log application start|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|

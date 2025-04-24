@@ -134,14 +134,16 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
     if (keys.length > 0) {
       const all = keys.reduce((all, cur) => ({ ...all, ...cur }), {});
       new Logger('All application environments').debug(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        Object.entries(all || {}).map(
+        JSON.stringify(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ([key, value]: [string, any]) =>
-            `${key}: ${Object.keys(value || {})
-              .filter((key) => value[key] && key !== 'transform' && key !== 'hidden')
-              .map((key) => `${capitalCase(key)}='${value ? value[key] : ''}'`)
-              .join(', ')}`
+          Object.entries(all || {}).map(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ([key, value]: [string, any]) =>
+              `${key}: ${Object.keys(value || {})
+                .filter((key) => value[key] && key !== 'transform' && key !== 'hidden')
+                .map((key) => `${capitalCase(key)}='${value ? value[key] : ''}'`)
+                .join(', ')}`
+          )
         )
       );
     }

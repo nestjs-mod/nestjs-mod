@@ -122,15 +122,17 @@ export async function configTransform<
   }
 
   if (debug && logger?.debug) {
-    logger.debug({
-      ...info,
-      validations: Object.fromEntries(
-        Object.entries(info.validations).filter(([key]) => {
-          return !info.modelPropertyOptions.some((o) => o.hideValueFromOutputs && o.originalName === key);
-        })
-      ),
-      modelPropertyOptions: info.modelPropertyOptions.filter((o) => o.hideValueFromOutputs !== true),
-    });
+    logger.debug(
+      JSON.stringify({
+        ...info,
+        validations: Object.fromEntries(
+          Object.entries(info.validations).filter(([key]) => {
+            return !info.modelPropertyOptions.some((o) => o.hideValueFromOutputs && o.originalName === key);
+          })
+        ),
+        modelPropertyOptions: info.modelPropertyOptions.filter((o) => o.hideValueFromOutputs !== true),
+      })
+    );
   }
 
   for (const configPropertyMetadata of modelPropertyOptions) {
