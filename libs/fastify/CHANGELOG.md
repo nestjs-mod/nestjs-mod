@@ -1,3 +1,11 @@
+## [1.9.6](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.9.5...fastify-v1.9.6) (2025-04-24)
+
+
+### Bug Fixes
+
+* change place of run setGlobalPrefix ([fde2459](https://github.com/nestjs-mod/nestjs-mod/commit/fde2459c536514986d4273e1faf6f2807a61e270))
+* set default for enableShutdownHooks value to false ([4efc140](https://github.com/nestjs-mod/nestjs-mod/commit/4efc140671391bff5881331c7361633d86b56c13))
+
 ## [1.9.5](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.9.4...fastify-v1.9.5) (2025-04-02)
 
 
