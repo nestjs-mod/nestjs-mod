@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.3.2...misc-v1.4.0) (2025-04-24)
+
+
+### Features
+
+* append new utils: compare, searchIn and ts utils MakeOptional ([5fbb50c](https://github.com/nestjs-mod/nestjs-mod/commit/5fbb50ca84fb5984c2b1795795f9c55fd7edc73f))
+
 ## [1.3.2](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.3.1...misc-v1.3.2) (2025-01-22)
 
 
