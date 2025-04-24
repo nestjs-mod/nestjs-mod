@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/source",
   "description": "A collection of utilities for unifying NestJS applications and modules",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "author": "EndyKaufman <admin@site15.ru>",
   "engines": {
