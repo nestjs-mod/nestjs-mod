@@ -1,3 +1,10 @@
+## [2.17.7](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.17.6...testing-v2.17.7) (2025-04-28)
+
+
+### Bug Fixes
+
+* change order of run app.setGlobalPrefix and app.listen ([45520a5](https://github.com/nestjs-mod/nestjs-mod/commit/45520a5edc1931822db09b3d72f591718d1e3038))
+
 ## [2.17.6](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.17.5...testing-v2.17.6) (2025-04-24)
 
 
