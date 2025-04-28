@@ -5,14 +5,14 @@ export const reflectMetadataVersion = '^0.1.13';
 export const tsLibVersion = '^2.3.0';
 
 export const nestJsModDeps = {
-  '@nestjs-mod/common': '2.17.6',
-  '@nestjs-mod/reports': '2.17.6',
+  '@nestjs-mod/common': '2.17.7',
+  '@nestjs-mod/reports': '2.17.7',
   '@nestjs-mod/terminus': '1.14.2',
   '@nestjs-mod/pino': '1.15.2',
   '@nestjs-mod/pm2': '1.13.3'
 };
 export const nestJsModDevDeps = {
   'rucken': '^4.16.0',
-  '@nestjs-mod/testing': '2.17.6',
-  '@nestjs-mod/schematics': '2.12.6'
+  '@nestjs-mod/testing': '2.17.7',
+  '@nestjs-mod/schematics': '2.12.7'
 };
