@@ -1,3 +1,10 @@
+## [1.8.7](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.8.6...microservices-v1.8.7) (2025-04-28)
+
+
+### Bug Fixes
+
+* change order of run app.setGlobalPrefix and app.listen ([45520a5](https://github.com/nestjs-mod/nestjs-mod/commit/45520a5edc1931822db09b3d72f591718d1e3038))
+
 ## [1.8.6](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.8.5...microservices-v1.8.6) (2025-04-24)
 
 
