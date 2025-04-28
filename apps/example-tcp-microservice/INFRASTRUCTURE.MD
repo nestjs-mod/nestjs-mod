@@ -1,5 +1,5 @@
 # example-tcp-microservice
-> Version: 0.0.0
+> Version: 0.0.1
 
 A collection of utilities for unifying NestJS applications and modules
 ## Installation

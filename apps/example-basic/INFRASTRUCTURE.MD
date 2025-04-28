@@ -1,5 +1,5 @@
 # example-basic
-> Version: 0.0.0
+> Version: 0.0.1
 
 Example basic application
 ## Installation

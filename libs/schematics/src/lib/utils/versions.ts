@@ -14,5 +14,5 @@ export const nestJsModDeps = {
 export const nestJsModDevDeps = {
   'rucken': '^4.16.0',
   '@nestjs-mod/testing': '2.17.7',
-  '@nestjs-mod/schematics': '2.12.7'
+  '@nestjs-mod/schematics': '2.12.8'
 };
