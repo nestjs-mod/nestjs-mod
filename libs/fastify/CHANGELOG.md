@@ -1,3 +1,10 @@
+## [1.9.7](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.9.6...fastify-v1.9.7) (2025-04-28)
+
+
+### Bug Fixes
+
+* change order of run app.setGlobalPrefix and app.listen ([45520a5](https://github.com/nestjs-mod/nestjs-mod/commit/45520a5edc1931822db09b3d72f591718d1e3038))
+
 ## [1.9.6](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.9.5...fastify-v1.9.6) (2025-04-24)
 
 
