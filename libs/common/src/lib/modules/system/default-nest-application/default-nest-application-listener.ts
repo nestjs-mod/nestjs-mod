@@ -108,13 +108,6 @@ export const { DefaultNestApplicationListener } = createNestModule({
         moduleCategory: NestModuleCategory.system,
         // we use postWrapApplication because we need to launch it after enabling all modules
         postWrapApplication: async ({ app, current }) => {
-          if (current.staticConfiguration?.preListen) {
-            await current.staticConfiguration?.preListen({
-              app,
-              current,
-            } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
-          }
-
           if (app && current.staticConfiguration) {
             if (typeof app.setGlobalPrefix === 'function' && current.staticConfiguration.globalPrefix) {
               app.setGlobalPrefix(current.staticConfiguration.globalPrefix);
@@ -124,6 +117,18 @@ export const { DefaultNestApplicationListener } = createNestModule({
               if (current.staticConfiguration?.enableShutdownHooks) {
                 app.enableShutdownHooks();
               }
+            }
+          }
+
+          if (current.staticConfiguration?.preListen) {
+            await current.staticConfiguration?.preListen({
+              app,
+              current,
+            } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
+          }
+
+          if (app && current.staticConfiguration) {
+            if (current.staticConfiguration?.mode === 'listen') {
               if (((typeof app?.getMicroservices === 'function' && app?.getMicroservices()) || []).length > 0) {
                 await app.startAllMicroservices();
               }
