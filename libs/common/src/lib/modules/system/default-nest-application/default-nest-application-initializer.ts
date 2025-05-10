@@ -1,9 +1,9 @@
-import { LogLevel, Logger, LoggerService, Module, NestApplicationOptions } from '@nestjs/common';
+import { INestApplication, LogLevel, Logger, LoggerService, Module, NestApplicationOptions } from '@nestjs/common';
 import { CorsOptions, CorsOptionsDelegate } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { NestFactory } from '@nestjs/core';
 import { ConfigModel, ConfigModelProperty } from '../../../config-model/decorators';
-import { NestModuleCategory } from '../../../nest-module/types';
+import { NestModuleCategory, WrapApplicationOptions } from '../../../nest-module/types';
 import { collectRootNestModules, createNestModule } from '../../../nest-module/utils';
 
 @ConfigModel()
@@ -112,6 +112,27 @@ export class DefaultNestApplicationInitializerConfig implements NestApplicationO
     default: true,
   })
   forceCloseConnections?: boolean;
+
+
+  @ConfigModelProperty({
+    description: 'Method for additional actions before listening',
+  })
+  preCreateApplication?: (
+    options: WrapApplicationOptions<
+      INestApplication,
+      DefaultNestApplicationInitializerConfig
+    >
+  ) => Promise<void>;
+
+  @ConfigModelProperty({
+    description: 'Method for additional actions after listening',
+  })
+  postCreateApplication?: (
+    options: WrapApplicationOptions<
+      INestApplication,
+      DefaultNestApplicationInitializerConfig
+    >
+  ) => Promise<void>;
 }
 
 export const { DefaultNestApplicationInitializer } = createNestModule({
@@ -121,15 +142,30 @@ export const { DefaultNestApplicationInitializer } = createNestModule({
   staticConfigurationModel: DefaultNestApplicationInitializerConfig,
   // creating application
   wrapApplication: async ({ app, modules, current }) => {
+    if (current.staticConfiguration?.preCreateApplication) {
+      await current.staticConfiguration.preCreateApplication({
+        app,
+        current,
+      } as WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>)
+    }
+
     @Module({
       imports: collectRootNestModules(modules),
     })
-    class DefaultNestApp {}
+    class DefaultNestApp { }
 
     if (app) {
       throw new Error('The application has already been initialized');
     }
     app = await NestFactory.create(DefaultNestApp, current?.staticConfiguration);
+
+    if (current.staticConfiguration?.postCreateApplication) {
+      await current.staticConfiguration.postCreateApplication({
+        app,
+        current,
+      } as WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>)
+    }
+
     if (current.staticConfiguration?.defaultLogger) {
       app.useLogger(current.staticConfiguration?.defaultLogger);
     }
