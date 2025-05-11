@@ -1,3 +1,10 @@
+## [1.8.9](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.8.8...microservices-v1.8.9) (2025-05-11)
+
+
+### Bug Fixes
+
+* add support addRunCommands many commands ([7d3f4c9](https://github.com/nestjs-mod/nestjs-mod/commit/7d3f4c91fcd1ac5516ec918bec03ea18519ea020))
+
 ## [1.8.8](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.8.7...microservices-v1.8.8) (2025-05-11)
 
 
