@@ -16,7 +16,7 @@ export class NxProjectJsonService {
     private readonly applicationPackageJsonService: ApplicationPackageJsonService,
     private readonly packageJsonService: PackageJsonService,
     private readonly dotEnvService: DotEnvService
-  ) {}
+  ) { }
 
   getNxProjectJsonFilePath() {
     if (this.projectUtilsConfiguration.nxProjectJsonFile) {
@@ -63,11 +63,13 @@ export class NxProjectJsonService {
     if (!projectJson.targets[targetName].options!['commands']) {
       projectJson.targets[targetName].options!['commands'] = [];
     }
-    if ((projectJson.targets[targetName].options?.['commands'] as string[])?.length === 0) {
-      for (const line of lines) {
+
+    for (const line of lines) {
+      if (!lines.find(line => (projectJson.targets![targetName].options!['commands'] as string[]).find(c => c === line))) {
         (projectJson.targets[targetName].options!['commands'] as string[]).push(line);
       }
     }
+
     if (!projectJson.targets[targetName].options!['parallel']) {
       projectJson.targets[targetName].options!['parallel'] = false;
     }
