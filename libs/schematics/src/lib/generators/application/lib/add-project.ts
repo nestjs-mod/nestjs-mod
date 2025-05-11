@@ -4,7 +4,7 @@ import type { NormalizedOptions } from '../schema';
 
 export function addProject(tree: Tree, options: NormalizedOptions): void {
   const project = readProjectConfiguration(tree, options.appProjectName);
-  const distFile = project.targets
+  const distFile = project.targets?.['build']?.options.outputPath
     ? `${project.targets['build']?.options.outputPath}/main.js`
     : `dist/apps/${options.appProjectName}/main.js`;
   if (project?.targets) {
