@@ -1,3 +1,10 @@
+## [2.17.9](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.17.8...reports-v2.17.9) (2025-05-11)
+
+
+### Bug Fixes
+
+* add support addRunCommands many commands ([7d3f4c9](https://github.com/nestjs-mod/nestjs-mod/commit/7d3f4c91fcd1ac5516ec918bec03ea18519ea020))
+
 ## [2.17.8](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.17.7...reports-v2.17.8) (2025-05-11)
 
 
