@@ -1,3 +1,10 @@
+## [2.12.9](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.8...schematics-v2.12.9) (2025-05-11)
+
+
+### Bug Fixes
+
+* update distFile detect rules [skip contrib, skip integrations] ([a342f36](https://github.com/nestjs-mod/nestjs-mod/commit/a342f369efeb06b0cde6be7796dab9e6176bb575))
+
 ## [2.12.8](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.7...schematics-v2.12.8) (2025-04-28)
 
 
