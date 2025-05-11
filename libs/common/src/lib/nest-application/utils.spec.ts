@@ -71,7 +71,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class AppService {
-        constructor(private readonly appEnv: AppEnv) {}
+        constructor(private readonly appEnv: AppEnv) { }
 
         getEnv() {
           return this.appEnv;
@@ -110,7 +110,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class App1Service {
-        constructor(private readonly appEnv: App1Env) {}
+        constructor(private readonly appEnv: App1Env) { }
 
         getEnv() {
           return this.appEnv;
@@ -125,7 +125,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class App2Service {
-        constructor(private readonly appService: App1Service) {}
+        constructor(private readonly appService: App1Service) { }
 
         getEnv() {
           return this.appService.getEnv();
@@ -189,7 +189,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class AppService {
-        constructor(private readonly appConfig: AppConfig) {}
+        constructor(private readonly appConfig: AppConfig) { }
 
         getConfig() {
           return this.appConfig;
@@ -225,7 +225,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class App1Service {
-        constructor(private readonly appConfig: App1Config) {}
+        constructor(private readonly appConfig: App1Config) { }
 
         getConfig() {
           return this.appConfig;
@@ -246,7 +246,7 @@ describe('NestJS application: Utils', () => {
         constructor(
           @InjectService(App1Service)
           private readonly appService: App1Service
-        ) {}
+        ) { }
 
         getConfig() {
           return this.appService.getConfig();
@@ -289,7 +289,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class AppService {
-        constructor(private readonly appConfig: AppConfig, private readonly appEnv: AppEnv) {}
+        constructor(private readonly appConfig: AppConfig, private readonly appEnv: AppEnv) { }
 
         getEnv() {
           return this.appEnv;
@@ -349,7 +349,7 @@ describe('NestJS application: Utils', () => {
         constructor(
           @InjectFeatures()
           private readonly appFeatureConfigs: InjectableFeatureConfigurationType<AppFeatureConfig>[]
-        ) {}
+        ) { }
 
         getFeatureConfigs() {
           return this.appFeatureConfigs.map(({ featureConfiguration }) => featureConfiguration);
@@ -364,7 +364,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class App2Service {
-        constructor(private readonly appFeatureScannerService: AppFeatureScannerService) {}
+        constructor(private readonly appFeatureScannerService: AppFeatureScannerService) { }
 
         getFeatureConfigs() {
           return this.appFeatureScannerService.getFeatureConfigs();
@@ -386,7 +386,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class App3Service {
-        constructor(private readonly appFeatureScannerService: AppFeatureScannerService) {}
+        constructor(private readonly appFeatureScannerService: AppFeatureScannerService) { }
 
         getFeatureConfigs() {
           return this.appFeatureScannerService.getFeatureConfigs();
@@ -438,7 +438,7 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class AppReportService {
-        constructor(private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorageService) {}
+        constructor(private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorageService) { }
 
         getReport() {
           return this.infrastructureMarkdownReportStorage.report;
@@ -498,6 +498,8 @@ describe('NestJS application: Utils', () => {
     |\`preview\`|Whether to run application in the preview mode. In the preview mode, providers/controllers are not instantiated & resolved. @default false|**optional**|-|-|
     |\`snapshot\`|Whether to generate a serialized graph snapshot. @default false|**optional**|-|-|
     |\`forceCloseConnections\`|Force close open HTTP connections. Useful if restarting your application hangs due to keep-alive connections in the HTTP adapter.|**optional**|\`\`\`true\`\`\`|\`\`\`true\`\`\`|
+    |\`preCreateApplication\`|Method for additional actions before listening|**optional**|-|-|
+    |\`postCreateApplication\`|Method for additional actions after listening|**optional**|-|-|
 
     ## Integration modules
     
