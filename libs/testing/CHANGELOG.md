@@ -1,3 +1,10 @@
+## [2.17.8](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.17.7...testing-v2.17.8) (2025-05-11)
+
+
+### Bug Fixes
+
+* add preCreateApplication and postCreateApplication to DefaultNestApplicationInitializer ([3be861d](https://github.com/nestjs-mod/nestjs-mod/commit/3be861d02762606163a2b996a404613dc3b91a2e))
+
 ## [2.17.7](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.17.6...testing-v2.17.7) (2025-04-28)
 
 
