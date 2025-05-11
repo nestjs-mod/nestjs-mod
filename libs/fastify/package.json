@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/fastify",
   "description": "Application modules with Fastify adapter for NestJS-mod",
-  "version": "1.9.8",
+  "version": "1.9.9",
   "keywords": [
     "nestjs",
     "nestjs-mod",
