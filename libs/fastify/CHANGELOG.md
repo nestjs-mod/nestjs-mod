@@ -1,3 +1,10 @@
+## [1.9.8](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.9.7...fastify-v1.9.8) (2025-05-11)
+
+
+### Bug Fixes
+
+* add preCreateApplication and postCreateApplication to DefaultNestApplicationInitializer ([3be861d](https://github.com/nestjs-mod/nestjs-mod/commit/3be861d02762606163a2b996a404613dc3b91a2e))
+
 ## [1.9.7](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.9.6...fastify-v1.9.7) (2025-04-28)
 
 
