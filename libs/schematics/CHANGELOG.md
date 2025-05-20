@@ -1,3 +1,10 @@
+## [2.12.11](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.10...schematics-v2.12.11) (2025-05-20)
+
+
+### Bug Fixes
+
+* update deps [skip contrib, skip integrations] ([a1d41da](https://github.com/nestjs-mod/nestjs-mod/commit/a1d41da6d2dc279a8d475e7382c5a893dab7f37b))
+
 ## [2.12.10](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.9...schematics-v2.12.10) (2025-05-20)
 
 
