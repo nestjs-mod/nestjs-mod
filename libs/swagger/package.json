@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/swagger",
   "description": "Swagger functions and helpers used in NestJS mod modules.",
-  "version": "1.4.1",
+  "version": "1.0.0",
   "keywords": [
     "nestjs",
     "nestjs-mod",
@@ -38,7 +38,7 @@
   },
   "peerDependencies": {
     "class-validator": "*",
-    "class-transformer":"*",
+    "class-transformer": "*",
     "@nestjs/swagger": "*"
   },
   "peerDependenciesMeta": {
