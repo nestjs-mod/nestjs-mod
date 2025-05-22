@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.4.1...misc-v1.4.2) (2025-05-22)
+
+
+### Bug Fixes
+
+* added many different common utilities from fullstack and sso projects ([b70826c](https://github.com/nestjs-mod/nestjs-mod/commit/b70826c00d5e528cc3cb7a56292156394e8919b8))
+
 ## [1.4.1](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.4.0...misc-v1.4.1) (2025-04-24)
 
 
