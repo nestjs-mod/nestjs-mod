@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.6.5...nestjs-mod-v1.7.0) (2025-05-23)
+
+
+### Features
+
+* add swagger utils ([ed6db3c](https://github.com/nestjs-mod/nestjs-mod/commit/ed6db3c955536fd6c6d605a4a2923da1188fcf75))
+
 ## [1.6.5](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.6.4...nestjs-mod-v1.6.5) (2025-01-22)
 
 
