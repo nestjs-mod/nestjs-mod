@@ -1,3 +1,10 @@
+# [2.13.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.11...schematics-v2.13.0) (2025-05-23)
+
+
+### Features
+
+* add swagger utils ([ed6db3c](https://github.com/nestjs-mod/nestjs-mod/commit/ed6db3c955536fd6c6d605a4a2923da1188fcf75))
+
 ## [2.12.11](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.10...schematics-v2.12.11) (2025-05-20)
 
 
