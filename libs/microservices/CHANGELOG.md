@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.8.9...microservices-v1.9.0) (2025-05-23)
+
+
+### Features
+
+* add swagger utils ([ed6db3c](https://github.com/nestjs-mod/nestjs-mod/commit/ed6db3c955536fd6c6d605a4a2923da1188fcf75))
+
 ## [1.8.9](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.8.8...microservices-v1.8.9) (2025-05-11)
 
 
