@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/nestjs-mod/nestjs-mod/compare/swagger-v1.0.0...swagger-v1.0.1) (2025-05-23)
+
+
+### Bug Fixes
+
+* update index file ([8925b39](https://github.com/nestjs-mod/nestjs-mod/commit/8925b399df13262e47817df49cf21edf3885f894))
+
 # 1.0.0 (2025-05-22)
 
 

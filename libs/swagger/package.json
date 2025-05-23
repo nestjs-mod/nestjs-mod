@@ -1,7 +1,7 @@
 {
   "name": "@nestjs-mod/swagger",
   "description": "Swagger functions and helpers used in NestJS mod modules.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": [
     "nestjs",
     "nestjs-mod",
