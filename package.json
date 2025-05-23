@@ -192,7 +192,6 @@
   },
   "private": true,
   "devDependencies": {
-    "class-transformer": "0.5.1",
     "@types/lodash.reduce": "4.6.9",
     "@types/lodash.map": "4.6.13",
     "@types/lodash.isequal": "4.5.8",
@@ -216,7 +215,6 @@
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "7.17.0",
     "@typescript-eslint/parser": "7.17.0",
-    "class-validator-multi-lang": "^0.130.201",
     "eslint": "8.57.0",
     "eslint-config-prettier": "^9.0.0",
     "fast-glob": "^3.3.2",
@@ -235,6 +233,10 @@
     "url-loader": "^4.1.1"
   },
   "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-transformer-global-storage": "0.4.1-1",
+    "class-validator": "^0.14.1",
+    "class-validator-multi-lang": "^0.140.1",
     "@fastify/cookie": "^9.3.1",
     "@nestjs/common": "^10.4.15",
     "@nestjs/core": "^10.4.15",
@@ -246,7 +248,6 @@
     "@nx/js": "20.3.0",
     "axios": "1.7.2",
     "case-anything": "2.1.13",
-    "class-validator": "^0.14.0",
     "commander": "^13.0.0",
     "dotenv": ">=16.3.1",
     "markdown-it": "^14.0.0",
