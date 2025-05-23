@@ -33,10 +33,23 @@ bootstrapNestApplication({
     ],
     infrastructure: [
       NestjsModAllReadmeGenerator.forRoot({
+        contextName: 'swagger',
+        staticConfiguration: {
+          telegramGroup: 'https://t.me/nestjs_mod',
+          discord: 'https://discord.gg/meY7UXaG',
+          packageFile: join(rootFolder, 'libs/swagger/package.json'),
+          markdownFile: join(rootFolder, 'libs/swagger/README.md'),
+          folderWithMarkdownFilesToUse: join(rootFolder, 'libs/swagger'),
+          utilsFolders: [join(rootFolder, 'libs/swagger/src/lib')],
+          modules: [import('@nestjs-mod/swagger')],
+          markdownFooter: NESTJS_MOD_ALL_README_GENERATOR_FOOTER,
+        },
+      }),
+      NestjsModAllReadmeGenerator.forRoot({
         contextName: 'common',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          discord:'https://discord.gg/meY7UXaG',
+          discord: 'https://discord.gg/meY7UXaG',
           packageFile: join(rootFolder, 'libs/microservices/package.json'),
           markdownFile: join(rootFolder, 'libs/microservices/README.md'),
           folderWithMarkdownFilesToUse: join(rootFolder, 'libs/microservices'),
@@ -49,7 +62,7 @@ bootstrapNestApplication({
         contextName: 'common',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          discord:'https://discord.gg/meY7UXaG',
+          discord: 'https://discord.gg/meY7UXaG',
           packageFile: join(rootFolder, 'libs/common/package.json'),
           markdownFile: join(rootFolder, 'libs/common/README.md'),
           folderWithMarkdownFilesToUse: join(rootFolder, 'libs/common'),
@@ -62,7 +75,7 @@ bootstrapNestApplication({
         contextName: 'reports',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          discord:'https://discord.gg/meY7UXaG',
+          discord: 'https://discord.gg/meY7UXaG',
           packageFile: join(rootFolder, 'libs/reports/package.json'),
           markdownFile: join(rootFolder, 'libs/reports/README.md'),
           folderWithMarkdownFilesToUse: join(rootFolder, 'libs/reports'),
@@ -75,7 +88,7 @@ bootstrapNestApplication({
         contextName: 'testing',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          discord:'https://discord.gg/meY7UXaG',
+          discord: 'https://discord.gg/meY7UXaG',
           packageFile: join(rootFolder, 'libs/testing/package.json'),
           markdownFile: join(rootFolder, 'libs/testing/README.md'),
           folderWithMarkdownFilesToUse: join(rootFolder, 'libs/testing'),
@@ -88,7 +101,7 @@ bootstrapNestApplication({
         contextName: 'fastify',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          discord:'https://discord.gg/meY7UXaG',
+          discord: 'https://discord.gg/meY7UXaG',
           packageFile: join(rootFolder, 'libs/fastify/package.json'),
           markdownFile: join(rootFolder, 'libs/fastify/README.md'),
           folderWithMarkdownFilesToUse: join(rootFolder, 'libs/fastify'),
@@ -101,7 +114,7 @@ bootstrapNestApplication({
         contextName: 'misc',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          discord:'https://discord.gg/meY7UXaG',
+          discord: 'https://discord.gg/meY7UXaG',
           packageFile: join(rootFolder, 'libs/misc/package.json'),
           markdownFile: join(rootFolder, 'libs/misc/README.md'),
           folderWithMarkdownFilesToUse: join(rootFolder, 'libs/misc'),

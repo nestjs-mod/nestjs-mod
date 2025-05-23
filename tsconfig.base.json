@@ -33,7 +33,8 @@
       "@nestjs-mod/nestjs-mod": ["libs/nestjs-mod/src/index.ts"],
       "@nestjs-mod/reports": ["libs/reports/src/index.ts"],
       "@nestjs-mod/schematics": ["libs/schematics/src/index.ts"],
-      "@nestjs-mod/testing": ["libs/testing/src/index.ts"]
+      "@nestjs-mod/testing": ["libs/testing/src/index.ts"],
+      "@nestjs-mod/swagger": ["libs/swagger/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp", "integrations"]

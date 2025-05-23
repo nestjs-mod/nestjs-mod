@@ -67,7 +67,7 @@
     "dep-graph": "./node_modules/.bin/nx dep-graph",
     "make-ts-list": "./node_modules/.bin/rucken make-ts-list",
     "update:nestjs-mod-example": "bash ./integrations/scripts/update-nestjs-mod-example.sh",
-    "update:lib-versions": "npx -y npm-check-updates @nestjs/* @theunderscorer/* rucken -u && npm i",
+    "update:lib-versions": "npx -y npm-check-updates @nestjs-mod/* @theunderscorer/* rucken -u && npm i",
     "manual:prepare": "rm -rf .nx && npm run schematics-version-bump && yes | cp -rf ./README.md ./libs/schematics && yes | cp -rf ./README.md ./libs/schematics/src/lib/generators/init/files && npm run generate && npm run docs:infrastructure && npm run test",
     "tsc": "tsc",
     "rucken": "rucken"
@@ -228,7 +228,7 @@
     "nx": "20.3.0",
     "prettier": "^2.6.2",
     "react-refresh": "^0.10.0",
-    "rucken": "^4.16.0",
+    "rucken": "^4.16.1",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
