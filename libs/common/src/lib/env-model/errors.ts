@@ -8,11 +8,13 @@ export class EnvModelValidationErrors extends Error {
   constructor(errors: ValidationError[], info: EnvModelInfo, message?: string) {
     super(
       message ||
-        Object.values(info.validations)
+        Object.entries(info.validations)
+          .filter(([k, v]) => errors.find((err) => err.property === k))
           .map(
-            (v) => `${v.propertyValueExtractors.map((e) => e.example.example)}-${Object.keys(v.constraints).join(',')}`
+            ([k, v]) =>
+              `${v.propertyValueExtractors.map((e) => e.example.example)}-${Object.keys(v.constraints).join(',')}`
           )
-          .join('\n')
+          .join(';')
     );
     this.errors = errors;
     this.info = info;

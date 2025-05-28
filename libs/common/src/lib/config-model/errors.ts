@@ -9,8 +9,9 @@ export class ConfigModelValidationErrors extends Error {
     super(
       message ||
         Object.entries(info.validations)
+          .filter(([k, v]) => errors.find((err) => err.property === k))
           .map(([k, v]) => `${k}-${Object.keys(v.constraints).join(',')}`)
-          .join('\n')
+          .join(';')
     );
     this.errors = errors;
     this.info = info;
