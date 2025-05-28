@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.9.0...microservices-v1.9.1) (2025-05-28)
+
+
+### Bug Fixes
+
+* hide not need validation info from error message ([2d2ddaf](https://github.com/nestjs-mod/nestjs-mod/commit/2d2ddaf5a54febd344a2c1fe8ac1e7afa87bea39))
+
 # [1.9.0](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.8.9...microservices-v1.9.0) (2025-05-23)
 
 
