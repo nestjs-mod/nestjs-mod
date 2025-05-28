@@ -1,3 +1,10 @@
+## [2.18.1](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.18.0...reports-v2.18.1) (2025-05-28)
+
+
+### Bug Fixes
+
+* hide not need validation info from error message ([2d2ddaf](https://github.com/nestjs-mod/nestjs-mod/commit/2d2ddaf5a54febd344a2c1fe8ac1e7afa87bea39))
+
 # [2.18.0](https://github.com/nestjs-mod/nestjs-mod/compare/reports-v2.17.9...reports-v2.18.0) (2025-05-23)
 
 
