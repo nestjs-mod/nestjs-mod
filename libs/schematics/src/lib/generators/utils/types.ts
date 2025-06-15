@@ -16,12 +16,7 @@ export type NestSchematic =
   | 'resolver'
   | 'resource'
   | 'service';
-export type TransportLayer =
-  | 'rest'
-  | 'graphql-code-first'
-  | 'graphql-schema-first'
-  | 'microservice'
-  | 'ws';
+export type TransportLayer = 'rest' | 'graphql-code-first' | 'graphql-schema-first' | 'microservice' | 'ws';
 
 export type NestGeneratorOptions = {
   path: string;

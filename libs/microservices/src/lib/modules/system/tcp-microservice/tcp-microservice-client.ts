@@ -39,8 +39,7 @@ function getClientProxyApplicationHooks(contextName?: string) {
 
 export const { TcpNestMicroserviceClientModule } = createNestModule({
   moduleName: TCP_NEST_MICROSERVICE_CLIENT_MODULE,
-  moduleDescription:
-    'TCP NestJS-mod microservice client @see https://docs.nestjs.com/microservices/basics',
+  moduleDescription: 'TCP NestJS-mod microservice client @see https://docs.nestjs.com/microservices/basics',
   moduleCategory: NestModuleCategory.system,
   staticConfigurationModel: TcpMicroserviceConfiguration,
   staticEnvironmentsModel: TcpMicroserviceEnvironments,

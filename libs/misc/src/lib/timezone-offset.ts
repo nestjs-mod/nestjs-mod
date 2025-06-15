@@ -1,2 +1,1 @@
-export const TIMEZONE_OFFSET =
-  new Date().getTimezoneOffset() / 60;
+export const TIMEZONE_OFFSET = new Date().getTimezoneOffset() / 60;

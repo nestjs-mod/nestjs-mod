@@ -53,7 +53,7 @@
     "check-contrib:local": "rm -rf .nx && export NX_DAEMON=false && export NX_PARALLEL=false && export GIT_LOG='no skip' && bash ./integrations/scripts/check-contrib.sh",
     "_____lint_____": "_____lint_____",
     "lint": "npm run tsc:lint && ./node_modules/.bin/nx run-many -t=lint --parallel=false",
-    "lint:fix": "npm run tsc:lint && ./node_modules/.bin/nx run-many -t=lint --fix --parallel=false",
+    "lint:fix": "npm run tsc:lint && ./node_modules/.bin/nx run-many -t=lint --fix --parallel=false && ./node_modules/.bin/nx format:write --all",
     "tsc:lint": "tsc --noEmit -p tsconfig.base.json && tsc --noEmit -p ./apps/example-basic/tsconfig.spec.json",
     "_____schematics_____": "_____schematics_____",
     "build:schematics": "./node_modules/.bin/nx build schematics",

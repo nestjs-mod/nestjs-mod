@@ -1,4 +1,4 @@
-import { DynamicModule} from '@nestjs/common';
+import { DynamicModule } from '@nestjs/common';
 import { Injectable, Module } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
@@ -44,10 +44,7 @@ describe('Config model: Utils', () => {
       Test.createTestingModule({
         imports: [AppModule.forRoot({})],
       }).compile()
-    ).rejects.toHaveProperty(
-      'errors.0.constraints.isNotEmpty',
-      'option should not be empty'
-    );
+    ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'option should not be empty');
   });
 
   it('should return model info in error if option of config not set', async () => {
@@ -89,9 +86,7 @@ describe('Config model: Utils', () => {
       }).compile()
     ).rejects.toMatchObject({
       info: {
-        modelPropertyOptions: [
-          { description: 'option description', originalName: 'option' },
-        ],
+        modelPropertyOptions: [{ description: 'option description', originalName: 'option' }],
         modelOptions: {
           name: 'model name',
           description: 'model description',

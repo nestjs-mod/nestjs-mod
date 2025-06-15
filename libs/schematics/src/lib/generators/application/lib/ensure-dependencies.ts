@@ -1,11 +1,6 @@
 import type { GeneratorCallback, Tree } from '@nx/devkit';
 import { addDependenciesToPackageJson } from '@nx/devkit';
-import {
-  nestJsVersion,
-  reflectMetadataVersion,
-  rxjsVersion,
-  tsLibVersion,
-} from '../../../utils/versions';
+import { nestJsVersion, reflectMetadataVersion, rxjsVersion, tsLibVersion } from '../../../utils/versions';
 
 export function ensureDependencies(tree: Tree): GeneratorCallback {
   return addDependenciesToPackageJson(
@@ -20,7 +15,7 @@ export function ensureDependencies(tree: Tree): GeneratorCallback {
     },
     {
       '@nestjs/testing': nestJsVersion,
-      "fast-glob": "^3.3.2",
+      'fast-glob': '^3.3.2',
     }
   );
 }

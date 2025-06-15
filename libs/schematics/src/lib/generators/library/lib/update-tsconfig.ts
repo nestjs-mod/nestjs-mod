@@ -15,14 +15,14 @@ export function updateTsConfigLib(tree: Tree, options: NormalizedOptions): void 
     json.compilerOptions.noImplicitOverride = true;
     json.compilerOptions.noImplicitReturns = true;
     json.compilerOptions.esModuleInterop = true;
-    
+
     if (options.strict) {
       json.compilerOptions = {
         ...json.compilerOptions,
         strictNullChecks: true,
         noImplicitAny: true,
         strictBindCallApply: true,
-        strictPropertyInitialization:true,
+        strictPropertyInitialization: true,
         forceConsistentCasingInFileNames: true,
         noFallthroughCasesInSwitch: true,
       };

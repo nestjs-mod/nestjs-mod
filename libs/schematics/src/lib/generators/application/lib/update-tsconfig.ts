@@ -4,7 +4,6 @@ import type { NormalizedOptions } from '../schema';
 
 export function updateTsConfig(tree: Tree, options: NormalizedOptions): void {
   updateJson(tree, joinPathFragments(options.appProjectRoot, 'tsconfig.app.json'), (json) => {
-
     json.compilerOptions.target = 'es2021';
     if (options.strict) {
       json.compilerOptions = {

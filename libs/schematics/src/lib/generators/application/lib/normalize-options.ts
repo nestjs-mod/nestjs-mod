@@ -7,7 +7,10 @@ import { Linter } from '@nx/eslint';
 import type { Schema as NodeApplicationGeneratorOptions } from '@nx/node/src/generators/application/schema';
 import type { ApplicationGeneratorOptions, NormalizedOptions } from '../schema';
 
-export async function normalizeOptionsApp(tree: Tree, options: ApplicationGeneratorOptions): Promise<NormalizedOptions> {
+export async function normalizeOptionsApp(
+  tree: Tree,
+  options: ApplicationGeneratorOptions
+): Promise<NormalizedOptions> {
   await ensureProjectName(tree, options, 'application');
   const { projectName: appProjectName, projectRoot: appProjectRoot } = await determineProjectNameAndRootOptions(tree, {
     name: options.name,

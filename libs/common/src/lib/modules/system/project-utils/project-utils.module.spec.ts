@@ -232,10 +232,7 @@ describe('Project Utils', () => {
     const getEnv = app.get(GetEnv);
 
     expect(getEnv.getEnv()).toMatchObject({ TEST_APP_PORT: '2000', TEST_APP_HOSTNAME: 'host' });
-    expect(getEnv.getKeys()).toEqual([
-      'TEST_APP_PORT',
-      'TEST_APP_HOSTNAME',
-    ]);
+    expect(getEnv.getKeys()).toEqual(['TEST_APP_PORT', 'TEST_APP_HOSTNAME']);
   });
 
   it('should return data from package.json-file', async () => {

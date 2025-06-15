@@ -3,7 +3,5 @@
   "npm": true,
   "github": true,
   "repositoryUrl": "https://github.com/nestjs-mod/nestjs-mod",
-  "branches": [
-    "master"
-  ]
+  "branches": ["master"]
 }

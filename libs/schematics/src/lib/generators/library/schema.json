@@ -78,7 +78,7 @@
     "category": {
       "description": "Logical category for dividing responsibilities between modules.",
       "type": "string",
-      "enum": ["core", "feature","infrastructure", "integration", "system"],
+      "enum": ["core", "feature", "infrastructure", "integration", "system"],
       "default": "feature"
     },
     "global": {
@@ -106,18 +106,7 @@
       "description": "The ES target, Nest suggest using es2021 or higher.",
       "type": "string",
       "default": "es2021",
-      "enum": [
-        "es5",
-        "es6",
-        "esnext",
-        "es2015",
-        "es2016",
-        "es2017",
-        "es2018",
-        "es2019",
-        "es2020",
-        "es2021"
-      ]
+      "enum": ["es5", "es6", "esnext", "es2015", "es2016", "es2017", "es2018", "es2019", "es2020", "es2021"]
     },
     "strict": {
       "description": "Whether to enable tsconfig strict mode or not.",

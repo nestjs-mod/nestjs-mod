@@ -16,7 +16,7 @@ export class NxProjectJsonService {
     private readonly applicationPackageJsonService: ApplicationPackageJsonService,
     private readonly packageJsonService: PackageJsonService,
     private readonly dotEnvService: DotEnvService
-  ) { }
+  ) {}
 
   getNxProjectJsonFilePath() {
     if (this.projectUtilsConfiguration.nxProjectJsonFile) {
@@ -65,7 +65,11 @@ export class NxProjectJsonService {
     }
 
     for (const line of lines) {
-      if (!lines.find(line => (projectJson.targets![targetName].options!['commands'] as string[]).find(c => c === line))) {
+      if (
+        !lines.find((line) =>
+          (projectJson.targets![targetName].options!['commands'] as string[]).find((c) => c === line)
+        )
+      ) {
         (projectJson.targets[targetName].options!['commands'] as string[]).push(line);
       }
     }

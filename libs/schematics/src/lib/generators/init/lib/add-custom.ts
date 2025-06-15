@@ -58,7 +58,11 @@ export function addScript(tree: Tree, projectName?: string) {
           comments: ['Launching a built NestJS application (you must first build it using the build command)'],
         },
         build: {
-          commands: ['npm run generate', 'npm run tsc:lint', `./node_modules/.bin/nx run-many --all -t=build --parallel=false`],
+          commands: [
+            'npm run generate',
+            'npm run tsc:lint',
+            `./node_modules/.bin/nx run-many --all -t=build --parallel=false`,
+          ],
           comments: ['Building a NestJS application'],
         },
       },
@@ -80,7 +84,9 @@ export function addScript(tree: Tree, projectName?: string) {
       'docs',
       {
         'docs:infrastructure': {
-          commands: [`export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --all -t=serve --parallel=false --watch=false --inspect=false`],
+          commands: [
+            `export NESTJS_MODE=infrastructure && ./node_modules/.bin/nx run-many --all -t=serve --parallel=false --watch=false --inspect=false`,
+          ],
           comments: [
             'Creation of documentation for the entire infrastructure and creation of files necessary to launch the infrastructure',
           ],
@@ -186,9 +192,7 @@ export function addScript(tree: Tree, projectName?: string) {
         },
         'make-ts-list': {
           commands: [`./node_modules/.bin/rucken make-ts-list`],
-          comments: [
-            'Automatically generating an index.ts file for each library,'
-          ],
+          comments: ['Automatically generating an index.ts file for each library,'],
         },
         // "prepare": "npx -y husky install",
         'manual:prepare': {
@@ -200,9 +204,7 @@ export function addScript(tree: Tree, projectName?: string) {
         },
         'update:nestjs-mod-versions': {
           commands: ['npx -y npm-check-updates @nestjs-mod/* nestjs-mod -u'],
-          comments: [
-            'Updating NestJS-mod libraries',
-          ],
+          comments: ['Updating NestJS-mod libraries'],
         },
         rucken: {
           commands: ['rucken'],

@@ -181,9 +181,7 @@ ${packageJsonInfo.description ? packageJsonInfo.description : ''}
 
 [![NPM version][npm-image]][npm-url] [![monthly downloads][downloads-image]][downloads-url] ${
       this.nestjsModAllReadmeGeneratorConfig.telegramGroup ? `[![Telegram][telegram-image]][telegram-url]` : ''
-    } ${
-      this.nestjsModAllReadmeGeneratorConfig.discord ? `[![Discord][discord-image]][discord-url]` : ''
-    }
+    } ${this.nestjsModAllReadmeGeneratorConfig.discord ? `[![Discord][discord-image]][discord-url]` : ''}
 
 ## Installation
 

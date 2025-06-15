@@ -1,16 +1,12 @@
 {
   "name": "nestjs-mod/schematics",
   "version": "0.1",
-  "extends": [
-    "@nx/workspace"
-  ],
+  "extends": ["@nx/workspace"],
   "generators": {
     "application": {
       "factory": "./src/lib/generators/application/application#applicationGeneratorInternal",
       "schema": "./src/lib/generators/application/schema.json",
-      "aliases": [
-        "app"
-      ],
+      "aliases": ["app"],
       "x-type": "application",
       "description": "Create a NestJS-mod application."
     },
@@ -18,17 +14,13 @@
       "factory": "./src/lib/generators/init/init",
       "schema": "./src/lib/generators/init/schema.json",
       "description": "Initialize the `@nrwl/nest` plugin.",
-      "aliases": [
-        "ng-add"
-      ],
+      "aliases": ["ng-add"],
       "hidden": true
     },
     "library": {
       "factory": "./src/lib/generators/library/library#libraryGeneratorInternal",
       "schema": "./src/lib/generators/library/schema.json",
-      "aliases": [
-        "lib"
-      ],
+      "aliases": ["lib"],
       "x-type": "library",
       "description": "Create a new NestJS-mod library."
     }

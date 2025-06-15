@@ -7,34 +7,25 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/nestjs-mod",
         "tsConfig": "libs/nestjs-mod/tsconfig.lib.json",
         "packageJson": "libs/nestjs-mod/package.json",
         "main": "libs/nestjs-mod/src/index.ts",
-        "assets": [
-          "libs/nestjs-mod/*.md",
-          "libs/nestjs-mod/*.js"
-        ]
+        "assets": ["libs/nestjs-mod/*.md", "libs/nestjs-mod/*.js"]
       }
     },
     "publish": {
       "command": "node tools/scripts/publish.mjs nestjs-mod {args.ver} {args.tag}",
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     },
     "lint": {
       "executor": "@nx/eslint:lint"
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "libs/nestjs-mod/jest.config.ts"
       }

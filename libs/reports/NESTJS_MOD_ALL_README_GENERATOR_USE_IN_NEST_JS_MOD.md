@@ -14,7 +14,7 @@ bootstrapNestApplication({
         contextName: 'common',
         staticConfiguration: {
           telegramGroup: 'https://t.me/nestjs_mod',
-          discord:'https://discord.gg/meY7UXaG',
+          discord: 'https://discord.gg/meY7UXaG',
           packageFile: join(libFolder, 'package.json'),
           markdownFile: join(libFolder, 'README.md'),
           folderWithMarkdownFilesToUse: libFolder,

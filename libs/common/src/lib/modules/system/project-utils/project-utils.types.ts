@@ -7,8 +7,8 @@ export type PackageJsonCategoryType = Record<string, PackageJsonScriptType>;
 export type PackageJsonType = ProjectOptions & {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
-  dependenciesInfo?: Record<string, {docs:true}>;
-  devDependenciesInfo?: Record<string, {docs:true}>;
+  dependenciesInfo?: Record<string, { docs: true }>;
+  devDependenciesInfo?: Record<string, { docs: true }>;
   [SCRIPTS_KEY_NAME]?: Record<string, PackageJsonCategoryType>;
   [SCRIPTS_COMMENTS_KEY_NAME]?: Record<string, string[]>;
 };
@@ -16,8 +16,8 @@ export type PackageJsonType = ProjectOptions & {
 export type BasicPackageJsonType = ProjectOptions & {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
-  dependenciesInfo?: Record<string, {docs:true}>;
-  devDependenciesInfo?: Record<string, {docs:true}>;
+  dependenciesInfo?: Record<string, { docs: true }>;
+  devDependenciesInfo?: Record<string, { docs: true }>;
   [SCRIPTS_KEY_NAME]?: Record<string, string>;
   [SCRIPTS_COMMENTS_KEY_NAME]?: Record<string, string[]>;
 };

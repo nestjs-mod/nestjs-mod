@@ -113,25 +113,18 @@ export class DefaultNestApplicationInitializerConfig implements NestApplicationO
   })
   forceCloseConnections?: boolean;
 
-
   @ConfigModelProperty({
     description: 'Method for additional actions before listening',
   })
   preCreateApplication?: (
-    options: WrapApplicationOptions<
-      INestApplication,
-      DefaultNestApplicationInitializerConfig
-    >
+    options: WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>
   ) => Promise<void>;
 
   @ConfigModelProperty({
     description: 'Method for additional actions after listening',
   })
   postCreateApplication?: (
-    options: WrapApplicationOptions<
-      INestApplication,
-      DefaultNestApplicationInitializerConfig
-    >
+    options: WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>
   ) => Promise<void>;
 }
 
@@ -146,13 +139,13 @@ export const { DefaultNestApplicationInitializer } = createNestModule({
       await current.staticConfiguration.preCreateApplication({
         app,
         current,
-      } as WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>)
+      } as WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>);
     }
 
     @Module({
       imports: collectRootNestModules(modules),
     })
-    class DefaultNestApp { }
+    class DefaultNestApp {}
 
     if (app) {
       throw new Error('The application has already been initialized');
@@ -163,7 +156,7 @@ export const { DefaultNestApplicationInitializer } = createNestModule({
       await current.staticConfiguration.postCreateApplication({
         app,
         current,
-      } as WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>)
+      } as WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>);
     }
 
     if (current.staticConfiguration?.defaultLogger) {
