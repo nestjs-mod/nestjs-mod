@@ -1,3 +1,10 @@
+## [2.13.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.13.0...schematics-v2.13.1) (2025-06-16)
+
+
+### Bug Fixes
+
+* format code ([eb867d2](https://github.com/nestjs-mod/nestjs-mod/commit/eb867d2661d16f6574a881a8f4bccd74318be8d7))
+
 # [2.13.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.12.11...schematics-v2.13.0) (2025-05-23)
 
 ### Features
