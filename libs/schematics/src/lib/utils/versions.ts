@@ -9,10 +9,10 @@ export const nestJsModDeps = {
   '@nestjs-mod/reports': '2.18.1',
   '@nestjs-mod/terminus': '1.15.0',
   '@nestjs-mod/pino': '1.16.0',
-  '@nestjs-mod/pm2': '1.14.0',
+  '@nestjs-mod/pm2': '1.14.0'
 };
 export const nestJsModDevDeps = {
-  rucken: '^4.16.1',
+  'rucken': '^4.16.1',
   '@nestjs-mod/testing': '2.18.1',
-  '@nestjs-mod/schematics': '2.13.0',
+  '@nestjs-mod/schematics': '2.13.0'
 };
