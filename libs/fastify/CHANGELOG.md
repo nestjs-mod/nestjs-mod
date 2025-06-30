@@ -1,3 +1,10 @@
+## [1.10.2](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.10.1...fastify-v1.10.2) (2025-06-30)
+
+
+### Bug Fixes
+
+* add support skip hard set gitignore rules ([a77057b](https://github.com/nestjs-mod/nestjs-mod/commit/a77057bb1902e0d8b5a4c71a8475154cb65702e4))
+
 ## [1.10.1](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.10.0...fastify-v1.10.1) (2025-05-28)
 
 ### Bug Fixes
