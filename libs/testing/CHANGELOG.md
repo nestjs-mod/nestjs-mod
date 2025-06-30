@@ -1,3 +1,10 @@
+## [2.18.2](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.18.1...testing-v2.18.2) (2025-06-30)
+
+
+### Bug Fixes
+
+* add support skip hard set gitignore rules ([a77057b](https://github.com/nestjs-mod/nestjs-mod/commit/a77057bb1902e0d8b5a4c71a8475154cb65702e4))
+
 ## [2.18.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.18.0...testing-v2.18.1) (2025-05-28)
 
 ### Bug Fixes
