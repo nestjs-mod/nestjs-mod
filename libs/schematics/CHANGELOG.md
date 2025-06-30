@@ -1,3 +1,10 @@
+## [2.13.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.13.1...schematics-v2.13.2) (2025-06-30)
+
+
+### Bug Fixes
+
+* add support skip hard set gitignore rules [skip contrib, skip integrations] ([2a9f647](https://github.com/nestjs-mod/nestjs-mod/commit/2a9f647d709472a582f64445d7a06162621bd170))
+
 ## [2.13.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.13.0...schematics-v2.13.1) (2025-06-16)
 
 
