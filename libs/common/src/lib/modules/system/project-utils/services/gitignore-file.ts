@@ -14,12 +14,16 @@ export class GitignoreService {
     if (packageJson && packageJsonFilePath) {
       const gitignoreFilePath = `${dirname(packageJsonFilePath)}/.gitignore`;
       if (existsSync(gitignoreFilePath)) {
-        let content = readFileSync(gitignoreFilePath, 'utf-8').toString();
+        const content = readFileSync(gitignoreFilePath, 'utf-8').toString();
+        const contentArray = content.split('\n');
 
         let changed = false;
         for (const line of lines) {
-          if (!content?.includes(line)) {
-            content = `${content}\n${line}\n`;
+          if (!contentArray?.includes(line) && !contentArray?.includes(`# ${line}`)) {
+            if (changed === false) {
+              contentArray.push('');
+            }
+            contentArray.push(line);
             changed = true;
           }
         }
@@ -32,7 +36,7 @@ export class GitignoreService {
             if (!existsSync(fileDir)) {
               mkdirSync(fileDir, { recursive: true });
             }
-            writeFileSync(gitignoreFilePath, content);
+            writeFileSync(gitignoreFilePath, contentArray.join('\n'));
           }
         }
       }
