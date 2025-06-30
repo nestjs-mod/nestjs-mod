@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.9.1...microservices-v1.9.2) (2025-06-30)
+
+
+### Bug Fixes
+
+* add support skip hard set gitignore rules ([a77057b](https://github.com/nestjs-mod/nestjs-mod/commit/a77057bb1902e0d8b5a4c71a8475154cb65702e4))
+
 ## [1.9.1](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.9.0...microservices-v1.9.1) (2025-05-28)
 
 ### Bug Fixes
