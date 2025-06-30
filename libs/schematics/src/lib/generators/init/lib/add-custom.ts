@@ -66,7 +66,7 @@ export function addScript(tree: Tree, projectName?: string) {
           comments: ['Building a NestJS application'],
         },
       },
-      jsonStructure
+      jsonStructure,
     );
     if (projectName) {
       packageJsonUtils.addScripts(
@@ -77,7 +77,7 @@ export function addScript(tree: Tree, projectName?: string) {
             comments: [`Launching a built ${projectName} (you must first build it using the build command)`],
           },
         },
-        jsonStructure
+        jsonStructure,
       );
     }
     packageJsonUtils.addScripts(
@@ -92,7 +92,7 @@ export function addScript(tree: Tree, projectName?: string) {
           ],
         },
       },
-      jsonStructure
+      jsonStructure,
     );
     packageJsonUtils.addScripts(
       'dev infra',
@@ -102,7 +102,7 @@ export function addScript(tree: Tree, projectName?: string) {
           comments: ['Running NestJS application source code in watch mode'],
         },
       },
-      jsonStructure
+      jsonStructure,
     );
     if (projectName) {
       packageJsonUtils.addScripts(
@@ -113,7 +113,7 @@ export function addScript(tree: Tree, projectName?: string) {
             comments: [`Running ${projectName} source code in watch mode`],
           },
         },
-        jsonStructure
+        jsonStructure,
       );
     }
     packageJsonUtils.addScripts(
@@ -132,7 +132,7 @@ export function addScript(tree: Tree, projectName?: string) {
           comments: ['Checking typescript code in libraries'],
         },
       },
-      jsonStructure
+      jsonStructure,
     );
     packageJsonUtils.addScripts(
       'tests',
@@ -144,7 +144,7 @@ export function addScript(tree: Tree, projectName?: string) {
           comments: ['Running tests across the entire project'],
         },
       },
-      jsonStructure
+      jsonStructure,
     );
     if (projectName) {
       packageJsonUtils.addScripts(
@@ -157,7 +157,7 @@ export function addScript(tree: Tree, projectName?: string) {
             comments: [`Running tests for ${projectName}`],
           },
         },
-        jsonStructure
+        jsonStructure,
       );
     }
 
@@ -214,7 +214,7 @@ export function addScript(tree: Tree, projectName?: string) {
           ],
         },
       },
-      jsonStructure
+      jsonStructure,
     );
 
     if (!basicJson['lint-staged']) {
@@ -277,12 +277,23 @@ Thumbs.db
 *.env
 `;
   if (host.exists('.gitignore')) {
-    let content = host.read('.gitignore', 'utf-8');
+    const lines = needed.split('\n');
+    const content = host.read('.gitignore', 'utf-8') || '';
+    const contentArray = content.split('\n');
 
-    if (!content?.includes('node_modules')) {
-      content = `${content}\n${needed}\n`;
+    let changed = false;
+    for (const line of lines) {
+      if (!contentArray?.includes(line) && !contentArray?.includes(`# ${line}`)) {
+        if (changed === false) {
+          contentArray.push('');
+        }
+        contentArray.push(line);
+        changed = true;
+      }
     }
-    host.write('.gitignore', content);
+    if (changed) {
+      host.write('.gitignore', contentArray.join('\n'));
+    }
   } else {
     host.write('.gitignore', `${needed}\n`);
   }
@@ -335,13 +346,25 @@ Thumbs.db
 .nx/workspace-data
 *.env
 `;
-  if (host.exists('.nxignore')) {
-    let content = host.read('.nxignore', 'utf-8');
 
-    if (!content?.includes('node_modules')) {
-      content = `${content}\n${needed}\n`;
+  if (host.exists('.nxignore')) {
+    const lines = needed.split('\n');
+    const content = host.read('.nxignore', 'utf-8') || '';
+    const contentArray = content.split('\n');
+
+    let changed = false;
+    for (const line of lines) {
+      if (!contentArray?.includes(line) && !contentArray?.includes(`# ${line}`)) {
+        if (changed === false) {
+          contentArray.push('');
+        }
+        contentArray.push(line);
+        changed = true;
+      }
     }
-    host.write('.nxignore', content);
+    if (changed) {
+      host.write('.nxignore', contentArray.join('\n'));
+    }
   } else {
     host.write('.nxignore', `${needed}\n`);
   }
