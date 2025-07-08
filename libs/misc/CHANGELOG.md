@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.4.2...misc-v1.4.3) (2025-07-08)
+
+
+### Bug Fixes
+
+* add getHttpErrorResponseData ([651a3a4](https://github.com/nestjs-mod/nestjs-mod/commit/651a3a4117442a23feb0e42709d9958177a83a62))
+
 ## [1.4.2](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.4.1...misc-v1.4.2) (2025-05-22)
 
 ### Bug Fixes
