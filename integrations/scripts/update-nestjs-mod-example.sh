@@ -31,7 +31,7 @@ npm install --save-dev @nestjs-mod/schematics@latest
 rm -rf ./.nx
 ./node_modules/.bin/nx g @nestjs-mod/schematics:application --verbose --linter=eslint --unitTestRunner=jest --directory=apps/app-name --name=app-name --strict=true
 rm -rf ./.nx
-./node_modules/.bin/nx g @nestjs-mod/schematics:library --verbose --linter=eslint --unitTestRunner=jest --buildable --publishable --directory=libs/feature-name --simpleName=true --strict=true
+./node_modules/.bin/nx g @nestjs-mod/schematics:library --name=feature-name --buildable --publishable --directory=libs/feature-name --simpleName=true --strict=true --linter=eslint --unitTestRunner=jest
 rm -rf ./.nx
 npm run manual:prepare
 # todo: fix it later

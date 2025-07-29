@@ -64,7 +64,7 @@ Commands for create empty NestJS-mod library
 
 ```bash
 # Create NestJS-mod library
-./node_modules/.bin/nx g @nestjs-mod/schematics:library --linter=eslint --unitTestRunner=jest --buildable --publishable --directory=libs/feature-name --simpleName=true --strict=true
+./node_modules/.bin/nx g @nestjs-mod/schematics:library --name=feature-name --buildable --publishable --directory=libs/feature-name --simpleName=true --strict=true --linter=eslint --unitTestRunner=jest
 ```
 
 Add created library to `apps/app-name/src/main.ts`
