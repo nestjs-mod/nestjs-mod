@@ -58,7 +58,7 @@ Feature variables of primitive and complex types that can be added to the curren
 
 | Key    | Description | Constraints | Default | Value |
 | ------ | ----------- | ----------- | ------- | ----- |
-|`featureVar`|-|**isNotEmpty** (featureVar should not be empty)|-|-|
+|`featureVar`|-|**optional**|-|-|
 
 #### Feature environments
 Feature variables with primitive types used in the module, the values of which can be obtained from various sources, such as: process.env or consul key value.

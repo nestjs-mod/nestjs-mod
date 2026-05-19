@@ -1,12 +1,12 @@
 export type RecursivelyReplaceNullWithUndefined<T> = T extends null
   ? undefined // Note: Add interfaces here of all GraphQL scalars that will be transformed into an object
   : T extends Date
-  ? T
-  : {
-      [K in keyof T]: T[K] extends (infer U)[]
-        ? RecursivelyReplaceNullWithUndefined<U>[]
-        : RecursivelyReplaceNullWithUndefined<T[K]>;
-    };
+    ? T
+    : {
+        [K in keyof T]: T[K] extends (infer U)[]
+          ? RecursivelyReplaceNullWithUndefined<U>[]
+          : RecursivelyReplaceNullWithUndefined<T[K]>;
+      };
 
 /**
  * Recursively replaces all nulls with undefineds.
@@ -27,9 +27,9 @@ export function replaceNullsWithUndefineds<T>(obj: T): RecursivelyReplaceNullWit
       v === null
         ? undefined
         : // eslint-disable-next-line no-proto
-        v && typeof v === 'object' && v.__proto__.constructor === Object
-        ? replaceNullsWithUndefineds(v)
-        : v;
+          v && typeof v === 'object' && v.__proto__.constructor === Object
+          ? replaceNullsWithUndefineds(v)
+          : v;
   });
   return newObj;
 }

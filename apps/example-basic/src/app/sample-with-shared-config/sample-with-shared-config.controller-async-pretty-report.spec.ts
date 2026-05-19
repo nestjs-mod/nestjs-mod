@@ -213,7 +213,7 @@ describe('SampleWithSharedConfigController (async-pretty-report)', () => {
         private readonly sampleWithSharedConfigService1: SampleWithSharedConfigService,
         @InjectService(SampleWithSharedConfigService, 'api33')
         private readonly sampleWithSharedConfigService3: SampleWithSharedConfigService,
-        private readonly sampleWithSharedConfigService: SampleWithSharedConfigService
+        private readonly sampleWithSharedConfigService: SampleWithSharedConfigService,
       ) {}
 
       getHello(): string {

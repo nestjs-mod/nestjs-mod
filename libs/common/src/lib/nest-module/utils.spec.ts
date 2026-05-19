@@ -26,7 +26,7 @@ describe('NestJS modules: Utils', () => {
       await expect(
         Test.createTestingModule({
           imports: [AppModule.forRoot({})],
-        }).compile()
+        }).compile(),
       ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'option should not be empty');
     });
 
@@ -46,7 +46,7 @@ describe('NestJS modules: Utils', () => {
       await expect(
         Test.createTestingModule({
           imports: [AppModule.forRoot({})],
-        }).compile()
+        }).compile(),
       ).rejects.toMatchObject({
         info: {
           modelPropertyOptions: [{ description: 'option description', originalName: 'option' }],
@@ -195,7 +195,7 @@ describe('NestJS modules: Utils', () => {
       await expect(
         Test.createTestingModule({
           imports: [AppModule.forRoot({})],
-        }).compile()
+        }).compile(),
       ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'option should not be empty');
     });
 
@@ -215,7 +215,7 @@ describe('NestJS modules: Utils', () => {
       await expect(
         Test.createTestingModule({
           imports: [AppModule.forRoot({})],
-        }).compile()
+        }).compile(),
       ).rejects.toMatchObject({
         info: {
           modelPropertyOptions: [{ description: 'option description', originalName: 'option' }],
@@ -294,7 +294,7 @@ describe('NestJS modules: Utils', () => {
       class App2Service {
         constructor(
           @InjectService(App1Service)
-          private readonly appService: App1Service
+          private readonly appService: App1Service,
         ) {}
 
         getConfig() {
@@ -334,7 +334,10 @@ describe('NestJS modules: Utils', () => {
 
       @Injectable()
       class AppService {
-        constructor(private readonly appConfig: AppConfig, private readonly appEnv: AppEnv) {}
+        constructor(
+          private readonly appConfig: AppConfig,
+          private readonly appEnv: AppEnv,
+        ) {}
 
         getEnv() {
           return this.appEnv;
@@ -390,7 +393,7 @@ describe('NestJS modules: Utils', () => {
           @InjectFeatures()
           private readonly appFeatureConfigs: InjectableFeatureConfigurationType<AppFeatureConfig>[],
           @InjectAllFeatures()
-          private readonly appAllFeatureConfigs: Record<string, InjectableFeatureConfigurationType<AppFeatureConfig>[]>
+          private readonly appAllFeatureConfigs: Record<string, InjectableFeatureConfigurationType<AppFeatureConfig>[]>,
         ) {}
 
         getFeatureConfigs() {

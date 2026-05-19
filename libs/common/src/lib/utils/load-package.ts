@@ -13,7 +13,7 @@ export class LoadPackageError extends Error {
 export function loadPackage(
   packageName: string,
   // eslint-disable-next-line @typescript-eslint/ban-types
-  loaderFn?: Function
+  loaderFn?: Function,
 ) {
   try {
     if (!loadedPackages[packageName]) {

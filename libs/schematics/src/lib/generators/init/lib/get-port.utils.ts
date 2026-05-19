@@ -101,7 +101,7 @@ export default async function getPorts(options: { port: any; exclude?: any }) {
       for (const element of excludeIterable) {
         if (typeof element !== 'number') {
           throw new TypeError(
-            'Each item in the `exclude` option must be a number corresponding to the port you want excluded.'
+            'Each item in the `exclude` option must be a number corresponding to the port you want excluded.',
           );
         }
 
@@ -142,7 +142,7 @@ export default async function getPorts(options: { port: any; exclude?: any }) {
           port,
           host: undefined,
         },
-        hosts
+        hosts,
       ); // eslint-disable-line no-await-in-loop
       while (lockedPorts.old.has(availablePort) || lockedPorts.young.has(availablePort)) {
         if (port !== 0) {
@@ -155,7 +155,7 @@ export default async function getPorts(options: { port: any; exclude?: any }) {
             port,
             host: undefined,
           },
-          hosts
+          hosts,
         ); // eslint-disable-line no-await-in-loop
       }
 

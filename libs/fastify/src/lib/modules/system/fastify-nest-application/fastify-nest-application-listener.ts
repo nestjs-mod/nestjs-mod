@@ -48,7 +48,7 @@ export class FastifyNestApplicationListenerConfiguration {
       NestFastifyApplication,
       FastifyNestApplicationListenerConfiguration,
       FastifyNestApplicationListenerEnvironments
-    >
+    >,
   ) => Promise<void>;
 
   @ConfigModelProperty({
@@ -59,7 +59,7 @@ export class FastifyNestApplicationListenerConfiguration {
       NestFastifyApplication,
       FastifyNestApplicationListenerConfiguration,
       FastifyNestApplicationListenerEnvironments
-    >
+    >,
   ) => Promise<void>;
 
   @ConfigModelProperty({
@@ -119,7 +119,11 @@ export const { FastifyNestApplicationListener } = createNestModule({
             await current.staticConfiguration?.preListen({
               app,
               current,
-            } as WrapApplicationOptions<NestFastifyApplication, FastifyNestApplicationListenerConfiguration, FastifyNestApplicationListenerEnvironments>);
+            } as WrapApplicationOptions<
+              NestFastifyApplication,
+              FastifyNestApplicationListenerConfiguration,
+              FastifyNestApplicationListenerEnvironments
+            >);
           }
 
           if (app && current.staticConfiguration?.mode === 'listen') {
@@ -159,7 +163,11 @@ export const { FastifyNestApplicationListener } = createNestModule({
             await current.staticConfiguration?.postListen({
               app,
               current,
-            } as WrapApplicationOptions<NestFastifyApplication, FastifyNestApplicationListenerConfiguration, FastifyNestApplicationListenerEnvironments>);
+            } as WrapApplicationOptions<
+              NestFastifyApplication,
+              FastifyNestApplicationListenerConfiguration,
+              FastifyNestApplicationListenerEnvironments
+            >);
           }
 
           if (current.staticConfiguration?.mode === 'listen' && current.staticConfiguration?.logApplicationStart) {
@@ -167,7 +175,7 @@ export const { FastifyNestApplicationListener } = createNestModule({
               (current.staticConfiguration.defaultLogger || new Logger()).log(
                 `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
                   current.staticEnvironments?.port
-                }/${current.staticConfiguration.globalPrefix || ''}`
+                }/${current.staticConfiguration.globalPrefix || ''}`,
               );
             } else {
               (current.staticConfiguration.defaultLogger || new Logger()).log(`🚀 Microservice is running`);
@@ -182,7 +190,7 @@ export const { FastifyNestApplicationListener } = createNestModule({
             setTimeout(() => process.exit(0), current.staticConfiguration?.autoCloseTimeoutInInfrastructureMode);
           }
         },
-      }).FastifyNestApplicationListener.forRootAsync(current.asyncModuleOptions)
+      }).FastifyNestApplicationListener.forRootAsync(current.asyncModuleOptions),
     );
   },
 });

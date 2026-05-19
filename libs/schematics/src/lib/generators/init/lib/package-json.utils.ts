@@ -17,7 +17,7 @@ export type ProjectOptions = {
     {
       name: string;
       email: string;
-    }
+    },
   ];
   devScripts?: string[];
   prodScripts?: string[];

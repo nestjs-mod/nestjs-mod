@@ -28,6 +28,6 @@ export function addDependencies(tree: Tree): GeneratorCallback {
       '@nestjs/schematics': nestJsSchematicsVersion,
       prettier: '^2.6.2',
       'lint-staged': '^15.2.0',
-    }
+    },
   );
 }

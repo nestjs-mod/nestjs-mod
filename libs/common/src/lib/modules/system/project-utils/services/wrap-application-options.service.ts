@@ -16,7 +16,7 @@ export class WrapApplicationOptionsService<
   TStaticConfigurationModel = any,
   TStaticEnvironmentsModel = any,
   TConfigurationModel = any,
-  TEnvironmentsModel = any
+  TEnvironmentsModel = any,
 > implements
     WrapApplicationOptions<
       TNestApplication,

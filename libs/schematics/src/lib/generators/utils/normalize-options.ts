@@ -9,7 +9,7 @@ export async function normalizeOptions(
     allowedFileExtensions?: Array<'js' | 'ts'>;
     skipLanguageOption?: boolean;
     suffix?: string;
-  } = {}
+  } = {},
 ): Promise<NormalizedOptions> {
   const { allowedFileExtensions = ['js', 'ts'], skipLanguageOption = false, suffix } = normalizationOptions;
 

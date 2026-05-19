@@ -5,35 +5,52 @@ import { ProcessEnvPropertyValueExtractor } from './extractors/process-env-prope
 import { DotEnvPropertyNameFormatter } from './formatters/dot-env-property-name.formatter';
 import { EnvModelOptions, EnvModelPropertyOptions, EnvModelRootOptions } from './types';
 
+/**
+ * Decorator to mark a class as an environment model
+ * Sets up default property value extractors and name formatters if not provided
+ * @param options Optional configuration for the environment model
+ */
 export function EnvModel(options?: EnvModelRootOptions) {
-  if (!options) {
-    options = {};
+  const modelOptions: EnvModelRootOptions = {
+    ...options,
+  };
+
+  // Set default property value extractors if not provided
+  if (!modelOptions.propertyValueExtractors) {
+    modelOptions.propertyValueExtractors = [
+      new DefaultPropertyValueExtractor(),
+      new ProcessEnvPropertyValueExtractor(),
+    ];
   }
-  if (!options.propertyValueExtractors) {
-    options.propertyValueExtractors = [new DefaultPropertyValueExtractor(), new ProcessEnvPropertyValueExtractor()];
+
+  // Set default property name formatters if not provided
+  if (!modelOptions.propertyNameFormatters) {
+    modelOptions.propertyNameFormatters = [new DotEnvPropertyNameFormatter()];
   }
-  if (!options.propertyNameFormatters) {
-    options.propertyNameFormatters = [new DotEnvPropertyNameFormatter()];
-  }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   return applyDecorators(Injectable(), (target: any): void => {
     Reflect.defineMetadata(
       ENV_MODEL_METADATA,
       <EnvModelOptions>{
-        ...options,
+        ...modelOptions,
         originalName: target.name,
       },
-      target
+      target,
     );
   });
 }
 
+/**
+ * Decorator to define a property within an environment model
+ * @param options Property configuration options (excluding originalName)
+ */
 export function EnvModelProperty(options?: Omit<EnvModelPropertyOptions, 'originalName'>) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (target: any, propertyKey: string): void => {
-    const envModelPropertyMetadata: EnvModelPropertyOptions[] =
+    const existingMetadata: EnvModelPropertyOptions[] =
       Reflect.getOwnMetadata(ENV_MODEL_PROPERTIES_METADATA, target.constructor) || [];
-    envModelPropertyMetadata.push({ ...options, originalName: propertyKey });
-    Reflect.defineMetadata(ENV_MODEL_PROPERTIES_METADATA, envModelPropertyMetadata, target.constructor);
+
+    existingMetadata.push({ ...options, originalName: propertyKey });
+
+    Reflect.defineMetadata(ENV_MODEL_PROPERTIES_METADATA, existingMetadata, target.constructor);
   };
 }

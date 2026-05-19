@@ -13,7 +13,7 @@ import type { ApplicationGeneratorOptions } from './schema';
 
 export async function applicationGenerator(
   tree: Tree,
-  rawOptions: ApplicationGeneratorOptions
+  rawOptions: ApplicationGeneratorOptions,
 ): Promise<GeneratorCallback> {
   return await applicationGeneratorInternal(tree, {
     ...rawOptions,
@@ -22,7 +22,7 @@ export async function applicationGenerator(
 
 export async function applicationGeneratorInternal(
   tree: Tree,
-  rawOptions: ApplicationGeneratorOptions
+  rawOptions: ApplicationGeneratorOptions,
 ): Promise<GeneratorCallback> {
   const options = await normalizeOptionsApp(tree, rawOptions);
 

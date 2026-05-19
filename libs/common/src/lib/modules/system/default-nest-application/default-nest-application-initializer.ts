@@ -117,14 +117,14 @@ export class DefaultNestApplicationInitializerConfig implements NestApplicationO
     description: 'Method for additional actions before listening',
   })
   preCreateApplication?: (
-    options: WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>
+    options: WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>,
   ) => Promise<void>;
 
   @ConfigModelProperty({
     description: 'Method for additional actions after listening',
   })
   postCreateApplication?: (
-    options: WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>
+    options: WrapApplicationOptions<INestApplication, DefaultNestApplicationInitializerConfig>,
   ) => Promise<void>;
 }
 

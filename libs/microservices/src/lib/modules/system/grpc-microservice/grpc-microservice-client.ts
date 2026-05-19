@@ -23,7 +23,7 @@ function getClientProxyApplicationHooks(contextName?: string) {
   class ClientProxyApplicationHooks implements OnApplicationBootstrap, OnModuleDestroy {
     constructor(
       @InjectGrpcNestMicroserviceClient(contextName)
-      private readonly clientProxy: ClientProxy
+      private readonly clientProxy: ClientProxy,
     ) {}
 
     async onApplicationBootstrap() {
@@ -52,7 +52,7 @@ export const { GrpcNestMicroserviceClientModule } = createNestModule({
         `${asyncModuleOptions.staticConfiguration?.featureName}_GRPC`,
         asyncModuleOptions.staticConfiguration?.microserviceProjectName
           ? { name: asyncModuleOptions.staticConfiguration.microserviceProjectName }
-          : undefined
+          : undefined,
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
@@ -65,7 +65,7 @@ export const { GrpcNestMicroserviceClientModule } = createNestModule({
         'GRPC',
         asyncModuleOptions.staticConfiguration?.microserviceProjectName
           ? { name: asyncModuleOptions.staticConfiguration.microserviceProjectName }
-          : undefined
+          : undefined,
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {

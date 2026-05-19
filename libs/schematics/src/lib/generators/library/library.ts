@@ -18,7 +18,7 @@ export async function libraryGenerator(tree: Tree, rawOptions: LibraryGeneratorO
 
 export async function libraryGeneratorInternal(
   tree: Tree,
-  rawOptions: LibraryGeneratorOptions
+  rawOptions: LibraryGeneratorOptions,
 ): Promise<GeneratorCallback> {
   const options = await normalizeOptionsLib(tree, rawOptions);
   await jsLibraryGenerator(tree, toJsLibraryGeneratorOptions(options));

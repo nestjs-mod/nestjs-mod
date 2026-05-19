@@ -50,7 +50,7 @@ export class InfrastructureMarkdownReportGeneratorConfiguration {
 @Injectable()
 export class DynamicNestModuleMetadataMarkdownReportGenerator {
   constructor(
-    private readonly infrastructureMarkdownReportGeneratorConfiguration: InfrastructureMarkdownReportGeneratorConfiguration
+    private readonly infrastructureMarkdownReportGeneratorConfiguration: InfrastructureMarkdownReportGeneratorConfiguration,
   ) {}
 
   getReport(
@@ -71,7 +71,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       nestModulesStaticConfigurationDescription: NEST_MODULES_STATIC_CONFIGURATION_DESCRIPTION,
       nestModulesFeatureConfigurationDescription: NEST_MODULES_FEATURE_CONFIGURATION_DESCRIPTION,
       nestModulesFeatureEnvironmentsDescription: NEST_MODULES_FEATURE_ENVIRONMENTS_DESCRIPTION,
-    }
+    },
   ) {
     let lines: string[] = [];
     const moduleMetadata: NestModuleMetadata | undefined =
@@ -112,9 +112,9 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           sharedProviders
             .map(
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (s: any) => `\`${s.provide ? String(s.provide.name || s.provide) : s.name}\``
+              (s: any) => `\`${s.provide ? String(s.provide.name || s.provide) : s.name}\``,
             )
-            .join(', ')
+            .join(', '),
         );
         lines.push('');
       }
@@ -137,9 +137,9 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           sharedImports
             .map(
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (s: any) => `\`${s.getNestModuleMetadata?.().moduleName || s.name}\``
+              (s: any) => `\`${s.getNestModuleMetadata?.().moduleName || s.name}\``,
             )
-            .join(', ')
+            .join(', '),
         );
         lines.push('');
       }
@@ -189,10 +189,10 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
         });
 
         const featureModuleNames = Object.keys(
-          dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleConfigurations || {}
+          dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleConfigurations || {},
         );
         const featureEnvironmentsModuleNames = Object.keys(
-          dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleEnvironments || {}
+          dynamicNestModuleMetadata.moduleSettings?.[name].featureModuleEnvironments || {},
         );
         if (featureModuleNames.length > 0) {
           for (const featureModuleName of featureModuleNames) {
@@ -271,7 +271,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           settingsModelInfo.modelOptions.name
             ? `${settingsModelInfoTitle}: ${settingsModelInfo.modelOptions.name}`
             : settingsModelInfoTitle
-        }`
+        }`,
       );
       const description = settingsModelInfo.modelOptions.description || settingsModelInfoDescription || '';
       if (description !== undefined && this.infrastructureMarkdownReportGeneratorConfiguration.style !== 'pretty') {
@@ -307,12 +307,12 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                   ? '**hidden**'
                   : this.safeValue(
                       settingsModelInfo?.validations[modelPropertyOption.originalName].value,
-                      modelPropertyOption.default
+                      modelPropertyOption.default,
                     ),
                 '',
-              ].join('|')
+              ].join('|'),
             ) || []),
-          ].join('\n')
+          ].join('\n'),
         );
       } else {
         lines.push(
@@ -339,12 +339,12 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                   ? '**hidden**'
                   : this.safeValue(
                       settingsModelInfo?.validations[modelPropertyOption.originalName].value,
-                      modelPropertyOption.default
+                      modelPropertyOption.default,
                     ),
                 '',
-              ].join('|')
+              ].join('|'),
             ) || []),
-          ].join('\n')
+          ].join('\n'),
         );
       }
       lines.push('');
@@ -370,7 +370,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
       !settingsModelInfo?.modelPropertyOptions.some(
         (modelPropertyOption) =>
           settingsModelInfo?.validations[modelPropertyOption.originalName].value !== undefined &&
-          settingsModelInfo?.validations[modelPropertyOption.originalName].value !== modelPropertyOption.default
+          settingsModelInfo?.validations[modelPropertyOption.originalName].value !== modelPropertyOption.default,
       )
     ) {
       return;
@@ -384,7 +384,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
           settingsModelInfo.modelOptions.name
             ? `${settingsModelInfoTitle}: ${settingsModelInfo.modelOptions.name}`
             : settingsModelInfoTitle
-        }`
+        }`,
       );
       const description = settingsModelInfo.modelOptions.description || settingsModelInfoDescription || '';
       if (description !== undefined && this.infrastructureMarkdownReportGeneratorConfiguration.style !== 'pretty') {
@@ -404,7 +404,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                   (this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
                     settingsModelInfo?.validations[modelPropertyOption.originalName].value !== undefined &&
                     settingsModelInfo?.validations[modelPropertyOption.originalName].value !==
-                      modelPropertyOption.default)
+                      modelPropertyOption.default),
               )
               .map((modelPropertyOption) =>
                 [
@@ -424,12 +424,12 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                     ? '**hidden**'
                     : this.safeValue(
                         settingsModelInfo?.validations[modelPropertyOption.originalName].value,
-                        modelPropertyOption.default
+                        modelPropertyOption.default,
                       ),
                   '',
-                ].join('|')
+                ].join('|'),
               ) || []),
-          ].join('\n')
+          ].join('\n'),
         );
       } else {
         lines.push(
@@ -443,7 +443,7 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                   (this.infrastructureMarkdownReportGeneratorConfiguration.skipEmptySettings &&
                     settingsModelInfo?.validations[modelPropertyOption.originalName].value !== undefined &&
                     settingsModelInfo?.validations[modelPropertyOption.originalName].value !==
-                      modelPropertyOption.default)
+                      modelPropertyOption.default),
               )
               .map((modelPropertyOption) =>
                 [
@@ -457,12 +457,12 @@ export class DynamicNestModuleMetadataMarkdownReportGenerator {
                   // Value
                   this.safeValue(
                     settingsModelInfo?.validations[modelPropertyOption.originalName].value,
-                    modelPropertyOption.default
+                    modelPropertyOption.default,
                   ),
                   '',
-                ].join('|')
+                ].join('|'),
               ) || []),
-          ].join('\n')
+          ].join('\n'),
         );
       }
       lines.push('');
@@ -560,7 +560,7 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
       private readonly dynamicNestModuleMetadataMarkdownReportGenerator: DynamicNestModuleMetadataMarkdownReportGenerator,
       private readonly infrastructureMarkdownReportStorage: InfrastructureMarkdownReportStorageService,
       private readonly infrastructureMarkdownReportGeneratorConfiguration: InfrastructureMarkdownReportGeneratorConfiguration,
-      private readonly packageJsonService: PackageJsonService
+      private readonly packageJsonService: PackageJsonService,
     ) {}
 
     onApplicationBootstrap() {
@@ -573,7 +573,7 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
           }
           writeFileSync(
             this.infrastructureMarkdownReportGeneratorConfiguration.markdownFile,
-            this.infrastructureMarkdownReportStorage.report
+            this.infrastructureMarkdownReportStorage.report,
           );
         }
       }
@@ -597,7 +597,7 @@ function getInfrastructureMarkdownReportGeneratorBootstrap({
         if (project?.repository) {
           const rep = (typeof project.repository === 'string' ? project.repository : project.repository.url).replace(
             'git+',
-            ''
+            '',
           );
           const projectName = basename(rep).replace('.git', '');
           lines.push(`## Installation`);
@@ -621,9 +621,9 @@ npm install
                     `npm run ${s}`,
                   ]
                     .filter(Boolean)
-                    .join('\n')
+                    .join('\n'),
                 )
-                .join('\n\n')}\n\`\`\``
+                .join('\n\n')}\n\`\`\``,
             );
           }
         }
@@ -647,7 +647,7 @@ npm install
       }
       for (const category of NEST_MODULE_CATEGORY_LIST) {
         const nestModules: DynamicNestModuleMetadata[] = (modules[category] || []).filter(
-          (m) => m.getNestModuleMetadata?.().moduleCategory
+          (m) => m.getNestModuleMetadata?.().moduleCategory,
         );
         if (nestModules.length > 0) {
           lines.push(`## ${NEST_MODULE_CATEGORY_TITLE[category]}`);
@@ -724,7 +724,7 @@ export const { InfrastructureMarkdownReportGenerator } = createNestModule({
         ],
         staticConfigurationModel: InfrastructureMarkdownReportGeneratorConfiguration,
         moduleCategory: NestModuleCategory.infrastructure,
-      }).InfrastructureMarkdownReportGenerator.forRootAsync(current.asyncModuleOptions)
+      }).InfrastructureMarkdownReportGenerator.forRootAsync(current.asyncModuleOptions),
     );
   },
 });

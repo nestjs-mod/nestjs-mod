@@ -43,7 +43,7 @@ describe('Config model: Utils', () => {
     await expect(
       Test.createTestingModule({
         imports: [AppModule.forRoot({})],
-      }).compile()
+      }).compile(),
     ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'option should not be empty');
   });
 
@@ -83,7 +83,7 @@ describe('Config model: Utils', () => {
     await expect(
       Test.createTestingModule({
         imports: [AppModule.forRoot({})],
-      }).compile()
+      }).compile(),
     ).rejects.toMatchObject({
       info: {
         modelPropertyOptions: [{ description: 'option description', originalName: 'option' }],

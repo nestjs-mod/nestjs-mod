@@ -9,7 +9,7 @@ import type { ApplicationGeneratorOptions, NormalizedOptions } from '../schema';
 
 export async function normalizeOptionsApp(
   tree: Tree,
-  options: ApplicationGeneratorOptions
+  options: ApplicationGeneratorOptions,
 ): Promise<NormalizedOptions> {
   await ensureProjectName(tree, options, 'application');
   const { projectName: appProjectName, projectRoot: appProjectRoot } = await determineProjectNameAndRootOptions(tree, {

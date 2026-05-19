@@ -20,7 +20,7 @@ export class MathClientService {
       tap((result) => {
         this.sumResult.push(result);
         this.logger.log({ sum: result });
-      })
+      }),
     );
   }
 
@@ -29,7 +29,7 @@ export class MathClientService {
       tap((result) => {
         this.getDateResult.push(result);
         this.logger.log({ getDate: result });
-      })
+      }),
     );
   }
 
@@ -38,7 +38,7 @@ export class MathClientService {
       tap((result) => {
         this.asyncSumResult.push(result);
         this.logger.log({ asyncSum: result });
-      })
+      }),
     );
   }
 
@@ -47,7 +47,7 @@ export class MathClientService {
       tap((result) => {
         this.observableSumResult.push(result);
         this.logger.log({ observableSum: result });
-      })
+      }),
     );
   }
 
@@ -56,7 +56,7 @@ export class MathClientService {
       tap((result) => {
         this.handleUserCreatedResult.push(result);
         this.logger.log({ handleUserCreated: result });
-      })
+      }),
     );
   }
 }

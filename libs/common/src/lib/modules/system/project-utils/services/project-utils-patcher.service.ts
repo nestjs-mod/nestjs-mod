@@ -19,7 +19,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
     private readonly applicationPackageJsonService: ApplicationPackageJsonService,
     private readonly wrapApplicationOptionsService: WrapApplicationOptionsService,
     private readonly dotEnvService: DotEnvService,
-    private readonly packageJsonService: PackageJsonService
+    private readonly packageJsonService: PackageJsonService,
   ) {}
 
   async onApplicationBootstrap() {
@@ -74,13 +74,13 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
                       [f.value]: {
                         model: m?.[contextName]?.environments?.modelOptions.name,
                         ...m?.[contextName]?.staticEnvironments?.modelPropertyOptions.find(
-                          (o) => (o.name === f.name || o.originalName === key) && o.hideValueFromOutputs !== true
+                          (o) => (o.name === f.name || o.originalName === key) && o.hideValueFromOutputs !== true,
                         ),
                       },
                     }))
-                    .flat()
+                    .flat(),
                 )
-                .flat()
+                .flat(),
             )
             .flat(),
           ...modules
@@ -93,13 +93,13 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
                       [f.value]: {
                         model: m?.[contextName]?.environments?.modelOptions.name,
                         ...m?.[contextName]?.environments?.modelPropertyOptions.find(
-                          (o) => (o.name === f.name || o.originalName === key) && o.hideValueFromOutputs
+                          (o) => (o.name === f.name || o.originalName === key) && o.hideValueFromOutputs,
                         ),
                       },
                     }))
-                    .flat()
+                    .flat(),
                 )
-                .flat()
+                .flat(),
             )
             .flat(),
           ...modules
@@ -115,20 +115,20 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
                             [f.value]: {
                               model: vItem.modelOptions.name,
                               ...vItem?.modelPropertyOptions.find(
-                                (o) => (o.name === key || o.originalName === key) && o.hideValueFromOutputs !== true
+                                (o) => (o.name === key || o.originalName === key) && o.hideValueFromOutputs !== true,
                               ),
                             },
                           }))
-                          .flat()
-                      )
+                          .flat(),
+                      ),
                     )
                     .flat()
-                    .flat()
+                    .flat(),
                 )
-                .flat()
+                .flat(),
             )
             .flat(),
-        ].filter(Boolean)
+        ].filter(Boolean),
       ),
     ];
     if (keys.length > 0) {
@@ -142,9 +142,9 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
               `${key}: ${Object.keys(value || {})
                 .filter((key) => value[key] && key !== 'transform' && key !== 'hidden')
                 .map((key) => `${capitalCase(key)}='${value ? value[key] : ''}'`)
-                .join(', ')}`
-          )
-        )
+                .join(', ')}`,
+          ),
+        ),
       );
     }
   }
@@ -163,7 +163,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
   private updateGlobalConfigurationAndEnvironmentsOptions() {
     if (!this.projectUtilsConfiguration || !this.wrapApplicationOptionsService) {
       this.logger.warn(
-        `projectUtilsConfiguration or applicationPackageJsonService or wrapApplicationOptionsService not set, updating not work`
+        `projectUtilsConfiguration or applicationPackageJsonService or wrapApplicationOptionsService not set, updating not work`,
       );
       return;
     }
@@ -203,7 +203,7 @@ export class ProjectUtilsPatcherService implements OnApplicationBootstrap {
   private updateProject() {
     if (!this.projectUtilsConfiguration || !this.applicationPackageJsonService || !this.wrapApplicationOptionsService) {
       this.logger.warn(
-        `projectUtilsConfiguration or applicationPackageJsonService or wrapApplicationOptionsService not set, updating not work`
+        `projectUtilsConfiguration or applicationPackageJsonService or wrapApplicationOptionsService not set, updating not work`,
       );
       return;
     }

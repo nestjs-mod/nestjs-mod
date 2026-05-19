@@ -203,7 +203,7 @@ export const { FastifyNestApplicationInitializer } = createNestModule({
     const app = await NestFactory.create<NestFastifyApplication>(
       FastifyNestApp,
       fastifyAdapter,
-      current?.staticConfiguration
+      current?.staticConfiguration,
     );
     if (current.staticConfiguration?.defaultLogger) {
       app.useLogger(current.staticConfiguration?.defaultLogger);

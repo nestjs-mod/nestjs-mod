@@ -19,7 +19,7 @@ const nxProjectJsonService = new NxProjectJsonService(
   {},
   applicationPackageJsonService,
   packageJsonService,
-  dotEnvService
+  dotEnvService,
 );
 
 let projectUtilsPatcherService: ProjectUtilsPatcherService | undefined = undefined;
@@ -58,14 +58,14 @@ export const { ProjectUtils } = createNestModule({
     if (options.current.staticConfiguration) {
       // PackageJsonService
       const tempPackageJsonService = new PackageJsonService(
-        wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
+        wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
       );
       Object.setPrototypeOf(packageJsonService, tempPackageJsonService);
       Object.assign(packageJsonService, tempPackageJsonService);
 
       // ApplicationPackageJsonService
       const tempApplicationPackageJsonService = new ApplicationPackageJsonService(
-        wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
+        wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
       );
       Object.setPrototypeOf(applicationPackageJsonService, tempApplicationPackageJsonService);
       Object.assign(applicationPackageJsonService, tempApplicationPackageJsonService);
@@ -79,7 +79,7 @@ export const { ProjectUtils } = createNestModule({
       const tempDotEnvService = new DotEnvService(
         wrapApplicationOptionsService,
         wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
-        tempGitignoreService
+        tempGitignoreService,
       );
       tempDotEnvService.read();
 
@@ -91,7 +91,7 @@ export const { ProjectUtils } = createNestModule({
         wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
         applicationPackageJsonService,
         packageJsonService,
-        dotEnvService
+        dotEnvService,
       );
       Object.setPrototypeOf(nxProjectJsonService, tempNxProjectJsonService);
       Object.assign(nxProjectJsonService, tempNxProjectJsonService);
@@ -100,11 +100,11 @@ export const { ProjectUtils } = createNestModule({
       projectUtilsPatcherService = new ProjectUtilsPatcherService(
         wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
         new ApplicationPackageJsonService(
-          wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration
+          wrapApplicationOptionsService.current.staticConfiguration as ProjectUtilsConfiguration,
         ),
         wrapApplicationOptionsService,
         dotEnvService,
-        packageJsonService
+        packageJsonService,
       );
       projectUtilsPatcherService.patchModules();
     }

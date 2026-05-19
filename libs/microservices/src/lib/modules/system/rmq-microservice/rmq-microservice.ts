@@ -200,7 +200,7 @@ export const { RmqNestMicroservice } = createNestModule({
     }
     if (asyncModuleOptions.staticConfiguration?.featureName) {
       const FomatterClass = getFeatureDotEnvPropertyNameFormatter(
-        `${asyncModuleOptions.staticConfiguration?.featureName}_RMQ`
+        `${asyncModuleOptions.staticConfiguration?.featureName}_RMQ`,
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
@@ -227,7 +227,7 @@ export const { RmqNestMicroservice } = createNestModule({
           transport: Transport.RMQ,
           options: { ...current.staticConfiguration, urls: current.staticEnvironments?.urls ?? [] },
         },
-        { inheritAppConfig: true }
+        { inheritAppConfig: true },
       );
     } else {
       @Module({

@@ -15,7 +15,7 @@ export class NxProjectJsonService {
     private readonly projectUtilsConfiguration: ProjectUtilsConfiguration,
     private readonly applicationPackageJsonService: ApplicationPackageJsonService,
     private readonly packageJsonService: PackageJsonService,
-    private readonly dotEnvService: DotEnvService
+    private readonly dotEnvService: DotEnvService,
   ) {}
 
   getNxProjectJsonFilePath() {
@@ -42,7 +42,7 @@ export class NxProjectJsonService {
      * A line to check whether to add, by default it searches for each command to add
      */
     searchCommand?: string,
-    customNxProjectJsonFile?: string
+    customNxProjectJsonFile?: string,
   ) {
     const projectJson = this.read(customNxProjectJsonFile) || {};
     if (!projectJson?.targets) {
@@ -67,7 +67,7 @@ export class NxProjectJsonService {
     for (const line of lines) {
       if (
         !lines.find((line) =>
-          (projectJson.targets![targetName].options!['commands'] as string[]).find((c) => c === line)
+          (projectJson.targets![targetName].options!['commands'] as string[]).find((c) => c === line),
         )
       ) {
         (projectJson.targets[targetName].options!['commands'] as string[]).push(line);

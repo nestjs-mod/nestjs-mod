@@ -23,7 +23,7 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
   let app: TNestApplication | undefined = undefined;
 
   const categories = NEST_MODULE_CATEGORY_LIST.filter(
-    (category) => isInfrastructureMode() || category !== NestModuleCategory.infrastructure
+    (category) => isInfrastructureMode() || category !== NestModuleCategory.infrastructure,
   );
   const pathNestModuleMetadata = () => {
     if (!project) {
@@ -53,7 +53,7 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
             // todo: change to pathNestModuleMetadata
             Object.assign(
               modules[category as NestModuleCategory]![index].getNestModuleMetadata!().project!,
-              project || {}
+              project || {},
             );
           }
         }
@@ -121,7 +121,7 @@ export async function bootstrapNestApplicationWithOptions<TNestApplication = INe
 }
 
 export async function bootstrapNestApplication<TNestApplication = INestApplication>(
-  options: BootstrapNestApplicationOptions
+  options: BootstrapNestApplicationOptions,
 ) {
   const { app } = await bootstrapNestApplicationWithOptions<TNestApplication>({
     ...options,

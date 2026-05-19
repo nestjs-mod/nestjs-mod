@@ -202,7 +202,7 @@ export const { GrpcNestMicroservice } = createNestModule({
     }
     if (asyncModuleOptions.staticConfiguration?.featureName) {
       const FomatterClass = getFeatureDotEnvPropertyNameFormatter(
-        `${asyncModuleOptions.staticConfiguration?.featureName}_GRPC`
+        `${asyncModuleOptions.staticConfiguration?.featureName}_GRPC`,
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
@@ -233,7 +233,7 @@ export const { GrpcNestMicroservice } = createNestModule({
             package: current.staticConfiguration?.package ?? [],
           },
         },
-        { inheritAppConfig: true }
+        { inheritAppConfig: true },
       );
     } else {
       @Module({

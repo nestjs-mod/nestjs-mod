@@ -532,7 +532,7 @@ export const { RedisNestMicroservice } = createNestModule({
     }
     if (asyncModuleOptions.staticConfiguration?.featureName) {
       const FomatterClass = getFeatureDotEnvPropertyNameFormatter(
-        `${asyncModuleOptions.staticConfiguration?.featureName}_REDIS`
+        `${asyncModuleOptions.staticConfiguration?.featureName}_REDIS`,
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
@@ -559,7 +559,7 @@ export const { RedisNestMicroservice } = createNestModule({
           transport: Transport.REDIS,
           options: { ...current.staticConfiguration, ...current.staticEnvironments },
         },
-        { inheritAppConfig: true }
+        { inheritAppConfig: true },
       );
     } else {
       @Module({

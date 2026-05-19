@@ -245,7 +245,7 @@ describe('NestJS application: Utils', () => {
       class App2Service {
         constructor(
           @InjectService(App1Service)
-          private readonly appService: App1Service
+          private readonly appService: App1Service,
         ) {}
 
         getConfig() {
@@ -289,7 +289,10 @@ describe('NestJS application: Utils', () => {
 
       @Injectable()
       class AppService {
-        constructor(private readonly appConfig: AppConfig, private readonly appEnv: AppEnv) {}
+        constructor(
+          private readonly appConfig: AppConfig,
+          private readonly appEnv: AppEnv,
+        ) {}
 
         getEnv() {
           return this.appEnv;
@@ -348,7 +351,7 @@ describe('NestJS application: Utils', () => {
       class AppFeatureScannerService {
         constructor(
           @InjectFeatures()
-          private readonly appFeatureConfigs: InjectableFeatureConfigurationType<AppFeatureConfig>[]
+          private readonly appFeatureConfigs: InjectableFeatureConfigurationType<AppFeatureConfig>[],
         ) {}
 
         getFeatureConfigs() {
@@ -559,7 +562,7 @@ describe('NestJS application: Utils', () => {
           .split('  ')
           .join('')
           .split('\n')
-          .join('')
+          .join(''),
       );
 
       await app.close();

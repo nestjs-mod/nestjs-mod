@@ -146,7 +146,7 @@ export const { MqttNestMicroservice } = createNestModule({
     }
     if (asyncModuleOptions.staticConfiguration?.featureName) {
       const FomatterClass = getFeatureDotEnvPropertyNameFormatter(
-        `${asyncModuleOptions.staticConfiguration?.featureName}_MQTT`
+        `${asyncModuleOptions.staticConfiguration?.featureName}_MQTT`,
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
@@ -173,7 +173,7 @@ export const { MqttNestMicroservice } = createNestModule({
           transport: Transport.MQTT,
           options: { ...current.staticConfiguration, ...current.staticEnvironments },
         },
-        { inheritAppConfig: true }
+        { inheritAppConfig: true },
       );
     } else {
       @Module({

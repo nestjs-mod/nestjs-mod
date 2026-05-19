@@ -152,7 +152,7 @@ export const { TcpNestMicroservice } = createNestModule({
     }
     if (asyncModuleOptions.staticConfiguration?.featureName) {
       const FomatterClass = getFeatureDotEnvPropertyNameFormatter(
-        `${asyncModuleOptions.staticConfiguration?.featureName}_TCP`
+        `${asyncModuleOptions.staticConfiguration?.featureName}_TCP`,
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
@@ -180,7 +180,7 @@ export const { TcpNestMicroservice } = createNestModule({
           transport: Transport.TCP,
           options,
         },
-        { inheritAppConfig: true }
+        { inheritAppConfig: true },
       );
     } else {
       @Module({

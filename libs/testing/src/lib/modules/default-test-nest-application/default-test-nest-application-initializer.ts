@@ -13,14 +13,14 @@ class DefaultTestNestApplicationInitializerConfiguration {
     description: 'Method for additional actions before init',
   })
   preInit?: (
-    options: WrapApplicationOptions<INestApplication, DefaultTestNestApplicationInitializerConfiguration>
+    options: WrapApplicationOptions<INestApplication, DefaultTestNestApplicationInitializerConfiguration>,
   ) => Promise<void>;
 
   @ConfigModelProperty({
     description: 'Method for additional actions after init',
   })
   postInit?: (
-    options: WrapApplicationOptions<INestApplication, DefaultTestNestApplicationInitializerConfiguration>
+    options: WrapApplicationOptions<INestApplication, DefaultTestNestApplicationInitializerConfiguration>,
   ) => Promise<void>;
 
   @ConfigModelProperty({
@@ -67,7 +67,7 @@ export const { DefaultTestNestApplicationInitializer } = createNestModule({
             (current.staticConfiguration?.defaultLogger || new Logger()).warn('Test application listener not started!');
           }
         },
-      }).DefaultTestNestApplicationInitializer.forRootAsync(current.asyncModuleOptions)
+      }).DefaultTestNestApplicationInitializer.forRootAsync(current.asyncModuleOptions),
     );
   },
 });

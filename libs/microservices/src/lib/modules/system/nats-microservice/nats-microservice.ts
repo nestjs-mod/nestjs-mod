@@ -298,7 +298,7 @@ export const { NatsNestMicroservice } = createNestModule({
     }
     if (asyncModuleOptions.staticConfiguration?.featureName) {
       const FomatterClass = getFeatureDotEnvPropertyNameFormatter(
-        `${asyncModuleOptions.staticConfiguration?.featureName}_NATS`
+        `${asyncModuleOptions.staticConfiguration?.featureName}_NATS`,
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
@@ -329,7 +329,7 @@ export const { NatsNestMicroservice } = createNestModule({
             servers: current.staticEnvironments?.servers,
           },
         },
-        { inheritAppConfig: true }
+        { inheritAppConfig: true },
       );
     } else {
       @Module({

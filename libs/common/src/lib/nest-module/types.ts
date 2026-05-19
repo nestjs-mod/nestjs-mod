@@ -78,53 +78,52 @@ export type DynamicNestModuleMetadata<
   TSharedProvidersWithStaticOptions = (linkOptions: TLinkOptions) => Provider[],
   TExportsWithStaticOptions = (linkOptions: TLinkOptions) => ExportsWithStaticOptionsResponse[],
   TNestApplication = INestApplication,
-  TModuleName extends string = string
-> =
-  | Promise<TDynamicModule> & {
-      moduleSettings?: Record<string, TModuleSettings>;
-      getNestModuleMetadata?: () => NestModuleMetadata<
-        TConfigurationModel,
-        TStaticConfigurationModel,
-        TEnvironmentsModel,
-        TStaticEnvironmentsModel,
-        TFeatureConfigurationModel,
-        TFeatureEnvironmentsModel,
-        TForRootMethodName,
-        TForRootAsyncMethodName,
-        TForFeatureMethodName,
-        TForFeatureAsyncMethodName,
-        TDynamicModule,
-        TLinkOptions,
-        TImportsWithStaticOptions,
-        TControllersWithStaticOptions,
-        TProvidersWithStaticOptions,
-        TSharedProvidersWithStaticOptions,
-        TExportsWithStaticOptions,
-        TNestApplication,
-        TModuleName
-      >;
-      pathNestModuleMetadata?: (newNestModuleMetadata: Partial<NestModuleMetadata>) => NestModuleMetadata;
-      forFeatureModules?: DynamicNestModuleMetadata<
-        TConfigurationModel,
-        TStaticConfigurationModel,
-        TEnvironmentsModel,
-        TStaticEnvironmentsModel,
-        TFeatureConfigurationModel,
-        TFeatureEnvironmentsModel,
-        TForRootMethodName,
-        TForRootAsyncMethodName,
-        TForFeatureMethodName,
-        TForFeatureAsyncMethodName,
-        TDynamicModule,
-        TLinkOptions,
-        TImportsWithStaticOptions,
-        TControllersWithStaticOptions,
-        TProvidersWithStaticOptions,
-        TSharedProvidersWithStaticOptions,
-        TExportsWithStaticOptions,
-        TNestApplication
-      >[];
-    };
+  TModuleName extends string = string,
+> = Promise<TDynamicModule> & {
+  moduleSettings?: Record<string, TModuleSettings>;
+  getNestModuleMetadata?: () => NestModuleMetadata<
+    TConfigurationModel,
+    TStaticConfigurationModel,
+    TEnvironmentsModel,
+    TStaticEnvironmentsModel,
+    TFeatureConfigurationModel,
+    TFeatureEnvironmentsModel,
+    TForRootMethodName,
+    TForRootAsyncMethodName,
+    TForFeatureMethodName,
+    TForFeatureAsyncMethodName,
+    TDynamicModule,
+    TLinkOptions,
+    TImportsWithStaticOptions,
+    TControllersWithStaticOptions,
+    TProvidersWithStaticOptions,
+    TSharedProvidersWithStaticOptions,
+    TExportsWithStaticOptions,
+    TNestApplication,
+    TModuleName
+  >;
+  pathNestModuleMetadata?: (newNestModuleMetadata: Partial<NestModuleMetadata>) => NestModuleMetadata;
+  forFeatureModules?: DynamicNestModuleMetadata<
+    TConfigurationModel,
+    TStaticConfigurationModel,
+    TEnvironmentsModel,
+    TStaticEnvironmentsModel,
+    TFeatureConfigurationModel,
+    TFeatureEnvironmentsModel,
+    TForRootMethodName,
+    TForRootAsyncMethodName,
+    TForFeatureMethodName,
+    TForFeatureAsyncMethodName,
+    TDynamicModule,
+    TLinkOptions,
+    TImportsWithStaticOptions,
+    TControllersWithStaticOptions,
+    TProvidersWithStaticOptions,
+    TSharedProvidersWithStaticOptions,
+    TExportsWithStaticOptions,
+    TNestApplication
+  >[];
+};
 
 export type ProjectOptions = {
   name: string;
@@ -141,7 +140,7 @@ export type ProjectOptions = {
     {
       name: string;
       email: string;
-    }
+    },
   ];
   devScripts?: string[];
   prodScripts?: string[];
@@ -165,7 +164,7 @@ export type WrapApplicationOptions<
     TConfigurationModel,
     TEnvironmentsModel,
     TStaticEnvironmentsModel
-  >
+  >,
 > = {
   app?: TNestApplication;
   project?: ProjectOptions;
@@ -230,7 +229,7 @@ export interface NestModuleMetadata<
     TStaticEnvironmentsModel,
     TFeatureConfigurationModel,
     TFeatureEnvironmentsModel
-  >
+  >,
 > {
   project?: ProjectOptions;
   moduleDisabled?: boolean;
@@ -289,7 +288,7 @@ export interface NestModuleMetadata<
       TConfigurationModel,
       TEnvironmentsModel,
       TForRootAsyncMethodOptions
-    >
+    >,
   ) => Promise<void>;
   wrapApplication?: (
     options: WrapApplicationOptions<
@@ -299,7 +298,7 @@ export interface NestModuleMetadata<
       TConfigurationModel,
       TEnvironmentsModel,
       TForRootAsyncMethodOptions
-    >
+    >,
   ) => Promise<TNestApplication | void>;
   postWrapApplication?: (
     options: WrapApplicationOptions<
@@ -309,7 +308,7 @@ export interface NestModuleMetadata<
       TConfigurationModel,
       TEnvironmentsModel,
       TForRootAsyncMethodOptions
-    >
+    >,
   ) => Promise<void>;
   logger?: Logger | LoggerService;
 
@@ -341,7 +340,7 @@ export type InternalForRootMethodOptions<
   TStaticConfigurationModel,
   TConfigurationModel,
   TEnvironmentsModel,
-  TStaticEnvironmentsModel
+  TStaticEnvironmentsModel,
 > = {
   contextName?: string;
   environmentsOptions?: Omit<EnvModelOptions, 'originalName'>;
@@ -357,7 +356,7 @@ export type ForRootMethodOptions<
   TStaticConfigurationModel,
   TConfigurationModel,
   TEnvironmentsModel,
-  TStaticEnvironmentsModel
+  TStaticEnvironmentsModel,
 > =
   | { contextName?: string }
   | (TStaticConfigurationModel extends never
@@ -389,7 +388,7 @@ export type InternalForRootAsyncMethodOptions<
   TStaticConfigurationModel,
   TConfigurationModel,
   TEnvironmentsModel,
-  TStaticEnvironmentsModel
+  TStaticEnvironmentsModel,
 > = {
   configurationExisting?: any;
   configurationClass?: Type<TConfigurationModel>;
@@ -412,7 +411,7 @@ export type ForRootAsyncMethodOptions<
   TStaticConfigurationModel,
   TConfigurationModel,
   TEnvironmentsModel,
-  TStaticEnvironmentsModel
+  TStaticEnvironmentsModel,
 > =
   | (TConfigurationModel extends never
       ? {}
@@ -464,7 +463,7 @@ export type InternalForFeatureAsyncMethodOptions<
   TEnvironmentsModel = never,
   TStaticEnvironmentsModel = never,
   TFeatureConfigurationModel = any,
-  TFeatureEnvironmentsModel = any
+  TFeatureEnvironmentsModel = any,
 > = {
   // todo: need add later
   // featureConfigurationExisting?: any;
@@ -492,7 +491,7 @@ export type ForFeatureAsyncMethodOptions<
   TEnvironmentsModel = never,
   TStaticEnvironmentsModel = never,
   TFeatureConfigurationModel = never,
-  TFeatureEnvironmentsModel = never
+  TFeatureEnvironmentsModel = never,
 > =
   | {
       // todo: need add later

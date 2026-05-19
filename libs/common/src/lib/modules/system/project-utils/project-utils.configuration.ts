@@ -48,7 +48,7 @@ export class ProjectUtilsConfiguration {
     description: 'Some logic for prepare processed files checksums',
   })
   prepareProcessedFilesCheckSumToEnvironments?: (
-    processed: Record<string, { fileList: string[]; sha256: string }>
+    processed: Record<string, { fileList: string[]; sha256: string }>,
   ) => Record<string, { fileList: string[]; sha256: string }>;
 
   // todo: try move to env config later

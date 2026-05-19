@@ -5,7 +5,7 @@ import type { NestSchematic, NormalizedOptions } from './types';
 export async function runNestSchematic(
   tree: Tree,
   schematic: NestSchematic,
-  options: NormalizedOptions
+  options: NormalizedOptions,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   const { skipFormat, ...schematicOptions } = options;

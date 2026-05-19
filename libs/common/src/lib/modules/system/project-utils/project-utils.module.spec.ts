@@ -81,7 +81,7 @@ describe('Project Utils', () => {
                   prepare: (content: string) => {
                     const json = JSON.parse(content);
                     return JSON.stringify(
-                      json['version'] || new Date().toISOString().split(':').join('_').split('.').join('-')
+                      json['version'] || new Date().toISOString().split(':').join('_').split('.').join('-'),
                     );
                   },
                 },
@@ -240,7 +240,7 @@ describe('Project Utils', () => {
     class GetPackageJson {
       constructor(
         private readonly applicationPackageJsonService: ApplicationPackageJsonService,
-        private readonly packageJsonService: PackageJsonService
+        private readonly packageJsonService: PackageJsonService,
       ) {}
 
       getApplicationPackageJson() {

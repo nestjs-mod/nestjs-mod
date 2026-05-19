@@ -7,7 +7,7 @@ import { CLEAR_WORDS, DotEnvPropertyNameFormatter } from './dot-env-property-nam
 export function getFeatureDotEnvPropertyNameFormatter(
   featureName: string,
   rootOptions?: EnvModelRootOptions,
-  options?: EnvModelOptions
+  options?: EnvModelOptions,
 ) {
   class FeatureDotEnvPropertyNameFormatter extends DotEnvPropertyNameFormatter {
     override format({

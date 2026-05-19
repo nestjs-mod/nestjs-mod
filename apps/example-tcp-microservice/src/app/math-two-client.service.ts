@@ -18,7 +18,7 @@ export class MathTwoClientService {
     @InjectTcpNestMicroserviceClient('ms1')
     private client1: ClientProxy,
     @InjectTcpNestMicroserviceClient('ms2')
-    private client2: ClientProxy
+    private client2: ClientProxy,
   ) {}
 
   sum(payload: number[]) {
@@ -26,7 +26,7 @@ export class MathTwoClientService {
       tap((result) => {
         this.sumResult.push(result);
         this.logger.log({ sum: result });
-      })
+      }),
     );
   }
 
@@ -35,7 +35,7 @@ export class MathTwoClientService {
       tap((result) => {
         this.sumResult.push(result);
         this.logger.log({ sum: result });
-      })
+      }),
     );
   }
 
@@ -44,7 +44,7 @@ export class MathTwoClientService {
       tap((result) => {
         this.getDateResult.push(result);
         this.logger.log({ getDate: result });
-      })
+      }),
     );
   }
 
@@ -53,7 +53,7 @@ export class MathTwoClientService {
       tap((result) => {
         this.getDateResult.push(result);
         this.logger.log({ getDate: result });
-      })
+      }),
     );
   }
 
@@ -62,7 +62,7 @@ export class MathTwoClientService {
       tap((result) => {
         this.asyncSumResult.push(result);
         this.logger.log({ asyncSum: result });
-      })
+      }),
     );
   }
 
@@ -71,7 +71,7 @@ export class MathTwoClientService {
       tap((result) => {
         this.asyncSumResult.push(result);
         this.logger.log({ asyncSum: result });
-      })
+      }),
     );
   }
 
@@ -80,7 +80,7 @@ export class MathTwoClientService {
       tap((result) => {
         this.observableSumResult.push(result);
         this.logger.log({ observableSum: result });
-      })
+      }),
     );
   }
 
@@ -89,7 +89,7 @@ export class MathTwoClientService {
       tap((result) => {
         this.observableSumResult.push(result);
         this.logger.log({ observableSum: result });
-      })
+      }),
     );
   }
 
@@ -98,7 +98,7 @@ export class MathTwoClientService {
       tap((result) => {
         this.handleUserCreatedResult.push(result);
         this.logger.log({ handleUserCreated: result });
-      })
+      }),
     );
   }
 
@@ -107,7 +107,7 @@ export class MathTwoClientService {
       tap((result) => {
         this.handleUserCreatedResult.push(result);
         this.logger.log({ handleUserCreated: result });
-      })
+      }),
     );
   }
 }

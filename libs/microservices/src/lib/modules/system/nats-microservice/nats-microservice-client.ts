@@ -23,7 +23,7 @@ function getClientProxyApplicationHooks(contextName?: string) {
   class ClientProxyApplicationHooks implements OnApplicationBootstrap, OnModuleDestroy {
     constructor(
       @InjectNatsNestMicroserviceClient(contextName)
-      private readonly clientProxy: ClientProxy
+      private readonly clientProxy: ClientProxy,
     ) {}
 
     async onApplicationBootstrap() {
@@ -52,7 +52,7 @@ export const { NatsNestMicroserviceClientModule } = createNestModule({
         `${asyncModuleOptions.staticConfiguration?.featureName}_NATS`,
         asyncModuleOptions.staticConfiguration?.microserviceProjectName
           ? { name: asyncModuleOptions.staticConfiguration.microserviceProjectName }
-          : undefined
+          : undefined,
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
@@ -65,7 +65,7 @@ export const { NatsNestMicroserviceClientModule } = createNestModule({
         'NATS',
         asyncModuleOptions.staticConfiguration?.microserviceProjectName
           ? { name: asyncModuleOptions.staticConfiguration.microserviceProjectName }
-          : undefined
+          : undefined,
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {

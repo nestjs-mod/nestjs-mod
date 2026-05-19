@@ -50,7 +50,7 @@ Default test NestJS application creator.
 
 | Key    | Constraints | Value |
 | ------ | ----------- | ----- |
-|`featureVar`|**isNotEmpty** (featureVar should not be empty)|-|
+|`featureVar`|**optional**|-|
 
 #### Feature environments
 

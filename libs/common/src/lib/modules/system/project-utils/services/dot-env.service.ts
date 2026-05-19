@@ -17,7 +17,7 @@ export class DotEnvService {
   constructor(
     private readonly wrapApplicationOptionsService: WrapApplicationOptionsService,
     private readonly projectUtilsConfiguration: ProjectUtilsConfiguration,
-    private readonly gitignoreService: GitignoreService
+    private readonly gitignoreService: GitignoreService,
   ) {}
 
   getEnvFilePath() {
@@ -41,8 +41,8 @@ export class DotEnvService {
                 .filter(
                   (key) =>
                     !m?.[contextName]?.staticEnvironments?.validations[key]?.propertyValueExtractors.some(
-                      (e) => e.demoMode
-                    )
+                      (e) => e.demoMode,
+                    ),
                 )
                 .map((key) =>
                   m?.[contextName]?.staticEnvironments?.validations[key]?.propertyNameFormatters
@@ -52,14 +52,14 @@ export class DotEnvService {
                           includeHiddenKeys ||
                           (!includeHiddenKeys &&
                             !m?.[contextName]?.staticEnvironments?.modelPropertyOptions.find(
-                              (p) => (p.originalName === key || p.name) && p.hidden
+                              (p) => (p.originalName === key || p.name) && p.hidden,
                             ))) &&
-                        f.name === 'dotenv'
+                        f.name === 'dotenv',
                     )
                     .map((f: EnvModelInfoValidationsPropertyNameFormatters) => f.value)
-                    .flat()
+                    .flat(),
                 )
-                .flat()
+                .flat(),
             )
             .flat(),
           ...modules
@@ -67,7 +67,7 @@ export class DotEnvService {
               Object.keys(m?.[contextName]?.environments?.validations || {})
                 .filter(
                   (key) =>
-                    !m?.[contextName]?.environments?.validations[key]?.propertyValueExtractors.some((e) => e.demoMode)
+                    !m?.[contextName]?.environments?.validations[key]?.propertyValueExtractors.some((e) => e.demoMode),
                 )
                 .map((key) =>
                   m?.[contextName]?.environments?.validations[key]?.propertyNameFormatters
@@ -77,14 +77,14 @@ export class DotEnvService {
                           includeHiddenKeys ||
                           (!includeHiddenKeys &&
                             !m?.[contextName]?.environments?.modelPropertyOptions.find(
-                              (p) => (p.originalName === key || p.name) && p.hidden
+                              (p) => (p.originalName === key || p.name) && p.hidden,
                             ))) &&
-                        f.name === 'dotenv'
+                        f.name === 'dotenv',
                     )
                     .map((f: EnvModelInfoValidationsPropertyNameFormatters) => f.value)
-                    .flat()
+                    .flat(),
                 )
-                .flat()
+                .flat(),
             )
             .flat(),
           ...modules
@@ -103,21 +103,21 @@ export class DotEnvService {
                                   includeHiddenKeys ||
                                   (!includeHiddenKeys &&
                                     !vItem?.modelPropertyOptions.find(
-                                      (p) => (p.originalName === key || p.name) && p.hidden
+                                      (p) => (p.originalName === key || p.name) && p.hidden,
                                     ))) &&
-                                f.name === 'dotenv'
+                                f.name === 'dotenv',
                             )
                             .map((f: EnvModelInfoValidationsPropertyNameFormatters) => f.value)
-                            .flat()
-                        )
+                            .flat(),
+                        ),
                     )
                     .flat()
-                    .flat()
+                    .flat(),
                 )
-                .flat()
+                .flat(),
             )
             .flat(),
-        ].filter(Boolean)
+        ].filter(Boolean),
       ),
     ];
     return keys;
@@ -263,7 +263,7 @@ export class DotEnvService {
         ...(ignoreCheckNeededKeys ? data : {}),
         ...neededKeys.reduce(
           (all, key) => ({ ...all, [String(key)]: data[key!] || existsEnvJson?.[key!] || '' }),
-          existsEnvJson
+          existsEnvJson,
         ),
       };
       await this.writeFile(envFile, newEnvJson);
@@ -276,14 +276,14 @@ export class DotEnvService {
             ...all,
             [String(key)]: existsExampleEnvJson?.[key!] || (key?.trim().startsWith('#') ? '' : ''),
           }),
-          existsExampleEnvJson
+          existsExampleEnvJson,
         );
         await this.writeFile(envExampleFile, newEnvJson);
       } else {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newEnvJson: any = [...neededKeys, ...(ignoreCheckNeededKeys ? Object.keys(data) : [])].reduce(
           (all, key) => ({ ...all, [String(key)]: key?.trim().startsWith('#') ? '' : '' }),
-          {}
+          {},
         );
         await this.writeFile(envExampleFile, newEnvJson);
       }

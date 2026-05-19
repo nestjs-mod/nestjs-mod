@@ -399,7 +399,7 @@ class AppFeatureConfig {
 class AppFeaturesService {
   constructor(
     @InjectFeatures()
-    private readonly appFeatureConfigs: InjectableFeatureConfigurationType<AppFeatureConfig>[]
+    private readonly appFeatureConfigs: InjectableFeatureConfigurationType<AppFeatureConfig>[],
   ) {}
 
   getFeatureConfigs() {
@@ -422,7 +422,10 @@ class App2Config {
 
 @Injectable()
 class App2Service {
-  constructor(private readonly appFeaturesService: AppFeaturesService, private readonly app2Config: App2Config) {}
+  constructor(
+    private readonly appFeaturesService: AppFeaturesService,
+    private readonly app2Config: App2Config,
+  ) {}
 
   getFeatureConfigs() {
     return this.appFeaturesService.getFeatureConfigs();
@@ -456,7 +459,10 @@ class App3Env {
 
 @Injectable()
 class App3Service {
-  constructor(private readonly appFeaturesService: AppFeaturesService, private readonly app3Env: App3Env) {}
+  constructor(
+    private readonly appFeaturesService: AppFeaturesService,
+    private readonly app3Env: App3Env,
+  ) {}
 
   getFeatureConfigs() {
     return this.appFeaturesService.getFeatureConfigs();
@@ -725,7 +731,7 @@ bootstrapNestApplication({
             Logger.log(
               `🚀 Application is running on: http://${current.staticEnvironments?.hostname || 'localhost'}:${
                 current.staticEnvironments?.port
-              }/api`
+              }/api`,
             );
           },
         },

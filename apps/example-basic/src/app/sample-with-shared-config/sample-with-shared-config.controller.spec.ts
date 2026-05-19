@@ -26,13 +26,15 @@ describe('SampleWithSharedConfigController', () => {
           system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
           feature: [SampleWithSharedConfig.forRoot()],
         },
-      })
+      }),
     ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'var1 should not be empty');
   });
 
   it('should return error if environment not set (translated errors)', async () => {
     const RU_I18N_MESSAGES = JSON.parse(
-      readFileSync(resolve(__dirname, '../../../../../node_modules/class-validator-multi-lang/i18n/ru.json')).toString()
+      readFileSync(
+        resolve(__dirname, '../../../../../node_modules/class-validator-multi-lang/i18n/ru.json'),
+      ).toString(),
     );
     setClassValidatorMessages(RU_I18N_MESSAGES);
 
@@ -63,7 +65,7 @@ describe('SampleWithSharedConfigController', () => {
           system: [DefaultTestNestApplicationCreate.forRoot(), DefaultTestNestApplicationInitializer.forRoot()],
           feature: [TestAppModule.forRoot()],
         },
-      })
+      }),
     ).rejects.toHaveProperty('errors.0.constraints.isNotEmpty', 'var1 не может быть пустым');
   });
 

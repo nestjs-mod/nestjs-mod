@@ -23,7 +23,7 @@ export class SampleWithSharedConfigService {
     private readonly configuration: SampleWithSharedConfigConfiguration,
     private readonly staticConfiguration: SampleWithSharedConfigStaticConfiguration,
     private readonly environments: SampleWithSharedConfigEnvironments,
-    private readonly staticEnvironments: SampleWithSharedConfigStaticEnvironments
+    private readonly staticEnvironments: SampleWithSharedConfigStaticEnvironments,
   ) {}
 
   getHello(): string {

@@ -89,7 +89,7 @@ class NestjsModAllReadmeGeneratorConfiguration {
 export class NestjsModAllReadmeGeneratorService implements OnModuleInit {
   constructor(
     private readonly nestjsModAllReadmeGeneratorConfig: NestjsModAllReadmeGeneratorConfiguration,
-    private readonly dynamicNestModuleMetadataMarkdownReportGenerator: DynamicNestModuleMetadataMarkdownReportGenerator
+    private readonly dynamicNestModuleMetadataMarkdownReportGenerator: DynamicNestModuleMetadataMarkdownReportGenerator,
   ) {}
 
   async onModuleInit() {
@@ -251,7 +251,7 @@ ${
       return undefined;
     }
     const packageJson: BasicPackageJsonType = JSON.parse(
-      readFileSync(this.nestjsModAllReadmeGeneratorConfig.packageFile).toString()
+      readFileSync(this.nestjsModAllReadmeGeneratorConfig.packageFile).toString(),
     );
     return packageJson;
   }
@@ -261,7 +261,7 @@ ${
     const readmeList: any[] = [];
     const readmeFileList = await fg(
       (this.nestjsModAllReadmeGeneratorConfig?.utilsFolders || [])?.map((folder) => join(folder, '**', '*.md')),
-      { dot: true }
+      { dot: true },
     );
 
     const md = markdownit({
@@ -293,14 +293,14 @@ ${
 
       const onlyNestModules = Object.entries(allClasses).filter(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ([, value]: [string, any]) => value['getNestModuleMetadata']
+        ([, value]: [string, any]) => value['getNestModuleMetadata'],
       );
       const asyncModules = onlyNestModules
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map(([, value]: [string, any]) =>
           value[value.getNestModuleMetadata()['forRootMethodName'] || DEFAULT_FOR_ROOT_METHOD_NAME]({
             contextName,
-          })
+          }),
         );
       // collect new modules
       const tempPreparedModules = await bootstrapNestApplicationWithOptions({
@@ -332,7 +332,7 @@ ${
               try {
                 const filePath = join(
                   this.nestjsModAllReadmeGeneratorConfig.folderWithMarkdownFilesToUse,
-                  `${constantCase(moduleName)}_USE_IN_NEST_JS.md`
+                  `${constantCase(moduleName)}_USE_IN_NEST_JS.md`,
                 );
                 nestJsUsage = readFileSync(filePath).toString();
               } catch (err) {
@@ -341,7 +341,7 @@ ${
               try {
                 const filePath = join(
                   this.nestjsModAllReadmeGeneratorConfig.folderWithMarkdownFilesToUse,
-                  `${constantCase(moduleName)}_USE_IN_NEST_JS_MOD.md`
+                  `${constantCase(moduleName)}_USE_IN_NEST_JS_MOD.md`,
                 );
                 nestJsModUsage = readFileSync(filePath).toString();
               } catch (err) {

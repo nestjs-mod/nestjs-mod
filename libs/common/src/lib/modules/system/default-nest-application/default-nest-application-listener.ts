@@ -41,7 +41,7 @@ export class DefaultNestApplicationListenerConfiguration {
       INestApplication,
       DefaultNestApplicationListenerConfiguration,
       DefaultNestApplicationListenerEnvironments
-    >
+    >,
   ) => Promise<void>;
 
   @ConfigModelProperty({
@@ -52,7 +52,7 @@ export class DefaultNestApplicationListenerConfiguration {
       INestApplication,
       DefaultNestApplicationListenerConfiguration,
       DefaultNestApplicationListenerEnvironments
-    >
+    >,
   ) => Promise<void>;
 
   @ConfigModelProperty({
@@ -124,7 +124,11 @@ export const { DefaultNestApplicationListener } = createNestModule({
             await current.staticConfiguration?.preListen({
               app,
               current,
-            } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
+            } as WrapApplicationOptions<
+              INestApplication,
+              DefaultNestApplicationListenerConfiguration,
+              DefaultNestApplicationListenerEnvironments
+            >);
           }
 
           if (app && current.staticConfiguration) {
@@ -160,7 +164,11 @@ export const { DefaultNestApplicationListener } = createNestModule({
             await current.staticConfiguration?.postListen({
               app,
               current,
-            } as WrapApplicationOptions<INestApplication, DefaultNestApplicationListenerConfiguration, DefaultNestApplicationListenerEnvironments>);
+            } as WrapApplicationOptions<
+              INestApplication,
+              DefaultNestApplicationListenerConfiguration,
+              DefaultNestApplicationListenerEnvironments
+            >);
           }
 
           if (current.staticConfiguration?.mode === 'listen' && current.staticConfiguration?.logApplicationStart) {
@@ -168,7 +176,7 @@ export const { DefaultNestApplicationListener } = createNestModule({
               (current.staticConfiguration.defaultLogger || new Logger()).log(
                 `🚀 Application is running on: http://${current.staticEnvironments?.hostname ?? 'localhost'}:${
                   current.staticEnvironments?.port
-                }/${current.staticConfiguration.globalPrefix || ''}`
+                }/${current.staticConfiguration.globalPrefix || ''}`,
               );
             } else {
               (current.staticConfiguration.defaultLogger || new Logger()).log(`🚀 All microservices is running`);
@@ -183,7 +191,7 @@ export const { DefaultNestApplicationListener } = createNestModule({
             setTimeout(() => process.exit(0), current.staticConfiguration?.autoCloseTimeoutInInfrastructureMode * 1000);
           }
         },
-      }).DefaultNestApplicationListener.forRootAsync(current.asyncModuleOptions)
+      }).DefaultNestApplicationListener.forRootAsync(current.asyncModuleOptions),
     );
   },
 });

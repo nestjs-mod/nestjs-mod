@@ -81,19 +81,19 @@ export const compare = function (a: any, b: any) {
             result.different = result.different.concat(
               map(deeper.different, (sub_path) => {
                 return key + '.' + sub_path;
-              })
+              }),
             );
 
             result.missing_from_second = result.missing_from_second.concat(
               map(deeper.missing_from_second, (sub_path) => {
                 return key + '.' + sub_path;
-              })
+              }),
             );
 
             result.missing_from_first = result.missing_from_first.concat(
               map(deeper.missing_from_first, (sub_path) => {
                 return key + '.' + sub_path;
-              })
+              }),
             );
             return result;
           }
@@ -103,7 +103,7 @@ export const compare = function (a: any, b: any) {
         return result;
       }
     },
-    result
+    result,
   );
 
   reduce(
@@ -116,7 +116,7 @@ export const compare = function (a: any, b: any) {
         return result;
       }
     },
-    result
+    result,
   );
 
   return result;

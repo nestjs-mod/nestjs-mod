@@ -195,7 +195,7 @@ export const { KafkaNestMicroservice } = createNestModule({
     }
     if (asyncModuleOptions.staticConfiguration?.featureName) {
       const FomatterClass = getFeatureDotEnvPropertyNameFormatter(
-        `${asyncModuleOptions.staticConfiguration?.featureName}_KAFKA`
+        `${asyncModuleOptions.staticConfiguration?.featureName}_KAFKA`,
       );
       Object.assign(asyncModuleOptions, {
         environmentsOptions: {
@@ -229,7 +229,7 @@ export const { KafkaNestMicroservice } = createNestModule({
             },
           },
         },
-        { inheritAppConfig: true }
+        { inheritAppConfig: true },
       );
     } else {
       @Module({
