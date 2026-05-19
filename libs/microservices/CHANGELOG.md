@@ -1,3 +1,12 @@
+# [1.10.0](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.9.2...microservices-v1.10.0) (2026-05-19)
+
+
+### Features
+
+* bump external deps ([a9747bc](https://github.com/nestjs-mod/nestjs-mod/commit/a9747bcbe6f233597c847ff4da3a9440bf742f2a))
+* bump external deps ([8cd2d1a](https://github.com/nestjs-mod/nestjs-mod/commit/8cd2d1ad69f81f7a8b3d6bc9c4d7093ad5a8b7e1))
+* bump external deps ([184f080](https://github.com/nestjs-mod/nestjs-mod/commit/184f080c2a3f0b54c0a7936f105f6c728c6ee1a3))
+
 ## [1.9.2](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.9.1...microservices-v1.9.2) (2025-06-30)
 
 ### Bug Fixes
