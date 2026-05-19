@@ -2,7 +2,7 @@
   "devDependencies": {
     "rucken": "^4.16.1",
     "@nestjs-mod/testing": "2.18.2",
-    "@nestjs-mod/schematics": "2.13.1"
+    "@nestjs-mod/schematics": "2.13.2"
   },
   "dependencies": {
     "@nestjs-mod/common": "2.18.2",

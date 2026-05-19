@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'example-fastify',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',

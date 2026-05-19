@@ -1,15 +1,13 @@
 import { Tree, readNxJson } from '@nx/devkit';
 import {
   determineProjectNameAndRootOptions,
-  ensureProjectName,
+  ensureRootProjectName,
 } from '@nx/devkit/src/generators/project-name-and-root-utils';
 import { getNpmScope } from '@nx/js/src/utils/package-json/get-npm-scope';
 import type { LibraryGeneratorSchema as JsLibraryGeneratorSchema } from '@nx/js/src/generators/library/schema';
-import { Linter } from '@nx/eslint';
 import type { LibraryGeneratorOptions, NormalizedOptions } from '../schema';
-
 export async function normalizeOptionsLib(tree: Tree, options: LibraryGeneratorOptions): Promise<NormalizedOptions> {
-  await ensureProjectName(tree, options, 'library');
+  await ensureRootProjectName(options, 'library');
   const {
     projectName,
     names: projectNames,
@@ -26,20 +24,23 @@ export async function normalizeOptionsLib(tree: Tree, options: LibraryGeneratorO
 
   options.addPlugin ??= addPlugin;
 
-  const fileName = options.simpleName ? projectNames.projectSimpleName : projectNames.projectFileName;
+  const fileName = projectNames.projectFileName;
   const parsedTags = options.tags ? options.tags.split(',').map((s) => s.trim()) : [];
 
+  // this helper is called before the jsLibraryGenerator is called, so, if the
+  // TS solution setup is not configured, we additionally check if the TS
+  // solution setup will be configured by the jsLibraryGenerator
+  const isUsingTsSolutionsConfig = false;
   const normalized: NormalizedOptions = {
     ...options,
     strict: options.strict ?? true,
     controller: options.controller ?? false,
     fileName,
-    category: options.category || 'feature',
     global: options.global ?? false,
-    linter: options.linter ?? Linter.EsLint,
+    linter: options.linter ?? 'eslint',
     parsedTags,
     prefix: getNpmScope(tree) || '', // we could also allow customizing this
-    projectName,
+    projectName: isUsingTsSolutionsConfig && !options.name ? importPath : projectName,
     projectRoot,
     importPath,
     service: options.service ?? false,
@@ -51,7 +52,7 @@ export async function normalizeOptionsLib(tree: Tree, options: LibraryGeneratorO
   return normalized;
 }
 
-export function toJsLibraryGeneratorOptions(options: LibraryGeneratorOptions): JsLibraryGeneratorSchema {
+export function toJsLibraryGeneratorOptions(options: NormalizedOptions): JsLibraryGeneratorSchema {
   return {
     name: options.name,
     bundler: options.buildable || options.publishable ? 'tsc' : 'none',
@@ -66,7 +67,6 @@ export function toJsLibraryGeneratorOptions(options: LibraryGeneratorOptions): J
     tags: options.tags,
     testEnvironment: options.testEnvironment,
     unitTestRunner: options.unitTestRunner,
-    config: options.standaloneConfig ? 'project' : 'workspace',
     setParserOptionsProject: options.setParserOptionsProject,
     addPlugin: options.addPlugin,
   };

@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default {
+module.exports = {
   displayName: 'example-tcp-microservice',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',

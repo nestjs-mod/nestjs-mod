@@ -36,12 +36,12 @@
   "generators": "./generators.json",
   "dependencies": {
     "tslib": "^2.3.0",
-    "@nx/eslint": "20.3.0",
-    "@nx/js": "20.3.0",
-    "@nx/devkit": "20.3.0",
-    "@nx/node": "20.3.0",
+    "@nx/eslint": "^22.6.5",
+    "@nx/js": "^22.6.5",
+    "@nx/devkit": "22.7.2",
+    "@nx/node": "^22.6.5",
     "case-anything": "2.1.13",
-    "typescript": "5.6.3"
+    "typescript": "5.9.3"
   },
   "type": "commonjs",
   "main": "./src/index.js",

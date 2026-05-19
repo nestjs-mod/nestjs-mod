@@ -14,7 +14,7 @@ import { LogLevel, Logger, LoggerService, Module, Type } from '@nestjs/common';
 import { NestMicroserviceOptions } from '@nestjs/common/interfaces/microservices/nest-microservice-options.interface';
 import { NestApplication, NestFactory } from '@nestjs/core';
 import { Deserializer, MicroserviceOptions, Serializer, TcpOptions, TcpSocket, Transport } from '@nestjs/microservices';
-import { ConnectionOptions } from 'tls';
+import { ConnectionOptions, TlsOptions } from 'tls';
 
 @EnvModel()
 export class TcpMicroserviceEnvironments implements Pick<Required<TcpOptions>['options'], 'host' | 'port'> {
@@ -127,7 +127,7 @@ export class TcpMicroserviceConfiguration
   @ConfigModelProperty({
     description: 'TLS options',
   })
-  tlsOptions?: ConnectionOptions;
+  tlsOptions?: TlsOptions;
 
   @ConfigModelProperty({
     description: 'Deserializer',
@@ -174,11 +174,23 @@ export const { TcpNestMicroservice } = createNestModule({
   // creating microservice
   wrapApplication: async ({ app, current, modules }) => {
     const options = { ...current.staticConfiguration, ...current.staticEnvironments };
+    
+    // Remove undefined values to prevent NestJS errors
+    const cleanOptions: any = {};
+    if (options.host) cleanOptions.host = options.host;
+    if (options.port) cleanOptions.port = options.port;
+    if (options.retryAttempts) cleanOptions.retryAttempts = options.retryAttempts;
+    if (options.retryDelay) cleanOptions.retryDelay = options.retryDelay;
+    if (options.serializer) cleanOptions.serializer = options.serializer;
+    if (options.deserializer) cleanOptions.deserializer = options.deserializer;
+    if (options.socketClass) cleanOptions.socketClass = options.socketClass;
+    if (options.tlsOptions) cleanOptions.tlsOptions = options.tlsOptions;
+    
     if (app) {
       app.connectMicroservice<MicroserviceOptions>(
         {
           transport: Transport.TCP,
-          options,
+          options: cleanOptions,
         },
         { inheritAppConfig: true },
       );
@@ -190,7 +202,7 @@ export const { TcpNestMicroservice } = createNestModule({
 
       app = (await NestFactory.createMicroservice<MicroserviceOptions>(MicroserviceNestApp, {
         transport: Transport.TCP,
-        options,
+        options: cleanOptions,
       })) as unknown as NestApplication;
     }
     // (current.staticConfiguration?.defaultLogger || new Logger()).debug(

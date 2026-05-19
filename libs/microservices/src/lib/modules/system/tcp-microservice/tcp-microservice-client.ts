@@ -24,7 +24,7 @@ function getClientProxyApplicationHooks(contextName?: string) {
     constructor(
       @InjectTcpNestMicroserviceClient(contextName)
       private readonly clientProxy: ClientProxy,
-    ) {}
+    ) { }
 
     async onApplicationBootstrap() {
       await this.clientProxy.connect();
@@ -81,12 +81,21 @@ export const { TcpNestMicroserviceClientModule } = createNestModule({
       provide: TCP_NEST_MICROSERVICE_CLIENT,
       useFactory: async () => {
         const options = { ...staticConfiguration, ...staticEnvironments };
+        
+        // Clean undefined values to prevent NestJS errors
+        const cleanOptions: any = {};
+        if (options.host) cleanOptions.host = options.host;
+        if (options.port) cleanOptions.port = options.port;
+        if (options.serializer) cleanOptions.serializer = options.serializer;
+        if (options.deserializer) cleanOptions.deserializer = options.deserializer;
+        if (options.socketClass) cleanOptions.socketClass = options.socketClass;
+        
         // (staticConfiguration?.defaultLogger || new Logger()).debug(
         //   `⚙️  Microservice client created with options: ${JSON.stringify(options)}`
         // );
         return ClientProxyFactory.create({
           transport: Transport.TCP,
-          options,
+          options: cleanOptions,
         });
       },
     },

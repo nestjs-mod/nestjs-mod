@@ -5,3 +5,4 @@
 dist
 integrations
 /.nx/workspace-data
+.nx/self-healing

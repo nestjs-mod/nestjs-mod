@@ -23,9 +23,11 @@
       "cache": true,
       "inputs": [
         "default",
+        "^default",
         "{workspaceRoot}/.eslintrc.json",
         "{workspaceRoot}/.eslintignore",
-        "{workspaceRoot}/eslint.config.js"
+        "{workspaceRoot}/eslint.config.js",
+        "{workspaceRoot}/tools/eslint-rules/**/*"
       ]
     }
   },
@@ -44,5 +46,6 @@
     "sharedGlobals": []
   },
   "useInferencePlugins": false,
-  "useLegacyCache": true
+  "neverConnectToCloud": true,
+  "analytics": false
 }

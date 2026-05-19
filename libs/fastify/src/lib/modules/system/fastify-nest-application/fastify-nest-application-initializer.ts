@@ -190,7 +190,7 @@ export const { FastifyNestApplicationInitializer } = createNestModule({
     } as unknown as FastifyBaseLogger;
 
     let fastifyAdapter = new FastifyAdapter({
-      logger: pinoLogger,
+      loggerInstance: pinoLogger,
     });
 
     if (current?.staticConfiguration?.wrapFastifyAdapter) {

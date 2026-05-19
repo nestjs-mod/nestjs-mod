@@ -47,3 +47,7 @@ Thumbs.db
 /integrations/nestjs-mod-contrib
 
 .env
+
+.claude/worktrees
+.nx/polygraph
+.nx/self-healing

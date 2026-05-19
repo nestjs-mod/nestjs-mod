@@ -1,3 +1,4 @@
+
 # @nestjs-mod/common
 
 A collection of utilities for unifying NestJS applications and modules
@@ -10,24 +11,27 @@ A collection of utilities for unifying NestJS applications and modules
 npm i --save @nestjs-mod/common
 ```
 
+
 ## Utilities
 
-| Link                                      | Description                                                                                                  |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [Config model](#config-model)             | Decorators for describing the module configuration and a function for its serialization and validation.      |
-| [Env model](#env-model)                   | Decorators for describing module environment variables and functions for its serialization and verification. |
-| [NestJS application](#nestjs-application) | Function for sequential import of nestModules.                                                               |
-| [NestJS module](#nestjs-module)           | Function for creating a configurable module with the ability to use multi-providing.                         |
+| Link | Description |
+| ---- | ----------- |
+| [Config model](#config-model) | Decorators for describing the module configuration and a function for its serialization and validation. |
+| [Env model](#env-model) | Decorators for describing module environment variables and functions for its serialization and verification. |
+| [NestJS application](#nestjs-application) | Function for sequential import of nestModules. |
+| [NestJS module](#nestjs-module) | Function for creating a configurable module with the ability to use multi-providing. |
+
 
 ## Modules
 
-| Link                                                                            | Category       | Description                                                                                                                 |
-| ------------------------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| [InfrastructureMarkdownReportGenerator](#infrastructuremarkdownreportgenerator) | infrastructure | Infrastructure markdown report generator.                                                                                   |
-| [InfrastructureMarkdownReportStorage](#infrastructuremarkdownreportstorage)     | infrastructure | Infrastructure markdown report storage                                                                                      |
-| [DefaultNestApplicationInitializer](#defaultnestapplicationinitializer)         | system         | Default NestJS application initializer.                                                                                     |
-| [DefaultNestApplicationListener](#defaultnestapplicationlistener)               | system         | Default NestJS application listener.                                                                                        |
-| [ProjectUtils](#projectutils)                                                   | system         | Utilities for setting global application parameters, such as project name, description, and settings validation parameters. |
+| Link | Category | Description |
+| ---- | -------- | ----------- |
+| [InfrastructureMarkdownReportGenerator](#infrastructuremarkdownreportgenerator) | infrastructure | Infrastructure markdown report generator. |
+| [InfrastructureMarkdownReportStorage](#infrastructuremarkdownreportstorage) | infrastructure | Infrastructure markdown report storage |
+| [DefaultNestApplicationInitializer](#defaultnestapplicationinitializer) | system | Default NestJS application initializer. |
+| [DefaultNestApplicationListener](#defaultnestapplicationlistener) | system | Default NestJS application listener. |
+| [ProjectUtils](#projectutils) | system | Utilities for setting global application parameters, such as project name, description, and settings validation parameters. |
+
 
 ## Utilities descriptions
 
@@ -110,7 +114,6 @@ bootstrap2();
 [Back to Top](#utilities)
 
 ---
-
 ### Env model
 
 Decorators for describing module environment variables and functions for its serialization and verification.
@@ -200,7 +203,6 @@ bootstrap3();
 [Back to Top](#utilities)
 
 ---
-
 ### NestJS application
 
 Function for sequential import of nestModules.
@@ -342,7 +344,6 @@ bootstrapNestApplication({
 [Back to Top](#utilities)
 
 ---
-
 ## NestJS module
 
 Function for creating a configurable module with the ability to use multi-providing.
@@ -515,11 +516,9 @@ bootstrap();
 ## Modules descriptions
 
 ### InfrastructureMarkdownReportGenerator
-
 Infrastructure markdown report generator.
 
 #### Use in NestJS-mod
-
 Use with options.
 
 ```typescript
@@ -542,27 +541,26 @@ bootstrapNestApplication({
 });
 ```
 
-#### Shared providers
 
+#### Shared providers
 `DynamicNestModuleMetadataMarkdownReportGenerator`
 
 #### Static configuration
 
-| Key                 | Description                                                          | Constraints  | Default | Value |
-| ------------------- | -------------------------------------------------------------------- | ------------ | ------- | ----- |
-| `markdownFile`      | Name of the markdown-file in which to save the infrastructure report | **optional** | -       | -     |
-| `skipEmptySettings` | Skip empty values of env and config models                           | **optional** | -       | -     |
+
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`markdownFile`|Name of the markdown-file in which to save the infrastructure report|**optional**|-|-|
+|`skipEmptySettings`|Skip empty values of env and config models|**optional**|-|-|
+|`style`|Report generation style|**optional**|```full```|```full```|
 
 [Back to Top](#modules)
 
 ---
-
 ### InfrastructureMarkdownReportStorage
-
 Infrastructure markdown report storage
 
 #### Use in NestJS-mod
-
 Use the forRoot method to create a global report store.
 
 ```typescript
@@ -627,20 +625,17 @@ bootstrapNestApplication({
 });
 ```
 
-#### Shared providers
 
+#### Shared providers
 `InfrastructureMarkdownReportStorageService`
 
 [Back to Top](#modules)
 
 ---
-
 ### DefaultNestApplicationInitializer
-
 Default NestJS application initializer.
 
 #### Use in NestJS-mod
-
 Use without options.
 
 ```typescript
@@ -676,33 +671,34 @@ bootstrapNestApplication({
 });
 ```
 
+
 #### Static configuration
 
-| Key                     | Description                                                                                                                                                                                                                             | Constraints  | Default                                                           | Value |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------- | ----- |
-| `cors`                  | CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)                                                                                                                                               | **optional** | `{"credentials":true,"methods":"GET,HEAD,PUT,PATCH,POST,DELETE"}` | -     |
-| `bodyParser`            | Whether to use underlying platform body parser.                                                                                                                                                                                         | **optional** | -                                                                 | -     |
-| `httpsOptions`          | Set of configurable HTTPS options                                                                                                                                                                                                       | **optional** | -                                                                 | -     |
-| `rawBody`               | Whether to register the raw request body on the request. Use `req.rawBody`.                                                                                                                                                             | **optional** | -                                                                 | -     |
-| `defaultLogger`         | Default logger for application                                                                                                                                                                                                          | **optional** | -                                                                 | -     |
-| `logger`                | Specifies the logger to use. Pass `false` to turn off logging.                                                                                                                                                                          | **optional** | -                                                                 | -     |
-| `abortOnError`          | Whether to abort the process on Error. By default, the process is exited. Pass `false` to override the default behavior. If `false` is passed, Nest will not exit the application and instead will rethrow the exception. @default true | **optional** | -                                                                 | -     |
-| `bufferLogs`            | If enabled, logs will be buffered until the "Logger#flush" method is called. @default false                                                                                                                                             | **optional** | -                                                                 | -     |
-| `autoFlushLogs`         | If enabled, logs will be automatically flushed and buffer detached when application initialization process either completes or fails. @default true                                                                                     | **optional** | -                                                                 | -     |
-| `preview`               | Whether to run application in the preview mode. In the preview mode, providers/controllers are not instantiated & resolved. @default false                                                                                              | **optional** | -                                                                 | -     |
-| `snapshot`              | Whether to generate a serialized graph snapshot. @default false                                                                                                                                                                         | **optional** | -                                                                 | -     |
-| `forceCloseConnections` | Force close open HTTP connections. Useful if restarting your application hangs due to keep-alive connections in the HTTP adapter.                                                                                                       | **optional** | `true`                                                            | -     |
+
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`cors`|CORS options from [CORS package](https://github.com/expressjs/cors#configuration-options)|**optional**|```{"credentials":true,"methods":"GET,HEAD,PUT,PATCH,POST,DELETE"}```|```{"credentials":true,"methods":"GET,HEAD,PUT,PATCH,POST,DELETE"}```|
+|`bodyParser`|Whether to use underlying platform body parser.|**optional**|-|-|
+|`httpsOptions`|Set of configurable HTTPS options|**optional**|-|-|
+|`rawBody`|Whether to register the raw request body on the request. Use `req.rawBody`.|**optional**|-|-|
+|`defaultLogger`|Default logger for application|**optional**|-|-|
+|`logger`|Specifies the logger to use.  Pass `false` to turn off logging.|**optional**|-|-|
+|`abortOnError`|Whether to abort the process on Error. By default, the process is exited. Pass `false` to override the default behavior. If `false` is passed, Nest will not exit the application and instead will rethrow the exception. @default true|**optional**|-|-|
+|`bufferLogs`|If enabled, logs will be buffered until the "Logger#flush" method is called. @default false|**optional**|-|-|
+|`autoFlushLogs`|If enabled, logs will be automatically flushed and buffer detached when application initialization process either completes or fails. @default true|**optional**|-|-|
+|`preview`|Whether to run application in the preview mode. In the preview mode, providers/controllers are not instantiated & resolved. @default false|**optional**|-|-|
+|`snapshot`|Whether to generate a serialized graph snapshot. @default false|**optional**|-|-|
+|`forceCloseConnections`|Force close open HTTP connections. Useful if restarting your application hangs due to keep-alive connections in the HTTP adapter.|**optional**|```true```|```true```|
+|`preCreateApplication`|Method for additional actions before listening|**optional**|-|-|
+|`postCreateApplication`|Method for additional actions after listening|**optional**|-|-|
 
 [Back to Top](#modules)
 
 ---
-
 ### DefaultNestApplicationListener
-
 Default NestJS application listener.
 
 #### Use in NestJS-mod
-
 Use with manual environments and custom configuration.
 
 ```typescript
@@ -741,35 +737,36 @@ bootstrapNestApplication({
 });
 ```
 
+
 #### Static environments
 
-| Key        | Description                                       | Sources                                      | Constraints                               | Default | Value |
-| ---------- | ------------------------------------------------- | -------------------------------------------- | ----------------------------------------- | ------- | ----- |
-| `port`     | The port on which to run the server.              | `obj['port']`, `process.env['PORT']`         | **isNotEmpty** (port should not be empty) | -       | -     |
-| `hostname` | Hostname on which to listen for incoming packets. | `obj['hostname']`, `process.env['HOSTNAME']` | **optional**                              | -       | -     |
+
+| Key    | Description | Sources | Constraints | Default | Value |
+| ------ | ----------- | ------- | ----------- | ------- | ----- |
+|`port`|The port on which to run the server.|`obj['port']`, `process.env['PORT']`|**optional**|```3000```|```3000```|
+|`hostname`|Hostname on which to listen for incoming packets.|`obj['hostname']`, `process.env['HOSTNAME']`|**optional**|-|-|
 
 #### Static configuration
 
-| Key                   | Description                                                                                             | Constraints  | Default  | Value |
-| --------------------- | ------------------------------------------------------------------------------------------------------- | ------------ | -------- | ----- |
-| `mode`                | Mode of start application: init - for run NestJS life cycle, listen - for full start NestJS application | **optional** | `listen` | -     |
-| `preListen`           | Method for additional actions before listening                                                          | **optional** | -        | -     |
-| `postListen`          | Method for additional actions after listening                                                           | **optional** | -        | -     |
-| `defaultLogger`       | Default logger for application                                                                          | **optional** | -        | -     |
-| `enableShutdownHooks` | Enable shutdown hooks                                                                                   | **optional** | `true`   | -     |
-| `globalPrefix`        | Global prefix                                                                                           | **optional** | `api`    | -     |
-| `logApplicationStart` | Log application start                                                                                   | **optional** | `true`   | -     |
+
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`mode`|Mode of start application: init - for run NestJS life cycle, listen -  for full start NestJS application|**optional**|```listen```|```listen```|
+|`preListen`|Method for additional actions before listening|**optional**|-|-|
+|`postListen`|Method for additional actions after listening|**optional**|-|-|
+|`defaultLogger`|Default logger for application|**optional**|-|-|
+|`enableShutdownHooks`|Enable shutdown hooks|**optional**|```false```|```false```|
+|`globalPrefix`|Global prefix|**optional**|```api```|```api```|
+|`autoCloseTimeoutInInfrastructureMode`|Timeout seconds for automatically closes the application in `infrastructure mode` if the application does not close itself (zero - disable)|**optional**|-|-|
+|`logApplicationStart`|Log application start|**optional**|```true```|```true```|
 
 [Back to Top](#modules)
 
 ---
-
 ### ProjectUtils
-
 Utilities for setting global application parameters, such as project name, description, and settings validation parameters.
 
 #### Use in NestJS-mod
-
 Use with options.
 
 ```typescript
@@ -867,34 +864,39 @@ bootstrapNestApplication({
 
 When launched in the infrastructure documentation generation mode, the module creates an `.env` file with a list of all required variables, as well as an example `example.env`, where you can enter example variable values.
 
-#### Shared providers
 
+#### Shared providers
 `WrapApplicationOptionsService`, `DotEnvService`, `PackageJsonService`, `ApplicationPackageJsonService`, `GitignoreService`, `NxProjectJsonService`, `ProjectUtilsPatcherService`
 
 #### Static configuration
 
-| Key                                               | Description                                   | Constraints  | Default | Value |
-| ------------------------------------------------- | --------------------------------------------- | ------------ | ------- | ----- |
-| `applicationPackageJsonFile`                      | Application package.json-file                 | **optional** | -       | -     |
-| `packageJsonFile`                                 | Root package.json-file                        | **optional** | -       | -     |
-| `nxProjectJsonFile`                               | Application project.json-file (nx)            | **optional** | -       | -     |
-| `envFile`                                         | Dot-env file with environment variables       | **optional** | -       | -     |
-| `updateEnvFile`                                   | Update env-file                               | **optional** | `true`  | -     |
-| `updateProjectOptions`                            | Update project properties                     | **optional** | `true`  | -     |
-| `updateGlobalConfigurationAndEnvironmentsOptions` | Update configuration and environments options | **optional** | `true`  | -     |
+
+| Key    | Description | Constraints | Default | Value |
+| ------ | ----------- | ----------- | ------- | ----- |
+|`applicationPackageJsonFile`|Application package.json-file|**optional**|-|-|
+|`packageJsonFile`|Root package.json-file|**optional**|-|-|
+|`nxProjectJsonFile`|Application project.json-file (nx)|**optional**|-|-|
+|`envFile`|Dot-env file with environment variables|**optional**|-|-|
+|`filesCheckSumToEnvironments`|Create environments key with checksum in value of some files|**optional**|-|-|
+|`prepareProcessedFilesCheckSumToEnvironments`|Some logic for prepare processed files checksums|**optional**|-|-|
+|`updateEnvFile`|Update env-file|**optional**|```true```|```true```|
+|`updateProjectOptions`|Update project properties|**optional**|```true```|```true```|
+|`updateGlobalConfigAndEnvsOptions`|Update configuration and environments options|**optional**|```true```|```true```|
+|`printAllApplicationEnvs`|Print all application environments|**optional**|```true```|```true```|
+|`saveFilesWithCheckSum`|Create json file with options and files used for create environments key with checksum|**optional**|```true```|```true```|
 
 [Back to Top](#modules)
 
 ## Links
 
-- https://github.com/nestjs-mod/nestjs-mod - A collection of utilities for unifying NestJS applications and modules
-- https://github.com/nestjs-mod/nestjs-mod-contrib - Contrib repository for the NestJS-mod
-- https://github.com/nestjs-mod/nestjs-mod-example - Example application built with [@nestjs-mod/schematics](https://github.com/nestjs-mod/nestjs-mod/tree/master/libs/schematics)
-- https://github.com/nestjs-mod/nestjs-mod/blob/master/apps/example-basic/INFRASTRUCTURE.MD - A simple example of infrastructure documentation.
-- https://github.com/nestjs-mod/nestjs-mod-contrib/blob/master/apps/example-prisma/INFRASTRUCTURE.MD - An extended example of infrastructure documentation with a docker-compose file and a data base.
-- https://dev.to/endykaufman/collection-of-nestjs-mod-utilities-for-unifying-applications-and-modules-on-nestjs-5256 - Article about the project NestJS-mod
-
+* https://github.com/nestjs-mod/nestjs-mod - A collection of utilities for unifying NestJS applications and modules
+* https://github.com/nestjs-mod/nestjs-mod-contrib - Contrib repository for the NestJS-mod
+* https://github.com/nestjs-mod/nestjs-mod-example - Example application built with [@nestjs-mod/schematics](https://github.com/nestjs-mod/nestjs-mod/tree/master/libs/schematics)
+* https://github.com/nestjs-mod/nestjs-mod/blob/master/apps/example-basic/INFRASTRUCTURE.MD - A simple example of infrastructure documentation.
+* https://github.com/nestjs-mod/nestjs-mod-contrib/blob/master/apps/example-prisma/INFRASTRUCTURE.MD - An extended example of infrastructure documentation with a docker-compose file and a data base.
+* https://dev.to/endykaufman/collection-of-nestjs-mod-utilities-for-unifying-applications-and-modules-on-nestjs-5256 - Article about the project NestJS-mod
 * https://habr.com/ru/articles/788916 - Коллекция утилит NestJS-mod для унификации приложений и модулей на NestJS
+
 
 ## License
 
