@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.5.0...misc-v1.5.1) (2026-05-19)
+
+
+### Bug Fixes
+
+* add provenance to packages ([6125fdb](https://github.com/nestjs-mod/nestjs-mod/commit/6125fdbfce5f0e9ce8c26c53edf43c1ab50e7e05))
+
 # [1.5.0](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.4.3...misc-v1.5.0) (2026-05-19)
 
 
