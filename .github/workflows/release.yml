@@ -30,7 +30,38 @@ jobs:
       - run: npm run test
       # - run: npm run test:integrations-build
       # - run: npm run check-contrib
-      - run: npx nx run-many --target=semantic-release --all --parallel=false
+      - name: Semantic release with npm auth retry
+        shell: bash
+        run: |
+          set +e
+
+          LOG_FILE=$(mktemp)
+
+          echo "=== First release attempt ==="
+
+          npx nx run-many --target=semantic-release --all --parallel=false 2>&1 | tee "$LOG_FILE"
+
+          EXIT_CODE=${PIPESTATUS[0]}
+
+          if grep -q "Open https://www.npmjs.com/login/" "$LOG_FILE"; then
+            echo ""
+            echo "========================================="
+            echo "NPM security key authentication detected"
+            echo "Please authenticate in browser"
+            echo "Waiting 30 seconds before retry..."
+            echo "========================================="
+            echo ""
+
+            sleep 30
+
+            echo "=== Second release attempt ==="
+
+            npx nx run-many --target=semantic-release --all --parallel=false
+
+            EXIT_CODE=$?
+          fi
+
+          exit $EXIT_CODE
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

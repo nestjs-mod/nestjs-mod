@@ -808,10 +808,10 @@ export function createNestModule<
         }
       }
 
-      const { featureConfiguration, featureEnvironments } = asyncModuleOptions || {};
-
-      let { featureConfigurationOptions, featureEnvironmentsOptions } = asyncModuleOptions || {};
       const contextName = defaultContextName(asyncModuleOptions?.contextName);
+
+      let { featureConfiguration, featureEnvironments } = asyncModuleOptions || {};
+      let { featureConfigurationOptions, featureEnvironmentsOptions } = asyncModuleOptions || {};
 
       if (featureConfigurationOptions === undefined) {
         featureConfigurationOptions = {};
@@ -824,10 +824,83 @@ export function createNestModule<
       async function getModule() {
         // console.log('getModule:feature', nestModuleMetadata.moduleName);
         const { module: settingsModule } = getOrCreateSettingsModule(contextName);
+
+        // Build providers for async feature configuration
+        // These providers handle dynamic configuration loading through different strategies:
+        // - featureConfigurationClass: Uses class with DI support (useClass)
+        // - featureConfigurationFactory: Creates config via factory function with DI
+        // - featureConfigurationStream: Updates config from RxJS Observable stream
+        const featureProviders: Provider[] = [];
+
+        // Handle async configuration options
+        let resolvedFeatureConfiguration = featureConfiguration;
+        if (asyncModuleOptions) {
+          // Handle class-based configuration with DI support
+          // The class will be instantiated by NestJS DI container with injected dependencies
+          if ('featureConfigurationClass' in asyncModuleOptions && asyncModuleOptions.featureConfigurationClass) {
+            const configClass = asyncModuleOptions.featureConfigurationClass;
+            
+            // Use factory to instantiate class with DI
+            // This allows NestJS to inject dependencies into the config class constructor
+            featureProviders.push({
+              provide: getFeatureConfigurationsToken(contextName),
+              useFactory: async (...args: any[]) => {
+                // Instantiate the class with injected dependencies
+                const instance = new configClass(...args);
+                const config = instance;
+                
+                // Transform and validate if model exists
+                if (config && nestModuleMetadata.featureConfigurationModel) {
+                  const obj = await configTransform({
+                    model: nestModuleMetadata.featureConfigurationModel,
+                    data: config as any,
+                    rootOptions: {
+                      ...featureConfigurationOptions,
+                      ...getRootConfigurationValidationOptions({ nestModuleMetadata, contextName }),
+                    },
+                  });
+                  
+                  // Update module settings for documentation/infrastructure
+                  if (moduleSettings[contextName].featureModuleConfigurations === undefined) {
+                    moduleSettings[contextName].featureModuleConfigurations = {};
+                  }
+                  if (
+                    moduleSettings[contextName].featureModuleConfigurations &&
+                    Array.isArray(moduleSettings[contextName].featureModuleConfigurations)
+                  ) {
+                    moduleSettings[contextName].featureModuleConfigurations.push({
+                      featureModuleName: asyncModuleOptions.featureModuleName,
+                      featureConfiguration: obj.data as TFeatureConfigurationModel,
+                    });
+                  }
+                  
+                  // Track for runtime access via InjectFeatures decorator
+                  if (featuresConfigurationByContextName[contextName] === undefined) {
+                    featuresConfigurationByContextName[contextName] = [];
+                  }
+                  featuresConfigurationByContextName[contextName].push({
+                    featureModuleName: asyncModuleOptions.featureModuleName,
+                    featureConfiguration: obj.data as TFeatureConfigurationModel,
+                  });
+                  
+                  return obj.data;
+                }
+                return config;
+              },
+              // Inject tokens from options - these will be passed to the class constructor
+              inject: 'inject' in asyncModuleOptions ? (asyncModuleOptions.inject as (InjectionToken | OptionalFactoryDependency)[]) : [],
+            });
+          }
+          if ('featureConfigurationExisting' in asyncModuleOptions && asyncModuleOptions.featureConfigurationExisting) {
+            // Use existing instance
+            resolvedFeatureConfiguration = asyncModuleOptions.featureConfigurationExisting as TFeatureConfigurationModel;
+          }
+        }
+
         const { module: featureModule } = await getOrCreateFeatureModule({
           contextName,
           featureModuleName: asyncModuleOptions.featureModuleName,
-          featureConfiguration,
+          featureConfiguration: resolvedFeatureConfiguration,
           featureEnvironments,
           featureConfigurationOptions,
           featureEnvironmentsOptions,
@@ -876,10 +949,168 @@ export function createNestModule<
                 }),
               } as TLinkOptions);
         const exports = (nestModuleMetadata.exports === undefined ? [] : exportsArr) || [];
+        
+        if (asyncModuleOptions) {
+          // Handle factory-based configuration
+          if ('featureConfigurationFactory' in asyncModuleOptions && asyncModuleOptions.featureConfigurationFactory) {
+            featureProviders.push({
+              provide: getFeatureConfigurationsToken(contextName),
+              useFactory: async (...args: any[]) => {
+                // Call factory to get configuration data
+                const config = await asyncModuleOptions.featureConfigurationFactory!(...args);
+                
+                // Transform and validate if model exists
+                if (config && nestModuleMetadata.featureConfigurationModel) {
+                  const obj = await configTransform({
+                    model: nestModuleMetadata.featureConfigurationModel,
+                    data: config as any,
+                    rootOptions: {
+                      ...featureConfigurationOptions,
+                      ...getRootConfigurationValidationOptions({ nestModuleMetadata, contextName }),
+                    },
+                  });
+                  
+                  // Update module settings for documentation/infrastructure
+                  if (moduleSettings[contextName].featureModuleConfigurations === undefined) {
+                    moduleSettings[contextName].featureModuleConfigurations = {};
+                  }
+                  if (
+                    moduleSettings[contextName].featureModuleConfigurations &&
+                    moduleSettings[contextName].featureModuleConfigurations![asyncModuleOptions.featureModuleName] === undefined
+                  ) {
+                    moduleSettings[contextName].featureModuleConfigurations![asyncModuleOptions.featureModuleName] = [];
+                  }
+                  moduleSettings[contextName].featureModuleConfigurations![asyncModuleOptions.featureModuleName]!.push(obj.info);
+                  
+                  // Add to feature configurations array for runtime access
+                  if (featuresConfigurationByContextName[contextName] === undefined) {
+                    featuresConfigurationByContextName[contextName] = [];
+                  }
+                  featuresConfigurationByContextName[contextName].push({
+                    featureModuleName: asyncModuleOptions.featureModuleName,
+                    featureConfiguration: obj.data as TFeatureConfigurationModel,
+                  });
+                  
+                  return obj.data;
+                }
+                return config;
+              },
+              inject: 'inject' in asyncModuleOptions ? (asyncModuleOptions.inject as (InjectionToken | OptionalFactoryDependency)[]) : [],
+            });
+          }
+          
+          // Handle stream-based configuration for real-time updates
+          if ('featureConfigurationStream' in asyncModuleOptions && asyncModuleOptions.featureConfigurationStream) {
+            // Create lifecycle manager to cleanup stream subscription on module destroy
+            @Injectable()
+            class OnModuleDestroyService implements OnModuleDestroy {
+              unsubscribe$ = new Subject();
+              onModuleDestroy() {
+                this.unsubscribe$.next(true);
+                this.unsubscribe$.complete();
+              }
+            }
+            
+            featureProviders.push(
+              OnModuleDestroyService,
+              {
+                provide: getFeatureConfigurationsToken(contextName),
+                useFactory: async (...args: any[]) => {
+                  if (asyncModuleOptions?.featureConfigurationStream) {
+                    const stream = asyncModuleOptions.featureConfigurationStream(args);
+                    if (isObservable(stream)) {
+                      // Find lifecycle manager from injected args
+                      const destroyService = args.find(
+                        (arg) => arg instanceof OnModuleDestroyService,
+                      ) as OnModuleDestroyService;
+                      
+                      let initialValue: any = undefined;
+                      
+                      if (destroyService) {
+                        // Subscribe to stream with automatic cleanup on module destroy
+                        // Wait for first value to ensure initial config is set
+                        await new Promise<void>((resolve) => {
+                          stream
+                            .pipe(takeUntil(destroyService.unsubscribe$))
+                            .subscribe({
+                              next: async (config) => {
+                                if (config && nestModuleMetadata.featureConfigurationModel) {
+                                  try {
+                                    // Store first value to return from factory
+                                    if (initialValue === undefined) {
+                                      initialValue = config;
+                                    }
+                                    
+                                    // Transform and validate each stream emission
+                                    const obj = await configTransform({
+                                      model: nestModuleMetadata.featureConfigurationModel,
+                                      data: config as any,
+                                      rootOptions: {
+                                        ...featureConfigurationOptions,
+                                        ...getRootConfigurationValidationOptions({ nestModuleMetadata, contextName }),
+                                      },
+                                    });
+                                    
+                                    // Update module settings for documentation
+                                    if (moduleSettings[contextName].featureModuleConfigurations === undefined) {
+                                      moduleSettings[contextName].featureModuleConfigurations = {};
+                                    }
+                                    if (
+                                      moduleSettings[contextName].featureModuleConfigurations &&
+                                      moduleSettings[contextName].featureModuleConfigurations![asyncModuleOptions.featureModuleName] === undefined
+                                    ) {
+                                      moduleSettings[contextName].featureModuleConfigurations![asyncModuleOptions.featureModuleName] = [];
+                                    }
+                                    moduleSettings[contextName].featureModuleConfigurations![asyncModuleOptions.featureModuleName]!.push(obj.info);
+                                    
+                                    // Update runtime feature configurations
+                                    if (featuresConfigurationByContextName[contextName] === undefined) {
+                                      featuresConfigurationByContextName[contextName] = [];
+                                    }
+                                    featuresConfigurationByContextName[contextName].push({
+                                      featureModuleName: asyncModuleOptions.featureModuleName,
+                                      featureConfiguration: obj.data as TFeatureConfigurationModel,
+                                    });
+                                    
+                                    // Resolve promise after first value processed
+                                    if (initialValue === config) {
+                                      resolve();
+                                    }
+                                  } catch (error) {
+                                    // Log validation errors but keep stream alive
+                                    nestModuleMetadata.logger?.error?.(`Feature configuration stream error: ${error}`);
+                                    if (initialValue === config) {
+                                      resolve();
+                                    }
+                                  }
+                                }
+                              },
+                              error: (error) => {
+                                // Handle stream errors without breaking
+                                nestModuleMetadata.logger?.error?.(`Feature configuration stream error: ${error}`);
+                                resolve();
+                              },
+                            });
+                        });
+                      }
+                      
+                      return initialValue;
+                    }
+                  }
+                  return undefined;
+                },
+                inject: [
+                  ...('inject' in asyncModuleOptions ? (asyncModuleOptions.inject as (InjectionToken | OptionalFactoryDependency)[]) : []),
+                  OnModuleDestroyService,
+                ],
+              },
+            );
+          }
+        }
 
         return {
           module: nameItClass(nestModuleMetadata.moduleName, InternalNestModule),
-          providers: [createUniqProvider()],
+          providers: [createUniqProvider(), ...featureProviders],
           imports: [settingsModule, featureModule, ...imports],
           exports: [...exports, settingsModule, featureModule],
         };
@@ -1087,9 +1318,12 @@ export function createNestModule<
       TExportsWithStaticOptions,
       TNestApplication
     > {
+      // Initialize options if not provided
       if (!asyncModuleOptions) {
         asyncModuleOptions = {};
       }
+      
+      // Allow custom wrapping of root async behavior
       if (nestModuleMetadata.wrapForRootAsync) {
         const { asyncModuleOptions: newAsyncModuleOptions, module: wrapForRootAsync } =
           nestModuleMetadata.wrapForRootAsync(asyncModuleOptions);
@@ -1105,12 +1339,14 @@ export function createNestModule<
       let staticConfiguration: Partial<TStaticConfigurationModel> | undefined;
       let staticEnvironments: Partial<TStaticEnvironmentsModel> | undefined;
 
+      // Load static settings metadata for documentation generation
+      // This collects schema information without actual validation
       async function loadStaticSettingsForInfo() {
         if (moduleSettings[contextName] === undefined) {
           moduleSettings[contextName] = {};
         }
 
-        // need for documentation
+        // Collect feature configuration metadata for docs
         if (moduleSettings[contextName].featureConfiguration === undefined) {
           if (nestModuleMetadata.featureConfigurationModel) {
             const obj = await configTransform({
@@ -1124,6 +1360,7 @@ export function createNestModule<
             moduleSettings[contextName].featureConfiguration = obj.info;
           }
         }
+        // Collect feature environments metadata for docs
         if (moduleSettings[contextName].featureEnvironments === undefined) {
           if (nestModuleMetadata.featureEnvironmentsModel) {
             const obj = await envTransform({
@@ -1143,6 +1380,7 @@ export function createNestModule<
             moduleSettings[contextName].featureEnvironments = obj.info;
           }
         }
+        // Collect runtime configuration metadata for docs
         if (moduleSettings[contextName].configuration === undefined) {
           if (nestModuleMetadata.configurationModel) {
             const obj = await configTransform({

@@ -465,12 +465,11 @@ export type InternalForFeatureAsyncMethodOptions<
   TFeatureConfigurationModel = any,
   TFeatureEnvironmentsModel = any,
 > = {
-  // todo: need add later
-  // featureConfigurationExisting?: any;
-  // featureConfigurationClass?: Type<TFeatureConfigurationModel>;
-  // featureConfigurationStream?: (...args: any[]) => Observable<TFeatureConfigurationModel>;
-  // featureConfigurationFactory?: (...args: any[]) => Promise<TFeatureConfigurationModel> | TFeatureConfigurationModel;
-  // inject?: any[];
+  featureConfigurationExisting?: any;
+  featureConfigurationClass?: Type<TFeatureConfigurationModel>;
+  featureConfigurationFactory?: (...args: any[]) => Promise<TFeatureConfigurationModel> | TFeatureConfigurationModel;
+  featureConfigurationStream?: (...args: any[]) => Observable<TFeatureConfigurationModel>;
+  inject?: any[];
 } & Pick<
   NestModuleMetadata<
     TConfigurationModel,
@@ -493,14 +492,15 @@ export type ForFeatureAsyncMethodOptions<
   TFeatureConfigurationModel = never,
   TFeatureEnvironmentsModel = never,
 > =
-  | {
-      // todo: need add later
-      // featureConfigurationExisting?: any;
-      // featureConfigurationClass?: Type<TFeatureConfigurationModel>;
-      // featureConfigurationStream?: (...args: any[]) => Observable<TFeatureConfigurationModel>;
-      // featureConfigurationFactory?: (...args: any[]) => Promise<TFeatureConfigurationModel> | TFeatureConfigurationModel;
-      // inject?: any[];
-    }
+  | (TFeatureConfigurationModel extends never
+      ? {}
+      : {
+          featureConfigurationExisting?: any;
+          featureConfigurationClass?: Type<TFeatureConfigurationModel>;
+          featureConfigurationFactory?: (...args: any[]) => Promise<TFeatureConfigurationModel> | TFeatureConfigurationModel;
+          featureConfigurationStream?: (...args: any[]) => Observable<TFeatureConfigurationModel>;
+          inject?: any[];
+        })
   | Pick<
       NestModuleMetadata<
         TConfigurationModel,
