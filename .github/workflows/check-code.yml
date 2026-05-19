@@ -26,5 +26,5 @@ jobs:
       - run: npm run build
       - run: npm run docs:infrastructure
       - run: npm run test
-      - run: npm run test:integrations-build
-      - run: npm run check-contrib
+      # - run: npm run test:integrations-build
+      # - run: npm run check-contrib

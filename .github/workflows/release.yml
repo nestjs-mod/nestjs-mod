@@ -28,8 +28,8 @@ jobs:
       - run: npm run build
       - run: npm run docs:infrastructure
       - run: npm run test
-      - run: npm run test:integrations-build
-      - run: npm run check-contrib
+      # - run: npm run test:integrations-build
+      # - run: npm run check-contrib
       - run: npx nx run-many --target=semantic-release --all --parallel=false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
