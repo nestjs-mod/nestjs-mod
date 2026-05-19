@@ -1,3 +1,10 @@
+## [2.14.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.14.0...schematics-v2.14.1) (2026-05-19)
+
+
+### Bug Fixes
+
+* add provenance to packages ([6125fdb](https://github.com/nestjs-mod/nestjs-mod/commit/6125fdbfce5f0e9ce8c26c53edf43c1ab50e7e05))
+
 # [2.14.0](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.13.2...schematics-v2.14.0) (2026-05-19)
 
 
