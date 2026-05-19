@@ -9,7 +9,8 @@
     "npm": ">=6"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "bugs": {
     "url": "https://github.com/nestjs-mod/nestjs-mod/issues"
