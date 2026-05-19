@@ -1,3 +1,10 @@
+# [2.20.0](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.19.1...common-v2.20.0) (2026-05-19)
+
+
+### Features
+
+* Add support use class as featureConfigurationModel [ai] ([857c49c](https://github.com/nestjs-mod/nestjs-mod/commit/857c49c35c8470e8f2d74bac999cb4a707703c2f))
+
 ## [2.19.1](https://github.com/nestjs-mod/nestjs-mod/compare/common-v2.19.0...common-v2.19.1) (2026-05-19)
 
 
