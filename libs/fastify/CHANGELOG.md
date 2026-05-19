@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.11.1...fastify-v1.12.0) (2026-05-19)
+
+
+### Features
+
+* Add support use class as featureConfigurationModel [ai] ([857c49c](https://github.com/nestjs-mod/nestjs-mod/commit/857c49c35c8470e8f2d74bac999cb4a707703c2f))
+
 ## [1.11.1](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.11.0...fastify-v1.11.1) (2026-05-19)
 
 
