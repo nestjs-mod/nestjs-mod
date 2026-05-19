@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.10.1...microservices-v1.11.0) (2026-05-19)
+
+
+### Features
+
+* Add support use class as featureConfigurationModel [ai] ([857c49c](https://github.com/nestjs-mod/nestjs-mod/commit/857c49c35c8470e8f2d74bac999cb4a707703c2f))
+
 ## [1.10.1](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.10.0...microservices-v1.10.1) (2026-05-19)
 
 
