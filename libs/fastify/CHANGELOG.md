@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.11.0...fastify-v1.11.1) (2026-05-19)
+
+
+### Bug Fixes
+
+* add provenance to packages ([6125fdb](https://github.com/nestjs-mod/nestjs-mod/commit/6125fdbfce5f0e9ce8c26c53edf43c1ab50e7e05))
+
 # [1.11.0](https://github.com/nestjs-mod/nestjs-mod/compare/fastify-v1.10.2...fastify-v1.11.0) (2026-05-19)
 
 
