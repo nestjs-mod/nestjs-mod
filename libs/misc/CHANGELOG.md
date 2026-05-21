@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.5.1...misc-v1.5.2) (2026-05-21)
+
+
+### Bug Fixes
+
+* update deps [ci skip] ([956a922](https://github.com/nestjs-mod/nestjs-mod/commit/956a92248d44cce6cd035562e1510a6258736670))
+
 ## [1.5.1](https://github.com/nestjs-mod/nestjs-mod/compare/misc-v1.5.0...misc-v1.5.1) (2026-05-19)
 
 
