@@ -62,7 +62,25 @@ fi
 # Check if npm is authenticated
 if ! npm whoami &>/dev/null; then
   echo -e "${YELLOW}Warning: Not logged in to npm${NC}"
-  echo -e "${YELLOW}Will attempt to publish anyway (may fail with ENEEDAUTH)${NC}"
+  echo -e "${YELLOW}Checking for NPM_TOKEN in environment...${NC}"
+  
+  if [ -n "$NPM_TOKEN" ]; then
+    echo -e "${GREEN}NPM_TOKEN found in environment${NC}"
+    echo -e "${YELLOW}Attempting to configure npm authentication...${NC}"
+    
+    # Try to set up authentication from token
+    echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc 2>/dev/null || true
+    echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc 2>/dev/null || true
+    
+    # Try again
+    if npm whoami &>/dev/null; then
+      echo -e "${GREEN}Successfully authenticated with NPM_TOKEN${NC}"
+    else
+      echo -e "${YELLOW}Authentication still failed, will attempt publish anyway${NC}"
+    fi
+  else
+    echo -e "${RED}NPM_TOKEN not found in environment${NC}"
+  fi
   echo ""
 fi
 
@@ -159,10 +177,14 @@ publish_all_packages() {
       echo -e "  ${YELLOW}Locally: Run 'npm login' before publishing${NC}"
       echo -e ""
       echo -e "${RED}========================================${NC}"
-      echo -e "${RED}FATAL: Cannot continue without authentication${NC}"
+      echo -e "${RED}ERROR: Cannot continue without authentication${NC}"
       echo -e "${RED}Stopping all publishing attempts${NC}"
       echo -e "${RED}========================================${NC}"
-      exit 1
+      # Don't exit immediately, mark as failed and continue to show summary
+      ((FAIL_COUNT++))
+      FAILED_PACKAGES+=("$package_name@$package_version (AUTH FAILED)")
+      # Set a flag to stop retries
+      return 2  # Special exit code for auth failure
     # Check for E403 error (version already published)
     elif echo "$publish_output" | grep -q "You cannot publish over the previously published versions"; then
       echo -e "  ${YELLOW}Status: SKIPPED${NC} (version already published)"
@@ -190,8 +212,15 @@ publish_all_packages() {
 while [ $retry_count -lt $MAX_RETRIES ]; do
   ((retry_count++))
   
-  if publish_all_packages $retry_count; then
+  publish_all_packages $retry_count
+  publish_result=$?
+  
+  if [ $publish_result -eq 0 ]; then
     # All packages processed successfully
+    break
+  elif [ $publish_result -eq 2 ]; then
+    # Authentication failure - stop immediately
+    echo -e "${RED}Authentication failure detected - stopping all retries${NC}"
     break
   else
     # OTP required or error occurred, will retry

@@ -70,8 +70,13 @@ jobs:
         shell: bash
         run: |
           echo "=== Setting up npm authentication ==="
-          # Create .npmrc file with token
+          # Create .npmrc file in home directory for global npm config
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+          
+          # Verify npm can see the token
+          echo "=== Verifying npm authentication ==="
+          npm whoami || echo "Warning: npm whoami failed, but token may still work for publish"
           
           echo "=== Publishing packages from dist/libs ==="
           bash ./publish-packages.sh || {
