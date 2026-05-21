@@ -74,6 +74,9 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
           
+          # Set CI environment
+          export CI=true
+          
           # Verify npm can see the token
           echo "=== Verifying npm authentication ==="
           npm whoami || echo "Warning: npm whoami failed, but token may still work for publish"
