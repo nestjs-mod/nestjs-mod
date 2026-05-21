@@ -1,3 +1,10 @@
+## [2.20.1](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.20.0...testing-v2.20.1) (2026-05-21)
+
+
+### Bug Fixes
+
+* update deps [ci skip] ([956a922](https://github.com/nestjs-mod/nestjs-mod/commit/956a92248d44cce6cd035562e1510a6258736670))
+
 # [2.20.0](https://github.com/nestjs-mod/nestjs-mod/compare/testing-v2.19.1...testing-v2.20.0) (2026-05-19)
 
 
