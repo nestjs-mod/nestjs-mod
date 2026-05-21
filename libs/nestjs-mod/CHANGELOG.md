@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.8.1...nestjs-mod-v1.8.2) (2026-05-21)
+
+
+### Bug Fixes
+
+* update deps [ci skip] ([956a922](https://github.com/nestjs-mod/nestjs-mod/commit/956a92248d44cce6cd035562e1510a6258736670))
+
 ## [1.8.1](https://github.com/nestjs-mod/nestjs-mod/compare/nestjs-mod-v1.8.0...nestjs-mod-v1.8.1) (2026-05-19)
 
 
