@@ -1,3 +1,11 @@
+## [2.14.2](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.14.1...schematics-v2.14.2) (2026-05-21)
+
+
+### Bug Fixes
+
+* add ci script for publish to npm ([9c20b74](https://github.com/nestjs-mod/nestjs-mod/commit/9c20b745a4061d138f59492c6e8a781c5572bad1))
+* update deps [ci skip] ([956a922](https://github.com/nestjs-mod/nestjs-mod/commit/956a92248d44cce6cd035562e1510a6258736670))
+
 ## [2.14.1](https://github.com/nestjs-mod/nestjs-mod/compare/schematics-v2.14.0...schematics-v2.14.1) (2026-05-19)
 
 
