@@ -158,18 +158,11 @@ publish_all_packages() {
       echo -e "  ${RED}Status: OTP REQUIRED${NC} ✗"
       echo -e "  ${YELLOW}Two-factor authentication required${NC}"
       echo -e ""
-      echo -e "  ${YELLOW}Authentication details:${NC}"
-      # Show important lines: URLs, OTP errors, and authentication messages
-      echo "$publish_output" | grep -E "(https://|npm notice Open|npm ERR!|EOTP|one-time password|security key|login)" | head -20 | while IFS= read -r line; do
+      echo -e "  ${YELLOW}Full npm output:${NC}"
+      # Show complete npm output so user can see the login URL
+      echo "$publish_output" | while IFS= read -r line; do
         echo "    $line"
       done
-      # If grep didn't find anything, show last 10 lines as fallback
-      if ! echo "$publish_output" | grep -qE "(https://|npm notice Open|npm ERR!|EOTP)"; then
-        echo "    [Last 10 lines of npm output]"
-        echo "$publish_output" | tail -10 | while IFS= read -r line; do
-          echo "    $line"
-        done
-      fi
       echo -e ""
       echo -e "  ${YELLOW}↑ Please complete authentication using the link above${NC}"
       echo -e "  ${YELLOW}Waiting 30 seconds for OTP verification...${NC}"
