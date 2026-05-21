@@ -66,3 +66,28 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish built packages from dist/libs
+        shell: bash
+        run: |
+          echo "=== Publishing packages from dist/libs ==="
+          bash ./publish-packages.sh || {
+            EXIT_CODE=$?
+            echo ""
+            echo "========================================="
+            echo "ERROR: Package publishing failed"
+            echo "Exit code: $EXIT_CODE"
+            echo ""
+            echo "Possible reasons:"
+            echo "1. OTP authentication was not completed (max 3 retries)"
+            echo "2. NPM_TOKEN is invalid or expired"
+            echo "3. Network or registry issues"
+            echo ""
+            echo "Check the logs above for detailed error messages"
+            echo "========================================="
+            echo ""
+            # Exit with the original error code
+            exit $EXIT_CODE
+          }
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

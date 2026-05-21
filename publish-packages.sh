@@ -1,0 +1,214 @@
+#!/bin/bash
+
+# Script to sequentially publish packages from dist/libs
+# Usage: ./publish-packages.sh [--dry-run] [--tag <tag>]
+
+# Don't exit on error - we want to continue publishing all packages
+# set -e is intentionally removed to allow error handling per package
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Configuration
+DRY_RUN=false
+TAG=""
+DIST_DIR="./dist/libs"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    --tag)
+      TAG="$2"
+      shift 2
+      ;;
+    --help)
+      echo "Usage: $0 [--dry-run] [--tag <tag>]"
+      echo ""
+      echo "Options:"
+      echo "  --dry-run    Show what would be published without actually publishing"
+      echo "  --tag <tag>  Publish with a specific tag (e.g., latest, next, beta)"
+      echo "  --help       Show this help message"
+      exit 0
+      ;;
+    *)
+      echo -e "${RED}Unknown option: $1${NC}"
+      echo "Use --help for usage information"
+      exit 1
+      ;;
+  esac
+done
+
+# Check if dist directory exists
+if [ ! -d "$DIST_DIR" ]; then
+  echo -e "${RED}Error: $DIST_DIR directory does not exist${NC}"
+  echo "Please run 'npm run build' first to build the packages"
+  exit 1
+fi
+
+# Check if npm is available
+if ! command -v npm &> /dev/null; then
+  echo -e "${RED}Error: npm is not installed or not in PATH${NC}"
+  exit 1
+fi
+
+# Find all package directories
+PACKAGES=()
+for dir in "$DIST_DIR"/*/; do
+  if [ -f "$dir/package.json" ]; then
+    package_name=$(node -p "require('$dir/package.json').name")
+    package_version=$(node -p "require('$dir/package.json').version")
+    PACKAGES+=("$dir")
+    echo -e "${BLUE}[${#PACKAGES[@]}]${NC} $package_name@$package_version"
+  fi
+done
+
+if [ ${#PACKAGES[@]} -eq 0 ]; then
+  echo -e "${YELLOW}No packages found in $DIST_DIR${NC}"
+  exit 0
+fi
+
+echo ""
+echo -e "${BLUE}========================================${NC}"
+echo -e "${BLUE}Found ${#PACKAGES[@]} package(s) to publish${NC}"
+echo -e "${BLUE}========================================${NC}"
+echo ""
+
+# Publish packages sequentially
+SUCCESS_COUNT=0
+FAIL_COUNT=0
+SKIP_COUNT=0
+FAILED_PACKAGES=()
+SKIPPED_PACKAGES=()
+idx=0
+MAX_RETRIES=3
+retry_count=0
+
+# Function to publish all packages
+publish_all_packages() {
+  local attempt=$1
+  local idx=0
+  
+  if [ $attempt -gt 1 ]; then
+    echo -e "${BLUE}========================================${NC}"
+    echo -e "${YELLOW}Retry attempt $attempt - Starting from first package${NC}"
+    echo -e "${BLUE}========================================${NC}"
+    echo ""
+  fi
+  
+  for dir in "${PACKAGES[@]}"; do
+    package_name=$(node -p "try { require('$dir/package.json').name } catch(e) { console.error('Error reading package name'); process.exit(1) }" 2>/dev/null) || continue
+    package_version=$(node -p "try { require('$dir/package.json').version } catch(e) { console.error('Error reading version'); process.exit(1) }" 2>/dev/null) || continue
+    
+    echo -e "${BLUE}[$((idx + 1))/${#PACKAGES[@]}]${NC} Publishing: $package_name@$package_version"
+    
+    # Build publish command
+    PUBLISH_CMD="npm publish"
+    
+    if [ "$DRY_RUN" = true ]; then
+      PUBLISH_CMD="$PUBLISH_CMD --dry-run"
+    else
+      if [ -n "$TAG" ]; then
+        PUBLISH_CMD="$PUBLISH_CMD --tag $TAG"
+      fi
+    fi
+    
+    # Execute publish and capture output
+    publish_output=$(cd "$dir" && eval "$PUBLISH_CMD" 2>&1)
+    publish_exit_code=$?
+    
+    # Check for EOTP error (requires two-factor authentication)
+    if echo "$publish_output" | grep -q "This operation requires a one-time password"; then
+      echo -e "  ${RED}Status: OTP REQUIRED${NC} ✗"
+      echo -e "  ${YELLOW}Two-factor authentication required${NC}"
+      echo -e ""
+      echo -e "  ${YELLOW}npm message:${NC}"
+      # Show full npm output with the OTP link
+      echo "$publish_output" | while IFS= read -r line; do
+        echo "    $line"
+      done
+      echo -e ""
+      echo -e "  ${YELLOW}↑ Please complete authentication using the link above${NC}"
+      echo -e "  ${YELLOW}Waiting 30 seconds for OTP verification...${NC}"
+      sleep 30
+      echo -e "  ${YELLOW}Restarting from the beginning...${NC}"
+      return 1  # Signal to retry from beginning
+    # Check for E403 error (version already published)
+    elif echo "$publish_output" | grep -q "You cannot publish over the previously published versions"; then
+      echo -e "  ${YELLOW}Status: SKIPPED${NC} (version already published)"
+      ((SKIP_COUNT++))
+      SKIPPED_PACKAGES+=("$package_name@$package_version")
+    elif [ $publish_exit_code -eq 0 ]; then
+      echo -e "  ${GREEN}Status: PUBLISHED${NC} ✓"
+      ((SUCCESS_COUNT++))
+    else
+      echo -e "  ${RED}Status: FAILED${NC} ✗"
+      echo -e "  ${RED}Error:${NC}"
+      echo "$publish_output" | sed 's/^/    /'
+      ((FAIL_COUNT++))
+      FAILED_PACKAGES+=("$package_name@$package_version")
+    fi
+    
+    ((idx++))
+    echo ""
+  done
+  
+  return 0  # All packages processed successfully
+}
+
+# Main publishing loop with retry logic
+while [ $retry_count -lt $MAX_RETRIES ]; do
+  ((retry_count++))
+  
+  if publish_all_packages $retry_count; then
+    # All packages processed successfully
+    break
+  else
+    # OTP required or error occurred, will retry
+    if [ $retry_count -lt $MAX_RETRIES ]; then
+      echo -e "${YELLOW}Retrying... (attempt $retry_count of $MAX_RETRIES)${NC}"
+      echo ""
+    else
+      echo -e "${RED}========================================${NC}"
+      echo -e "${RED}ERROR: Max retries ($MAX_RETRIES) reached${NC}"
+      echo -e "${RED}OTP authentication was not completed successfully${NC}"
+      echo -e "${RED}Please check the logs above and try again manually${NC}"
+      echo -e "${RED}========================================${NC}"
+      exit 1
+    fi
+  fi
+done
+
+# Summary
+echo -e "${BLUE}========================================${NC}"
+echo -e "${BLUE}Publication Summary${NC}"
+echo -e "${BLUE}========================================${NC}"
+echo -e "${GREEN}Successfully published: $SUCCESS_COUNT${NC}"
+if [ $SKIP_COUNT -gt 0 ]; then
+  echo -e "${YELLOW}Skipped (already published): $SKIP_COUNT${NC}"
+  echo -e "${YELLOW}Skipped packages:${NC}"
+  for pkg in "${SKIPPED_PACKAGES[@]}"; do
+    echo -e "${YELLOW}  - $pkg${NC}"
+  done
+fi
+if [ $FAIL_COUNT -gt 0 ]; then
+  echo -e "${RED}Failed: $FAIL_COUNT${NC}"
+  echo -e "${RED}Failed packages:${NC}"
+  for pkg in "${FAILED_PACKAGES[@]}"; do
+    echo -e "${RED}  - $pkg${NC}"
+  done
+  exit 1
+else
+  if [ $SKIP_COUNT -gt 0 ]; then
+    echo -e "${GREEN}All new packages published successfully!${NC}"
+  else
+    echo -e "${GREEN}All packages published successfully!${NC}"
+  fi
+fi

@@ -70,6 +70,8 @@
     "update:nestjs-mod-example": "bash ./integrations/scripts/update-nestjs-mod-example.sh",
     "update:lib-versions": "npx -y npm-check-updates @nestjs-mod/* @theunderscorer/* rucken -u && npm i",
     "manual:prepare": "rm -rf .nx && npm run schematics-version-bump && yes | cp -rf ./README.md ./libs/schematics && yes | cp -rf ./README.md ./libs/schematics/src/lib/generators/init/files && npm run generate && npm run docs:infrastructure && npm run test",
+    "publish:packages": "bash ./publish-packages.sh",
+    "publish:packages:dry-run": "bash ./publish-packages.sh --dry-run",
     "tsc": "tsc",
     "rucken": "rucken"
   },
@@ -181,6 +183,12 @@
     "manual:prepare": [
       "Preparing code, building code, creating infrastructure documentation",
       "and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)"
+    ],
+    "publish:packages": [
+      "Publish all built packages from dist/libs directory to npm sequentially"
+    ],
+    "publish:packages:dry-run": [
+      "Test publishing all packages without actually publishing them (dry run)"
     ],
     "tsc": [
       "Alias for running the tsc version locally, which is in the project (example: `npm run tsc -- --noEmit -p tsconfig.base.json`),",
