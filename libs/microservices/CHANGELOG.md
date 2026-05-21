@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.11.0...microservices-v1.11.1) (2026-05-21)
+
+
+### Bug Fixes
+
+* update deps [ci skip] ([956a922](https://github.com/nestjs-mod/nestjs-mod/commit/956a92248d44cce6cd035562e1510a6258736670))
+
 # [1.11.0](https://github.com/nestjs-mod/nestjs-mod/compare/microservices-v1.10.1...microservices-v1.11.0) (2026-05-19)
 
 
