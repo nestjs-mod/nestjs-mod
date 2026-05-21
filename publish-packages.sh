@@ -59,6 +59,13 @@ if ! command -v npm &> /dev/null; then
   exit 1
 fi
 
+# Check if npm is authenticated
+if ! npm whoami &>/dev/null; then
+  echo -e "${YELLOW}Warning: Not logged in to npm${NC}"
+  echo -e "${YELLOW}Will attempt to publish anyway (may fail with ENEEDAUTH)${NC}"
+  echo ""
+fi
+
 # Find all package directories
 PACKAGES=()
 for dir in "$DIST_DIR"/*/; do
@@ -140,6 +147,22 @@ publish_all_packages() {
       sleep 30
       echo -e "  ${YELLOW}Restarting from the beginning...${NC}"
       return 1  # Signal to retry from beginning
+    # Check for ENEEDAUTH error (not authenticated)
+    elif echo "$publish_output" | grep -q "ENEEDAUTH\|need auth"; then
+      echo -e "  ${RED}Status: AUTHENTICATION FAILED${NC} ✗"
+      echo -e "  ${RED}npm is not authenticated to registry${NC}"
+      echo -e ""
+      echo -e "  ${RED}This command requires you to be logged in to https://registry.npmjs.org/${NC}"
+      echo -e "  ${RED}You need to authorize this machine using \`npm adduser\`${NC}"
+      echo -e ""
+      echo -e "  ${YELLOW}In CI/CD: Make sure NPM_TOKEN secret is set correctly${NC}"
+      echo -e "  ${YELLOW}Locally: Run 'npm login' before publishing${NC}"
+      echo -e ""
+      echo -e "${RED}========================================${NC}"
+      echo -e "${RED}FATAL: Cannot continue without authentication${NC}"
+      echo -e "${RED}Stopping all publishing attempts${NC}"
+      echo -e "${RED}========================================${NC}"
+      exit 1
     # Check for E403 error (version already published)
     elif echo "$publish_output" | grep -q "You cannot publish over the previously published versions"; then
       echo -e "  ${YELLOW}Status: SKIPPED${NC} (version already published)"

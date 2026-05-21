@@ -69,6 +69,10 @@ jobs:
       - name: Publish built packages from dist/libs
         shell: bash
         run: |
+          echo "=== Setting up npm authentication ==="
+          # Create .npmrc file with token
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+          
           echo "=== Publishing packages from dist/libs ==="
           bash ./publish-packages.sh || {
             EXIT_CODE=$?
@@ -89,5 +93,4 @@ jobs:
             exit $EXIT_CODE
           }
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
