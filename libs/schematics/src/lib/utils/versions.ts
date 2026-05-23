@@ -12,7 +12,7 @@ export const nestJsModDeps = {
   '@nestjs-mod/pm2': '1.14.1'
 };
 export const nestJsModDevDeps = {
-  'rucken': '^4.16.1',
-  '@nestjs-mod/testing': '2.18.2',
+  'rucken': '^4.18.0',
+  '@nestjs-mod/testing': '2.20.0',
   '@nestjs-mod/schematics': '2.14.1'
 };

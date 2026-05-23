@@ -75,6 +75,8 @@ npm run test:example-tcp-microservice
 |`npm run update:nestjs-mod-example`|Start generating an empty application using the latest versions of the NestJS-mod libraries, published in https://github.com/nestjs-mod/nestjs-mod-example|
 |`npm run update:lib-versions`|Script for update main libs used in project|
 |`npm run manual:prepare`|Preparing code, building code, creating infrastructure documentation and all the files necessary to raise the infrastructure and running tests (generate, build, docs:infrastructure, test)|
+|`npm run publish:packages`|Publish all built packages from dist/libs directory to npm sequentially|
+|`npm run publish:packages:dry-run`|Test publishing all packages without actually publishing them (dry run)|
 |`npm run tsc`|Alias for running the tsc version locally, which is in the project (example: `npm run tsc -- --noEmit -p tsconfig.base.json`), in order not to install tsc globally in the operating system|
 |`npm run rucken`|Alias for console tools and scripts for nx and not only use to automate the workflow and speed up the development process (example: `npm run rucken -- make-ts-list`, site: https://www.npmjs.com/package/rucken)|
 ## System modules
